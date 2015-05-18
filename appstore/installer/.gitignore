@@ -1,0 +1,6 @@
+# All data in the installer packages will be ignored
+packages/*/data/*
+
+# Ignore the runnable file
+EntropyPianoTuner_Setup.exe
+EntropyPianoTuner_Setup.run

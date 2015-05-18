@@ -1,0 +1,30 @@
+# temporary files
+*~
+*.bak
+
+# hidden files
+*.db
+
+# user files
+*.user
+
+# codeblocks files
+*.layout
+*.depend
+
+# android studio files
+*.iml
+
+# keystores and secret keys
+*.keystore
+*.mobileprovision
+
+# generated files
+dependencies
+*.pdf
+build*
+docs/doxy*
+*.autosave
+log
+publish
+/Qt/.directory
