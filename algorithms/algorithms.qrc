@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/algorithms">
+        <file>examplealgorithm/examplealgorithm.xml</file>
+        <file>entropyminimizer/entropyminimizer.xml</file>
+    </qresource>
+</RCC>

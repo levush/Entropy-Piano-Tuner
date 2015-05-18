@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Entropy Piano Tuner</Name>
+    <Version>1.0.0</Version>
+    <Title>Entropy Piano Tuner Installer</Title>
+    <Publisher>TP III Universität Würzburg</Publisher>
+    <ProductUrl>http://www.entropy-tuner.org</ProductUrl>
+    <InstallerWindowIcon>icon_256x256</InstallerWindowIcon>
+    <InstallerApplicationIcon>icons/entropytuner</InstallerApplicationIcon>
+    <Logo>icon_512x512</Logo>
+	<AllowSpaceInPath>true</AllowSpaceInPath>
+    <RunProgram>@TargetDir@/EntropyTuner</RunProgram>
+    <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
+    <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
+</Installer>

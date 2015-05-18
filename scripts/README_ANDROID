@@ -1,0 +1,109 @@
+How to enable the android build in qt
+we will
+
+1. Download the android sdk/ndk and the 3rd party libraries gsl/fftw3
+2. Extract the archives
+3. Setup the sdk/ndk and build the 3rd party libraries
+4. add the sdk/ndk to QtCreator and add a build rule for the project
+
+
+1. Downloading
+   ===========
+
+Platform tools to install
+ - jdk (Java development kit, normally available in the packet manager of the distribution)
+ - ant (also available in the distribution)
+ - install 32 bit versions of zlib and libstdc++
+
+1.1 Android sdk
+
+The android sdk contains all the required functions to build apps for android. Normal apps are build in java, therefore we need to download the ndk for compile c/c++ code.
+
+Download the sdk from http://developer.android.com/sdk/index.html#Other
+
+1.2 Android ndk
+
+The android native develoment kit is necessary to compile native c++ code.
+Download it from https://developer.android.com/tools/sdk/ndk/index.html
+
+1.3 gsl
+
+Download the gsl from http://www.gnu.org/software/gsl/
+The lates version can be downloaded direct by this link
+ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
+
+1.4 fftw3
+
+Download the fftw3 from http://www.fftw.org/download.html
+
+
+
+2. Extracting
+   ==========
+
+Extract all files to a directory on your platform following the instructions on the download pages.
+Note the paths, since they will be necessary later on!
+
+In the following ANDROID_SDK will be the path to your android sdk root dir,
+ANDROID_NDK to the android ndk root dir.
+
+
+
+3. Setup the sdk/ndk and build the 3rd party libraries
+   ===================================================
+
+3.1 Setup the android sdk
+
+run ANDROID_SDK/tools/android from a shell. This will show a window where you can setup your sdk installation.
+Click the install button to install the the current api files (like in Qt you can install the development files for different android versions).
+Accept the licences of-course!
+Restart the android tool and check if there are new packages to install. Install them!
+
+We will setup aswell an Android Virtual Device this is an emulator we use for developing later on. In the android window click Tools->Manage AVDS->Create.
+Enter an AVD-Name, e.g. Default, select a device type, e.g. 10.1" WXGA (Tablet), select as CPU/ABI ARM (armeabi-v7a), select skin WXGA800.
+
+Click ok! This may take a while since the internal memory for the new device has to be created.
+
+Close the sdk manager.
+
+3.2 Setup the android ndk
+
+nothing to do here
+
+3.3 compile the gsl
+
+Copy the android_configure.sh file to the GSL root dir and open it in a text editor. Replace ANDROID_NDK_PATH with the path to your android ndk installation.
+Open a terminal and cd to the root dir of gsl.
+Run
+  chmod +x android_configure.sh   (if necessary)
+  . ./android_configure.sh  (the leading dot is important!)
+  make -j8 (8 is the number of threads)
+  make install
+
+3.4 compile the fftw3
+
+repeat the steps in 3.3 for fftw3. You may just copy the changed android_configure.sh file.
+
+
+
+4. Add the sdk/ndk to QtCreator and add a build rule for the project
+   =================================================================
+
+4.1 Add sdk and ndk to QtCreator
+
+In QtCreator open Tools->Options and Select Android. Browse your Android SDK and Android NDK version.
+If ant/jdk is not installed in the default path (you cant run ant or java from the console) change the paths here aswell.
+
+Apply and close the dialog.
+
+4.2 Add a build rule for android
+
+Open the project file and click on 'Projects' in the left bar. Click on 'Add Kit'->Android for armeabi-v7a to add the build target.
+To build for android select the build target by clicking the button above the green arrows in the left bar and select 'Android for ...'.
+Now just hit Build/Run/Debug to compile the code for android
+
+When yoy start to programm you will be asked to select a device. This can be the emulator we created above or a mobile that is plugged in by a usb connection.
+
+You can change the emulator orientation by pressing STRG+F11. This is very usefuls!
+
+If there are errors on libstdc++ not found in the compile output, google it, maybe you need to install some 32bit libraries for adb

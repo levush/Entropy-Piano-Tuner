@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 4.3.7.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2015-05-17T10:57:48.428319605"/>
+	<style type="text/css">
+		td p { color: #000000 }
+		h1 { color: #000000 }
+		p { color: #000000 }
+	</style>
+</head>
+<body lang="de-DE" text="#000000" dir="ltr" style="background: transparent">
+<h1 align="center"><i>Entropie-Piano-Tuner</i></h1>
+<p align="center"><font color="#800000"><font size="4" style="font-size: 14pt"><i><b>Schnelleinstieg</b></i></font></font></p>
+<p align="center"><i>Willkommen beim entropiebasierten
+Klavierstimmen. Mit dem Entropy-Piano-Tuner (EPT) können Sie ein
+<a href="http://www.sbfisica.org.br/rbef/pdf/342301.pdf">neues
+elektronisches Verfahren</a> zum Stimmen von Klavieren testen, mit
+der die Unordnung (Entropie) der Frequenzspektren minimiert wird.
+Diese Kurzanleitung soll Sie mit den wichtigsten Funktionen vertraut
+machen. Ausführliche Informationen finden Sie in der
+<a href="http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/www/manual/manual_de.pdf">Bedienungsanleitung</a>.</i></p>
+<hr/>
+
+<table width="100%" cellpadding="8" cellspacing="0">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<tr valign="top">
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="http://www.entropy-tuner.org/"><span style="text-decoration: none"><b><span style="background: transparent">Homepage</span></b></span></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#installation"><span style="text-decoration: none"><b><span style="background: transparent">Installation</span></b></span></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<font size="3" style="font-size: 12pt"><a href="http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/www/manual/manual_de.pdf"><span style="text-decoration: none"><font size="3" style="font-size: 12pt"><b><span style="background: transparent">Anleitung</span></b></font></span></a></font></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#license"><span style="text-decoration: none"><b><span style="background: transparent">Lizenz</span></b></span></a></p>
+		</td>
+	</tr>
+</table>
+<hr/>
+
+<table width="100%" cellpadding="4" cellspacing="0">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<tr valign="top">
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<font size="3" style="font-size: 12pt"><a href="#first steps"><font color="#800000"><span style="text-decoration: none"><b><span style="background: transparent">Start</span></b></span></font></a></font></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#recording"><font color="#800000"><span style="text-decoration: none"><b><span style="background: transparent">Aufnahme</span></b></span></font></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#calculating"><font color="#800000"><span style="text-decoration: none"><b><span style="background: transparent">Berechnung</span></b></span></font></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#tuning"><font color="#800000"><span style="text-decoration: none"><b><span style="background: transparent">Stimmen</span></b></span></font></a></p>
+		</td>
+	</tr>
+</table>
+<hr/>
+
+<p style="margin-top: 0.42cm"><a name="installation"></a><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b><br>Technische
+Voraussetzungen und Installation</b></font></font></p>
+<p><b>Computer: </b><span style="font-weight: normal">Der EPT</span>
+<span style="font-weight: normal">läuft auf fast allen gängigen
+Laptops und Tablets und sogar auf Mobiltelefonen. </span>
+</p>
+<p><b>Mikrofon:</b> Für den Einsatz des EPTs benötigen Sie ein
+qualitativ gutes Mikrofon. Zu empfehlen ist ein rauscharmes
+Kondensatormikrofon mit linearem Frequenzgang. Eingebaute Mikrofone
+in Handys oder Tablets können zwar zum Testen der Anwendung
+verwendet werden, versagen aber in der Regel bei tiefen und hohen
+Frequenzen.</p>
+<p><b>Kopfhörer: </b>Optional kann ein gewöhnlicher Kopfhörer zum
+Einsatz kommen, mit dem die aufgenommenen Töne überprüft werden
+können. Wenn Sie keinen Kopfhörer verwenden, sollten Sie den
+Lautsprecher Ihres Geräts stummschalten, um Rückkopplungen über
+das Mikrofon zu vermeiden.</p>
+<p><b>MIDI-Keyboard: </b>Optional können Sie an Ihren Rechner ein
+MIDI-Keyboard anschließen, mit dem Töne selektiert und angehört
+werden können. Ein MIDI-Keyboard ist aber in der Regel zum Stimmen
+nicht erforderlich.</p>
+<p><b>Installation:</b> Der Entropie-Piano-Tuner ist für die
+Betriebssysteme OS-X, IOS, Android, Windows und Linux verfügbar.
+Hier geht es zum <a href="http://www.entropy-tuner.org/www/index_de.html">Download</a>.</p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Vorbereitung</b></font></font></p>
+<p>Schließen Sie das Mikrofon an Ihren Computer an und starten Sie
+den EPT. Mit den Symbolen auf der linken Seite kann man zwischen den
+einzelnen Betriebsarten umschalten. Vergewissern Sie sich, dass das
+Aussteuerungsanzeige auf das Mikrofon reagiert und sich automatisch
+anpasst. Wenn Sie ein Instrument zum ersten Mal stimmen, wählen Sie
+Datei-Neu und geben Sie die entsprechenden Daten ein. 
+</p>
+<p>Das Stimmen erfolgt in drei Schritten:</p>
+<ul>
+	<li/>
+<p>Aufnahme aller Töne des Klaviers.</p>
+	<li/>
+<p>Berechnung der Entropie-optimierten Stimmung.</p>
+	<li/>
+<p>Elektronisch unterstütztes manuelles Stimmen.</p>
+</ul>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><a name="recording"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>1.
+Aufnahme</b></font></font></p>
+<p style="margin-top: 0.42cm; page-break-after: avoid">Klicken Sie
+nun auf „Aufnahme“ und schlagen Sie alle Tasten des Klaviers
+nacheinander von links nach rechts an., um die Töne aufzunehmen. Die
+Aufnahme startet, wenn die Aussteuerungsanzeige die obere Marke
+überschreitet und endet, wenn die untere Marke unterschritten wird.
+Die angeschlagene Taste wird automatisch erkannt. Über den Tasten
+erscheint das Obertonspektrum als rote Linie.</p>
+<p style="margin-top: 0.42cm">Warten Sie bei nach jedem Ton die
+Verarbeitung des Signals ab. Wenn Sie einen Kopfhörer verwenden,
+ertönt nach jeder erfolgreichen Aufnahme ein kurzer Kontrollton in
+gleicher Höhe. Die Taste wird mit einem grünen Haken markiert. 
+</p>
+<p style="margin-top: 0.42cm">Wenn Sie einen Ton nochmal aufnehmen
+wollen, selektieren Sie die entsprechende Taste durch einen Mausklick
+oder durch Betätigung der Richtungstasten. Wenn die Taste nicht
+korrekt erkannt wird, z.B. bei den sehr hohen Tönen, kann die
+Erkennung auch durch einen zweifachen Mausklick forciert werden.</p>
+<p style="margin-top: 0.42cm">Der ETP zeit oben rechts die Qualität
+des aufgenommenen Signals an. Diese muss nicht maximal sein, sollte
+aber von Taste zu Taste gleichmäßig sein. Es empfiehlt sich, nur
+eine Saite pro Ton aufzunehmen und die anderen zu dämpfen.</p>
+<p style="margin-top: 0.42cm">Oberhalb des Spektrums entstehen zwei
+Kurven. Die blauen Markierungen geben die gemessene Tonhöhe in Cent
+relativ zur gleichtemperierten Stimmung an. Die grauen Markierungen
+sind ein Maß für die Inharmonizität, die hier auf Kopf dargestellt
+wird. Die Inharmonizitätsmarkierungen sollten keine grundlosen
+Sprünge aufweisen. In der obersten Oktave findet keine
+Inharmonizitätsbestimmung statt.</p>
+<p style="margin-top: 0.42cm">Wenn alle Tasten mit einem grünen
+Haken versehen sind, speichern Sie die Daten ab (Datei-Speichern
+als...). Mit einem MIDI Keyboard können Sie die aufgenommenen Töne
+überprüfen.</p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><a name="calculating"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>2.
+Berechnung</b></font></font></p>
+<p style="margin-top: 0.42cm; page-break-after: avoid">Gehen Sie in
+den Berechnungsmodus und starten Sie die Berechnung. Im
+Stimmkurvenfenster kann man den Berechnungsvorgang mitverfolgen,
+dabei entsteht eine Stimmkurve, die durch die dunkelgrünen Marker
+repräsentiert wird. Wenn keine wesentlichen Änderungen mehr
+stattfinden und Sie die Stimmkurve für plausibel halten, brechen Sie
+den Berechnungsvorgang einfach ab. 
+</p>
+<p style="margin-top: 0.42cm">Sie können anschließend mit einem
+MIDI-Keyboard die neu berechnete Stimmung ausprobieren. Dabei
+imitiert der synthetisch erzeugte Klang die gemessene Inharmonizität.
+Sollten einzelne erkennbar falsch gestimmte Töne dabei sein, ist es
+möglich, die entsprechenden dunkelgrünen Markierungen in der
+Stimmkurve mit Hilfe der Maus zu verschieben.</p>
+<p style="margin-top: 0.42cm">Nach erfolgreicher Berechnung speichern
+Sie das Projekt.</p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><a name="tuning"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>3.
+Stimmen</b></font></font></p>
+<p style="margin-top: 0.42cm; page-break-after: avoid">Zum Stimmen
+gehen Sie in den Stimmmodus. Der EPT arbeitet hier wie ein
+konventionelles Stimmgerät. Allerdings arbeitet die
+Frequenzerkennung nur dann fehlerfrei, wenn die aufgenommenen Töne
+tatsächlich von dem zu stimmenden Instrument stammen.</p>
+<p style="margin-top: 0.42cm">Bringen Sie zum Stimmen die rechteckige
+Markierung in die Mitte des Signalanalysators bzw. die rote
+Markierung in den grün hinterlegten Bereich. Bei mehreren Saiten pro
+Ton empfiehlt es sich, zuerst eine Saite zu stimmen und dann die
+jeweils anderen relativ dazu nach Gehör zu stimmen.</p>
+<p style="margin-top: 0.42cm">Der aktuell gestimmte Ton wird im
+Stimmmodus automatisch erkannt. Im Kopfhörer entsteht dabei ein
+synthetisch erzeugter Klang, der mit der zu stimmenden Saite
+übereinstimmen sollte und bei Schwebungen eine Abweichung anzeigt.
+Durch Anklicken kann auch eine Taste fest vorgegeben werden.</p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><a name="license"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Lizenz
+/ Haftungsausschluss</b></font></font></p>
+<p style="margin-top: 0.42cm; page-break-after: avoid">Der
+Entropie-Piano-Tuner (EPT) ist <b>kostenlos</b> erhältlich und darf
+für private und gewerbliche Zwecke verwendet werden. Es handelt sich
+um eine <span style="font-weight: normal">quelloffene</span>
+Software, die unter der <a href="https://gnu.org/licenses/gpl.html">GNU-GPL-Lizenz</a>
+veröffentlicht wird. <font color="#800000"><b>Wir weisen
+ausdrücklich darauf hin, dass das Stimmen von Klavieren eine
+anspruchsvolle Tätigkeit ist, die eine umfassende mehrjährige
+Berufsausbildung erfordert. Durch unsachgemäßes Stimmen kann Ihr
+Instrument schwer</b></font><font color="#800000"> </font><font color="#800000"><b>beschädigt
+werden. Die Anwendung der Software geschieht auf eigene Gefahr. </b></font>
+</p>
+<p style="margin-top: 0.42cm"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Feedback</b></font></font></p>
+<p>Wenn Sie Rückmeldungen und Anregungen haben, schicken Sie uns
+bitte eine e-Mail an <b>info at entropy-tuner.org</b>. 
+</p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><br/>
+<br/>
+
+</p>
+</body>
+</html>

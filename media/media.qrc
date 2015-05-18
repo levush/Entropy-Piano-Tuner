@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/media">
+        <file>images/mode_calculate.png</file>
+        <file>images/mode_idle.png</file>
+        <file>images/mode_record.png</file>
+        <file>images/mode_tune.png</file>
+        <file>images/status_checked.png</file>
+        <file>images/status_unchecked.png</file>
+        <file>images/icon_256x256.png</file>
+        <file>audio/startup_sound.mp3</file>
+        <file>images/micro_active.png</file>
+        <file>images/micro_mute.png</file>
+        <file>images/refresh.png</file>
+        <file>images/icon_256x256@2x.png</file>
+        <file>icons/accessories-text-editor.png</file>
+        <file>icons/audio-card.png</file>
+        <file>icons/audio-input-microphone.png</file>
+        <file>icons/document-new.png</file>
+        <file>icons/document-open.png</file>
+        <file>icons/document-properties.png</file>
+        <file>icons/document-save.png</file>
+        <file>icons/document-save-as.png</file>
+        <file>icons/edit-clear.png</file>
+        <file>icons/help-browser.png</file>
+        <file>icons/user-desktop.png</file>
+        <file>icons/help-content.png</file>
+        <file>icons/wrest.png</file>
+        <file>icons/note.png</file>
+        <file>icons/system-idle.png</file>
+        <file>icons/menu.png</file>
+        <file>icons/edit-delete.png</file>
+        <file>icons/preferences-system.png</file>
+        <file>icons/info_icon.png</file>
+    </qresource>
+</RCC>

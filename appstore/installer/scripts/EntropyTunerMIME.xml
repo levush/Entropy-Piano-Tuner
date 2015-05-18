@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/ept">
+    <sub-class-of type="text/xml"/>
+    <comment xml:lang="en">Entropy Tuner File</comment>
+    <comment xml:lang="de">Entropy Tuner Datei</comment>
+    <magic priority="10">
+      <match type="string" offset="10:200" value="entropyPianoTunerFile"/>
+    </magic>
+    <glob pattern="*.ept"/>
+  </mime-type>
+</mime-info>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<algorithm year="2015" author="Christoph Wick">
+    <name>
+        <string>Example algorithm</string>
+        <string lang="de">Beispielalgorithmus</string>
+    </name>
+    <description>
+        <string>This is just an example algorithm that will set the tuning curve to be in equal temprament.</string>
+        <string lang="de">Dies ist nur ein Beispielalgorithmus, der die Stimmkurve auf eine gleichtemperierte Stimmung bringt.</string>
+    </description>
+    <param id="concertPitch" type="double" min="430" max="450" default="440" precision="1">
+        <label>
+            <string>Concert pitch</string>
+            <string lang="de">Kammerton</string>
+        </label>
+        <description>
+            <string>The desired concert pitch.</string>
+            <string lang="de">Der gewünschte Kammerton.</string>
+        </description>
+    </param>
+    <param id="dummyList" type="list" default="entry_2">
+        <label>
+            <string>Dummy list</string>
+            <string lang="de">Dummy-Liste</string>
+        </label>
+        <description>
+            <string>Select any entry.</string>
+            <string lang="de">Wähle einen beliebigen Eintrag.</string>
+        </description>
+        <entry value="entry_1">
+            <string>Entry 1</string>
+            <string lang="de">Eintrag 1</string>
+        </entry>
+        <entry value="entry_2">
+            <string>Entry 2</string>
+            <string lang="de">Eintrag 2</string>
+        </entry>
+    </param>
+</algorithm>
