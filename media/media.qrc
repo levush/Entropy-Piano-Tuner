@@ -1,9 +1,5 @@
 <RCC>
     <qresource prefix="/media">
-        <file>images/mode_calculate.png</file>
-        <file>images/mode_idle.png</file>
-        <file>images/mode_record.png</file>
-        <file>images/mode_tune.png</file>
         <file>images/status_checked.png</file>
         <file>images/status_unchecked.png</file>
         <file>images/icon_256x256.png</file>
