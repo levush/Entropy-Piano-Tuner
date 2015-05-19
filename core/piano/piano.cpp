@@ -44,10 +44,12 @@ Piano::Piano() :
     mManufactureYear(""),
     mManufactureLocation(""),
     mTuningLocation(""),
-    mTuningTimestamp(),
+    mTuningTime(""),
     mConcertPitch(DEFAULT_CONCERT_PITCH),
     mKeyboard(DEFAULT_NUMBER_OF_KEYS)
-{}
+{
+    setNow();
+}
 
 
 
@@ -57,7 +59,11 @@ Piano::Piano() :
 
 
 void Piano::setNow() {
-    mTuningTimestamp = std::chrono::system_clock::now();
+    time_t rawtime = time(0);
+    struct tm *nowtime = gmtime(&rawtime);
+    char buffer[50];
+    strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", nowtime);
+    mTuningTime = buffer;
 }
 
 

@@ -157,14 +157,11 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
         } else if (strcmp(data->Value(), "tuningLocation") == 0) {
             piano.setTuningLocation(getText(data));
         } else if (strcmp(data->Value(), "tuningTimestamp") == 0) {
-            std::time_t timestamp = time(0);
             if (data->GetText()) {
-                // read time
-                struct std::tm tm;
-                strptime(data->GetText(), "%F %T", &tm);
-                timestamp = mktime(&tm);
+                piano.setTuningTime(data->GetText());
+            } else {
+                piano.setNow();
             }
-            piano.setTuningTimestamp(std::chrono::system_clock::from_time_t(timestamp));
         } else if (strcmp(data->Value(), "keyboard") == 0) {
             read(data, piano.getKeyboard());
         }
@@ -175,16 +172,12 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Piano &piano) const {
     e->SetAttribute("concertPitch", piano.getConcertPitch());
     e->SetAttribute("type", piano.getPianoType());
 
-    time_t timestamp = std::chrono::system_clock::to_time_t(piano.getTuningTimestamp());
-    char timebuffer[20];
-    strftime(timebuffer, 20, "%F %T", localtime(&timestamp));
-
     createTextXMLElement(e, "name", piano.getName().c_str());
     createTextXMLElement(e, "serialNumber", piano.getSerialNumber().c_str());
     createTextXMLElement(e, "manufactionYear", piano.getManufactionYear().c_str());
     createTextXMLElement(e, "manufactionLocation", piano.getManufactionLocation().c_str());
     createTextXMLElement(e, "tuningLocation", piano.getTuningLocation().c_str());
-    createTextXMLElement(e, "tuningTimestamp", timebuffer);
+    createTextXMLElement(e, "tuningTimestamp", piano.getTuningTime().c_str());
 
     // write key data
     tinyxml2::XMLElement *keyboardElem = e->GetDocument()->NewElement("keyboard");

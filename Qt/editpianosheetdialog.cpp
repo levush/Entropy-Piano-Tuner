@@ -41,8 +41,9 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->productionLocationLineEdit->setText(QString::fromStdString(piano.getManufactionLocation()));
 
     ui->tuningLocationLineEdit->setText(QString::fromStdString(piano.getTuningLocation()));
-    ui->timeOfTuningDateTimeEdit->setDateTime(
-                QDateTime::fromTime_t(std::chrono::system_clock::to_time_t(piano.getTuningTimestamp())));
+    QDateTime time = QDateTime::fromString(QString::fromStdString(piano.getTuningTime()), "yyyy-MM-dd HH:mm:ss").toLocalTime();
+    time.setTimeSpec(Qt::UTC);
+    ui->timeOfTuningDateTimeEdit->setDateTime(time.toLocalTime());
 
     ui->concertPitchSpinBox->setValue(piano.getConcertPitch());
     ui->numberOfKeysSpinBox->setValue(piano.getKeyboard().getNumberOfKeys());
@@ -66,7 +67,7 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
     piano->setManufactureLocation(ui->productionLocationLineEdit->text().toStdString());
 
     piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdString());
-    piano->setTuningTimestamp(std::chrono::system_clock::from_time_t(ui->timeOfTuningDateTimeEdit->dateTime().toTime_t()));\
+    piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
     piano->getKeyboard().setNumberOfKeys(ui->numberOfKeysSpinBox->value(),
                                          ui->keyNumberOfASpinBox->value());
