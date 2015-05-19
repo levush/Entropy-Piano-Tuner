@@ -25,7 +25,6 @@
 #define PIANO_H
 
 #include <string>
-#include <chrono>
 #include <fstream>
 
 #include "keyboard.h"
@@ -78,9 +77,9 @@ public:
     void setTuningLocation(const std::string &loc) {mTuningLocation = loc;}
     const std::string &getTuningLocation() const {return mTuningLocation;}
 
-    void setTuningTimestamp(const std::chrono::system_clock::time_point &timestamp) {mTuningTimestamp = timestamp;}
+    void setTuningTime(const std::string &time) {mTuningTime = time;}
     void setNow();
-    const std::chrono::system_clock::time_point &getTuningTimestamp() const {return mTuningTimestamp;}
+    const std::string &getTuningTime() const {return mTuningTime;}
 
     void setConcertPitch(double pitch) {mConcertPitch = pitch;}
     const double &getConcertPitch() const {return mConcertPitch;}
@@ -122,8 +121,8 @@ private:
 
     /// location where the piano is now
     std::string mTuningLocation;
-    /// timestamp when the tuning hast been started
-    std::chrono::system_clock::time_point mTuningTimestamp;
+    /// time when the tuning hast been started (format yyyy-mm-dd HH:MM:SS, UTC)
+    std::string mTuningTime;
     /// concert pitch (default 440 Hz)
     double mConcertPitch;
 
