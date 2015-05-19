@@ -635,7 +635,7 @@ void MainWindow::onTutorial() {
 }
 
 void MainWindow::onManual() {
-    QDesktopServices::openUrl(QUrl(QString("http://www.entropy-tuner.org/www/manual/manual_%1.pdf").arg(QString::fromStdString(SettingsForQt::getSingleton().getLanguageId()))));
+    QDesktopServices::openUrl(QUrl(QString("http://www.entropy-tuner.org/www/manual/manual_%1.pdf").arg(QString::fromStdString(SettingsForQt::getSingleton().getUserLanguageId()))));
 }
 
 void MainWindow::onAbout() {
