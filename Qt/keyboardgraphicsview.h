@@ -80,7 +80,6 @@ public:
         MODE_FULLSCREEN = MODE_NORMAL | MODE_SCROLLBAR,
     };
 
-private:
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief The KeyState enum
     ///
@@ -174,6 +173,18 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void addAutoScaledGraphicsView(AutoScaledToKeyboardGraphicsView *view) {mAutoScaledGraphicsViews.push_back(view);}
 
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Function to select or deselect a key.
+    /// \param key0 : The key index to select or -1.
+    /// \param doubleClick : Double klick will force the key.
+    /// \param notifyMessageListeners : Notiy the message listeners by sending a
+    ///                                 message
+    ///
+    /// The current selected key is stored in mSelectedKey and its state in
+    /// mSelectedKeyState.
+    ///////////////////////////////////////////////////////////////////////////////
+    void selectKey(int8_t key0, bool doubleClick, bool notifyMessageListeners = true);
+
 protected:
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Reimplemented to keep the complete scene rect in the view.
@@ -239,18 +250,6 @@ private:
     /// function will chose the correct color and apply it to the key.
     ///////////////////////////////////////////////////////////////////////////////
     void setKeyColor(int8_t key);
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Function to select or deselect a key.
-    /// \param key0 : The key index to select or -1.
-    /// \param doubleClick : Double klick will force the key.
-    /// \param notifyMessageListeners : Notiy the message listeners by sending a
-    ///                                 message
-    ///
-    /// The current selected key is stored in mSelectedKey and its state in
-    /// mSelectedKeyState.
-    ///////////////////////////////////////////////////////////////////////////////
-    void selectKey(int8_t key0, bool doubleClick, bool notifyMessageListeners = true);
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Function to change the prelimary key stored in mPreliminaryKey.
@@ -352,7 +351,7 @@ private slots:
     /// \brief Slot to deselect a key.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void deselectKey();
+    void deselectKey(bool notifyListeners = true);
 
 private:
     /// The mode of the keyboard view.

@@ -19,10 +19,13 @@
 
 #include "fullscreenkeyboarddialog.h"
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include "core/system/eptexception.h"
 #include "keyboardgraphicsview.h"
 
 FullScreenKeyboardDialog::FullScreenKeyboardDialog(KeyboardGraphicsView *parent) :
-    QDialog(parent) {
+    QDialog(parent),
+    mParentKeyboardView(parent) {
 
     setWindowTitle(tr("Keyboard"));
     QVBoxLayout *layout = new QVBoxLayout;
@@ -39,7 +42,14 @@ FullScreenKeyboardDialog::FullScreenKeyboardDialog(KeyboardGraphicsView *parent)
     // select the current key
     keyboardView->setSelection(parent->getSelectedKeyIndex(), parent->getSelectedKeyState(), parent->getPreliminaryKey());
 
+    QDialogButtonBox *buttons = new QDialogButtonBox;
+    mDialogButtons = buttons;
+    layout->addWidget(buttons);
+    buttons->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
+
     QObject::connect(keyboardView, SIGNAL(selectionChanged(int8_t)), this, SLOT(accept()));
+    QObject::connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
+    QObject::connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 
     mKeyboardView = keyboardView;
 }
@@ -47,4 +57,17 @@ FullScreenKeyboardDialog::FullScreenKeyboardDialog(KeyboardGraphicsView *parent)
 FullScreenKeyboardDialog::~FullScreenKeyboardDialog()
 {
 
+}
+
+void FullScreenKeyboardDialog::reject() {
+    QDialog::reject();
+}
+
+void FullScreenKeyboardDialog::accept() {
+    int index = mKeyboardView->getSelectedKeyIndex();
+    KeyboardGraphicsView::KeyState state = mKeyboardView->getSelectedKeyState();
+
+    mParentKeyboardView->selectKey(index, state == KeyboardGraphicsView::KeyState::STATE_FORCED, true);
+
+    QDialog::accept();
 }

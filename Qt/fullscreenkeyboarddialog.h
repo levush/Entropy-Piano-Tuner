@@ -21,6 +21,7 @@
 #define FULLSCREENKEYBOARDDIALOG_H
 
 #include <QDialog>
+#include <QDialogButtonBox>
 
 class KeyboardGraphicsView;
 
@@ -56,10 +57,17 @@ public:
     KeyboardGraphicsView *getKeyboardView() {return mKeyboardView;}
 
 private slots:
+    void reject() override final;
+    void accept() override final;
 
 private:
     /// Pointer to the displayed KeyboardGraphicsView in fullscreen.
     KeyboardGraphicsView *mKeyboardView;
+
+    KeyboardGraphicsView *mParentKeyboardView;
+
+    /// button box
+    QDialogButtonBox *mDialogButtons;
 };
 
 #endif // FULLSCREENKEYBOARDDIALOG_H

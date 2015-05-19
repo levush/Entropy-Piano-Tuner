@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QGraphicsTextItem>
 #include <QGraphicsSimpleTextItem>
+#include <QScroller>
 #include "../core/system/eptexception.h"
 #include "../core/messages/messagekeyselectionchanged.h"
 #include "../core/messages/messagehandler.h"
@@ -81,6 +82,7 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
 
     if (mMode & MODE_SCROLLBAR) {
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        QScroller::grabGesture(this, QScroller::LeftMouseButtonGesture);
     }
 }
 
@@ -131,14 +133,19 @@ void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
     int newSelectedKey = getKeyAtPosition(event->pos());
 
     if (mMode & MODE_NORMAL) {
+        bool notifyListeners = true;
+        if (mMode & MODE_SCROLLBAR) {
+            // just select locally, dont send yet, this has to be dont by the dialog containing the keyboard itself.
+            notifyListeners = false;
+        }
         if (newSelectedKey == mSelectedKey) {
             if (mSelectedKeyState == KeyState::STATE_FORCED) {
-                deselectKey();
+                deselectKey(notifyListeners);
             } else {
-                selectKey(newSelectedKey, true);
+                selectKey(newSelectedKey, true, notifyListeners);
             }
         } else {
-            selectKey(newSelectedKey, false);
+            selectKey(newSelectedKey, false, notifyListeners);
         }
     } else if (mMode & MODE_CLICK_RAISES_FULLSCREEN) {
         FullScreenKeyboardDialog dia(this);
@@ -152,10 +159,13 @@ void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
 void KeyboardGraphicsView::mouseMoveEvent(QMouseEvent *event) {
     QGraphicsView::mouseMoveEvent(event);
 
-    if (event->buttons() & Qt::LeftButton) {
-        int newSelectedKey = getKeyAtPosition(event->pos());
-        if (newSelectedKey != mSelectedKey) {
-            selectKey(newSelectedKey, false);
+    if (mMode & MODE_SCROLLBAR) {
+    } else {
+        if (event->buttons() & Qt::LeftButton) {
+            int newSelectedKey = getKeyAtPosition(event->pos());
+            if (newSelectedKey != mSelectedKey) {
+                selectKey(newSelectedKey, false);
+            }
         }
     }
 }
@@ -495,7 +505,7 @@ void KeyboardGraphicsView::selectPrevious() {
     selectKey(std::max(0, mSelectedKey - 1), false);
 }
 
-void KeyboardGraphicsView::deselectKey() {
+void KeyboardGraphicsView::deselectKey(bool notifyListeners) {
     setFocus();
-    selectKey(-1, false);
+    selectKey(-1, false, notifyListeners);
 }
