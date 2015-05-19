@@ -630,6 +630,8 @@ void MainWindow::onTutorial() {
 
     QObject::connect(buttons, SIGNAL(rejected()), &helpDialog, SLOT(reject()));
 
+    QScroller::grabGesture(edit);
+
     // show maximized as default
     helpDialog.showMaximized();
     helpDialog.exec();
@@ -655,7 +657,6 @@ void MainWindow::onAbout() {
     text->setStyleSheet("background-color: transparent;");
     text->setFrameShape(QFrame::NoFrame);
     text->setOpenLinks(false);
-    text->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
     QObject::connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(onOpenAboutUrl(QUrl)));
     mainLayout->addWidget(text);
 
@@ -700,6 +701,8 @@ void MainWindow::onAbout() {
     QObject::connect(okButton, SIGNAL(clicked()), &d, SLOT(accept()));
 
     QScroller::grabGesture(text);
+    text->setReadOnly(true);
+    text->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 
     SHOW_DIALOG(&d);
 

@@ -101,7 +101,7 @@ SimpleFileDialog::SimpleFileDialog(Mode mode, QDir dir) :
 
     QObject::connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
     QObject::connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
-    QObject::connect(mFilesList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
+    QObject::connect(mFilesList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(accept()));
     QObject::connect(mFilesList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(onCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
     QObject::connect(this, SIGNAL(fileSelectionChanged(QString)), nameEdit, SLOT(setText(QString)));
 
