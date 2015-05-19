@@ -21,6 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QUrl>
 #include <QToolButton>
 #include <memory>
 #include "../core/system/prerequisites.h"
@@ -271,7 +272,7 @@ public slots:
     ///
     ///  If usually will open a web browser if url is a web link.
     ///////////////////////////////////////////////////////////////////////////////
-    void onOpenAboutUrl(QString url);
+    void onOpenAboutUrl(QUrl url);
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Slot to open the log viewer.

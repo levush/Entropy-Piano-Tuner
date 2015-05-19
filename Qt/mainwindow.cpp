@@ -640,6 +640,8 @@ void MainWindow::onManual() {
 
 void MainWindow::onAbout() {
     QDialog d(this);
+    QRect r(this->geometry());
+    d.setGeometry(r.left() + r.width() / 4, r.top() + r.height() / 4, r.width() / 2, r.height() / 2);
     d.setWindowTitle(tr("About"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(0);
@@ -647,49 +649,43 @@ void MainWindow::onAbout() {
 
     mainLayout->addWidget(new QLabel(QString("<h1>%1 %2</h1>").arg(tr("Entropy Piano Tuner"), EPT_VERSION_STRING)));
 
-    QHBoxLayout *iconTextLayout = new QHBoxLayout;
-    iconTextLayout->setMargin(0);
-    mainLayout->addLayout(iconTextLayout);
+    QString iconPath = ":/media/images/icon_256x256" + mIconPostfix + ".png";
+    QTextBrowser *text = new QTextBrowser;
+    text->setStyleSheet("background-color: transparent;");
+    text->setFrameShape(QFrame::NoFrame);
+    text->setOpenLinks(false);
+    QObject::connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(onOpenAboutUrl(QUrl)));
+    mainLayout->addWidget(text);
 
-    QLabel *icon = new QLabel;
-    icon->setPixmap(QPixmap(":/media/images/icon_256x256" + mIconPostfix + ".png"));
-    iconTextLayout->addWidget(icon);
-    icon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    const QString buildText = tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate));
+    const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
-    QVBoxLayout *textLayout = new QVBoxLayout;
-    textLayout->setMargin(0);
-    iconTextLayout->addLayout(textLayout);
+    QString dependenciesText;
+    dependenciesText.append("<a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
+    dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
+    dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
 
-    textLayout->addWidget(new QLabel(tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate))));
-    textLayout->addWidget(new QLabel(tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.")));
-    QString text = tr("Based on ");
-    text.append("<a href=\"Qt\">Qt</a>, <a href=\"fftw3\">fftw3</a>");
-    text.append(", <a href=\"tinyxml2\">tinyxml2</a>");
-    text.append(", <a href=\"RtMidi\">RtMidi</a>");
-    QLabel *depsText = new QLabel(text);
-    depsText->setWordWrap(true);
-    QObject::connect(depsText, SIGNAL(linkActivated(QString)), this, SLOT(onOpenAboutUrl(QString)));
-    textLayout->addWidget(depsText);
+    const QString copyrightText = tr("Copyright 2015 Dept. of Th. Phys. III, University of Würzburg. All rights reserved.");
+    const QString licenseText = tr("This software is licensed unter the terms of the %1. The source code can be accessed at %2.").
+            arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
+                "<a href=\"http://entropy-tuner.org/gitlink.html\">git</a>");
 
-    QLabel *copyright = new QLabel(tr("Copyright 2015 Dept. of Th. Phys. III, University of Würzburg. All rights reserved."));
-    copyright->setWordWrap(true);
-    textLayout->addWidget(copyright);
+    const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
 
-    QLabel *licenceText = new QLabel(tr("This software is licensed unter the terms of the %1. The source code can be accessed at %2.").arg("<a href=\"gpl\">GPLv3</a>", "<a href=\"source\">git</a>"));
-    licenceText->setWordWrap(true);
-    QObject::connect(licenceText, SIGNAL(linkActivated(QString)), this, SLOT(onOpenAboutUrl(QString)));
-    mainLayout->addWidget(licenceText);
+    auto makeParagraphTags = [](const QString &t) {return "<p>" + t + "</p>";};
+    QString completeText;
+    completeText.append("<html><img src=\"" + iconPath + "\" style=\"float: left;\"/>");
 
-    QLabel *warranty = new QLabel(tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."));
-    warranty->setWordWrap(true);
-    mainLayout->addWidget(warranty);
+    completeText.append(makeParagraphTags(buildText));
+    completeText.append(makeParagraphTags(buildByText));
+    completeText.append(makeParagraphTags(dependenciesText));
+    completeText.append(makeParagraphTags(copyrightText));
+    completeText.append(makeParagraphTags(licenseText));
+    completeText.append(makeParagraphTags(warrantyText));
 
-    copyright->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-    depsText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-    licenceText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-    warranty->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+    completeText.append("</html>");
 
-    mainLayout->addStretch();
+    text->setHtml(completeText);
 
     QHBoxLayout *okButtonLayout = new QHBoxLayout;
     okButtonLayout->setMargin(0);
@@ -706,17 +702,11 @@ void MainWindow::onAbout() {
     d.exec();
 }
 
-void MainWindow::onOpenAboutUrl(QString url) {
-    if (url == "Qt") {
+void MainWindow::onOpenAboutUrl(QUrl url) {
+    if (url.toString() == "Qt") {
         QMessageBox::aboutQt(this);
-    } else if (url == "fftw3") {
-        QDesktopServices::openUrl(QUrl("http://fftw.org"));
-    } else if (url == "tinyxml2") {
-        QDesktopServices::openUrl(QUrl("http://www.grinninglizard.com/tinyxml2"));
-    } else if (url == "source") {
-        QDesktopServices::openUrl(QUrl("http://entropy-tuner.org/gitlink.html"));
-    } else if (url == "gpl") {
-        QDesktopServices::openUrl(QUrl("http://www.gnu.org/licenses/gpl-3.0-standalone.html"));
+    } else {
+        QDesktopServices::openUrl(url);
     }
 }
 
