@@ -23,6 +23,9 @@
 #include "donotshowagainmessagebox.h"
 #include "options/optionsdialog.h"
 
+
+const QString SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH = "app/currentFileDialogPath";
+
 SettingsForQt::SettingsForQt()
     : mGuideEnabled(true),
       mApplicationRuns(0),

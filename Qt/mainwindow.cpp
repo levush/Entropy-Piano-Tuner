@@ -49,6 +49,7 @@
 #include <QTextBrowser>
 #include <QResource>
 #include <QDialogButtonBox>
+#include <QScroller>
 #include "qtconfig.h"
 #include "logforqt.h"
 #include "editpianosheetdialog.h"
@@ -654,6 +655,7 @@ void MainWindow::onAbout() {
     text->setStyleSheet("background-color: transparent;");
     text->setFrameShape(QFrame::NoFrame);
     text->setOpenLinks(false);
+    text->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
     QObject::connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(onOpenAboutUrl(QUrl)));
     mainLayout->addWidget(text);
 
@@ -697,6 +699,8 @@ void MainWindow::onAbout() {
 
     QObject::connect(okButton, SIGNAL(clicked()), &d, SLOT(accept()));
 
+    QScroller::grabGesture(text);
+
     SHOW_DIALOG(&d);
 
     d.exec();
@@ -711,7 +715,7 @@ void MainWindow::onOpenAboutUrl(QUrl url) {
 }
 
 void MainWindow::onViewLog() {
-    LogViewer logViewer;
+    LogViewer logViewer(this);
     logViewer.exec();
 }
 

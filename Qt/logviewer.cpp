@@ -20,6 +20,7 @@
 #include "logviewer.h"
 #include <QTextStream>
 #include <QFile>
+#include <QScroller>
 #include "../core/config.h"
 #include "logforqt.h"
 #include "filemanagerforqt.h"
@@ -32,6 +33,9 @@ LogViewer::LogViewer(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QRect p(parent->geometry());
+    setGeometry(p.left() + p.width() / 4, p.top() + p.height() / 4, p.width() / 2, p.height() / 2);
+
     QFile f(QString::fromStdString(FileManager::getSingleton().getLogFilePath(LogForQt::LOG_NAME)));
     if (!f.open(QFile::ReadOnly | QFile::Text)) return;
     QTextStream in(&f);
@@ -41,6 +45,8 @@ LogViewer::LogViewer(QWidget *parent) :
     ui->textBrowser->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 
     SHOW_DIALOG(this);
+
+    QScroller::grabGesture(ui->textBrowser);
 }
 
 LogViewer::~LogViewer()

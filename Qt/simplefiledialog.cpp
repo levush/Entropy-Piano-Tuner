@@ -29,6 +29,7 @@
 #include <QHeaderView>
 #include <QToolButton>
 #include <QMessageBox>
+#include <QScroller>
 
 #include "qtconfig.h"
 #include "core/system/eptexception.h"
@@ -113,6 +114,8 @@ SimpleFileDialog::SimpleFileDialog(Mode mode, QDir dir) :
             mNameEdit->setText(mFilesList->currentItem()->text(0));
         }
     }
+
+    QScroller::grabGesture(mFilesList);
 }
 
 QString SimpleFileDialog::getOpenFile(QDir dir) {

@@ -30,6 +30,7 @@
 #endif
 
 #include "qtconfig.h"
+#include "settingsforqt.h"
 #include "../core/system/log.h"
 #include "../core/config.h"
 #include "mainwindow.h"
@@ -79,13 +80,15 @@ std::string ProjectManagerForQt::getSavePath() {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
-    QDir().mkdir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QFileDialog d(mMainWindow, MainWindow::tr("Save"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
+    QString path(getCurrentPath());
+    QDir().mkdir(path);
+    QFileDialog d(mMainWindow, MainWindow::tr("Save"), path, MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
     d.setAcceptMode(QFileDialog::AcceptSave);
     d.setFileMode(QFileDialog::AnyFile);
     d.setDefaultSuffix("ept");
     SHOW_DIALOG(&d);
     if (d.exec() == QDialog::Accepted) {
+        setCurrentPath(d.directory().absolutePath());
         return d.selectedFiles().first().toStdString();
     } else {
         return std::string();
@@ -97,13 +100,15 @@ std::string ProjectManagerForQt::getOpenPath()  {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
-    QDir().mkdir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QFileDialog d(mMainWindow, MainWindow::tr("Open"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
+    QString path(getCurrentPath());
+    QDir().mkdir(path);
+    QFileDialog d(mMainWindow, MainWindow::tr("Open"), path, MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
     d.setAcceptMode(QFileDialog::AcceptOpen);
     d.setFileMode(QFileDialog::AnyFile);
     d.setDefaultSuffix("ept");
     SHOW_DIALOG(&d);
     if (d.exec() == QDialog::Accepted) {
+        setCurrentPath(d.directory().absolutePath());
         return d.selectedFiles().first().toStdString();
     } else {
         return std::string();
@@ -152,4 +157,15 @@ void ProjectManagerForQt::showOpenError() {
 
 void ProjectManagerForQt::showSaveError() {
     QMessageBox::critical(mMainWindow, MainWindow::tr("Error"), MainWindow::tr("File could not be saved."));
+}
+
+QString ProjectManagerForQt::getCurrentPath() const {
+    QSettings s;
+    return s.value(SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH, QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toString();
+}
+
+void ProjectManagerForQt::setCurrentPath(QString path) {
+    QSettings s;
+    s.setValue(SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH, path);
+    EptAssert(QDir(path).exists(), "Default path should exist.");
 }

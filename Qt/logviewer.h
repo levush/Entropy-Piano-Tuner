@@ -31,7 +31,7 @@ class LogViewer : public QDialog
     Q_OBJECT
 
 public:
-    explicit LogViewer(QWidget *parent = 0);
+    explicit LogViewer(QWidget *parent);
     ~LogViewer();
 
 private:
