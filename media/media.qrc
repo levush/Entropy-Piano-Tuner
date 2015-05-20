@@ -27,5 +27,6 @@
         <file>icons/preferences-system.png</file>
         <file>icons/help-about.png</file>
         <file>icons/help-contents.png</file>
+        <file>icons/help-context.png</file>
     </qresource>
 </RCC>

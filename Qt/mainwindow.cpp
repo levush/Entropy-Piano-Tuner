@@ -189,7 +189,11 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif  // __ANDROID__
 
 #if EPT_WHATS_THIS_ENABLED
-    ui->menuHelp->addAction(QWhatsThis::createAction(this));
+    QAction *whatsThisAction = QWhatsThis::createAction(this);
+    whatsThisAction->setIcon(QIcon(":/media/icons/help-context.png"));
+    whatsThisAction->setCheckable(true);
+    ui->menuHelp->addAction(whatsThisAction);
+    helpToolBar->addAction(whatsThisAction);
 #endif  // EPT_WHATS_THIS_ENABLED
 
     ui->actionGuide_enabled->setChecked(SettingsForQt::getSingleton().isGuideEnabled());
