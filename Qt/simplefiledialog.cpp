@@ -36,6 +36,7 @@
 #include "core/system/log.h"
 
 SimpleFileDialog::SimpleFileDialog(Mode mode, QDir dir) :
+    QDialog(0, Qt::Window),
     mMode(mode),
     mDir(dir)
 {

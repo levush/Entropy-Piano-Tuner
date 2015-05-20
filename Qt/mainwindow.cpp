@@ -586,7 +586,7 @@ void MainWindow::onOptions() {
 }
 
 void MainWindow::onTutorial() {
-    QDialog helpDialog(this);
+    QDialog helpDialog(this, Qt::Window);
 
     // if in non maximized mode, the dialog has a size of half the main window
     QRect mwRect(this->geometry());
@@ -642,7 +642,7 @@ void MainWindow::onManual() {
 }
 
 void MainWindow::onAbout() {
-    QDialog d(this);
+    QDialog d(this, Qt::Window);
     QRect r(this->geometry());
     d.setGeometry(r.left() + r.width() / 4, r.top() + r.height() / 4, r.width() / 2, r.height() / 2);
     d.setWindowTitle(tr("About"));

@@ -29,7 +29,7 @@
 #include "qtconfig.h"
 
 EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::Window),
     ui(new Ui::EditPianoSheetDialog)
 {
     ui->setupUi(this);

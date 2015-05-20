@@ -38,7 +38,7 @@
 namespace options {
 
 OptionsDialog::OptionsDialog(MainWindow *mainWindow)
-    : QDialog(mainWindow),
+    : QDialog(mainWindow, Qt::Window),
       mMainWindow(mainWindow),
       mCore(mainWindow->getCore()),
       mCentralWidget(0),
