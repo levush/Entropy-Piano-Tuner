@@ -12,9 +12,6 @@ const std::array<std::array<qreal, 4>, GraphicsKeyItem::COUNT> MARGINS {{ {{0, 0
 void GraphicsKeyItem::initShapes(qreal b_w, qreal b_h, qreal w_w, qreal w_h) {
     if (mKeyShapes[BLACK].elementCount() > 0) {return;}  // already initialized
 
-    QPainterPath &black = mKeyShapes[BLACK];
-    QPainterPath &white = mKeyShapes[WHITE];
-
     mKeyRects[BLACK] = QRectF(0, 0, b_w, b_h);
     mKeyRects[WHITE] = QRectF(0, 0, w_w, w_h);
 

@@ -85,7 +85,8 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
     setSizePolicy(p);
 
     if (mMode & MODE_SCROLLBAR) {
-        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        // scroll bar always off, looks nicer, since it is scrollable with the finger
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         QScroller::grabGesture(this, QScroller::LeftMouseButtonGesture);
     }
 }
