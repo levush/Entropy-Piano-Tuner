@@ -163,6 +163,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // main menu icons
+#if CONFIG_MENU_ICONS
     ui->action_New->setIcon(iconFromTheme("document-new"));
     ui->actionOpen->setIcon(iconFromTheme("document-open"));
     ui->actionSave->setIcon(iconFromTheme("document-save"));
@@ -174,6 +175,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionTutorial->setIcon(iconFromTheme("help-contents"));
     ui->actionView_log->setIcon(iconFromTheme("accessories-text-editor"));
     ui->actionAbout->setIcon(iconFromTheme("help-about"));
+#endif
 
 #if __APPLE__
 #   if defined(TARGET_IPHONE_SIMULATOR) || defined(TARGET_OS_IPHONE)

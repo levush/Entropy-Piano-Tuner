@@ -28,16 +28,10 @@ void GraphicsKeyItem::initShapes(qreal b_w, qreal b_h, qreal w_w, qreal w_h) {
         mKeyShapes[i].setFillRule(Qt::WindingFill);
         mKeyShapes[i] = mKeyShapes[i].simplified();
     }
-
-    // mFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    mFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-    mFont.setPixelSize(10);
-    mFont.setStyleStrategy(QFont::PreferAntialias);
 }
 
 std::array<QPainterPath, GraphicsKeyItem::COUNT> GraphicsKeyItem::mKeyShapes;
 std::array<QRectF, GraphicsKeyItem::COUNT> GraphicsKeyItem::mKeyRects;
-QFont GraphicsKeyItem::mFont;
 
 GraphicsKeyItem::GraphicsKeyItem(KeyType type, const QString &text, const QColor &textColor) :
     QGraphicsRectItem(mKeyRects[type]),

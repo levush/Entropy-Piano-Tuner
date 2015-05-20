@@ -414,6 +414,9 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
     shadowItem->setPos(0, KEY_SPACING_TO_MARKERS);
 
 
+    // font for keys
+    QFont keyFont;
+    keyFont.setPixelSize(12);
 
     for (int8_t i = 0; i < (int8_t)(mMarkerPixmapItems.size()); i++) {
         auto keyColorType = mKeyboard->getKeyColor(i);
@@ -459,10 +462,11 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         QRectF shape(keyShape(i));
         QPointF pos(shape.topLeft());
         shape.setTopLeft(QPointF(0, 0));
-        QGraphicsRectItem *item = new GraphicsKeyItem(keyType, keyText, textColor);
+        GraphicsKeyItem *item = new GraphicsKeyItem(keyType, keyText, textColor);
         mScene.addItem(item);
         item->setPos(pos);
         item->setBrush(QBrush(keyColor));
+        item->setFont(keyFont);
 
         item->setPen(borderpen);
         mKeysGraphicsItems[i] = item;

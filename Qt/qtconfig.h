@@ -30,5 +30,12 @@
 #   define SHOW_DIALOG(d) {(d)->showNormal();}
 #endif
 
+// icons for menu?
+#if __APPLE__
+#   define CONFIG_MENU_ICONS 0
+#else
+#   define CONFIG_MENU_ICONS 1
+#endif
+
 #endif // QTCONFIG_H
 
