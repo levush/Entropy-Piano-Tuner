@@ -130,7 +130,7 @@ HEADERS  += \
     Qt/tunerapplication.h \
     Qt/fourierspectrumgraph.h \
     Qt/tuningcurvegraph.h \
-    Qt/autoscaledtokeyboardgraphicsview.h \
+    Qt/keyboard/autoscaledtokeyboardgraphicsview.h \
     Qt/zoomedspectrumgraphicsview.h \
     Qt/graphicsviewadapterforqt.h \
     Qt/projectmanagerforqt.h \
@@ -145,7 +145,7 @@ HEADERS  += \
     Qt/guidescreenplay.h \
     Qt/settingsforqt.h \
     Qt/options/optionsdialog.h \
-    Qt/keyboardgraphicsview.h \
+    Qt/keyboard/keyboardgraphicsview.h \
     Qt/options/optionscentralwidgetinterface.h \
     Qt/options/optionscontentswidgetinterface.h \
     Qt/options/audio/optionspageaudio.h \
@@ -155,7 +155,7 @@ HEADERS  += \
     Qt/options/environment/optionspageenvironmentgeneralpage.h \
     Qt/platformtools.h \
     Qt/donotshowagainmessagebox.h \
-    Qt/fullscreenkeyboarddialog.h \
+    Qt/keyboard/fullscreenkeyboarddialog.h \
     Qt/calculationprogressgroup.h \
     Qt/androidnativewrapper.h \
     Qt/recordingqualitybar.h \
@@ -175,7 +175,8 @@ HEADERS  += \
     Qt/doubleslider.h \
     Qt/simplefiledialog.h \
     Qt/algorithmdialog.h \
-    Qt/qtconfig.h
+    Qt/qtconfig.h \
+    Qt/keyboard/graphicskeyitem.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -184,7 +185,7 @@ SOURCES +=  \
     Qt/tunerapplication.cpp \
     Qt/fourierspectrumgraph.cpp \
     Qt/tuningcurvegraph.cpp \
-    Qt/autoscaledtokeyboardgraphicsview.cpp \
+    Qt/keyboard/autoscaledtokeyboardgraphicsview.cpp \
     Qt/zoomedspectrumgraphicsview.cpp \
     Qt/graphicsviewadapterforqt.cpp \
     Qt/projectmanagerforqt.cpp \
@@ -199,7 +200,7 @@ SOURCES +=  \
     Qt/guidescreenplay.cpp \
     Qt/settingsforqt.cpp \
     Qt/options/optionsdialog.cpp \
-    Qt/keyboardgraphicsview.cpp \
+    Qt/keyboard/keyboardgraphicsview.cpp \
     Qt/options/optionscentralwidgetinterface.cpp \
     Qt/options/optionscontentswidgetinterface.cpp \
     Qt/options/audio/optionspageaudio.cpp \
@@ -209,7 +210,7 @@ SOURCES +=  \
     Qt/options/environment/optionspageenvironmentgeneralpage.cpp \
     Qt/platformtools.cpp \
     Qt/donotshowagainmessagebox.cpp \
-    Qt/fullscreenkeyboarddialog.cpp \
+    Qt/keyboard/fullscreenkeyboarddialog.cpp \
     Qt/calculationprogressgroup.cpp \
     Qt/androidnativewrapper.cpp \
     Qt/recordingqualitybar.cpp \
@@ -228,7 +229,8 @@ SOURCES +=  \
     core/calculation/algorithminformationparser.cpp \
     Qt/doubleslider.cpp \
     Qt/simplefiledialog.cpp \
-    Qt/algorithmdialog.cpp
+    Qt/algorithmdialog.cpp \
+    Qt/keyboard/graphicskeyitem.cpp
 
 #------------- Message system --------------------
 

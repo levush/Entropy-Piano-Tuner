@@ -173,6 +173,8 @@ void SimpleFileDialog::onDeleteFile() {
 }
 
 void SimpleFileDialog::onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
+    Q_UNUSED(previous);
+
     if (!current) {
         emit fileSelectionChanged(QString());
     } else {

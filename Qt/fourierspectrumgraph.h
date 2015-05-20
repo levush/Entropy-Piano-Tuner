@@ -20,7 +20,7 @@
 #ifndef FOURIERSPECTRUMGRAPH_H
 #define FOURIERSPECTRUMGRAPH_H
 
-#include "autoscaledtokeyboardgraphicsview.h"
+#include "keyboard/autoscaledtokeyboardgraphicsview.h"
 #include "../core/drawers/fourierspectrumgraphdrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////

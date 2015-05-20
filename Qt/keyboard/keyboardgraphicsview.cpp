@@ -27,14 +27,15 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsSimpleTextItem>
 #include <QScroller>
-#include "../core/system/eptexception.h"
-#include "../core/messages/messagekeyselectionchanged.h"
-#include "../core/messages/messagehandler.h"
-#include "../core/messages/messagepreliminarykey.h"
-#include "../core/messages/messagekeydatachanged.h"
-#include "../core/messages/messageprojectfile.h"
-#include "../core/piano/piano.h"
+#include "core/system/eptexception.h"
+#include "core/messages/messagekeyselectionchanged.h"
+#include "core/messages/messagehandler.h"
+#include "core/messages/messagepreliminarykey.h"
+#include "core/messages/messagekeydatachanged.h"
+#include "core/messages/messageprojectfile.h"
+#include "core/piano/piano.h"
 #include "autoscaledtokeyboardgraphicsview.h"
+#include "keyboard/graphicskeyitem.h"
 #include "fullscreenkeyboarddialog.h"
 
 const qreal KeyboardGraphicsView::GLOBAL_SCALING = 1;
@@ -65,6 +66,9 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
       mSelectedKeyState(KeyState::STATE_NORMAL),
       mPreliminaryKey(-1),
       mKeyNumberOfA(-1) {
+    GraphicsKeyItem::initShapes(KEY_WIDTH, KEY_HEIGHT * KEY_BLACK_TO_WHITE_RATIO,
+                                KEY_WHITE_KEY_SIZE, KEY_HEIGHT);
+
     setScene(&mScene);
 
     // antialiasing for nice lines
@@ -400,11 +404,20 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
     mKeysGraphicsItems.resize(keys);
     mMarkerPixmapItems.resize(keys);
 
-    QFont textFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    textFont.setPixelSize(12);
-    textFont.setStyleStrategy(QFont::PreferAntialias);
+    // big gradient as shadow
+    QLinearGradient shadowGradient(0, 0, 0, KEY_HEIGHT);
+    shadowGradient.setSpread(QGradient::PadSpread);
+    shadowGradient.setColorAt(0.9, Qt::black);
+    shadowGradient.setColorAt(1, Qt::transparent);
+    QGraphicsRectItem *shadowItem = mScene.addRect(0, 0, KEY_WIDTH * keys, KEY_HEIGHT, Qt::NoPen, QBrush(shadowGradient));
+    shadowItem->setPos(0, KEY_SPACING_TO_MARKERS);
+
+
 
     for (int8_t i = 0; i < (int8_t)(mMarkerPixmapItems.size()); i++) {
+        auto keyColorType = mKeyboard->getKeyColor(i);
+        QString keyText = QString::fromStdString(mKeyboard->getNoteName(i));
+
         QPen borderpen(QBrush(Qt::black), PEN_THIN_LINE);
         borderpen.setCosmetic(true);
 
@@ -417,39 +430,46 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         pixmapItem->setTransformationMode(Qt::SmoothTransformation);
         mMarkerPixmapItems[i] = pixmapItem;
 
-        // key rects
-        QGraphicsRectItem *item = mScene.addRect(keyShape(i));
+        // just paint A's, looks nicer. Remove clear lines, to paint all names
+        QColor keyColor;
+        QColor textColor;
+        if (keyColorType == Keyboard::Black) {
+            // black
+            keyColor = Qt::darkGray;
+            keyColor = keyColor.darker(350);
+            textColor = Qt::darkGray;
+            keyText.clear();
+        } else {
+            // white key
+            keyColor = Qt::white;
 
+            // only A's are black, all others are gray
+            if ((i + 1200 - mKeyNumberOfA) % 12 == 0) {
+                textColor = Qt::black;
+            } else {
+                textColor = Qt::lightGray;
+                keyText.clear();
+            }
+        }
+
+        GraphicsKeyItem::KeyType keyType = (keyColorType == Keyboard::Black) ? GraphicsKeyItem::KeyType::BLACK : GraphicsKeyItem::KeyType::WHITE;
+
+        // key rects
+        QRectF shape(keyShape(i));
+        QPointF pos(shape.topLeft());
+        shape.setTopLeft(QPointF(0, 0));
+        QGraphicsRectItem *item = new GraphicsKeyItem(keyType, keyText, textColor);
+        mScene.addItem(item);
+        item->setPos(pos);
+        item->setBrush(QBrush(keyColor));
 
         item->setPen(borderpen);
         mKeysGraphicsItems[i] = item;
 
-
-
-        QGraphicsSimpleTextItem *textItem = mScene.addSimpleText(QString::fromStdString(mKeyboard->getNoteName(i)), textFont);
-        textItem->setPos(item->rect().left() + item->rect().width() / 2 - textFont.pixelSize() * 0.55, item->rect().bottom() - 5);
-        textItem->setRotation(-90);
-        textItem->setZValue(10);
-        textItem->setAcceptedMouseButtons(0);
-
-        // colors
-        if (mKeyboard->getKeyColor(i) == Keyboard::Black) {
-            // black
-            item->setBrush(QBrush(Qt::black));
-            textItem->setBrush(QBrush(Qt::darkGray));
-            item->setZValue(1);  // on top of white keys
-        } else {
-            // white key
-            item->setBrush(QBrush(Qt::white));
-
-            // only A's are black, all others are gray
-            if ((i + 1200 - mKeyNumberOfA) % 12 == 0) {
-                textItem->setBrush(QBrush(Qt::black));
-            } else {
-                textItem->setBrush(QBrush(Qt::lightGray));
-            }
+        if (keyColorType == Keyboard::Black) {
+            item->setZValue(1);
         }
-    }
+   }
 
     // redrawAllMarkers();
 

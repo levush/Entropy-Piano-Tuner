@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "tuningcurvegraph.h"
-#include "keyboardgraphicsview.h"
+#include "keyboard/keyboardgraphicsview.h"
 #include "../core/messages/message.h"
 #include "../core/messages/messagehandler.h"
 #include "../core/messages/messagekeyselectionchanged.h"

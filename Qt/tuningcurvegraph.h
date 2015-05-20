@@ -20,7 +20,7 @@
 #ifndef TUNINGCURVEGRAPH_H
 #define TUNINGCURVEGRAPH_H
 
-#include "autoscaledtokeyboardgraphicsview.h"
+#include "keyboard/autoscaledtokeyboardgraphicsview.h"
 #include <QGraphicsPathItem>
 #include "../core/drawers/tuningcurvegraphdrawer.h"
 
