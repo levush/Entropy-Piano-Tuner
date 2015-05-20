@@ -129,18 +129,21 @@ MainWindow::MainWindow(QWidget *parent) :
     mModeToolButtons[MODE_CALCULATION] = calculatingButton;
     mModeToolButtons[MODE_TUNING] = tuningButton;
 
+    // helper function to get default icon from system or from local icon theme
+    auto iconFromTheme = [](const QString &s)  {return QIcon::fromTheme(s, QIcon(":/media/icons/" + s + ".png"));};
+
     // file tool bar, containing most relevant buttons
     mFileToolBar = new QToolBar(tr("Documents and tools"));
     addToolBar(Qt::TopToolBarArea, mFileToolBar);
     mFileToolBar->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea);
     mFileToolBar->setMovable(false);
     mFileToolBar->setIconSize(QSize(iconSize, iconSize) * 1.5);
-    mFileToolBar->addAction(QIcon::fromTheme("document-new", QIcon(":/media/icons/document-new.png")), tr("New"), this, SLOT(onFileNew()));
-    mFileToolBar->addAction(QIcon::fromTheme("document-open", QIcon(":/media/icons/document-open.png")), tr("Open"), this, SLOT(onFileOpen()));
-    mFileToolBar->addAction(QIcon::fromTheme("document-save", QIcon(":/media/icons/document-save.png")), tr("Save"), this, SLOT(onFileSave()));
-    mFileToolBar->addAction(QIcon::fromTheme("document-save-as", QIcon(":/media/icons/document-save-as.png")), tr("Save as"), this, SLOT(onFileSaveAs()));
-    mFileToolBar->addAction(QIcon::fromTheme("document-properties", QIcon(":/media/icons/document-properties.png")), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
-    mFileToolBar->addAction(QIcon::fromTheme("preferences-system", QIcon(":/media/icons/preferences-system.png")), tr("Options"), this, SLOT(onOptions()));
+    mFileToolBar->addAction(iconFromTheme("document-new"), tr("New"), this, SLOT(onFileNew()));
+    mFileToolBar->addAction(iconFromTheme("document-open"), tr("Open"), this, SLOT(onFileOpen()));
+    mFileToolBar->addAction(iconFromTheme("document-save"), tr("Save"), this, SLOT(onFileSave()));
+    mFileToolBar->addAction(iconFromTheme("document-save-as"), tr("Save as"), this, SLOT(onFileSaveAs()));
+    mFileToolBar->addAction(iconFromTheme("document-properties"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
+    mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
 
     QToolBar *helpToolBar = new QToolBar(tr("Help"));
     addToolBar(Qt::TopToolBarArea, helpToolBar);
@@ -154,9 +157,23 @@ MainWindow::MainWindow(QWidget *parent) :
     tbStretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);
     tbStretch->setVisible(true);
 
-    helpToolBar->addAction(QIcon::fromTheme("help-contents", QIcon(":/media/icons/help-content.png")), tr("Tutorial"), this, SLOT(onTutorial()));
-    helpToolBar->addAction(QIcon::fromTheme("accessories-text-editor", QIcon(":/media/icons/accessories-text-editor")), tr("Log"), this, SLOT(onViewLog()));
-    helpToolBar->addAction(QIcon::fromTheme("help-about", QIcon(":/media/icons/info_icon.png")), tr("About"), this, SLOT(onAbout()));
+    helpToolBar->addAction(iconFromTheme("help-contents"), tr("Tutorial"), this, SLOT(onTutorial()));
+    helpToolBar->addAction(iconFromTheme("accessories-text-editor"), tr("Log"), this, SLOT(onViewLog()));
+    helpToolBar->addAction(iconFromTheme("help-about"), tr("About"), this, SLOT(onAbout()));
+
+
+    // main menu icons
+    ui->action_New->setIcon(iconFromTheme("document-new"));
+    ui->actionOpen->setIcon(iconFromTheme("document-open"));
+    ui->actionSave->setIcon(iconFromTheme("document-save"));
+    ui->actionSave_As->setIcon(iconFromTheme("document-save-as"));
+    ui->actionExit->setIcon(iconFromTheme("application-exit"));
+    ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("document-properties"));
+    ui->actionReset_recoding->setIcon(iconFromTheme("edit-clear"));
+    ui->actionOptions->setIcon(iconFromTheme("preferences-system"));
+    ui->actionTutorial->setIcon(iconFromTheme("help-contents"));
+    ui->actionView_log->setIcon(iconFromTheme("accessories-text-editor"));
+    ui->actionAbout->setIcon(iconFromTheme("help-about"));
 
 #if __APPLE__
 #   if defined(TARGET_IPHONE_SIMULATOR) || defined(TARGET_OS_IPHONE)

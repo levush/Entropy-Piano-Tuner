@@ -543,41 +543,21 @@
    </attribute>
   </widget>
   <action name="actionOpen">
-   <property name="icon">
-    <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Open</string>
    </property>
   </action>
   <action name="actionSave">
-   <property name="icon">
-    <iconset theme="document-save">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Save</string>
    </property>
   </action>
   <action name="actionExit">
-   <property name="icon">
-    <iconset theme="application-exit">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>E&amp;xit</string>
    </property>
   </action>
   <action name="actionAbout">
-   <property name="icon">
-    <iconset theme="help-about">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>About</string>
    </property>
@@ -588,31 +568,16 @@
    </property>
   </action>
   <action name="actionSave_As">
-   <property name="icon">
-    <iconset theme="document-save-as">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>Save &amp;As</string>
    </property>
   </action>
   <action name="action_New">
-   <property name="icon">
-    <iconset theme="document-new">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;New</string>
    </property>
   </action>
   <action name="actionEdit_piano_data_sheet">
-   <property name="icon">
-    <iconset theme="document-properties">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Edit piano data sheet</string>
    </property>
@@ -649,11 +614,6 @@
    </property>
   </action>
   <action name="actionReset_recoding">
-   <property name="icon">
-    <iconset theme="edit-clear">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>&amp;Reset recoding</string>
    </property>
@@ -664,11 +624,6 @@
    </property>
   </action>
   <action name="actionTutorial">
-   <property name="icon">
-    <iconset theme="help-contents">
-     <normaloff/>
-    </iconset>
-   </property>
    <property name="text">
     <string>Tutorial</string>
    </property>

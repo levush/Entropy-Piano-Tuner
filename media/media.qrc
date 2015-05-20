@@ -19,13 +19,13 @@
         <file>icons/edit-clear.png</file>
         <file>icons/help-browser.png</file>
         <file>icons/user-desktop.png</file>
-        <file>icons/help-content.png</file>
         <file>icons/wrest.png</file>
         <file>icons/note.png</file>
         <file>icons/system-idle.png</file>
         <file>icons/menu.png</file>
         <file>icons/edit-delete.png</file>
         <file>icons/preferences-system.png</file>
-        <file>icons/info_icon.png</file>
+        <file>icons/help-about.png</file>
+        <file>icons/help-contents.png</file>
     </qresource>
 </RCC>
