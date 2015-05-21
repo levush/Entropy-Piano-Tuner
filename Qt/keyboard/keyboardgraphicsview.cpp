@@ -369,7 +369,7 @@ QColor KeyboardGraphicsView::getKeyColor(bool isWhite, bool selected, bool doubl
     if (isWhite) {
         return QColor(Qt::white);
     }
-    return QColor(Qt::black);
+    return QColor(Qt::black).darker(350);
 }
 
 QRectF KeyboardGraphicsView::keyShape(int8_t key0) {
@@ -435,18 +435,14 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         mMarkerPixmapItems[i] = pixmapItem;
 
         // just paint A's, looks nicer. Remove clear lines, to paint all names
-        QColor keyColor;
+        QColor keyColor = getKeyColor(keyColorType == Keyboard::White, false, false, false);
         QColor textColor;
         if (keyColorType == Keyboard::Black) {
             // black
-            keyColor = Qt::darkGray;
-            keyColor = keyColor.darker(350);
             textColor = Qt::darkGray;
             keyText.clear();
         } else {
             // white key
-            keyColor = Qt::white;
-
             // only A's are black, all others are gray
             if ((i + 1200 - mKeyNumberOfA) % 12 == 0) {
                 textColor = Qt::black;

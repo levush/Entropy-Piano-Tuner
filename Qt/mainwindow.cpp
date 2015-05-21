@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     int iconSize = ui->modeToolBar->fontMetrics().height();
+    ui->modeToolBar->setObjectName("modeToolBar");
     ui->modeToolBar->setIconSize(QSize(iconSize, iconSize) * 2);
 
 
@@ -134,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // file tool bar, containing most relevant buttons
     mFileToolBar = new QToolBar(tr("Documents and tools"));
+    mFileToolBar->setObjectName("fileToolBar");
     addToolBar(Qt::TopToolBarArea, mFileToolBar);
     mFileToolBar->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea);
     mFileToolBar->setMovable(false);
@@ -146,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
 
     QToolBar *helpToolBar = new QToolBar(tr("Help"));
+    helpToolBar->setObjectName("helpToolBar");
     addToolBar(Qt::TopToolBarArea, helpToolBar);
     helpToolBar->setMovable(false);
     helpToolBar->setFloatable(false);
@@ -298,9 +301,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
         settings.setValue("splitterSizes/graphSplitter", sizes);
 #endif
 
-
-
-        mCore->exit();
         event->accept();
         QMainWindow::closeEvent(event);
     } else {

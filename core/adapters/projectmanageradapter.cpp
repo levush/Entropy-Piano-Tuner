@@ -192,7 +192,10 @@ bool ProjectManagerAdapter::onQuit() {
             return false;
         default:
             // save the file
-            onSaveFile();
+            if (onSaveFile() == R_CANCELED) {
+                // cancel aswell
+                return R_CANCELED;
+            }
             break;
         }
     }
