@@ -2,5 +2,6 @@
     <qresource prefix="/tutorial">
         <file>tutorial_de.html</file>
         <file>tutorial_en.html</file>
+        <file>tutorial_pt.html</file>
     </qresource>
 </RCC>
