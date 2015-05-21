@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>498</width>
-        <height>471</height>
+        <width>512</width>
+        <height>462</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -269,7 +269,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="pianoType">
             <item>
              <property name="text">
               <string>Grand</string>

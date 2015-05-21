@@ -22,16 +22,12 @@
 
 #include <string>
 #include "key.h"
+#include "pianodefines.h"
 
 class Keyboard
 {
 public:
     using Keys = std::vector<Key>;
-
-    enum KeyColor {
-        Black,
-        White
-    };
 
 public:
     Keyboard(size_t initialSize = 88);
@@ -53,7 +49,7 @@ public:
     Keys &getKeys() {return mKeys;}
 
     std::string getNoteName(int key) const;
-    KeyColor getKeyColor(int k) const;
+    piano::KeyColor getKeyColor(int k) const;
 
     void setNumberOfKeys(int keys, int keyNumberOfA);
     int getNumberOfKeys() const {return static_cast<int>(size());}

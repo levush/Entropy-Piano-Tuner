@@ -28,6 +28,7 @@
 #include <fstream>
 
 #include "keyboard.h"
+#include "pianodefines.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -43,13 +44,6 @@ public:
     static const int DEFAULT_KEY_NUMBER_OF_A;
     static const double DEFAULT_CONCERT_PITCH;    ///< default concert pitch of A
 
-    /// Enumeration of piano types
-    enum PianoType
-    {
-        GRAND_PIANO = 0,                          ///< The piano is a grand piano
-        UPGRIGHT_PIANO,                           ///< The piano is a upgright piano
-    };
-
 public:
     Piano();
     ~Piano() {};
@@ -61,9 +55,9 @@ public:
     void setName(const std::string &name) {mName = name;}
     const std::string &getName() const {return mName;}
 
-    void setType(PianoType type) {mType = type;}
-    PianoType getPianoType() const {return mType;}
-    PianoType &getPianoType() {return mType;}
+    void setType(piano::PianoType type) {mType = type;}
+    piano::PianoType getPianoType() const {return mType;}
+    piano::PianoType &getPianoType() {return mType;}
 
     void setSerialNumber(const std::string &number) {mSerialNumber = number;}
     const std::string &getSerialNumber() const {return mSerialNumber;}
@@ -111,7 +105,7 @@ private:
     /// name of the real piano
     std::string mName;
     /// type of the real piano
-    PianoType mType;
+    piano::PianoType mType;
     /// serial number of the real piano
     std::string mSerialNumber;
     /// manufaction year of the real piano

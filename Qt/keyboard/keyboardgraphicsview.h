@@ -80,14 +80,9 @@ public:
         MODE_FULLSCREEN = MODE_NORMAL | MODE_SCROLLBAR,
     };
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief The KeyState enum
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    enum class KeyState {
-        STATE_NORMAL = 0,            ///< Normal state
-        STATE_FORCED,                ///< Key is forced
-    };
+private:
+    using KeyState = piano::KeyState;
+    using KeyColor = piano::KeyColor;
 
 public:
     ///////////////////////////////////////////////////////////////////////////////
@@ -175,15 +170,15 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Function to select or deselect a key.
-    /// \param key0 : The key index to select or -1.
-    /// \param doubleClick : Double klick will force the key.
-    /// \param notifyMessageListeners : Notiy the message listeners by sending a
-    ///                                 message
+    /// \param key0 The key index to select or -1.
+    /// \param keyState The state of the key.
+    /// \param notifyMessageListeners Notiy the message listeners by sending a
+    ///                               message
     ///
     /// The current selected key is stored in mSelectedKey and its state in
     /// mSelectedKeyState.
     ///////////////////////////////////////////////////////////////////////////////
-    void selectKey(int8_t key0, bool doubleClick, bool notifyMessageListeners = true);
+    void selectKey(int8_t key0, KeyState keyState, bool notifyMessageListeners = true);
 
 protected:
     ///////////////////////////////////////////////////////////////////////////////
@@ -284,14 +279,14 @@ private:
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Function to get the key color.
-    /// \param isWhite Is this a white or a black key?
+    /// \param color The color of the key.
     /// \param selected Is the key selected?
-    /// \param doubleClick Is the key forced?
+    /// \param keyState The state of the key.
     /// \param recorded Is the key recorded?
     /// \return A QColor for the key
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    QColor getKeyColor(bool isWhite, bool selected, bool doubleClick, bool recorded);
+    QColor getKeyColor(piano::KeyColor color, bool selected, KeyState keyState, bool recorded);
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Returns a QRectF as shape of the given key.

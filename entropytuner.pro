@@ -176,7 +176,8 @@ HEADERS  += \
     Qt/simplefiledialog.h \
     Qt/algorithmdialog.h \
     Qt/qtconfig.h \
-    Qt/keyboard/graphicskeyitem.h
+    Qt/keyboard/graphicskeyitem.h \
+    core/piano/pianodefines.h
 
 SOURCES +=  \
     Qt/main.cpp\

@@ -78,8 +78,10 @@ std::string Keyboard::getNoteName(int key) const {
 
 // Tells whether the key index k is black or white
 
-Keyboard::KeyColor Keyboard::getKeyColor(int k) const {
-    const Keyboard::KeyColor scheme[12] =
+piano::KeyColor Keyboard::getKeyColor(int k) const {
+    const piano::KeyColor White = piano::KC_WHITE;
+    const piano::KeyColor Black = piano::KC_BLACK;
+    const piano::KeyColor scheme[12] =
     {White, Black, White, Black, White, White, Black, White, Black, White, Black, White};
     return scheme[(k + 9 + (12 * 100 - getKeyNumberOfA4())) % 12];
 }

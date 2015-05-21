@@ -35,6 +35,7 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->setupUi(this);
 
     ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
+    ui->pianoType->setCurrentIndex(piano.getPianoType());
     ui->serialNumberLineEdit->setText(QString::fromStdString(piano.getSerialNumber()));
     // we only need the year
     ui->yearEdit->setDate(QDate(QString::fromStdString(piano.getManufactionYear()).toInt(), 1, 1));
@@ -61,6 +62,7 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
     assert(piano);
 
     piano->setName(ui->nameLineEdit->text().toStdString());
+    piano->setType(static_cast<piano::PianoType>(ui->pianoType->currentIndex()));
     piano->setSerialNumber(ui->serialNumberLineEdit->text().toStdString());
     // we only need the year
     piano->setManufactureYear(QString("%1").arg(ui->yearEdit->date().year()).toStdString());

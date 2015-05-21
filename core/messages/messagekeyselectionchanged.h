@@ -21,23 +21,26 @@
 #define MESSAGEKEYSELECTIONCHANGED_H
 
 #include "message.h"
+#include "../piano/pianodefines.h"
 #include "../piano/key.h"
 #include <cstdint>
 
 class MessageKeySelectionChanged : public Message
 {
 public:
-    MessageKeySelectionChanged(int index, const Key *key, bool force = false);
+    MessageKeySelectionChanged(int index, const Key *key, piano::KeyState keyState = piano::STATE_NORMAL);
     ~MessageKeySelectionChanged();
 
     int getKeyNumber() const {return mIndex;}
     const Key *getKey() const {return mKey;}
-    bool isForced() const {return mForce;}
+    piano::KeyState getKeyState() const {return mKeyState;}
+
+    bool isForced() const {return mKeyState == piano::STATE_FORCED;}
 
 private:
     const int mIndex;
     const Key *mKey;
-    const bool mForce;
+    const piano::KeyState mKeyState;
 };
 
 #endif // MESSAGEKEYSELECTIONCHANGED_H

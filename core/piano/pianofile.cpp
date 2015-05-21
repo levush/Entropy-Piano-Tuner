@@ -142,7 +142,7 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
 
     e->QueryDoubleAttribute("concertPitch", &piano.getConcertPitch());
     e->QueryIntAttribute("type", &type);
-    piano.setType(static_cast<Piano::PianoType>(type));
+    piano.setType(static_cast<piano::PianoType>(type));
 
     for (const tinyxml2::XMLElement *data = e->FirstChildElement(); data;
          data = data->NextSiblingElement()) {

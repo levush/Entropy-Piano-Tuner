@@ -19,11 +19,11 @@
 
 #include "messagekeyselectionchanged.h"
 
-MessageKeySelectionChanged::MessageKeySelectionChanged(int index, const Key *key, bool force)
+MessageKeySelectionChanged::MessageKeySelectionChanged(int index, const Key *key, piano::KeyState keyState)
     : Message(MSG_KEY_SELECTION_CHANGED),
       mIndex(index),
       mKey(key),
-      mForce(force) {
+      mKeyState(keyState) {
 }
 
 MessageKeySelectionChanged::~MessageKeySelectionChanged()
