@@ -241,19 +241,20 @@ void Synthesizer::GenerateWaveform ()
         }
         snd.amplitude = amplitude;
 
-        // compute stereo amplitude factors
-        double left=sqrt(1-snd.stereo), right=sqrt(snd.stereo);
-        double shift = snd.clock;
-
         int64_t c = static_cast<int64_t>(100*SampleRate);
         int64_t d = static_cast<int64_t>(SineLength);
         int64_t n = static_cast<int64_t>(samples);
+
+        // compute stereo amplitude factors
+        double left=sqrt(0.7-0.4*snd.stereo), right=sqrt(0.3+0.4*snd.stereo);
+        int64_t phase = static_cast<int64_t>((snd.stereo-0.5)*SampleRate)/800;
+        double shift = snd.clock;
 
         // time-critical loop
         for (auto &mode : snd.fouriermodes)
         {
             int64_t a = static_cast<int64_t>(100.0*mode.first*SineLength);
-            int64_t b = static_cast<int64_t>(100.0*mode.first*shift*SineLength);
+            int64_t b = static_cast<int64_t>(100.0*(mode.first*shift+100)*SineLength) + 100*d*c;
 
             if (channels==1)
             {
@@ -265,9 +266,9 @@ void Synthesizer::GenerateWaveform ()
 
                 for (int64_t i = 0; i < n; i++)
                 {
-                    double signal = amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
-                    buffer[2*i]   += left*signal;
-                    buffer[2*i+1] += right*signal;
+                    //double signal = amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
+                    buffer[2*i]   += left*amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
+                    buffer[2*i+1] += right*amplitudes[i]*mode.second*sinewave[((a*(i+phase)+b)/c)%d];
                 }
             }
         }
