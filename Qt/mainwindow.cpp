@@ -686,7 +686,7 @@ void MainWindow::onAbout() {
     const QString buildText = tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate));
     const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
-    QString dependenciesText = tr("Based on: ");
+    QString dependenciesText = tr("Based on ");
     dependenciesText.append("<a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
     dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
     dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
