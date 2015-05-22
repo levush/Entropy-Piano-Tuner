@@ -545,7 +545,7 @@ void SignalAnalyzer::signalProcessing(FFTWVector &signal, int samplingrate) {
     // of course if the user forced the key, this should not work
     int identifiedKey = identifySelectedKey();
     if (!mKeyForced && abs(identifiedKey - mSelectedKey) == 1 && identifiedKey != -1) {
-        MessageHandler::sendUnique<MessageKeySelectionChanged>(identifiedKey, mPiano->getKeyPtr(identifiedKey), false);
+        MessageHandler::sendUnique<MessageKeySelectionChanged>(identifiedKey, mPiano->getKeyPtr(identifiedKey));
     }
 }
 

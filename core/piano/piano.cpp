@@ -39,7 +39,7 @@ const double Piano::DEFAULT_CONCERT_PITCH = 440;
 
 Piano::Piano() :
     mName(""),
-    mType(GRAND_PIANO),
+    mType(piano::PT_GRAND),
     mSerialNumber(""),
     mManufactureYear(""),
     mManufactureLocation(""),

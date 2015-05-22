@@ -64,10 +64,9 @@ void FullScreenKeyboardDialog::reject() {
 }
 
 void FullScreenKeyboardDialog::accept() {
-    int index = mKeyboardView->getSelectedKeyIndex();
-    KeyboardGraphicsView::KeyState state = mKeyboardView->getSelectedKeyState();
-
-    mParentKeyboardView->selectKey(index, state == KeyboardGraphicsView::KeyState::STATE_FORCED, true);
+    mParentKeyboardView->selectKey(mKeyboardView->getSelectedKeyIndex(),
+                                   mKeyboardView->getSelectedKeyState(),
+                                   true);
 
     QDialog::accept();
 }

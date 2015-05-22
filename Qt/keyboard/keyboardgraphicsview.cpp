@@ -38,6 +38,11 @@
 #include "keyboard/graphicskeyitem.h"
 #include "fullscreenkeyboarddialog.h"
 
+using piano::STATE_FORCED;
+using piano::STATE_NORMAL;
+using piano::KC_BLACK;
+using piano::KC_WHITE;
+
 const qreal KeyboardGraphicsView::GLOBAL_SCALING = 1;
 const qreal KeyboardGraphicsView::PEN_THIN_LINE = 1 * KeyboardGraphicsView::GLOBAL_SCALING;
 const qreal KeyboardGraphicsView::PEN_MEDIUM_LINE = 2 * KeyboardGraphicsView::GLOBAL_SCALING;
@@ -104,7 +109,7 @@ void KeyboardGraphicsView::setKeyboard(const Keyboard *kb) {
 }
 
 void KeyboardGraphicsView::setSelection(int key, KeyState state, int preliminary) {
-    selectKey(key, state == KeyState::STATE_FORCED, false);
+    selectKey(key, state, false);
     selectPreliminaryKey(preliminary);
 }
 
@@ -144,13 +149,13 @@ void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
             notifyListeners = false;
         }
         if (newSelectedKey == mSelectedKey) {
-            if (mSelectedKeyState == KeyState::STATE_FORCED) {
+            if (mSelectedKeyState == STATE_FORCED) {
                 deselectKey(notifyListeners);
             } else {
-                selectKey(newSelectedKey, true, notifyListeners);
+                selectKey(newSelectedKey, STATE_FORCED, notifyListeners);
             }
         } else {
-            selectKey(newSelectedKey, false, notifyListeners);
+            selectKey(newSelectedKey, STATE_NORMAL, notifyListeners);
         }
     } else if (mMode & MODE_CLICK_RAISES_FULLSCREEN) {
         FullScreenKeyboardDialog dia(this);
@@ -169,7 +174,7 @@ void KeyboardGraphicsView::mouseMoveEvent(QMouseEvent *event) {
         if (event->buttons() & Qt::LeftButton) {
             int newSelectedKey = getKeyAtPosition(event->pos());
             if (newSelectedKey != mSelectedKey) {
-                selectKey(newSelectedKey, false);
+                selectKey(newSelectedKey, STATE_NORMAL);
             }
         }
     }
@@ -179,7 +184,7 @@ void KeyboardGraphicsView::keyPressEvent(QKeyEvent *event) {
     QGraphicsView::keyPressEvent(event);
 
     if (event->key() == Qt::Key_Return) {
-        selectKey(mSelectedKey, true);
+        selectKey(mSelectedKey, STATE_FORCED);
     }
 }
 
@@ -187,7 +192,7 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
     switch (m->getType()) {
     case Message::MSG_KEY_SELECTION_CHANGED: {
         auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
-        selectKey(mksc->getKeyNumber(), mksc->isForced(), false);
+        selectKey(mksc->getKeyNumber(), mksc->getKeyState(), false);
         for (AutoScaledToKeyboardGraphicsView *scaledViews : mAutoScaledGraphicsViews) {
             scaledViews->highlightKey(mksc->getKeyNumber());
         }
@@ -206,7 +211,7 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
     case Message::MSG_CLEAR_RECORDING:
         // deselect all
         selectPreliminaryKey(-1);
-        selectKey(-1, false);
+        selectKey(-1, STATE_NORMAL);
 
         // redraw all markers
         redrawAllMarkers();
@@ -227,7 +232,7 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
 void KeyboardGraphicsView::resetKey(int8_t key0) {
     EptAssert(mKeyboard, "The key data structure has to exist");
 
-    if (mKeyboard->getKeyColor(key0) == Keyboard::Black) {
+    if (mKeyboard->getKeyColor(key0) == KC_BLACK) {
         // black
         mKeysGraphicsItems[key0]->setBrush(QBrush(Qt::black));
     } else  {
@@ -241,9 +246,9 @@ void KeyboardGraphicsView::resetKey(int8_t key0) {
 void KeyboardGraphicsView::setKeyColor(int8_t key) {
     EptAssert(key >= 0, "Key has to exist");
     EptAssert(mKeyboard, "Keyboard has to be set");
-    QColor selectedKeyColor = getKeyColor(mKeyboard->getKeyColor(key) == Keyboard::White,
+    QColor selectedKeyColor = getKeyColor(mKeyboard->getKeyColor(key),
                                           mSelectedKey == key,
-                                          mSelectedKeyState == KeyState::STATE_FORCED,
+                                          mSelectedKeyState,
                                           mKeyboard->at(key).isRecorded());
     QColor preliminaryColor = KEY_PRELIMINARY_COLOR;
 
@@ -264,7 +269,7 @@ void KeyboardGraphicsView::setKeyColor(int8_t key) {
     } else if (mSelectedKey == key) {
         mKeysGraphicsItems[mSelectedKey]->setBrush(QBrush(selectedKeyColor));
     } else {
-        if (mKeyboard->getKeyColor(key) == Keyboard::Black) {
+        if (mKeyboard->getKeyColor(key) == KC_BLACK) {
             // black
             mKeysGraphicsItems[key]->setBrush(QBrush(Qt::black));
         } else  {
@@ -274,8 +279,9 @@ void KeyboardGraphicsView::setKeyColor(int8_t key) {
     }
 }
 
-void KeyboardGraphicsView::selectKey(int8_t key0, bool doubleClick, bool notifyMessageListeners) {
-    if (mSelectedKey == key0 && !doubleClick) {
+void KeyboardGraphicsView::selectKey(int8_t key0, piano::KeyState keyState, bool notifyMessageListeners) {
+    if (mSelectedKey == key0 && mSelectedKeyState == keyState) {
+        // nothing changed
         return;
     }
 
@@ -292,7 +298,7 @@ void KeyboardGraphicsView::selectKey(int8_t key0, bool doubleClick, bool notifyM
     mSelectedKey = key0;
 
     if (notifyMessageListeners) {
-        MessageHandler::send<MessageKeySelectionChanged>(key0, mKeyboard->getKeyPtr(key0), doubleClick);
+        MessageHandler::send<MessageKeySelectionChanged>(key0, mKeyboard->getKeyPtr(key0), keyState);
         emit selectionChanged(key0);
     }
 
@@ -300,7 +306,7 @@ void KeyboardGraphicsView::selectKey(int8_t key0, bool doubleClick, bool notifyM
         return;
     }
 
-    mSelectedKeyState = (doubleClick ? KeyState::STATE_FORCED : KeyState::STATE_NORMAL);
+    mSelectedKeyState = keyState;
     setKeyColor(mSelectedKey);
 
     updateColorMarker(key0);
@@ -352,24 +358,24 @@ QPixmap KeyboardGraphicsView::getPixmapForKeyRecordingState(bool recorded) {
     }
 }
 
-QColor KeyboardGraphicsView::getKeyColor(bool isWhite, bool selected, bool doubleClick, bool recorded) {
+QColor KeyboardGraphicsView::getKeyColor(piano::KeyColor color, bool selected, KeyState keyState, bool recorded) {
     if (selected) {
         if (recorded) {
-            if (doubleClick) {
+            if (keyState == STATE_FORCED) {
                 return QColor(KEY_SELECTED_RECORDED_COLOR).darker();
             }
             return QColor(KEY_SELECTED_RECORDED_COLOR);
         } else {
-            if (doubleClick) {
+            if (keyState) {
                 return QColor(KEY_SELECTED_UNRECORDED_COLOR).darker();
             }
             return QColor(KEY_SELECTED_UNRECORDED_COLOR);
         }
     }
-    if (isWhite) {
+    if (color == KC_WHITE) {
         return QColor(Qt::white);
     }
-    return QColor(Qt::black);
+    return QColor(Qt::black).darker(350);
 }
 
 QRectF KeyboardGraphicsView::keyShape(int8_t key0) {
@@ -435,18 +441,14 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         mMarkerPixmapItems[i] = pixmapItem;
 
         // just paint A's, looks nicer. Remove clear lines, to paint all names
-        QColor keyColor;
+        QColor keyColor = getKeyColor(keyColorType, false, STATE_NORMAL, false);
         QColor textColor;
-        if (keyColorType == Keyboard::Black) {
+        if (keyColorType == KC_BLACK) {
             // black
-            keyColor = Qt::darkGray;
-            keyColor = keyColor.darker(350);
             textColor = Qt::darkGray;
             keyText.clear();
         } else {
             // white key
-            keyColor = Qt::white;
-
             // only A's are black, all others are gray
             if ((i + 1200 - mKeyNumberOfA) % 12 == 0) {
                 textColor = Qt::black;
@@ -456,13 +458,11 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
             }
         }
 
-        GraphicsKeyItem::KeyType keyType = (keyColorType == Keyboard::Black) ? GraphicsKeyItem::KeyType::BLACK : GraphicsKeyItem::KeyType::WHITE;
-
         // key rects
         QRectF shape(keyShape(i));
         QPointF pos(shape.topLeft());
         shape.setTopLeft(QPointF(0, 0));
-        GraphicsKeyItem *item = new GraphicsKeyItem(keyType, keyText, textColor);
+        GraphicsKeyItem *item = new GraphicsKeyItem(keyColorType, keyText, textColor);
         mScene.addItem(item);
         item->setPos(pos);
         item->setBrush(QBrush(keyColor));
@@ -471,7 +471,7 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         item->setPen(borderpen);
         mKeysGraphicsItems[i] = item;
 
-        if (keyColorType == Keyboard::Black) {
+        if (keyColorType == KC_BLACK) {
             item->setZValue(1);
         }
    }
@@ -522,15 +522,15 @@ int KeyboardGraphicsView::getKeyAtPosition(const QPoint &pos) {
 
 void KeyboardGraphicsView::selectNext() {
     setFocus();
-    selectKey(std::min<int>(mSelectedKey + 1, mKeysGraphicsItems.size() - 1), false);
+    selectKey(std::min<int>(mSelectedKey + 1, mKeysGraphicsItems.size() - 1), STATE_NORMAL);
 }
 
 void KeyboardGraphicsView::selectPrevious() {
     setFocus();
-    selectKey(std::max(0, mSelectedKey - 1), false);
+    selectKey(std::max(0, mSelectedKey - 1), STATE_NORMAL);
 }
 
 void KeyboardGraphicsView::deselectKey(bool notifyListeners) {
     setFocus();
-    selectKey(-1, false, notifyListeners);
+    selectKey(-1, STATE_NORMAL, notifyListeners);
 }

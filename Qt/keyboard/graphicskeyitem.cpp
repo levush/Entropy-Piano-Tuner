@@ -4,21 +4,25 @@
 #include <QFontDatabase>
 #include <QTextLayout>
 
-const std::array<qreal, GraphicsKeyItem::COUNT> KEY_RADIUS_FACTOR {{0.1, 0.1}};
+
+const std::array<qreal, GraphicsKeyItem::KC_COUNT> KEY_RADIUS_FACTOR {{0.18, 0.1}};
 const qreal WHITE_KEY_RADIUS_FACTOR = 0.4;
 
-const std::array<std::array<qreal, 4>, GraphicsKeyItem::COUNT> MARGINS {{ {{0, 0, 0, 0}}, {{0.5, 0, -0.5, 0}} }};
+const std::array<std::array<qreal, 4>, GraphicsKeyItem::KC_COUNT> MARGINS {{ {{0, 0, 0, 0}}, {{0.5, 0, -0.5, 0}} }};
+
+std::array<QPainterPath, GraphicsKeyItem::KC_COUNT> GraphicsKeyItem::mKeyShapes;
+std::array<QRectF, GraphicsKeyItem::KC_COUNT> GraphicsKeyItem::mKeyRects;
 
 void GraphicsKeyItem::initShapes(qreal b_w, qreal b_h, qreal w_w, qreal w_h) {
-    if (mKeyShapes[BLACK].elementCount() > 0) {return;}  // already initialized
+    if (mKeyShapes[KC_BLACK].elementCount() > 0) {return;}  // already initialized
 
-    mKeyRects[BLACK] = QRectF(0, 0, b_w, b_h);
-    mKeyRects[WHITE] = QRectF(0, 0, w_w, w_h);
+    mKeyRects[KC_BLACK] = QRectF(0, 0, b_w, b_h);
+    mKeyRects[KC_WHITE] = QRectF(0, 0, w_w, w_h);
 
-    const std::array<qreal, COUNT> radius {{b_w * KEY_RADIUS_FACTOR[0], w_w * KEY_RADIUS_FACTOR[1]}};
-    std::array<QRectF, COUNT> rWithMargin = mKeyRects;
+    const std::array<qreal, KC_COUNT> radius {{b_w * KEY_RADIUS_FACTOR[0], w_w * KEY_RADIUS_FACTOR[1]}};
+    std::array<QRectF, KC_COUNT> rWithMargin = mKeyRects;
 
-    for (size_t i = 0; i < COUNT; ++i) {
+    for (size_t i = 0; i < KC_COUNT; ++i) {
         const auto &m = MARGINS[i];
         rWithMargin[i].adjust(m[0], m[1], m[2], m[3]);
 
@@ -30,12 +34,10 @@ void GraphicsKeyItem::initShapes(qreal b_w, qreal b_h, qreal w_w, qreal w_h) {
     }
 }
 
-std::array<QPainterPath, GraphicsKeyItem::COUNT> GraphicsKeyItem::mKeyShapes;
-std::array<QRectF, GraphicsKeyItem::COUNT> GraphicsKeyItem::mKeyRects;
 
-GraphicsKeyItem::GraphicsKeyItem(KeyType type, const QString &text, const QColor &textColor) :
-    QGraphicsRectItem(mKeyRects[type]),
-    mKeyType(type),
+GraphicsKeyItem::GraphicsKeyItem(KeyColor color, const QString &text, const QColor &textColor) :
+    QGraphicsRectItem(mKeyRects[color]),
+    mKeyColor(color),
     mText(text),
     mTextColor(textColor)
 {
@@ -48,7 +50,7 @@ void GraphicsKeyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
     painter->setPen(pen());
     painter->setBrush(brush());
-    painter->drawPath(mKeyShapes[mKeyType]);
+    painter->drawPath(mKeyShapes[mKeyColor]);
 
     // draw text
     painter->rotate(-90);
