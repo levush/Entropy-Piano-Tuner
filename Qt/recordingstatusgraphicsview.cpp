@@ -34,11 +34,14 @@ RecordingStatusGraphicsView::RecordingStatusGraphicsView(QWidget *parent)
     setScene(&mScene);
 
     // record
+    mRecordItems.push_back(mScene.addEllipse(-44, -42, 91, 91, QPen(Qt::darkRed), QBrush(Qt::darkRed)));
     mRecordItems.push_back(mScene.addEllipse(-45, -45, 90, 90, QPen(), QBrush(Qt::red)));
 
     // pause rects
-    mPauseItems.push_back(mScene.addRect(-45, -45, 35, 90, QPen(), QBrush(Qt::green)));
-    mPauseItems.push_back(mScene.addRect(10, -45, 35, 90, QPen(), QBrush(Qt::green)));
+    mPauseItems.push_back(mScene.addRect(-45, -45, 35, 90, QPen(Qt::darkGreen), QBrush(Qt::darkGreen)));
+    mPauseItems.push_back(mScene.addRect(-45, -45, 31, 87, QPen(Qt::lightGray), QBrush(Qt::green)));
+    mPauseItems.push_back(mScene.addRect(10, -45, 35, 90, QPen(Qt::darkGreen), QBrush(Qt::darkGreen)));
+    mPauseItems.push_back(mScene.addRect(10, -45, 31, 87, QPen(Qt::lightGray), QBrush(Qt::green)));
 
 
     // progress arcs
