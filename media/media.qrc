@@ -28,5 +28,6 @@
         <file>icons/help-about.png</file>
         <file>icons/help-contents.png</file>
         <file>icons/help-context.png</file>
+        <file>icons/application-exit.png</file>
     </qresource>
 </RCC>
