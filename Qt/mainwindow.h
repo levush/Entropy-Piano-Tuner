@@ -30,7 +30,6 @@
 #include "../core/messages/messagelistener.h"
 #include "../core/adapters/modeselectoradapter.h"
 #include "projectmanagerforqt.h"
-#include "guidescreenplay.h"
 #include "calculationprogressgroup.h"
 
 namespace Ui {
@@ -83,13 +82,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     Core *getCore() {return mCore;}
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Set if the guide shall be enabled.
-    /// \param b : Enabling state
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setGuideActionEnabled(bool b);
 
 protected:
     ///////////////////////////////////////////////////////////////////////////////
@@ -157,11 +149,6 @@ private:
 
     /// Pointer to the Core.
     Core *mCore;
-
-#if EPT_GUIDE_ENABLED
-    /// Instance of the GuideScreenplay.
-    GuideScreenplay mGuideScreenplay;
-#endif  // EPT_GUIDE_ENABLED
 
     /// Ui of the Mainwindow.
     Ui::MainWindow *ui;
@@ -279,13 +266,6 @@ public slots:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void onViewLog();
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Slot to toggle the guide.
-    /// \param b : Toggle state
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void onGuideEnabled(bool b);
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Slot to switch to idle mode.

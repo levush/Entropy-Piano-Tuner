@@ -63,9 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     mIconPostfix((QApplication::primaryScreen()->devicePixelRatio() > 1.5) ? "@2x" : ""),
     mCore(nullptr),
-#if EPT_GUIDE_ENABLED
-    mGuideScreenplay(this),
-#endif  // EPT_GUIDE_ENABLED
     ui(new Ui::MainWindow),
     mSmallScreen(false)
 {
@@ -199,8 +196,6 @@ MainWindow::MainWindow(QWidget *parent) :
     helpToolBar->addAction(whatsThisAction);
 #endif  // EPT_WHATS_THIS_ENABLED
 
-    ui->actionGuide_enabled->setChecked(SettingsForQt::getSingleton().isGuideEnabled());
-
     // create shortcuts
     new QShortcut(QKeySequence(Qt::Key_Tab), this, SLOT(onSelectNextMode()));
     new QShortcut(QKeySequence(Qt::SHIFT | Qt::Key_Tab), this, SLOT(onSelectPreviousMode()));
@@ -236,11 +231,6 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
     SHOW_DIALOG(this);
 #endif  // CONFIG_DIALOG_SIZE
-
-#if EPT_GUIDE_ENABLED
-#else
-    ui->actionGuide_enabled->setVisible(false);
-#endif  // EPT_GUIDE_ENABLED
 }
 
 MainWindow::~MainWindow()
@@ -269,22 +259,12 @@ void MainWindow::init(Core *core) {
 }
 
 void MainWindow::start() {
-#if EPT_GUIDE_ENABLED
-    // start the guide
-    mGuideScreenplay.start();
-#endif  // EPT_GUIDE_ENABLED
-
     updateVolumeBar();
 
     // init the project manager (load startup file)
     mCore->getProjectManager()->init(mCore);
 
     updateWindowTitle();
-}
-
-void MainWindow::setGuideActionEnabled(bool b)
-{
-    ui->actionGuide_enabled->setCheckable(b);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -686,8 +666,8 @@ void MainWindow::onAbout() {
     const QString buildText = tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate));
     const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
-    QString dependenciesText = tr("Based on ");
-    dependenciesText.append("<a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
+    QString dependenciesText = tr("Based on");
+    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
     dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
     dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
 
@@ -698,8 +678,8 @@ void MainWindow::onAbout() {
 
     const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
 
-    const QString acknowledgementsText = tr("We thank all those who have contributed to the project: ") +
-           "Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich.";
+    const QString acknowledgementsText = tr("We thank all those who have contributed to the project:") +
+           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich.";
 
     auto makeParagraphTags = [](const QString &t) {return "<p>" + t + "</p>";};
     QString completeText;
@@ -747,13 +727,6 @@ void MainWindow::onOpenAboutUrl(QUrl url) {
 void MainWindow::onViewLog() {
     LogViewer logViewer(this);
     logViewer.exec();
-}
-
-void MainWindow::onGuideEnabled(bool b) {
-    SettingsForQt::getSingleton().enableGuide(b);
-#if EPT_GUIDE_ENABLED
-    mGuideScreenplay.guideActivated();
-#endif  // EPT_GUIDE_ENABLED
 }
 
 void MainWindow::onModeIdle(bool checked) {

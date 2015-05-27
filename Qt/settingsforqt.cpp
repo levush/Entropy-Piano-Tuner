@@ -27,8 +27,7 @@
 const QString SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH = "app/currentFileDialogPath";
 
 SettingsForQt::SettingsForQt()
-    : mGuideEnabled(true),
-      mApplicationRuns(0),
+    : mApplicationRuns(0),
       mLastVisitedOptionsPage(options::OptionsDialog::PAGE_ENVIRONMENT) {
 }
 
@@ -44,7 +43,6 @@ SettingsForQt &SettingsForQt::getSingleton() {
 
 
 void SettingsForQt::load() {
-    mGuideEnabled = mSettings.value("guide/enabled", true).toBool();
     mApplicationRuns = mSettings.value("app/runs", 0).toLongLong();
     mLanguageId = mSettings.value("app/languageId", QString()).toString().toStdString();
 
@@ -67,15 +65,6 @@ void SettingsForQt::load() {
     mSoundGeneratorMode = static_cast<SoundGeneratorMode>(
                 mSettings.value("core/soundGeneratorMode", static_cast<int>(SGM_REFERENCE_TONE)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
-}
-
-bool SettingsForQt::isGuideEnabled() const {
-    return mGuideEnabled;
-}
-
-void SettingsForQt::enableGuide(bool b) {
-    mSettings.setValue("guide/enabled", b);
-    mGuideEnabled = b;
 }
 
 qlonglong SettingsForQt::getApplicationRuns() const {

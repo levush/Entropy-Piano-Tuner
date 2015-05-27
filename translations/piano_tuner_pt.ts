@@ -47,10 +47,6 @@
         <translation>Status:</translation>
     </message>
     <message>
-        <source>Algorithm:</source>
-        <translation type="vanished">Algoritmo:</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation>Informação</translation>
     </message>
@@ -101,26 +97,6 @@
     <message>
         <source>Press the button to start the calculation</source>
         <translation>Pressione o botão para iniciar cálculo</translation>
-    </message>
-    <message>
-        <source>Info of algorithm: %1</source>
-        <translation type="vanished">Informação do algoritmo: %1</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">Nome:</translation>
-    </message>
-    <message>
-        <source>Author:</source>
-        <translation type="vanished">Autor:</translation>
-    </message>
-    <message>
-        <source>Year:</source>
-        <translation type="vanished">Ano:</translation>
-    </message>
-    <message>
-        <source>Description:</source>
-        <translation type="vanished">Descrição:</translation>
     </message>
 </context>
 <context>
@@ -217,10 +193,6 @@
         <translation>Ano de fabricação</translation>
     </message>
     <message>
-        <source>yyyy</source>
-        <translation type="vanished">aaaa</translation>
-    </message>
-    <message>
         <source>Production location</source>
         <translation>Local de fabricação</translation>
     </message>
@@ -250,61 +222,6 @@
     <message>
         <source>Keyboard</source>
         <translation>Teclado</translation>
-    </message>
-</context>
-<context>
-    <name>GuideMessageBox</name>
-    <message>
-        <source>Welcome to the entropy piano tuner</source>
-        <translation>Bem vindo ao afinador de piano por entropia</translation>
-    </message>
-    <message>
-        <source>This guide will instruct you though the program to help you tuning your piano. Do you want to enable this guide?</source>
-        <translation>Este manual irá auxiliá-lo a usar o programa para afinar seu piano. Você deseja ativar este manual?</translation>
-    </message>
-    <message>
-        <source>Welcome back to the entropy piano tuner</source>
-        <translation>Bem vindo de volta ao afinador de piano por entropia</translation>
-    </message>
-    <message>
-        <source>The guide is currently activated. Do you want to keep it enabled?</source>
-        <translation>Este manual está ativado no momento. Deseja mantê-lo ativado?</translation>
-    </message>
-    <message>
-        <source>If you are stuck, you can always get further help from the help menu.</source>
-        <translation>Caso você não consiga mais avançar, sempre é possível obter mais ajuda com o menu de ajuda.</translation>
-    </message>
-    <message>
-        <source>Press Ok to start tuning your piano.</source>
-        <translation>Pressione OK para iniciar o afinador de piano.</translation>
-    </message>
-    <message>
-        <source>Before the actual tuning you should provide some information about your piano in order to easier recover your work.</source>
-        <translation>Antes que o processo de afinação se inicie, você deve fornecer algumas informações sobre seu piano a fim de mais facilmente recuperar seu trabalho.</translation>
-    </message>
-    <message>
-        <source>Do you want to open an dialog to edit the piano data sheet now?</source>
-        <translation>Você deseja abrir uma caixa de diálogo neste instante a fim de editar a planilha de dados do piano?</translation>
-    </message>
-    <message>
-        <source>If you want to make changes in the piano data sheet at a later point in time you can call this dialog by the menu.</source>
-        <translation>Caso você queira modificar a planilha de dados do piano em algum momento posterior, você pode chamar esta caixa de diálogo utilizando o menu.</translation>
-    </message>
-    <message>
-        <source>Now it is time to record all of your piano keys&apos; tones.</source>
-        <translation>Agora é o momento de gravar todos os tons do teclado de seu piano.</translation>
-    </message>
-    <message>
-        <source>Switch to the recording mode by pressing the corresponding button in the left tool bar.</source>
-        <translation>Mude para o modo gravação pressionando o botão correspondente na barra de ferramentas à esquerda.</translation>
-    </message>
-    <message>
-        <source>Before recording any sound you have to calibrate initially your input device.</source>
-        <translation>Antes de gravar qualquer som, você tem que antes fazer a calibragem inicial seu aparelho de leitura de dados.</translation>
-    </message>
-    <message>
-        <source>Do you want to open the automatic calibration?</source>
-        <translation>Você deseja abrir a calibragem automática?</translation>
     </message>
 </context>
 <context>
@@ -376,14 +293,6 @@
         <translation>Analisador de sinais</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if the  you can record the next key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Este item mostra o status do gravador. Um circulo vermelho indica que o sinal de áudio está gravado. Um circulo azul, girando, aparece quando o programa processa o sinal gravado. Um símbolo verde de pausa é mostrado se o (sp)(sp) você pode gravar a próxima nota.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This label displays the key that has to be recorded next.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Este símbolo mostra qual a  nota que deve ser gravada em seguida.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <source>Hz</source>
         <translation>Hz</translation>
     </message>
@@ -398,10 +307,6 @@
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the recorded spectrum of a single note. Bars will indicate the peaks that were found during the analysis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Esta janela mostra o espectro gravado de uma única nota. Barras indicarão os picos encontrados durante a análise.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the keyboard. Each key has a small indicator box that will display the current status of this key. The color indicates the status&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Red:&lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;/&gt;Not recorded yet&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#ff9500;&quot;&gt;Orange: &lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Key to be recorded next&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#0000ff;&quot;&gt;Blue: &lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Force overwrite with next recorded tone&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00ff00;&quot;&gt;Green:&lt;/span&gt;&lt;span style=&quot; color:#00ff00;&quot;/&gt;Successfully recorded&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;You can select a key to select it as key to record.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Esta janela mostra o teclado. Cada tecla tem uma pequena caixa indicadora que mostrará o status atual da nota. A cor indica o status. &lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Vermelho:&lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;/&gt;Não gravado ainda&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#ff9500;&quot;&gt;Laranja: &lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Próxima tecla a ser gravada &lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#0000ff;&quot;&gt;Azul: &lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Forçar gravar por cima com próximo tom gravado next recorded tone&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00ff00;&quot;&gt;Verde:&lt;/span&gt;&lt;span style=&quot; color:#00ff00;&quot;/&gt;Gravado com sucesso&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Você pode escolher uma tecla para  ser gravada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -448,20 +353,12 @@
         <translation>&amp;Edite planilha de dados do piano</translation>
     </message>
     <message>
-        <source>Text based file</source>
-        <translation type="vanished">Arquivo baseado em texto</translation>
-    </message>
-    <message>
         <source>Share</source>
         <translation>Compartilhar</translation>
     </message>
     <message>
         <source>View log</source>
         <translation>Ver log</translation>
-    </message>
-    <message>
-        <source>Guide enabled</source>
-        <translation>Manual acionado</translation>
     </message>
     <message>
         <source>&amp;Options</source>
@@ -580,14 +477,6 @@
         <translation>por %1 e %2</translation>
     </message>
     <message>
-        <source>Based on </source>
-        <translation type="vanished">Baseado em(sp)</translation>
-    </message>
-    <message>
-        <source>Copyright 2015 Dept. of Th. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation>Direitos autorais 2015, Departamento de Física Teórica III, Universidade de Würzburg. Todos os direitos reservados.</translation>
-    </message>
-    <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
     </message>
@@ -702,6 +591,18 @@
     <message>
         <source>Log</source>
         <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Based on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>We thank all those who have contributed to the project:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

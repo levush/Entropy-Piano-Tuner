@@ -141,8 +141,6 @@ HEADERS  += \
     Qt/initializedialog.h \
     Qt/logviewer.h \
     Qt/recordingstatusgraphicsview.h \
-    Qt/guidemessagebox.h \
-    Qt/guidescreenplay.h \
     Qt/settingsforqt.h \
     Qt/options/optionsdialog.h \
     Qt/keyboard/keyboardgraphicsview.h \
@@ -197,8 +195,6 @@ SOURCES +=  \
     Qt/initializedialog.cpp \
     Qt/logviewer.cpp \
     Qt/recordingstatusgraphicsview.cpp \
-    Qt/guidemessagebox.cpp \
-    Qt/guidescreenplay.cpp \
     Qt/settingsforqt.cpp \
     Qt/options/optionsdialog.cpp \
     Qt/keyboard/keyboardgraphicsview.cpp \

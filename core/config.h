@@ -41,9 +41,6 @@
 // this is defined for each platform, default behaviour is 1
 // CONFIG_DIALOG_SIZE 1
 
-// Enabling the guide
-#define EPT_GUIDE_ENABLED              0
-
 // Enabling what's this
 #define EPT_WHATS_THIS_ENABLED         1
 

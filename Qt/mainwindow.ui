@@ -521,7 +521,6 @@
     <addaction name="actionAbout"/>
     <addaction name="actionView_log"/>
     <addaction name="separator"/>
-    <addaction name="actionGuide_enabled"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
@@ -598,14 +597,6 @@
   <action name="actionView_log">
    <property name="text">
     <string>View log</string>
-   </property>
-  </action>
-  <action name="actionGuide_enabled">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Guide enabled</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -828,22 +819,6 @@
     <hint type="destinationlabel">
      <x>384</x>
      <y>292</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionGuide_enabled</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onGuideEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>535</x>
-     <y>310</y>
     </hint>
    </hints>
   </connection>
