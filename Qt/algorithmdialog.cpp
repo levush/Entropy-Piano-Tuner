@@ -53,8 +53,12 @@ AlgorithmDialog::AlgorithmDialog(QString currentAlgorithm, QWidget *parent) :
     if (mAlgorithmNames.size() == 0) {
         for (auto &desc : CalculationManager::getSingleton().getAlgorithms()) {
             const std::string &name = desc.first;
-            auto info(std::move(CalculationManager::getSingleton().loadAlgorithmInformation(name)));
-            mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdString(info->getName())));
+            try {
+                auto info(std::move(CalculationManager::getSingleton().loadAlgorithmInformation(name)));
+                mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdString(info->getName())));
+            } catch (...) {
+                WARNING("Error during loading and adding the algorithm '%s'. Skipping...", name.c_str());
+            }
         }
     }
 

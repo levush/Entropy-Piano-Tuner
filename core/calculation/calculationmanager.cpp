@@ -26,6 +26,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "../config.h"
 #include "../system/log.h"
 #include "../system/timer.h"
 #include "../messages/messagehandler.h"
@@ -104,6 +105,14 @@ void CalculationManager::registerFactory(const std::string &name, AlgorithmFacto
     if (mAlgorithms.count(name) == 1) {
         EPT_EXCEPT(EptException::ERR_DUPLICATE_ITEM, "An algorithm with name '" + name + "' already exists.");
     }
+
+#if EPT_EXCLUDE_EXAMPLE_ALGORITHM
+    // exclude example algorithm(s)
+    if (name.find("example") != std::string::npos) {
+        return;
+    }
+#endif
+
     mAlgorithms[name] = factory;
 }
 

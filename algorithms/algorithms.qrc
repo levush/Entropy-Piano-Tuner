@@ -2,5 +2,6 @@
     <qresource prefix="/algorithms">
         <file>examplealgorithm/examplealgorithm.xml</file>
         <file>entropyminimizer/entropyminimizer.xml</file>
+        <file>resettorecording/resettorecording.xml</file>
     </qresource>
 </RCC>

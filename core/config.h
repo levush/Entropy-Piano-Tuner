@@ -47,6 +47,9 @@
 // Enabling what's this
 #define EPT_WHATS_THIS_ENABLED         1
 
+// Exclude the example algorithm
+#define EPT_EXCLUDE_EXAMPLE_ALGORITHM  1
+
 //#define CONFIG_ENABLE_OLD_RECORDER
 
 #if __ANDROID__

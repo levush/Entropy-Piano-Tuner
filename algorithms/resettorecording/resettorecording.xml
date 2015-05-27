@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<algorithm year="2015" author="Christoph Wick">
+    <name>
+        <string>Reset to recorded frequency</string>
+        <string lang="de">Zurücksetzen auf augenommene Frequenz</string>
+    </name>
+    <description>
+        <string>Running this algorithm will just reset the calculated frequency to the recorded one.</string>
+        <string lang="de">Das Ausführen diese Algorithmus setzt nur die berechnete Freuqenz auf die Aufgenommene zurück.</string>
+    </description>
+</algorithm>
