@@ -24,40 +24,34 @@
 #ifndef KEYRECOGNIZER_H
 #define KEYRECOGNIZER_H
 
-#include <cmath>
-
 #include "../system/simplethreadhandler.h"
-#include "../audio/audiorecorderadapter.h"
 #include "../messages/messagelistener.h"
 #include "../piano/piano.h"
 #include "../math/fftimplementation.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Callback class for KeyRecognizer.
 ///
 /// When KeyRecognizer::recognizeKey has
-/// finished, he pure virtual function keyRecognized() will be called.
+/// finished, the pure virtual function keyRecognized() will be called.
 ///////////////////////////////////////////////////////////////////////////////
-class KeyRecognizerCallback {
+
+class KeyRecognizerCallback
+{
 public:
     virtual void keyRecognized(int keyIndex, double frequency) = 0;
 };
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Module for fast recognition of the pressed key
+/// \brief Module for fast recognition of the pressed key.
 ///
-/// When a key is pressed, the SignalAnalyzer continuously Fourier-
-/// transforms the signal in short time intervals.
-/// Every time when a new FFT is ready,
-/// the SignalAnalyzer sends a MessageNewFFTCalculated
-/// with a 'false' flag indicating that the FFT is not yet final.
-/// This message will start the present KeyRecognizer in a
-/// new thread.
-///
-/// The KeyRecognizer works as a black box independent of all other
-/// modules in the tuning program.
-/// It produces a message with the estimated frequency and
-/// the corresponding key number.
+/// When a key is pressed, the SignalAnalyzer calls the function
+/// recognizeKey to start an independent thread for key recognition on the
+/// basis of the current Fourier transform. The key recognizer transmits the
+/// estimated frequency and the corresponding key number via a callback function.
 ////////////////////////////////////////////////////////////////////////////////
 
 class KeyRecognizer : public SimpleThreadHandler
@@ -68,43 +62,35 @@ private:
     static const double fmax;                           ///< Frequency of bin M-1
 
 public:
-    KeyRecognizer (KeyRecognizerCallback *callback);    ///< Constructor
-    ~KeyRecognizer(){}                                  ///< Empty destructor
+    KeyRecognizer (KeyRecognizerCallback *callback);    // Constructor
+    ~KeyRecognizer(){}                                  // Empty destructor
 
-    void init(bool optimize);                           ///< Initialize (optimize fft)
-    void recognizeKey(
-            bool forceRestart,
-            const Piano *piano,
-            FFTDataPointer fftPointer,
-            int selectedKey,
-            bool keyForced);
+    void init(bool optimize);                           // Initialize (optimize FFT)
+    void recognizeKey(bool forceRestart,                // Recognize a key:
+                      const Piano *piano,               // This function is called by
+                      FFTDataPointer fftPointer);       // the SignalAnalyzer
 
 private:
-    void workerFunction() override final;               ///< Thread execution function
+    void workerFunction() override final;               // Thread execution function
 
-    void constructLogSpec();                            ///< Construct logarithmic spectrum
-    void defineKernel();                                ///< Define convolution kernel
-    void signalPreprocessing();                         ///< Preprocessing of the signal
-    double estimateFrequency();                         ///< Frequency recognition
-    int findNearestKey (double f);                      ///< Find nearest key, 0 if none
-    int identifySelectedKey(double frequency);          ///< identify final key
+    void constructLogSpec();                            // Construct logarithmic spectrum
+    void signalPreprocessing();                         // Preprocessing of the signal
+    void defineKernel();                                // Define convolution kernel
+    double estimateFrequency();                         // Frequency recognition
+    int findNearestKey (double f);                      // Find nearest key, 0 if none
 
 private:
     KeyRecognizerCallback *mCallback;                   ///< Pointer to the caller
     FFTDataPointer mFFTPtr;                             ///< Pointer to Fourier transform
-    bool mFinal;                                        ///< Flag for final FFT
-    const Piano *mPiano;                                ///< Pointer to the piano
     double mConcertPitch;                               ///< Actual frequency of the A-key
     int mNumberOfKeys;                                  ///< Number of piano keys
     int mKeyNumberOfA;                                  ///< Index of the A-key
     FFT_Implementation mFFT;                            ///< Instance of FFT implementation
     std::vector<double> mLogSpec;                       ///< Logarithmic spectrum (LogSpec)
+    std::vector<double> mLogLogSpec;                    ///< DoubleLogarithmic spectrum (LogLogSpec)
     FFTComplexVector mKernelFFT;                        ///< Fourier transform of the kernel
-    FFTComplexVector mLogSpecFFT;                       ///< Fourier transform of LogSpec
+    FFTComplexVector mLogLogSpecFFT;                    ///< Fourier transform of LogLogSpec
     FFTRealVector mConvolution;                         ///< Convolution vector
-    int mSelectedKey;                                   ///< The selected key by the user
-    bool mKeyForced;                                    ///< Is the key selection forced
-
 
 private:
     static const double logfmin;                        ///< Log of minimal frequency
@@ -112,7 +98,7 @@ private:
     double mtof (int m);                                ///< Map bin index to frequency
     int ftom (double f);                                ///< Map frequency to bin index
 
-    void Write(std::string filename, std::vector<double> &v); // only for development
+    //void Write(std::string filename, std::vector<double> &v, bool log=true); // only for development
 };
 
 #endif // KEYRECOGNIZER_H

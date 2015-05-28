@@ -33,138 +33,134 @@
 #include "../piano/piano.h"
 #include "../system/log.h"
 
-const int    KeyRecognizer::M = 8192;
+const int    KeyRecognizer::M = 1024;
 const double KeyRecognizer::fmin = 10;
 const double KeyRecognizer::fmax = 20000;
 const double KeyRecognizer::logfmin = log(fmin);
 const double KeyRecognizer::logfmax = log(fmax);
 
+
 //-----------------------------------------------------------------------------
 //			                    Constructor
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of the KeyRecognizer
+/// \param callback : Pointer to the instance of the callback.
+///////////////////////////////////////////////////////////////////////////////
+
 KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
     mCallback(callback),                // Pointer to the caller
     mFFTPtr(nullptr),                   // Pointer to the Fourier transform
-    mFinal(false),                      // Flag for final FFT
-    mPiano(nullptr),                    // Pointer to the current piano
     mConcertPitch(0),                   // Concert pitch in Hz (normally 440)
     mNumberOfKeys(0),                   // Number of piano keys (normally 88)
     mKeyNumberOfA(0),                   // Index of the A-key (normally 48)
     mFFT(),                             // Instance of FFT implementation
     mLogSpec(M),                        // Vector holding the log. spectrum
+    mLogLogSpec(M),                     // Vector holding the loglog. spectrum
     mKernelFFT(M/2+1),                  // Vector holding the complex FFT of the kernel
-    mLogSpecFFT(M/2+1),                 // Vector holding the complex FFT of the logspec
-    mConvolution(M),                    // Convolution vector, real
-    mSelectedKey(-1),                   // Selected key
-    mKeyForced(false)                   // key selection forced
+    mLogLogSpecFFT(M/2+1),              // Vector holding the complex FFT of the loglogspec
+    mConvolution(M)                    // Convolution vector, real
 {}
 
+
 //-----------------------------------------------------------------------------
-//			               init
+//			                   Initialization
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Initialization of the KeyRecognizer.
+///
+/// This function defines the kernel and optimizes the plan for the FFT.
+/// Optimization will take a while to be finished.
+///
+/// \param optimize : true if the FFT should be optimized
+///
+///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-/// Function to define the kernel and optimize the fft. Optimazing will take
-/// a while to be finished.
-///
-/// \param optimize Optimize the fft
-///
-///////////////////////////////////////////////////////////////////////////////
 void KeyRecognizer::init(bool optimize)
 {
-    INFORMATION("KeyRecognizer: starting initialization");
+    VERBOSE("KeyRecognizer: starting initialization");
     defineKernel();
     if (optimize)
     {
         mFFT.optimize(mLogSpec);
-        mFFT.optimize(mLogSpecFFT);
+        mFFT.optimize(mLogLogSpecFFT);
     }
-    INFORMATION("KeyRecognizer: initialization finished");
+    VERBOSE("KeyRecognizer: initialization finished");
 }
 
-//-----------------------------------------------------------------------------
-//			               init
-//-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+//			            Start the key recognition thread
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Function to start the recognizing thread on a given fft
-/// \param piano
-/// \param fftPointer
-/// \param samplingRate
+/// \brief Start key recognition.
 ///
-/// When finished this will call the
+/// Function to start the key recognition thread. This function
+/// is called by the SignalAnalyzer.
+/// \param forceRestart : true if restart of the thread is forced
+/// \param piano : pointer to the piano data
+/// \param fftPointer : pointer to the actual FFT
 ///////////////////////////////////////////////////////////////////////////////
-void KeyRecognizer::recognizeKey(bool forceRestart,
+
+void KeyRecognizer::recognizeKey (
+        bool forceRestart,
         const Piano *piano,
-        FFTDataPointer fftPointer,
-        int selectedKey,
-        bool keyForced) {
+        FFTDataPointer fftPointer)
+{
     EptAssert(piano, "The piano has to be set.");
     EptAssert(fftPointer, "The fft data has to exist.");
     EptAssert(fftPointer->isValid(), "Invaild fft data");
 
-    // stop the thread if we want to restart
-    // or return if it is already running
-    if (forceRestart) {stop();}
-    else if (isThreadRunnding()) {return;}
+    if (forceRestart) stop();                   // if restart forced stop thread
+    else if (isThreadRunnding()) return;        // if it is running do nothing
 
-    // The thread shall be started
+    // copy data from the piano
+    mConcertPitch = piano->getConcertPitch();
+    mNumberOfKeys = piano->getKeyboard().getNumberOfKeys();
+    mKeyNumberOfA = piano->getKeyboard().getKeyNumberOfA4();
 
-    // copy data
+    mFFTPtr = fftPointer;           // save pointer to the Fourier transform
 
-    mPiano = piano;
-    mConcertPitch = mPiano->getConcertPitch();                 // copy concert pitch (standard 440 Hz)
-    mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();   // copy number of piano keys (standard 88)
-    mKeyNumberOfA = mPiano->getKeyboard().getKeyNumberOfA4();  // copy number of A440-key (standard 48)
-
-
-    mFFTPtr = fftPointer;                                      // Get a pointer to the Fourier transform
-
-    mSelectedKey = selectedKey;
-    mKeyForced = keyForced;
-
-    // start the thread
-
-    start();
+    start();                        // start the thread
 }
 
 
 //-----------------------------------------------------------------------------
-//			Worker function running in an independent thread
+//		  	 Worker function running in an independent thread
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Main worker function for executing the key recognition thread.
+///////////////////////////////////////////////////////////////////////////////
 
 void KeyRecognizer::workerFunction()
 {
-    EptAssert(mPiano, "The piano has to be set");
     EptAssert(mFFTPtr, "FFT Data have to non zero");
     EptAssert(mFFTPtr->isValid(), "FFT Data have to exist");
     EptAssert(mCallback, "Callback class has to exist");
 
-    constructLogSpec();
-    signalPreprocessing();
-
+    constructLogSpec();             // Compute log spectrum
     CHECK_CANCEL_THREAD;
 
-    double f = estimateFrequency();
-
+    signalPreprocessing();          // Compute flattened loglog spectrum
     CHECK_CANCEL_THREAD;
 
-    int keynumber = identifySelectedKey(f);
+    double f = estimateFrequency(); // Estimate frequency
+    CHECK_CANCEL_THREAD;
+
+    int keynumber = findNearestKey(f);      // determine keynumber
 
     std::cout << "KeyRecognizer: f=" << f << ", key=" << keynumber << std::endl;
 
-    // notify callback
-
-    mCallback->keyRecognized(keynumber, f);
-
-    //Write("3-keyrecog-convolution.dat",mConvolution);
+    mCallback->keyRecognized(keynumber, f); // notify callback
 }
 
+
 //-----------------------------------------------------------------------------
-//			            index mapping functions
+//			             Index mapping functions
 //-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
@@ -180,6 +176,7 @@ void KeyRecognizer::workerFunction()
 int KeyRecognizer::ftom (double f) {
     return static_cast<int>(0.5+M*(log(f)-logfmin)/(logfmax-logfmin));
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 /// This function maps the logarithmic binning index back to the
@@ -205,24 +202,59 @@ double KeyRecognizer::mtof (int m) {
 /// bins of the logarithmic spectrum (mLogSpec).
 ////////////////////////////////////////////////////////////////////////
 
-double f(double x) { return x*x; }
-
 void KeyRecognizer::constructLogSpec()
 {
     const int Q = mFFTPtr->fft.size();
     std::function<double(double)> mtoq = [this,Q] (double m)
         { return 2*fmin*Q/mFFTPtr->samplingRate*pow(fmax/fmin,m/M); };
     MathTools::coarseGrainSpectrum (mFFTPtr->fft,mLogSpec,mtoq);
-
-    //Write("3-keyrecog-logspec.dat",mLogSpec);
 }
 
 
 //-----------------------------------------------------------------------------
-//			                Define kernel
+//                        Preprocessing of the singal
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Preprocessing of the signal
+///
+/// The purpose of this function is to convert the logarithmically binned
+/// spectrum (called logspec), which is logarithmic in the frequency, also
+/// logarithmically in the amplitude. The result is a double-logarithmic
+/// spectrum, i.e., logarithmic in its binning and also in its value.
+/// Values <= 0 are mapped to zero.
+///
+/// Some spectra, in particular those of the high keys, show a broad noise
+/// background which varies only smoothly with the frequency. The second part
+/// of the function substracts a gliding average over a certain window,
+/// centereing the loglog spectrum around the zero line.
+///////////////////////////////////////////////////////////////////////////////
+
+void KeyRecognizer::signalPreprocessing()
+{
+    std::vector<double> copy(M);
+    for (int i=0; i<M; ++i) copy[i]=(mLogSpec[i]>0 ? log(mLogSpec[i]) : 0);
+
+    // Flatten noise by subtracting a gliding average
+    const int w=30;             // width of the average
+    for (int i=0; i<M; ++i)
+    {
+        int a = std::max(0,i-w);
+        int b = std::min(M,i+w+1);
+        double sum=0;
+        for (int k=a; k<b; ++k) sum+=copy[k];
+        mLogLogSpec[i]=copy[i]-sum/(b-a);
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+//			                Define the kernel
 //-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
+/// \brief Define the kernel vector for key recognition.
+///
 /// The tuner needs to recognize the key that is pressed. The essential
 /// part in the recognition procedure is a kernel function which is
 /// convolved linearly with the actually measured spectrum. It has
@@ -234,11 +266,12 @@ void KeyRecognizer::constructLogSpec()
 void KeyRecognizer::defineKernel ()
 {
 
-    static const int width=15;     // width of the peaks in cents
+    static const int width=M/300;     // width of the peaks in bins
     static const int partials=20;  // number of partials to be detected (20)
-    static const double B=0.0002;   // here still with a constant inharmonicity
+    static const double B=0.0005;   // here still with a constant inharmonicity
 
     static std::vector<double> kernel(M); //must be static for using fftw3
+    kernel.assign(M,0);
 
     // lambda function for setting a peak
     auto setpeak = [] (int m, double amplitude)
@@ -257,76 +290,40 @@ void KeyRecognizer::defineKernel ()
 
     // Define the kernel function
     for (int n=1; n<=partials; ++n) setpeak(partialindex(0, n, B, 1),intensity(n));
-    for (int div=2; div<=15; div++) for (int n=1; n<=30; ++n) if (n%div>0)
-        setpeak(partialindex(0,n,B,div),-0.05*intensity(n));
+        for (int div=2; div<=15; div++) for (int n=1; n<=30; ++n) if (n%div>0)
+            setpeak(partialindex(0,n,B,div),-0.05*intensity(n));
 
     mFFT.calculateFFT(kernel,mKernelFFT); // calculate FFT
 
-    //Write("3-keyrecog-kernel.dat",kernel);
+    //Write("keyrecog-kernel.dat",kernel,false);
 }
 
-
-//-----------------------------------------------------------------------------
-//                        Preprocessing of the singal
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-///  \brief Preprocessing of the signal
-///
-/// This is so to say a high pass filter. It will cut (set to 0) all
-/// frequencies below the selected key.
-/// The signal processing is active if the key selection is forced
-///////////////////////////////////////////////////////////////////////////////
-
-void KeyRecognizer::signalPreprocessing() {
-    EptAssert(mPiano, "The piano has to be set");
-
-    // if the selected key is forced we do a signal preprocessing
-    if (mSelectedKey < 0 || !mKeyForced) {
-        return;
-    }
-
-    // get the esitimated frequency of the key
-    double f = mPiano->getEqualTempFrequency(mSelectedKey);
-
-    // all frequencies lower than 0.9 * f are set to 0
-    f *= 0.9;
-    for (int n = 0; n < std::min<int>(ftom(f), mLogSpec.size()); n++) {
-        mLogSpec[n] = 0;
-    }
-}
 
 //-----------------------------------------------------------------------------
 //			              Estimate frequency
 //-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Estimate frequency for a given log-log spectrum.
+///
 /// This function estimates the frequency of a pressed piano key.
-/// To this end the logarithmically binned spectrum is convolved with
+/// To this end the logarithmically binned log spectrum is convolved with
 /// the recognition kernel for all frequencies. For speedup this
 /// convolution product is carried out by two Fourier transformations
 /// (in log space instead of real space) with an ordinary multiplication
-/// in between. The m-value (slot) where
-/// the response of the kernel is maximal is then used as a first guess.
+/// in between. The m-value (slot) where the response of the kernel is
+/// maximal is then used as a first estimate of the frequency.
 /// \return Estimated frequency in Hz
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 double KeyRecognizer::estimateFrequency ()
 {
-    mFFT.calculateFFT(mLogSpec,mLogSpecFFT);
-    for (size_t n = 0; n < mLogSpecFFT.size(); ++n) mLogSpecFFT[n] *= std::conj(mKernelFFT[n]);
-    mFFT.calculateFFT(mLogSpecFFT,mConvolution);
+    mFFT.calculateFFT(mLogLogSpec,mLogLogSpecFFT);
+    for (size_t n = 0; n < mLogLogSpecFFT.size(); ++n)
+        mLogLogSpecFFT[n] *= std::conj(mKernelFFT[n]);
+    mFFT.calculateFFT(mLogLogSpecFFT,mConvolution);
     int m  = MathTools::findMaximum(mConvolution);
-    double f = mtof(m);
-    //Write("3-keyrecog-convolution.dat",mConvolution);
-
-    // Above 1kHz the kernel is no longer reliable. Here we search for the absolute maximum
-    if (f > 1000 and m < M - 1000)
-    {
-        int m2 = MathTools::findMaximum(mLogSpec, m + 1000, M);
-        if (mLogSpec[m2] > 1.2 * mLogSpec[m]) f = mtof(m2);
-    }
-    return f;
+    return mtof(m);
 }
 
 
@@ -334,69 +331,45 @@ double KeyRecognizer::estimateFrequency ()
 //	Find the nearest key to a given frequency, assuming average stretch
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Find the nearest key for a given frequency.
+///
+/// This function determines the most likely index of a key for a given
+/// frequency, referring to the actual concert pitch.
+/// \param f : Frequency in Hz
+/// \return Index of the key in the range 0..mNumberOfKeys
+///////////////////////////////////////////////////////////////////////////////
+
 int KeyRecognizer::findNearestKey (double f)
 {
     if (mConcertPitch<=390 or mConcertPitch>500) return -1;
     // Approximate distance in keys from A-440:
     double d = 17.3123*log(f/mConcertPitch);
     // Average stretch polynomial, giving the expected deviation in cents
-    double c =0.000019394+0.079694594*d-0.003718646*d*d+0.000450934*d*d*d + 0.000003724*d*d*d*d;
+    double c = 0.000019394+0.079694594*d-0.003718646*d*d
+             + 0.000450934*d*d*d + 0.000003724*d*d*d*d;
     int k=-1; k = static_cast<int>(mKeyNumberOfA+d-c/100+0.5);
     return (k>=0 and k<mNumberOfKeys ? k : -1);
 }
 
 
-//-----------------------------------------------------------------------------
-//                        Identify the selected key
-//-----------------------------------------------------------------------------
+////-----------------------------------------------------------------------------
+////			Write function for development purposes
+////-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Identify the selected key.
-///
-/// \param frequency The detected frequency
-/// The KeyRecognizer has continuously sent messages containing the number
-/// of the recognized key. These results have beeen registered by the
-/// in the histogram mKeyCount. This function declares a
-/// key as selected if more it was recognized for more than 50%.
-/// \return Number of the key, -1 if none.
-///////////////////////////////////////////////////////////////////////////////
-
-int KeyRecognizer::identifySelectedKey(double frequency)
-{
-    double time = mFFTPtr->getTime();
-    double meanindex = MathTools::computeMoment(mLogSpec,1);
-    double frequencyestimator = Key::IndexToFrequency(meanindex);
-
-    if (time < 1.5 and frequencyestimator > 1100) // if its a key in the diskant
-    {
-        // Locate the most dominant high-frequency peak
-        double maxpeak = 0;
-        int pos = 0, start = Key::FrequencyToIndex(1800), end = mLogSpec.size();
-        for (int m=start; m<end; ++m) if (mLogSpec[m]>maxpeak) { maxpeak=mLogSpec[m]; pos=m; }
-        double frequency = Key::IndexToFrequency(pos);
-        return findNearestKey(frequency);
-    }
-
-    return findNearestKey(frequency);
-}
-
-
-//-----------------------------------------------------------------------------
-//			Write function for development purposes
-//-----------------------------------------------------------------------------
-
-void KeyRecognizer::Write(std::string filename, std::vector<double> &v)
-{
-#if CONFIG_ENABLE_XMGRACE
-    std::ofstream os(filename);
-    for (uint m=0; m<v.size(); ++m)
-    {
-        //os << m << "\t" << v[m] << std::endl;
-        os << mtof(m) << "\t" << v[m] << std::endl;
-    }
-    os.close();
-#else
-    (void)filename; (void)v; // suppress warnings
-#endif // CONFIG_ENABLE_XMGRACE
-}
+//void KeyRecognizer::Write(std::string filename, std::vector<double> &v, bool log)
+//{
+//#if CONFIG_ENABLE_XMGRACE
+//    std::ofstream os(filename);
+//    for (uint m=0; m<v.size(); ++m)
+//    {
+//        //os << m << "\t" << v[m] << std::endl;
+//        if (log) os << mtof(m) << "\t" << v[m] << std::endl;
+//        else os << m << "\t" << v[m] << std::endl;
+//    }
+//    os.close();
+//#else
+//    (void)filename; (void)v; // suppress warnings
+//#endif // CONFIG_ENABLE_XMGRACE
+//}
 
