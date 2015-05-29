@@ -98,6 +98,14 @@
         <source>Press the button to start the calculation</source>
         <translation>Pressione o botão para iniciar cálculo</translation>
     </message>
+    <message>
+        <source>Calculation finished</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DoNotShowAgainMessageBox</name>
