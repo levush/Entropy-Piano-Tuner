@@ -394,7 +394,7 @@ void KeyRecognizer::defineKernel ()
     { double f=mtof(m); return ftom(f*partial(f/div,n,B)/partial(f/div,div,B)); };
 
     // lambda function for the intensity decay of the peaks
-    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.1); };
+    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.2); };
 
     // Define the kernel function
     for (int n=1; n<=partials; ++n) setpeak(partialindex(0, n, B, 1),intensity(n));
