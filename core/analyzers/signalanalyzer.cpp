@@ -536,7 +536,7 @@ void SignalAnalyzer::signalProcessing(FFTWVector &signal, int samplingrate) {
              mPowerspectrum, polygon);
 
     // recognize key
-    mKeyRecognizer.recognizeKey(false, mPiano, mPowerspectrum);
+    mKeyRecognizer.recognizeKey(false, mPiano, mPowerspectrum, mSelectedKey, mKeyForced);
 
     if (mAnalyzerRole == ROLE_ROLLING_FFT) {
         analyzeSignal();

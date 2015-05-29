@@ -53,6 +53,7 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
     mCallback(callback),                // Pointer to the caller
     mFFTPtr(nullptr),                   // Pointer to the Fourier transform
     mConcertPitch(0),                   // Concert pitch in Hz (normally 440)
+    mPiano(nullptr),                    // Pointer to the piano data
     mNumberOfKeys(0),                   // Number of piano keys (normally 88)
     mKeyNumberOfA(0),                   // Index of the A-key (normally 48)
     mFFT(),                             // Instance of FFT implementation
@@ -60,7 +61,9 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
     mLogLogSpec(M),                     // Vector holding the loglog. spectrum
     mKernelFFT(M/2+1),                  // Vector holding the complex FFT of the kernel
     mLogLogSpecFFT(M/2+1),              // Vector holding the complex FFT of the loglogspec
-    mConvolution(M)                    // Convolution vector, real
+    mConvolution(M),                    // Convolution vector, real
+    mSelectedKey(-1),                   // Selected key
+    mKeyForced(false)                   // selected key is forced
 {}
 
 
@@ -73,9 +76,7 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
 ///
 /// This function defines the kernel and optimizes the plan for the FFT.
 /// Optimization will take a while to be finished.
-///
 /// \param optimize : true if the FFT should be optimized
-///
 ///////////////////////////////////////////////////////////////////////////////
 
 void KeyRecognizer::init(bool optimize)
@@ -103,12 +104,16 @@ void KeyRecognizer::init(bool optimize)
 /// \param forceRestart : true if restart of the thread is forced
 /// \param piano : pointer to the piano data
 /// \param fftPointer : pointer to the actual FFT
+/// \param selectedKey : Number of the selected key (-1 if none)
+/// \param keyForced : Boolean flag saying whether the selected key is forced
 ///////////////////////////////////////////////////////////////////////////////
 
 void KeyRecognizer::recognizeKey (
         bool forceRestart,
         const Piano *piano,
-        FFTDataPointer fftPointer)
+        FFTDataPointer fftPointer,
+        int selectedKey,
+        bool keyForced)
 {
     EptAssert(piano, "The piano has to be set.");
     EptAssert(fftPointer, "The fft data has to exist.");
@@ -118,11 +123,13 @@ void KeyRecognizer::recognizeKey (
     else if (isThreadRunnding()) return;        // if it is running do nothing
 
     // copy data from the piano
+    mPiano = piano;
     mConcertPitch = piano->getConcertPitch();
     mNumberOfKeys = piano->getKeyboard().getNumberOfKeys();
     mKeyNumberOfA = piano->getKeyboard().getKeyNumberOfA4();
-
     mFFTPtr = fftPointer;           // save pointer to the Fourier transform
+    mSelectedKey = selectedKey;     // copy selected key
+    mKeyForced = keyForced;         // copy forcing flag
 
     start();                        // start the thread
 }
@@ -142,14 +149,22 @@ void KeyRecognizer::workerFunction()
     EptAssert(mFFTPtr->isValid(), "FFT Data have to exist");
     EptAssert(mCallback, "Callback class has to exist");
 
-    constructLogSpec();             // Compute log spectrum
+    double f=0;
+    if (mKeyForced and mSelectedKey>=0) f = detectForcedFrequency();
+    else f = detectFrequencyInTreble();
     CHECK_CANCEL_THREAD;
 
-    signalPreprocessing();          // Compute flattened loglog spectrum
-    CHECK_CANCEL_THREAD;
+    if (f==0)
+    {
+        constructLogSpec();             // Compute log spectrum
+        CHECK_CANCEL_THREAD;
 
-    double f = estimateFrequency(); // Estimate frequency
-    CHECK_CANCEL_THREAD;
+        signalPreprocessing();          // Compute flattened loglog spectrum
+        CHECK_CANCEL_THREAD;
+
+        f = estimateFrequency(); // Estimate frequency
+        CHECK_CANCEL_THREAD;
+    }
 
     int keynumber = findNearestKey(f);      // determine keynumber
 
@@ -160,10 +175,90 @@ void KeyRecognizer::workerFunction()
 
 
 //-----------------------------------------------------------------------------
+//			               Measure forced keys
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Detect forced key
+///
+/// If a key is forced we search for the maximum of the FFT in the vicinity
+/// of the forced key with a width of a bit less than a half tone.
+/// \return Frequency in Hz
+///////////////////////////////////////////////////////////////////////////////
+
+double KeyRecognizer::detectForcedFrequency()
+{
+    if (mSelectedKey<0 or not mKeyForced) return 0;
+    std::vector<double> &fft = mFFTPtr->fft;
+    int n = mFFTPtr->fft.size();
+    int sr = mFFTPtr->samplingRate;
+    auto ftoq = [n,sr] (double f) { return MathTools::roundToInteger(2*n*f/sr); };
+    auto qtof = [n,sr] (double q) { return sr*q/(2*n); };
+    double f = mPiano->getEqualTempFrequency(mSelectedKey);
+    int q1 = std::max(0,ftoq(f/1.04));
+    int q2 = std::min(ftoq(f*1.04),n);
+    double max=0;
+    for (int q=q1; q<=q2; ++q) if (fft[q]>max)
+    {
+        max=fft[q];
+        f=qtof(q);
+    }
+    return f;
+}
+
+
+//-----------------------------------------------------------------------------
+//			                 Detect treble keys
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Detect keys in the treble
+///
+/// For very high notes the kernel method is not suitable. This function
+/// detects whether one of the very high keys has been hit. This is done
+/// by comparing the second and the first moment of the FFT. If the ratio
+/// is above the threshold, indicating a high key, the frequency is determined
+/// simply by searching for the maximal peak in the range from 1..5 kHz.
+/// \return Frequency in Hz
+///////////////////////////////////////////////////////////////////////////////
+
+double KeyRecognizer::detectFrequencyInTreble()
+{
+    const double threshold = 0.09;
+    std::vector<double> &fft = mFFTPtr->fft;
+    int n = mFFTPtr->fft.size();
+    int sr = mFFTPtr->samplingRate;
+    auto ftoq = [n,sr] (double f) { return MathTools::roundToInteger(2*n*f/sr); };
+    auto qtof = [n,sr] (double q) { return sr*q/(2*n); };
+    double q1=ftoq(20), q2=ftoq(1000), q3=ftoq(4500), m1=0, m2=0;
+    if (n<=0 or q1<0 or q3>=n) return 0;
+    for (int q=q1; q<=q3; ++q)
+    {
+        m1 += fft[q]*q;
+        m2 += fft[q]*q*q;
+    }
+    if (m1<=0) return 0;
+    double f=0;
+    if (m2/m1/n > threshold)
+    {
+        double max=0;
+        for (int q=q2; q<q3; ++q) if (fft[q]>max)
+        {
+            max=fft[q];
+            f=qtof(q);
+        }
+    }
+    return f;
+}
+
+
+//-----------------------------------------------------------------------------
 //			             Index mapping functions
 //-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
+/// \brief Convert frequency to logspec index
+///
 /// The key recognizer performs a logarithmic binning independent of
 /// the one carried out in the FFTAnalyzer. To this end the frequency f
 /// is mapped to an integer index m. The formula reads:
@@ -179,6 +274,8 @@ int KeyRecognizer::ftom (double f) {
 
 
 ////////////////////////////////////////////////////////////////////////
+/// \brief Convert logspec index to frequency
+///
 /// This function maps the logarithmic binning index back to the
 /// frequency. It is the inverse function of ftom:
 /// \f[ f(m) = f_{min} + (f_{max}-f_{min})^{m/M} \,. \f]
@@ -196,6 +293,8 @@ double KeyRecognizer::mtof (int m) {
 //-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
+/// \brief Construct logarithmic spectrum
+///
 /// This function maps the FFT spectrum, which is linear in the frequency,
 /// to a logarithmically binned spectrum. To this end the amplitudes
 /// of the FFT power spectrum are evently distributed into
@@ -236,14 +335,23 @@ void KeyRecognizer::signalPreprocessing()
     for (int i=0; i<M; ++i) copy[i]=(mLogSpec[i]>0 ? log(mLogSpec[i]) : 0);
 
     // Flatten noise by subtracting a gliding average
-    const int w=30;             // width of the average
     for (int i=0; i<M; ++i)
     {
+        const int w=30;             // width of the average
         int a = std::max(0,i-w);
         int b = std::min(M,i+w+1);
         double sum=0;
         for (int k=a; k<b; ++k) sum+=copy[k];
         mLogLogSpec[i]=copy[i]-sum/(b-a);
+    }
+
+    if (mSelectedKey>=0 and not mKeyForced)
+    {
+        const int w=30;             // width of the amplification
+        int m=ftom(mPiano->getEqualTempFrequency(mSelectedKey));
+        int a = std::max(0,m-w);
+        int b = std::min(M,m+w+1);
+        for (int k=a; k<b; ++k) mLogLogSpec[k] += 3.0/w*std::min(k-a,b-k);
     }
 }
 
@@ -291,7 +399,7 @@ void KeyRecognizer::defineKernel ()
     // Define the kernel function
     for (int n=1; n<=partials; ++n) setpeak(partialindex(0, n, B, 1),intensity(n));
         for (int div=2; div<=15; div++) for (int n=1; n<=30; ++n) if (n%div>0)
-            setpeak(partialindex(0,n,B,div),-0.05*intensity(n));
+            setpeak(partialindex(0,n,B,div),-0.3*intensity(n));
 
     mFFT.calculateFFT(kernel,mKernelFFT); // calculate FFT
 

@@ -66,7 +66,7 @@
 
 #define CONFIG_ENABLE_RTMIDI           1
 #define CONFIG_ENABLE_PULSEAUDIO       0
-#define CONFIG_ENABLE_XMGRACE          1
+#define CONFIG_ENABLE_XMGRACE          0
 #define CONFIG_OPTIMIZE_FFT            1
 #define CONFIG_USE_SIMPLE_FILE_DIALOG  0
 #define __LINUX_ALSA__ // for RtMidi

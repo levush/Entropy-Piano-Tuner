@@ -68,11 +68,14 @@ public:
     void init(bool optimize);                           // Initialize (optimize FFT)
     void recognizeKey(bool forceRestart,                // Recognize a key:
                       const Piano *piano,               // This function is called by
-                      FFTDataPointer fftPointer);       // the SignalAnalyzer
+                      FFTDataPointer fftPointer,        // the SignalAnalyzer
+                      int selectedKey, bool keyForced);
 
 private:
     void workerFunction() override final;               // Thread execution function
 
+    double detectForcedFrequency();                     // Handle forced keys
+    double detectFrequencyInTreble();                   // Handle keys in the treble
     void constructLogSpec();                            // Construct logarithmic spectrum
     void signalPreprocessing();                         // Preprocessing of the signal
     void defineKernel();                                // Define convolution kernel
@@ -83,6 +86,7 @@ private:
     KeyRecognizerCallback *mCallback;                   ///< Pointer to the caller
     FFTDataPointer mFFTPtr;                             ///< Pointer to Fourier transform
     double mConcertPitch;                               ///< Actual frequency of the A-key
+    const Piano *mPiano;                                ///< Pointer to the piano data
     int mNumberOfKeys;                                  ///< Number of piano keys
     int mKeyNumberOfA;                                  ///< Index of the A-key
     FFT_Implementation mFFT;                            ///< Instance of FFT implementation
@@ -91,6 +95,8 @@ private:
     FFTComplexVector mKernelFFT;                        ///< Fourier transform of the kernel
     FFTComplexVector mLogLogSpecFFT;                    ///< Fourier transform of LogLogSpec
     FFTRealVector mConvolution;                         ///< Convolution vector
+    int mSelectedKey;                                   ///< Number of the actually selected key
+    bool mKeyForced;                                    ///< Flag indicating that the key is forced
 
 private:
     static const double logfmin;                        ///< Log of minimal frequency
