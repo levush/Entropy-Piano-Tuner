@@ -593,18 +593,24 @@ void EntropyMinimizer::minimizeEntropy ()
     // compute initial entropy
     double H = computeEntropy();
     std::cout << "STARTING WITH ENTROPY H=" << H << std::endl;
-    double counter=0, progress=0;
+
+    // counter for calculating progress
+    uint64_t attemptsCounter = 0;
+    uint64_t updatesSinceLastChange = 0;
 
     // helper function for accepting an update and handling the progress bar
-    auto acceptUpdate = [&H,&progress,&counter,this] (int keynumber, double Hnew)
+    auto acceptUpdate = [&H,&attemptsCounter,&updatesSinceLastChange,this] (int keynumber, double Hnew)
     {
+        // update entropy and tuning curve
         H = Hnew;
         std::cout << "H=" << H << std::endl;
         if (keynumber>=0) updateTuningcurve(keynumber);
         else updateTuningcurve();
-        counter++;
-        progress += (1-progress) / (1+5000.0/sqrt(counter));
-        showCalculationProgress (progress);
+
+        // 'reset' updates
+        updatesSinceLastChange /= 2;
+
+        // output
         writeAccumulator("0-accumulator.dat");
         writeSpectrum(4,"tuned",mPitch[4]-getRecordedPitchET440(4));
         writeSpectrum(16,"tuned",mPitch[16]-getRecordedPitchET440(16));
@@ -612,9 +618,52 @@ void EntropyMinimizer::minimizeEntropy ()
     };
 
     double methodratio = 1;
+    double lastProgress = 0;
+    double pbAcc = 0;
+    double pbVel = 0;
 
-    while (not terminateThread() and progress<1)
+    // accuracy (duration) of algorithm
+    int stepsToFinish = 100;
+    std::string accuracy = mFactoryDescription.getStringParameter("accuracy");
+    if (accuracy == "low") {stepsToFinish = 10;}
+    else if (accuracy == "standard") {stepsToFinish = 60;}
+    else if (accuracy == "high") {stepsToFinish = 120;}
+    else if (accuracy == "infinite") {stepsToFinish = -1;}
+    else {ERROR("Accuracy %s is not supported, using standard.", accuracy.c_str());}
+
+
+    VERBOSE("Accuracy is %s, using %d as max steps.", accuracy.c_str(), stepsToFinish);
+
+    if (stepsToFinish < 0) {
+        // infinite, reset progress to 0
+        showCalculationProgress(0);
+    }
+
+    while (not terminateThread())
     {
+        ++attemptsCounter;
+        ++updatesSinceLastChange;
+
+        // update progress
+        if (stepsToFinish > 0) {
+            double progress = updatesSinceLastChange / stepsToFinish;
+            progress = std::max(progress, lastProgress);
+            pbAcc = std::max(-1.0, std::min(1.0, (progress - lastProgress)));
+            pbVel += pbAcc * 1.0;
+            pbVel = std::max(0.0, pbVel);
+            progress = pbVel * 0.001;
+            lastProgress = progress;
+            showCalculationProgress (progress);
+            if (attemptsCounter % 100 == 0) {
+                VERBOSE("Progress: %f", progress);
+            }
+
+            if (progress > 1) {
+                // stop calculation
+                break;
+            }
+        }
+
         // If external manual change of tuning curve reset entropy
         if (mRecalculateEntropy)
         {

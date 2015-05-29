@@ -121,6 +121,7 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
         case MessageCaluclationProgress::CALCULATION_ENDED:
             resetCalculation();
             mCalculationInProgress = false;
+            QMessageBox::information(this, tr("Calculation finished"), tr("The calculation finished successfully! Now you can switch to the tuning mode and tune your piano."));
             break;
         case MessageCaluclationProgress::CALCULATION_PROGRESSED:
             mCalculationProgressBar->setValue(mcp->getValue() * 100);

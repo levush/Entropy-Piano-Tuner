@@ -8,4 +8,30 @@
         <string>This algorithm performs a Monte-Carlo simulation to find the minimized entropy of the overlayed spectra of all keys.</string>
         <string lang="de">Dieser Algorithmus führt eine Monte-Carlo-Simulation aus, um das Minimum der Entropie des überlagerten Spektrums aller Tasten zu finden.</string>
     </description>
+    <param id="accuracy" type="list" default="standard">
+        <label>
+            <string>Calculation accuracy</string>
+            <string lang="de">Berechnungsgenauigkeit</string>
+        </label>
+        <description>
+            <string>Select the accuracy of the algorithm. A higher accuracy will take more computing time.</string>
+            <string lang="de">Wählen Sie die Genauigkeit des Algorithmus. Eine größere Genauigkeit wird eine längere Berechnungszeit in Anspruch nehmen.</string>
+        </description>
+        <entry value="low">
+            <string>Low</string>
+            <string lang="de">Niedrig</string>
+        </entry>
+        <entry value="standard">
+            <string>Standard</string>
+            <string lang="de">Standard</string>
+        </entry>
+        <entry value="high">
+            <string>High</string>
+            <string lang="de">Hoch</string>
+        </entry>
+        <entry value="infinite">
+            <string>Infinite</string>
+            <string lang="de">Unendlich</string>
+        </entry>
+    </param>
 </algorithm>
