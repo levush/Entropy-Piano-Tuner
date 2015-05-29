@@ -27,6 +27,7 @@
 #include "../core/config.h"
 #include "../core/piano/piano.h"
 #include "qtconfig.h"
+#include "QScroller"
 
 EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) :
     QDialog(parent, Qt::Window),
@@ -49,6 +50,8 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->concertPitchSpinBox->setValue(piano.getConcertPitch());
     ui->numberOfKeysSpinBox->setValue(piano.getKeyboard().getNumberOfKeys());
     ui->keyNumberOfASpinBox->setValue(piano.getKeyboard().getKeyNumberOfA4());
+
+    QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
 
     SHOW_DIALOG(this);
 }

@@ -69,58 +69,71 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     int iconSize = ui->modeToolBar->fontMetrics().height();
+    QSize modeIconSize = QSize(iconSize, iconSize) * 2;
     ui->modeToolBar->setObjectName("modeToolBar");
     ui->modeToolBar->setIconSize(QSize(iconSize, iconSize) * 2);
 
 
+    QScrollArea *modeScrollArea = new QScrollArea;
+    ui->modeToolBar->addWidget(modeScrollArea);
+    modeScrollArea->setWidgetResizable(true);
+    modeScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    modeScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    modeScrollArea->setStyleSheet("\
+                        QScrollArea { background: transparent; } \
+                        QScrollArea > QWidget > QWidget { background: transparent; } \
+                        ");
+    QScroller::grabGesture(modeScrollArea->viewport(), QScroller::LeftMouseButtonGesture);
+    QWidget *modeScrollContents = new QWidget;
+    modeScrollArea->setWidget(modeScrollContents);
+    modeScrollContents->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    QVBoxLayout *modeScrollLayout = new QVBoxLayout;
+    modeScrollLayout->setMargin(0);
+    modeScrollLayout->setSpacing(0);
+    modeScrollContents->setLayout(modeScrollLayout);
 
     QButtonGroup *group = new QButtonGroup(this);
 
-    QToolButton *idleButton = new QToolButton(this);
+    auto createModeToolButton = [this, modeIconSize, group, modeScrollLayout]() {
+        QToolButton *b = new QToolButton(this);
+        group->addButton(b);
+        b->setAutoRaise(true);
+        b->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        b->setCheckable(true);
+        b->setIconSize(modeIconSize);
+        b->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+        modeScrollLayout->addWidget(b);
+        return b;
+    };
+
+    QToolButton *idleButton = createModeToolButton();
     idleButton->setText(tr("Idle"));
     idleButton->setIcon(QIcon(":/media/icons/system-idle.png"));
-    idleButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    idleButton->setCheckable(true);
-    idleButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     idleButton->setWhatsThis(tr("Press this button to switch to the idle mode."));
-    group->addButton(idleButton);
     connect(idleButton, SIGNAL(toggled(bool)), this, SLOT(onModeIdle(bool)));
-    ui->modeToolBar->addWidget(idleButton);
 
-    QToolButton *recordingButton = new QToolButton(this);
+    QToolButton *recordingButton = createModeToolButton();
     recordingButton->setText(tr("Record"));
     recordingButton->setIcon(QIcon::fromTheme("audio-input-microphone", QIcon(":/media/icons/audio-input-microphone.png")));
-    recordingButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    recordingButton->setCheckable(true);
-    recordingButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     recordingButton->setWhatsThis(tr("Press this button to switch to the recording mode."));
-    group->addButton(recordingButton);
     connect(recordingButton, SIGNAL(toggled(bool)), this, SLOT(onModeRecord(bool)));
-    ui->modeToolBar->addWidget(recordingButton);
 
-    QToolButton *calculatingButton = new QToolButton(this);
+    QToolButton *calculatingButton = createModeToolButton();
     calculatingButton->setText(tr("Calculate"));
     calculatingButton->setIcon(QIcon(":/media/icons/note.png"));
-    calculatingButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    calculatingButton->setCheckable(true);
-    calculatingButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     calculatingButton->setWhatsThis(tr("Press this button to switch to the calculation mode."));
-    group->addButton(calculatingButton);
     connect(calculatingButton, SIGNAL(toggled(bool)), this, SLOT(onModeCalculate(bool)));
-    ui->modeToolBar->addWidget(calculatingButton);
 
-    QToolButton *tuningButton = new QToolButton(this);
+    QToolButton *tuningButton = createModeToolButton();
     tuningButton->setText(tr("Tune"));
     tuningButton->setIcon(QIcon(":/media/icons/wrest.png"));
-    tuningButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    tuningButton->setCheckable(true);
-    tuningButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     tuningButton->setWhatsThis(tr("Press this button to switch to the tuning mode."));
-    group->addButton(tuningButton);
     connect(tuningButton, SIGNAL(toggled(bool)), this, SLOT(onModeTune(bool)));
-    ui->modeToolBar->addWidget(tuningButton);
 
     idleButton->setChecked(true);
+
+    modeScrollLayout->addStretch();
 
     mModeToolButtons[MODE_IDLE] = idleButton;
     mModeToolButtons[MODE_RECORDING] = recordingButton;

@@ -28,6 +28,7 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QDoubleSpinBox>
+#include <QScroller>
 #include "doubleslider.h"
 
 #include "qtconfig.h"
@@ -86,10 +87,12 @@ AlgorithmDialog::AlgorithmDialog(QString currentAlgorithm, QWidget *parent) :
     // scroll area
     mAlgorithmDescriptionScrollArea = new QScrollArea;
     mainLayout->addWidget(mAlgorithmDescriptionScrollArea);
-    mAlgorithmDescriptionScrollArea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    //mAlgorithmDescriptionScrollArea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     mAlgorithmDescriptionScrollArea->setWidgetResizable(true);
-    mAlgorithmDescriptionScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    mAlgorithmDescriptionScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    //mAlgorithmDescriptionScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //mAlgorithmDescriptionScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    QScroller::grabGesture(mAlgorithmDescriptionScrollArea->viewport(), QScroller::LeftMouseButtonGesture);
 
 
 
@@ -148,7 +151,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     setWindowTitle(tr("Info of algorithm: %1").arg(QString::fromStdString(info.getName())));
 
     QWidget *scrollContentWidget = new QWidget;
-    scrollContentWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    scrollContentWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     mAlgorithmDescriptionScrollArea->setWidget(scrollContentWidget);
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     scrollContentWidget->setLayout(scrollLayout);
@@ -165,7 +168,6 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
     QLabel *descriptionLabel = new QLabel(QString::fromStdString(info.getDescription()));
     descriptionLabel->setWordWrap(true);
-    descriptionLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
     descriptionLabel->setAlignment(Qt::AlignTop);
     layout->addRow(new QLabel(tr("Description:")), descriptionLabel);
 
@@ -226,7 +228,6 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
             EptAssert(dataWidget, "A data widget has to exist.");
 
-            dataWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
             dataWidget->setWhatsThis(QString::fromStdString(param.getDescription()));
 
             if (dataLayout) {
