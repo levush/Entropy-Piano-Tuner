@@ -104,7 +104,7 @@ private:
     double mtof (int m);                                ///< Map bin index to frequency
     int ftom (double f);                                ///< Map frequency to bin index
 
-    //void Write(std::string filename, std::vector<double> &v, bool log=true); // only for development
+    void Write(std::string filename, std::vector<double> &v, bool log=true); // only for development
 };
 
 #endif // KEYRECOGNIZER_H

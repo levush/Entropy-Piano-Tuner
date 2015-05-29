@@ -345,14 +345,24 @@ void KeyRecognizer::signalPreprocessing()
         mLogLogSpec[i]=copy[i]-sum/(b-a);
     }
 
+    // If key is selected remove all spectral lines below.
+    // For low-lying spectral lines amplify the lowest one.
     if (mSelectedKey>=0 and not mKeyForced)
     {
-        const int w=30;             // width of the amplification
-        int m=ftom(mPiano->getEqualTempFrequency(mSelectedKey));
-        int a = std::max(0,m-w);
-        int b = std::min(M,m+w+1);
-        for (int k=a; k<b; ++k) mLogLogSpec[k] += 3.0/w*std::min(k-a,b-k);
+        const int w=30;
+        int m=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*0.9);
+        for (int k=0; k<m; ++k) mLogLogSpec[k]=0;
+        m=ftom(mPiano->getEqualTempFrequency(mSelectedKey));
+        if (mSelectedKey < 20)
+        {
+            const int w=30;             // width of the amplification
+            int a = std::max(0,m-w);
+            int b = std::min(M,m+w+1);
+            for (int k=a; k<b; ++k) mLogLogSpec[k] += 3.0/w*std::min(k-a,b-k);
+        }
     }
+
+    Write("000-loglogspec.dat",mLogLogSpec,false);
 }
 
 
@@ -461,23 +471,23 @@ int KeyRecognizer::findNearestKey (double f)
 }
 
 
-////-----------------------------------------------------------------------------
-////			Write function for development purposes
-////-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//			Write function for development purposes
+//-----------------------------------------------------------------------------
 
-//void KeyRecognizer::Write(std::string filename, std::vector<double> &v, bool log)
-//{
-//#if CONFIG_ENABLE_XMGRACE
-//    std::ofstream os(filename);
-//    for (uint m=0; m<v.size(); ++m)
-//    {
-//        //os << m << "\t" << v[m] << std::endl;
-//        if (log) os << mtof(m) << "\t" << v[m] << std::endl;
-//        else os << m << "\t" << v[m] << std::endl;
-//    }
-//    os.close();
-//#else
-//    (void)filename; (void)v; // suppress warnings
-//#endif // CONFIG_ENABLE_XMGRACE
-//}
+void KeyRecognizer::Write(std::string filename, std::vector<double> &v, bool log)
+{
+#if CONFIG_ENABLE_XMGRACE
+    std::ofstream os(filename);
+    for (uint m=0; m<v.size(); ++m)
+    {
+        //os << m << "\t" << v[m] << std::endl;
+        if (log) os << mtof(m) << "\t" << v[m] << std::endl;
+        else os << m << "\t" << v[m] << std::endl;
+    }
+    os.close();
+#else
+    (void)filename; (void)v; // suppress warnings
+#endif // CONFIG_ENABLE_XMGRACE
+}
 
