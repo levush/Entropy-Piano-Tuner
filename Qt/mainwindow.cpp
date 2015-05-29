@@ -83,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
                         QScrollArea { background: transparent; } \
                         QScrollArea > QWidget > QWidget { background: transparent; } \
                         ");
+    modeScrollArea->setFrameShape(QFrame::NoFrame);
     QScroller::grabGesture(modeScrollArea->viewport(), QScroller::LeftMouseButtonGesture);
     QWidget *modeScrollContents = new QWidget;
     modeScrollArea->setWidget(modeScrollContents);
