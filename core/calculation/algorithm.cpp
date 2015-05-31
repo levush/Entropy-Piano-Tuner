@@ -20,6 +20,7 @@
 #include "algorithm.h"
 #include <cmath>
 #include "../messages/messagehandler.h"
+#include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagechangetuningcurve.h"
 #include "../messages/messagecaluclationprogress.h"
 
@@ -46,6 +47,9 @@ void Algorithm::workerFunction()
             (MessageCaluclationProgress::CALCULATION_STARTED);
 
     algorithmWorkerFunction();
+
+    // After completion of the algorithm, deselect all keys.
+    MessageHandler::send<MessageKeySelectionChanged>(-1,nullptr);
 
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_ENDED);
