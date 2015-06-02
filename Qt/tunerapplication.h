@@ -78,6 +78,14 @@ public:
     static TunerApplication *getSingletonPtr();
 
 
+    /// \brief This is sets the exit code if the app would be terminated now
+    ///
+    /// If it is expected that the app may exit in the future, usually at the end
+    /// of the program all this with EXIT_SUCCESS.
+    /// If it is not expected that the app exits call this using EXIT_FAILURE
+    /// This is used to detect whether the app crashed
+    static void setApplicationExitState(int errorcode = EXIT_SUCCESS);
+
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Function to initialise the application.
     ///
@@ -192,7 +200,12 @@ private slots:
     ///////////////////////////////////////////////////////////////////////////////
     void onApplicationStateChanged(Qt::ApplicationState state);
 
+    void onAboutToQuit();
+
 private:
+    /// last exit code to detect if the application crashed
+    int mLastExitCode;
+
     /// Id of the timer that progresses the MessageHandler.
     int mMessageHandlerTimerId;
 

@@ -39,10 +39,10 @@
 
 AlgorithmDialog::AlgorithmIdList AlgorithmDialog::mAlgorithmNames;
 
-AlgorithmDialog::AlgorithmDialog(QString currentAlgorithm, QWidget *parent) :
+AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, QWidget *parent) :
     QDialog(parent)
 {
-    EptAssert(CalculationManager::getSingleton().hasAlgorithm(currentAlgorithm.toStdString()), "Current algorithm has to exist.");
+    EptAssert(currentAlgorithm, "Current algorithm has to exist.");
 
     QRect pr(parent->contentsRect());
     setGeometry(pr.center().x() - pr.width() / 4, pr.center().y() - pr.height() / 4,
@@ -79,7 +79,7 @@ AlgorithmDialog::AlgorithmDialog(QString currentAlgorithm, QWidget *parent) :
     }
     titleLayout->addWidget(comboBox);
     // select current algorithm
-    comboBox->setCurrentIndex(comboBox->findData(currentAlgorithm));
+    comboBox->setCurrentIndex(comboBox->findData(QString::fromStdString(currentAlgorithm->getId())));
     EptAssert(comboBox->currentIndex() >= 0, "The default algotihm doesnt exist!");
 
     QObject::connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(algorithmSelectionChanged(int)));
@@ -142,7 +142,6 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
     // load new
     QString algId = mAlgorithmSelection->itemData(index).toString();
-    mCurrenctAlgorithm = algId;
     AlgorithmFactoryDescription &description = CalculationManager::getSingleton().getAlgorithmDescription(algId.toStdString());
     mCurrenctFactoryDescription = &description;
     mCurrentAlgorithmInformation = CalculationManager::getSingleton().loadAlgorithmInformation(description.getAlgorithmName());

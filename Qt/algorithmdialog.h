@@ -37,9 +37,9 @@ class AlgorithmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    AlgorithmDialog(QString currentAlgorithm, QWidget *parent);
+    AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, QWidget *parent);
 
-    const QString getAlgorithm() const {return mCurrenctAlgorithm;}
+    std::shared_ptr<const AlgorithmInformation> getAlgorithmInformation() const {return mCurrentAlgorithmInformation;}
 private:
     void acceptCurrent();
 
@@ -55,11 +55,9 @@ private:
     AlgorithmWidgetConnectionList mAlgorithmWidgetConnectionList;
 
     AlgorithmFactoryDescription *mCurrenctFactoryDescription = nullptr;
-    std::unique_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;
+    std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;
     QComboBox *mAlgorithmSelection = nullptr;
     QScrollArea *mAlgorithmDescriptionScrollArea = nullptr;
-
-    QString mCurrenctAlgorithm;
 };
 
 #endif // ALGORITHMDIALOG_H

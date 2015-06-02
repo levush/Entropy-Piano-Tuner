@@ -30,7 +30,7 @@
 class AlgorithmInformationParser
 {
 public:
-    std::unique_ptr<const AlgorithmInformation> parse(const std::string &fileContent) const;
+    std::shared_ptr<const AlgorithmInformation> parse(const std::string &algorithmId) const;
 
 private:
     std::string parseLanguageString(const tinyxml2::XMLElement *element) const;

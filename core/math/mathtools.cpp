@@ -176,7 +176,7 @@ double MathTools::findSmoothedMaximum (const std::vector<double> &x)
 double MathTools::weightedArithmetricMean(const std::vector<double> &Y, size_t start, size_t end)
 {
     double norm = 0;
-    double mean;
+    double mean = 0;
     end = std::min(end, Y.size());
     for (size_t i = start; i < end; ++i)
     {

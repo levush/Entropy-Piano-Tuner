@@ -32,13 +32,15 @@ public:
     using ParameterListType = std::vector<ParameterType>;
 
 public:
-    AlgorithmInformation(const std::string name,
+    AlgorithmInformation(const std::string id,
+                         const std::string name,
                          const std::string description,
                          const int year,
                          const std::string author,
                          const ParameterListType &parameters);
     ~AlgorithmInformation();
 
+    const std::string &getId() const {return mId;}
     const std::string &getName() const {return mName;}
     const std::string &getDescription() const {return mDescription;}
     int getYear() const {return mYear;}
@@ -47,6 +49,7 @@ public:
     const ParameterType &getParameter(const std::string &id) const;
 
 private:
+    const std::string mId;
     const std::string mName;
     const std::string mDescription;
     const int          mYear;

@@ -33,6 +33,7 @@
 
 #include <QTranslator>
 #include <QLibraryInfo>
+#include <QMessageBox>
 #include "tunerapplication.h"
 #include "qdebug.h"
 #include "../core/config.h"
@@ -44,12 +45,12 @@ int main(int argc, char *argv[])
 {
     int exitCode = -1;
 
-    try {
-        // basic application properties (needed for settings)
-        QCoreApplication::setOrganizationName("tp3");
-        QCoreApplication::setOrganizationDomain("entropy-tuner.org");
-        QCoreApplication::setApplicationName("Entropy Piano Tuner");
+    // basic application properties (needed for settings)
+    QCoreApplication::setOrganizationName("tp3");
+    QCoreApplication::setOrganizationDomain("entropy-tuner.org");
+    QCoreApplication::setApplicationName("Entropy Piano Tuner");
 
+    try {
         // create settings
         (new SettingsForQt())->load();
         // increase run count
@@ -92,17 +93,18 @@ int main(int argc, char *argv[])
     catch (const EptException &e) {
         qCritical() << "Unhandled exception: ";
         qCritical() << QString::fromStdString(e.getFullDescription());
-
+        exitCode = EXIT_FAILURE;
     }
     catch (const std::exception &e) {
         qCritical() << "Unhandled exception: ";
         qCritical() << QString::fromStdString(e.what());
+        exitCode = EXIT_FAILURE;
     }
     catch (...) {
         qCritical() << "Unhandled exception: ";
         qCritical() << "unknown exception";
+        exitCode = EXIT_FAILURE;
     }
-    exitCode = EXIT_FAILURE;
 
     platformtools::enableScreensaver();
 

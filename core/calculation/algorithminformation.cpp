@@ -20,11 +20,13 @@
 #include "algorithminformation.h"
 #include "../system/eptexception.h"
 
-AlgorithmInformation::AlgorithmInformation(const std::string name,
+AlgorithmInformation::AlgorithmInformation(const std::string id,
+                                           const std::string name,
                                            const std::string description,
                                            const int year,
                                            const std::string author,
                                            const ParameterListType &parameters) :
+    mId(id),
     mName(name),
     mDescription(description),
     mYear(year),
