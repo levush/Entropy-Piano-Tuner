@@ -150,7 +150,7 @@ float AudioRecorderForQt::getVolume() const {
     return 1;
 }
 
-void AudioRecorderForQt::onReadPacket() {\
+void AudioRecorderForQt::onReadPacket() {
     QByteArray rawdata = mIODevice->readAll();
     std::vector<DataFormat> data(rawdata.size() / sizeof(DataFormat));
     memcpy(data.data(), rawdata.data(), data.size() * sizeof(DataFormat));

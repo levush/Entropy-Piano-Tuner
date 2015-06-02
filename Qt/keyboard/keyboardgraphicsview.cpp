@@ -210,8 +210,8 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
     }
     case Message::MSG_CLEAR_RECORDING:
         // deselect all
-        selectPreliminaryKey(-1);
-        selectKey(-1, STATE_NORMAL);
+        selectPreliminaryKey(NO_KEY);
+        selectKey(NO_KEY, STATE_NORMAL);
 
         // redraw all markers
         redrawAllMarkers();
@@ -223,6 +223,9 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
         // update key
         break;
     }
+    case Message::MSG_SIGNAL_ANALYSIS_ENDED:
+        selectPreliminaryKey(NO_KEY);
+        break;
     default:
         break;
     }

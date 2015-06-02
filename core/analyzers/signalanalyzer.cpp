@@ -249,6 +249,9 @@ void SignalAnalyzer::recordSignal()
     // define the packed to store audio data
     AudioBase::PacketType packet;
 
+    // read all data from the audio recorder to clear all buffered data
+    mAudioRecorder->readAll(packet);
+
     // get the sampling rate
     uint samplingrate = mAudioRecorder->getSamplingRate();
 

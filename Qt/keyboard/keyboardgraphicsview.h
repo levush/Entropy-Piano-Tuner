@@ -67,6 +67,8 @@ public:
     static const qreal KEY_FORCED_FACTOR;                       ///< Color scaling if the key is forced
     static const QColor KEY_PRELIMINARY_AND_SELECTED_COLOR;     ///< Color if the preliminary key equates the selected key
 
+    static const int NO_KEY = -1;                               ///< No key selection constant
+
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief The KeyboardMode enum
