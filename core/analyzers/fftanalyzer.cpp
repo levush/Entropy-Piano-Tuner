@@ -136,7 +136,7 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
         key->setRecorded(true);
 
         auto peaks = identifyPeaks(finalFFT, spectrum,f,B);
-        VERBOSE("FFTAnalyzer: found %lu peaks.", peaks.size());
+        VERBOSE("FFTAnalyzer: found %u peaks.", peaks.size());
         key->setPeaks(peaks);
     } else {
         WARNING("Frequence %f is out of bounds", f);

@@ -85,7 +85,7 @@ void transformVector (const std::vector<T> &v, std::vector<T> &w,
 
 template <typename T>
 std::vector<T> transformVector (const std::vector<T> &v, std::function<T(T)> f)
-{ std::vector<T> w(v.size()); for (int i=0; i<v.size(); i++) w[i]=f(v[i]); return w; }
+{ std::vector<T> w(v.size()); for (uint i=0; i<v.size(); i++) w[i]=f(v[i]); return w; }
 
 } // MathTools
 

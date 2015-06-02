@@ -151,7 +151,7 @@ void KeyRecognizer::workerFunction()
 
     double f=0;
     if (mKeyForced and mSelectedKey>=0) f = detectForcedFrequency();
-    //else f = detectFrequencyInTreble();
+    else f = detectFrequencyInTreble();
     CHECK_CANCEL_THREAD;
 
     if (f==0)
@@ -167,8 +167,6 @@ void KeyRecognizer::workerFunction()
     }
 
     int keynumber = findNearestKey(f);      // determine keynumber
-
-    std::cout << "KeyRecognizer: f=" << f << ", key=" << keynumber << std::endl;
 
     mCallback->keyRecognized(keynumber, f); // notify callback
 }
@@ -353,23 +351,16 @@ void KeyRecognizer::signalPreprocessing()
     Write("03-dBflat.dat",mFlatSpectrum);
 
 
-//    int m0=ftom(5000);
-//    for (int i=m0; i<M; ++i) mLogLogSpec[i]=0;
-
-
-    // If key is selected remove all spectral lines below.
-    // For low-lying spectral lines amplify the lowest one.
+    // If key is selected decrease all spectral lines below
+    // and slightly increase the main spectral line.
     if (mSelectedKey>=0 and not mKeyForced)
     {
-        int m=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*0.9);
-        for (int k=0; k<m; ++k) mFlatSpectrum[k]=0;
-        m=ftom(mPiano->getEqualTempFrequency(mSelectedKey));
-        if (mSelectedKey < 20)
+        int m1=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*0.93);
+        int m2=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*1.07);
+        if (m1>=0 and m1<=m2 and m2<=M)
         {
-            const int w=30;             // width of the amplification
-            int a = std::max(0,m-w);
-            int b = std::min(M,m+w+1);
-            for (int k=a; k<b; ++k) mFlatSpectrum[k] += 3.0/w*std::min(k-a,b-k);
+            for (int k=0; k<m1; ++k)  mFlatSpectrum[k] *= 0.75;
+            for (int k=m1; k<m2; ++k) mFlatSpectrum[k] *= 1.2;
         }
     }
     Write("04-FlatSpectrum.dat",mFlatSpectrum);
@@ -397,14 +388,14 @@ void KeyRecognizer::defineKernel ()
 
     static const int width=M/300;     // width of the peaks in bins
     static const int partials=20;  // number of partials to be detected (20)
-    static const double B=0.0005;   // here still with a constant inharmonicity
+    static const double B=0.000;   // here still with a constant inharmonicity
 
     static std::vector<double> kernel(M); //must be static for using fftw3
     kernel.assign(M,0);
 
     // lambda function for setting a peak
     auto setpeak = [] (int m, double amplitude)
-    { for (int n=m-width; n<=m+width; n++) kernel[(n+M)%M]+=amplitude*(width-std::abs(n-m)); };
+    { for (int n=m-width; n<=m+width; n++) kernel[(n+M)%M]=amplitude*(width-std::abs(n-m)); };
 
     // lambda function for computing the frequency ratio of the nth partial
     auto partial = [] (int n, double B)
@@ -415,17 +406,18 @@ void KeyRecognizer::defineKernel ()
     { return ftom(fmin*partial(n,B)/partial(div,B)); };
 
     // lambda function for the intensity decay of the peaks
-    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.0); };
+    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.3); };
 
     // Define the kernel function
+    for (int div=2; div<=4; div++) for (int n=1; n<=30; ++n) if (n%div>0) if (n>div-2)
+            setpeak(partialindex(n,B,div),-0.3*intensity(n));
+
     for (int n=1; n<=partials; ++n) setpeak(partialindex(n, B, 1),intensity(n));
 
-    for (int div=2; div<=15; div++) for (int n=1; n<=15; ++n) if (n%div>0) if (n>div-2)
-            setpeak(partialindex(n,B,div),-0.2*intensity(n));
 
     mFFT.calculateFFT(kernel,mKernelFFT); // calculate FFT
 
-    Write("05-keyrecog-kernel.dat",kernel,false);
+    Write("05-keyrecog-kernel.dat",kernel,true);
 }
 
 
@@ -500,7 +492,7 @@ void KeyRecognizer::Write(std::string filename, std::vector<double> &v, bool log
     }
     os.close();
 #else
-    (void)filename; (void)v; // suppress warnings
+    (void)filename; (void)v; (void)log; // suppress warnings
 #endif // CONFIG_ENABLE_XMGRACE
 }
 
