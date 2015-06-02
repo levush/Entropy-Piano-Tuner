@@ -28,6 +28,7 @@
 #include <vector>
 #include <cmath>
 #include <functional>
+#include <algorithm>
 #include <limits>
 #include "../system/prerequisites.h"
 
@@ -75,6 +76,16 @@ double weightedArithmetricMean(const std::vector<double> &Y, size_t start = 0, s
 
 /// Restrict floating point value to an interval
 double restrictToInterval (double x, double xmin, double xmax);
+
+/// Map a vector to a different one by a unary map
+template <typename T>
+void transformVector (const std::vector<T> &v, std::vector<T> &w,
+                      std::function<T(T)> f)
+{ w.resize(v.size()); for (int i=0; i<v.size(); i++) w[i]=f(v[i]); }
+
+template <typename T>
+std::vector<T> transformVector (const std::vector<T> &v, std::function<T(T)> f)
+{ std::vector<T> w(v.size()); for (int i=0; i<v.size(); i++) w[i]=f(v[i]); return w; }
 
 } // MathTools
 
