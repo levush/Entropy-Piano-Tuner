@@ -27,6 +27,7 @@
 #include <QFileOpenEvent>
 #include <QStandardPaths>
 #include <QScreen>
+#include <QMessageBox>
 #include "../core/config.h"
 #include "../core/messages/messagehandler.h"
 #include "filemanagerforqt.h"
@@ -35,6 +36,7 @@
 #include "logforqt.h"
 #include "settingsforqt.h"
 #include "../core/system/eptexception.h"
+#include "logviewer.h"
 
 TunerApplication *TunerApplication::mSingleton(nullptr);
 
@@ -54,6 +56,14 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
     }
 
     new FileManagerForQt();
+
+    // get last exit code
+    QSettings settings;
+    mLastExitCode =  settings.value("application/lastExitCode", EXIT_SUCCESS).toInt();
+    // and set the last exit code to failure (this session has not ended)
+    settings.setValue("application/lastExitCode", EXIT_FAILURE);
+
+    QObject::connect(this, SIGNAL(aboutToQuit()), this, SLOT(onAboutToQuit()));
 }
 
 TunerApplication::~TunerApplication()
@@ -75,7 +85,21 @@ TunerApplication *TunerApplication::getSingletonPtr() {
     return mSingleton;
 }
 
+void TunerApplication::setApplicationExitState(int errorcode) {
+    // store the error code for next session
+    QSettings settings;
+    settings.setValue("application/lastExitCode", errorcode);
+}
+
 void TunerApplication::init() {
+    // check if there was a crash last session
+    if (mLastExitCode != EXIT_SUCCESS) {
+        if (QMessageBox::information(nullptr, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
+                == QMessageBox::Yes) {
+            LogViewer v;
+            v.exec();
+        }
+    }
 
     // open the main window with the startup file
     mMainWindow.reset(new MainWindow());
@@ -119,8 +143,6 @@ void TunerApplication::start() {
 
     QObject::connect(this, SIGNAL(applicationStateChanged(Qt::ApplicationState)),
                      this, SLOT(onApplicationStateChanged(Qt::ApplicationState)));
-
-
 
 
     // if the user opened this program by double clicking a file, we can set this file
@@ -259,11 +281,13 @@ void TunerApplication::onApplicationStateChanged(Qt::ApplicationState state) {
     if (state & Qt::ApplicationSuspended) {
         // called if application is 'shut down'
         INFORMATION("Application suspended: exiting core");
+        setApplicationExitState(EXIT_SUCCESS);
         stopCore();
         exitCore();
     } else if (state & Qt::ApplicationActive) {
         // init and start core components
         INFORMATION("Application gone active: starting core");
+        setApplicationExitState(EXIT_FAILURE);
         initCore();
         startCore();
     } else if (state & Qt::ApplicationHidden ) {
@@ -275,6 +299,11 @@ void TunerApplication::onApplicationStateChanged(Qt::ApplicationState state) {
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(Q_OS_WINPHONE)
         INFORMATION("Application gone inactive: stopping core");
         stopCore();
+        setApplicationExitState(EXIT_SUCCESS);
 #endif
     }
+}
+
+void TunerApplication::onAboutToQuit() {
+    setApplicationExitState(EXIT_SUCCESS);
 }

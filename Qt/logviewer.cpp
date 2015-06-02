@@ -33,8 +33,10 @@ LogViewer::LogViewer(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QRect p(parent->geometry());
-    setGeometry(p.left() + p.width() / 4, p.top() + p.height() / 4, p.width() / 2, p.height() / 2);
+    if (parent) {
+        QRect p(parent->geometry());
+        setGeometry(p.left() + p.width() / 4, p.top() + p.height() / 4, p.width() / 2, p.height() / 2);
+    }
 
     QFile f(QString::fromStdString(FileManager::getSingleton().getLogFilePath(LogForQt::LOG_NAME)));
     if (!f.open(QFile::ReadOnly | QFile::Text)) return;
