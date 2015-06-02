@@ -6,7 +6,6 @@
 
 
 const std::array<qreal, GraphicsKeyItem::KC_COUNT> KEY_RADIUS_FACTOR {{0.18, 0.1}};
-const qreal WHITE_KEY_RADIUS_FACTOR = 0.4;
 
 const std::array<std::array<qreal, 4>, GraphicsKeyItem::KC_COUNT> MARGINS {{ {{0, 0, 0, 0}}, {{0.5, 0, -0.5, 0}} }};
 

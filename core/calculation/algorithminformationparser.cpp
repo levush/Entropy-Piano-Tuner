@@ -25,12 +25,15 @@
 #include "../system/eptexception.h"
 #include "../system/log.h"
 #include "../settings.h"
+#include "../adapters/filemanager.h"
 
 using tinyxml2::XMLDocument;
 using tinyxml2::XMLElement;
 
-std::unique_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(const std::string &fileContent) const {
+std::shared_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(const std::string &algorithmId) const {
     XMLDocument document;
+
+    std::string fileContent(FileManager::getSingleton().getAlgorithmInformationFileContent(algorithmId));
 
     document.Parse(fileContent.c_str(), fileContent.size());
 
@@ -64,8 +67,8 @@ std::unique_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(co
 
     }
 
-    return std::unique_ptr<const AlgorithmInformation>(
-                new AlgorithmInformation(name, description, year, author, params));
+    return std::shared_ptr<const AlgorithmInformation>(
+                new AlgorithmInformation(algorithmId, name, description, year, author, params));
 }
 
 std::string AlgorithmInformationParser::parseLanguageString(const tinyxml2::XMLElement *element) const {

@@ -49,8 +49,6 @@ protected:
 private:
     const Piano *mPiano;
     int mNumberOfKeys;
-    int mKeyNumberOfA;
-    int mSamplingRate;
     int mSelectedKey;
     int mRecognizedKey;
     OperationMode mOperationMode;

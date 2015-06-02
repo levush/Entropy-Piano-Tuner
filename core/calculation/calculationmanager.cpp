@@ -32,7 +32,6 @@
 #include "../messages/messagehandler.h"
 #include "../messages/messagecaluclationprogress.h"
 #include "../messages/messagechangetuningcurve.h"
-#include "../adapters/filemanager.h"
 #include "algorithmfactory.h"
 #include "algorithminformationparser.h"
 
@@ -125,11 +124,11 @@ AlgorithmFactoryDescription &CalculationManager::getAlgorithmDescription(const s
     return mAlgorithms.at(algorithmName)->getDescription();
 }
 
-std::unique_ptr<const AlgorithmInformation> CalculationManager::loadAlgorithmInformation(const std::string &algorithmName) const
+std::shared_ptr<const AlgorithmInformation> CalculationManager::loadAlgorithmInformation(const std::string &algorithmName) const
 {
     // open the xml file for this algorithm and return the information in the current language
     AlgorithmInformationParser parser;
-    return parser.parse(FileManager::getSingleton().getAlgorithmInformationFileContent(algorithmName));
+    return parser.parse(algorithmName);
 }
 
 bool CalculationManager::hasAlgorithm(const std::string &id) const {

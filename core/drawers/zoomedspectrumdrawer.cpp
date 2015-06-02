@@ -39,7 +39,6 @@ ZoomedSpectrumDrawer::ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics),
     mPiano(nullptr),
     mNumberOfKeys(0),
-    mKeyNumberOfA(0),
     mSelectedKey(-1),
     mRecognizedKey(-1),
     mOperationMode(MODE_COUNT)
@@ -64,19 +63,6 @@ void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
         auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
         mOperationMode = mmc->getMode();
         redraw(true);
-        break;
-    }
-    case Message::MSG_NEW_FFT_CALCULATED:
-    {
-        /*auto mnfc(std::static_pointer_cast<MessageNewFFTCalculated>(m));
-        if (mnfc->hasError()) {
-            mFFTData.reset();
-            mSamplingRate = -1;
-        } else {
-            mFFTData = mnfc->getData();
-            mSamplingRate = mFFTData->samplingRate;
-        }
-        redraw(true);*/
         break;
     }
     case Message::MSG_PRELIMINARY_KEY:
@@ -195,8 +181,8 @@ void ZoomedSpectrumDrawer::draw()
 
     auto borderline = GraphicsViewAdapter::PEN_THIN_DARK_GRAY;
     auto filling = GraphicsViewAdapter::FILL_RED;
-    if (abs(deviation) < 5) filling = GraphicsViewAdapter::FILL_GREEN;
-    else if (abs(deviation) < 10) filling = GraphicsViewAdapter::FILL_ORANGE;
+    if (std::abs(deviation) < 5) filling = GraphicsViewAdapter::FILL_GREEN;
+    else if (std::abs(deviation) < 10) filling = GraphicsViewAdapter::FILL_ORANGE;
 
     mGraphics->drawFilledRect(mx, my, markerWidth, markerHeight, borderline, filling);
 }

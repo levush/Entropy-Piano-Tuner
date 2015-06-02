@@ -39,7 +39,7 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, bool smallDevice,
       CalculationAdapter(core),
       mCalculationInProgress(false)
 {
-    setTitle(tr("Calculation"));
+    Q_UNUSED(smallDevice);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -67,14 +67,19 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, bool smallDevice,
 
     mainLayout->addStretch();
 
-    resetCalculation();
+    onResetCalculation();
 
-    mAlgorithmSelection = QString::fromStdString(SettingsForQt::getSingleton().getLastUsedAlgorithm());
+    std::string lastUsedAlgorithm(SettingsForQt::getSingleton().getLastUsedAlgorithm());
     // check if algorithm exists
-    if (CalculationManager::getSingleton().hasAlgorithm(mAlgorithmSelection.toStdString()) == false) {
+    if (CalculationManager::getSingleton().hasAlgorithm(lastUsedAlgorithm) == false) {
         // select default algorithm
-        mAlgorithmSelection = QString::fromStdString(CalculationManager::getSingleton().getDefaultAlgorithmId());
+        lastUsedAlgorithm = CalculationManager::getSingleton().getDefaultAlgorithmId();
     }
+
+    // load algorithm information
+    mAlgorithmSelection = CalculationManager::getSingleton().loadAlgorithmInformation(lastUsedAlgorithm);
+
+    updateTitle();
 
     QObject::connect(mStartCancelButton, SIGNAL(clicked()), this, SLOT(startCancelPressed()));
 }
@@ -109,7 +114,7 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
 
             QMessageBox::critical(this, tr("Calculation error"), QString("%1<br><br><b>%2: %3</b>").arg(errorText, tr("Error code"), QString("%1").arg(mcp->getErrorCode())));
 
-            cancelCalculation();
+            onCancelCalculation();
             break;
         }
         case MessageCaluclationProgress::CALCULATION_STARTED:
@@ -119,7 +124,7 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
             mStartCancelButton->setText(tr("Stop calculation"));
             break;
         case MessageCaluclationProgress::CALCULATION_ENDED:
-            resetCalculation();
+            onResetCalculation();
             mCalculationInProgress = false;
             QMessageBox::information(this, tr("Calculation finished"), tr("The calculation finished successfully! Now you can switch to the tuning mode and tune your piano."));
             break;
@@ -138,23 +143,28 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
     }
 }
 
-void CalculationProgressGroup::startCalculation() {
-    CalculationAdapter::startCalculation(mAlgorithmSelection.toStdString());
+void CalculationProgressGroup::updateTitle() {
+    EptAssert(mAlgorithmSelection, "Algorithm has to be selected");
+    setTitle(tr("Calculation with: %1").arg(QString::fromStdString(mAlgorithmSelection->getName())));
+}
+
+void CalculationProgressGroup::onStartCalculation() {
+    CalculationAdapter::startCalculation(mAlgorithmSelection->getId());
 
     activateMessageListener();
 }
 
-void CalculationProgressGroup::cancelCalculation() {
+void CalculationProgressGroup::onCancelCalculation() {
     mStatusLabel->setText(tr("Calculation canceled"));
     mCalculationProgressBar->setValue(0);
     mStartCancelButton->setText(tr("Start calculation"));
 
-    CalculationAdapter::cancelCalculation();
+    cancelCalculation();
     deactivateMessageListener();
     mCalculationInProgress = false;
 }
 
-void CalculationProgressGroup::resetCalculation() {
+void CalculationProgressGroup::onResetCalculation() {
     mStatusLabel->setText(tr("Press the button to start the calculation"));
     mCalculationProgressBar->setValue(0);
     mStartCancelButton->setText(tr("Start calculation"));
@@ -165,15 +175,16 @@ void CalculationProgressGroup::resetCalculation() {
 
 void CalculationProgressGroup::startCancelPressed() {
     if (mCalculationInProgress) {
-        cancelCalculation();
+        onCancelCalculation();
     } else {
-        startCalculation();
+        onStartCalculation();
     }
 }
 
 void CalculationProgressGroup::showAlgorithmInfo() {
     AlgorithmDialog dialog(mAlgorithmSelection, parentWidget());
     dialog.exec();
-    mAlgorithmSelection = dialog.getAlgorithm();
-    Settings::getSingleton().setLastUsedAlgorithm(mAlgorithmSelection.toStdString());
+    mAlgorithmSelection = dialog.getAlgorithmInformation();
+    updateTitle();
+    Settings::getSingleton().setLastUsedAlgorithm(mAlgorithmSelection->getId());
 }

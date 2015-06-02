@@ -64,7 +64,7 @@ public:
 
     const std::map<std::string, AlgorithmFactoryBase*> &getAlgorithms() const {return mAlgorithms;}
     AlgorithmFactoryDescription &getAlgorithmDescription(const std::string &algorithmName) const;
-    std::unique_ptr<const AlgorithmInformation> loadAlgorithmInformation(const std::string &algorithmName) const;
+    std::shared_ptr<const AlgorithmInformation> loadAlgorithmInformation(const std::string &algorithmName) const;
     bool hasAlgorithm(const std::string &id) const;
     std::string getDefaultAlgorithmId() const;
 
