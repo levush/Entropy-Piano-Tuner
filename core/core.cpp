@@ -112,6 +112,7 @@ void Core::exit() {
 
 void Core::start() {
     mRecorderAdapter->start();
+    mPlayerAdapter->start();
 }
 
 void Core::stop() {
