@@ -99,7 +99,7 @@ void Log::impl_error(const char *l) {
     std::cout << "Error: " << l << std::endl;
 }
 
-void Log::writeToLogfile(ELevel, const char *text, int line, const char *file, const char *function) {
+void Log::writeToLogfile(ELevel level, const char *text, int line, const char *file, const char *function) {
     if (mLogStream.is_open() == false) {
         // no log output
         return;
@@ -111,6 +111,25 @@ void Log::writeToLogfile(ELevel, const char *text, int line, const char *file, c
     char tmdescr[20]={0};
     const char fmt[]="%X";
     strftime(tmdescr, sizeof(tmdescr) - 1, fmt, &now);
+
+    // write level to log file
+    switch (level) {
+    case LEVEL_VERBOSE:
+        mLogStream << "V/";
+        break;
+    case LEVEL_DEBUG:
+        mLogStream << "D/";
+        break;
+    case LEVEL_INFORMATION:
+        mLogStream << "I/";
+        break;
+    case LEVEL_WARNING:
+        mLogStream << "W/";
+        break;
+    case LEVEL_ERROR:
+        mLogStream << "E/";
+        break;
+    }
 
     // write time to log file:
     mLogStream << tmdescr << ":\t";
