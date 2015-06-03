@@ -455,13 +455,9 @@ SOURCES += \
     $$THIRD_PARTY_SOURCES \
 
 
-# include rt midi if we are not on android
-!android {
-SOURCES += \
-    $$CORE_AUDIO_RT_MIDI_SOURCES
-
-HEADERS += \
-    $$CORE_AUDIO_RT_MIDI_HEADERS
+# add android files
+android {
+    include($$PWD/platforms/android/android.pri)
 }
 
 # add applenativewrapper files
@@ -481,14 +477,6 @@ RESOURCES += \
     $$PWD/tutorial/tutorial.qrc \
     $$PWD/algorithms/algorithms.qrc
 
-DISTFILES += \
-    $$ANDROID_PACKAGE_SOURCE_DIR/gradle/wrapper/gradle-wrapper.jar \
-    $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml \
-    $$ANDROID_PACKAGE_SOURCE_DIR/res/values/libs.xml \
-    $$ANDROID_PACKAGE_SOURCE_DIR/build.gradle \
-    $$ANDROID_PACKAGE_SOURCE_DIR/gradle/wrapper/gradle-wrapper.properties \
-    $$ANDROID_PACKAGE_SOURCE_DIR/gradlew \
-    $$ANDROID_PACKAGE_SOURCE_DIR/gradlew.bat \
 
 
 # -------- translations -------------

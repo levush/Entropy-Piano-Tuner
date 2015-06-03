@@ -40,6 +40,7 @@ public class TunerApplication extends QtActivity {
     private boolean  mFileToOpenCached = false;
 
     static private TunerApplication mApplication;
+    private UsbMidiDriverAdapter mMidiDriver = new UsbMidiDriverAdapter();
 
     public TunerApplication() {
         super();
@@ -60,7 +61,16 @@ public class TunerApplication extends QtActivity {
 
         // keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mMidiDriver.create(this);
     }
+
+    @Override
+    public void onDestroy() {
+        mMidiDriver.destroy();
+
+        super.onDestroy();
+    }
+
 
     @Override
     public void onResume() {
