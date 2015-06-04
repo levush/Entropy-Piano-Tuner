@@ -229,8 +229,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fourierSpectrumGraphics->setKeyboard(ui->keyboardGraphicsView);
     ui->tuningCurveGraphicsView->setKeyboard(ui->keyboardGraphicsView);
 
-    ui->resetNoiseLevelButton->setIconSize(QSize(iconSize, iconSize));
-    ui->muteButton->setIconSize(QSize(iconSize, iconSize));
+    ui->resetNoiseLevelButton->setIconSize(QSize(iconSize, iconSize) * 1.5);
+    ui->muteButton->setIconSize(QSize(iconSize, iconSize) * 1.5);
 #if CONFIG_DIALOG_SIZE == 1
     // reset old settings (windows size/position and splitter)
     QSettings settings;
