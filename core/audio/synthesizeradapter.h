@@ -38,6 +38,8 @@
 /// which are known from traditional synthesizers. The ADSR-envelope of each sound
 /// (note) can be chosen individually. The release phase is triggered by calling
 /// the function ReleaseSound.
+///
+/// This adapter has no implementation file.
 ///////////////////////////////////////////////////////////////////////////////
 
 class SynthesizerAdapter

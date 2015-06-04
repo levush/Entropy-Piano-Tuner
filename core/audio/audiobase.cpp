@@ -118,7 +118,9 @@ uint8_t AudioBase::getChannelCount() const
 /// \param c : number of channels
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioBase::setChannelCount(uint8_t c) { mChannelCount = c; }
+void AudioBase::setChannelCount(uint8_t c)
+{ mChannelCount = c; }
+
 
 //-----------------------------------------------------------------------------
 //                         Set the device volume
@@ -129,7 +131,9 @@ void AudioBase::setChannelCount(uint8_t c) { mChannelCount = c; }
 /// \param volume The volume
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioBase::setVolume(float volume) {(void)volume;}
+void AudioBase::setVolume(float volume)
+{ (void)volume; }
+
 
 //-----------------------------------------------------------------------------
 //                         Get the device volume
@@ -140,4 +144,5 @@ void AudioBase::setVolume(float volume) {(void)volume;}
 /// \returns The volume
 ///////////////////////////////////////////////////////////////////////////////
 
-float AudioBase::getVolume() const {return 1;}
+float AudioBase::getVolume() const
+{ return 1; }

@@ -92,12 +92,12 @@ public:
 
 private:    
     const int SineLength = 16384;           ///< sine value buffer length.
-    const double cutoff_volume = 0.00001;   ///< Fade-out volume cutoff.
+    const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    AudioBase::PacketType sinewave;         ///< Sine wave vector.
-    AudioBase::PacketType buffer;           ///< Audio buffer.
+    AudioBase::PacketType mSineWave;        ///< Sine wave vector.
+    AudioBase::PacketType mBuffer;          ///< Audio buffer.
 
-    struct sound
+    struct Sound
     {
         int clock;                          ///< Running time in sample cycles.
         int stage;                          ///< Stage of envelope:  0=off
@@ -112,14 +112,14 @@ private:
         std::map<float,float> fouriermodes;
     };
 
-    bool running;               ///< Flag that the thread is running.
-    std::map<int,sound> chord;  ///< Chord defined as a collection of sounds.
-    std::mutex chordmutex;      ///< Mutex to protect access to the chord.
-    AudioPlayerAdapter *audio;  ///< Pointer to the audio player.
+    bool mRunning;                      ///< Flag that the thread is running.
+    std::map<int,Sound> mChord;         ///< Chord defined as a collection of sounds.
+    std::mutex mChordMutex;             ///< Mutex to protect access to the chord.
+    AudioPlayerAdapter *mAudioPlayer;   ///< Pointer to the audio player.
 
-    sound* GetSoundPtr (int id);
+    Sound* getSoundPtr (int id);
     void workerFunction () override final;
-    void GenerateWaveform();
+    void generateWaveform();
 };
 
 #endif // SYNTHESIZER_H

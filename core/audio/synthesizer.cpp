@@ -35,18 +35,18 @@
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor
+/// \brief Constructor, intitializes the member variables.
 ///
 /// \param audioadapter : Pointer to the implementation of the AudioPlayer
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
-    sinewave(SineLength),
-    buffer(),
-    running(false),
-    chord(),
-    chordmutex(),
-    audio(audioadapter)
+    mSineWave(SineLength),
+    mBuffer(),
+    mRunning(false),
+    mChord(),
+    mChordMutex(),
+    mAudioPlayer(audioadapter)
 {
 }
 
@@ -64,15 +64,15 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
 
 void Synthesizer::init ()
 {
-    if (audio)
+    if (mAudioPlayer)
     {
-        // Pre-calculate a sine function for speedup
-        sinewave.resize(SineLength);
+        // Pre-calculate a sine wave for speedup
+        mSineWave.resize(SineLength);
         for (int i=0; i<SineLength; ++i)
-            sinewave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
+            mSineWave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
 
         // start the synthesizer in a separate autonomous thread:
-        running = true;
+        mRunning = true;
         start();
         INFORMATION ("Synthesizer started.");
     }
@@ -90,9 +90,9 @@ void Synthesizer::init ()
 
 void Synthesizer::exit ()
 {
-if (running)
+if (mRunning)
     {
-        running = false;        // terminate the loop
+        mRunning = false;        // terminate the loop
         stop();
         INFORMATION ("Synthesizer shutting down");
     }
@@ -109,37 +109,37 @@ if (running)
 
 void Synthesizer::workerFunction (void)
 {
-    while (running and not cancelThread())
+    while (mRunning and not cancelThread())
     {
-        chordmutex.lock();
-        bool active = (audio and not chord.empty());
-        chordmutex.unlock();
+        mChordMutex.lock();
+        bool active = (mAudioPlayer and not mChord.empty());
+        mChordMutex.unlock();
         if (active)
         {
             // first remove all sounds with an amplitude below the cutoff:
-            chordmutex.lock();
-            for (auto it = chord.begin(); it != chord.end(); )
-                if (it->second.stage>=2 and it->second.amplitude<cutoff_volume)
-                { chord.erase(it++); }
+            mChordMutex.lock();
+            for (auto it = mChord.begin(); it != mChord.end(); )
+                if (it->second.stage>=2 and it->second.amplitude<CutoffVolume)
+                { mChord.erase(it++); }
                 else ++it;
 
             // create an empty buffer of a suitable size
-            size_t size = std::max(audio->getMinBufferSamples(),audio->getFreeBufferSize());
+            size_t size = std::max(mAudioPlayer->getMinBufferSamples(),mAudioPlayer->getFreeBufferSize());
             size -= size%2; // size must be even for stereo signals
-            buffer.resize(size);
-            buffer.assign(size,0);
-            GenerateWaveform();
-            chordmutex.unlock();
-            while (running and audio->getFreeBufferSize() < buffer.size()) msleep(0.1);
-            if (running) audio->write(buffer);
+            mBuffer.resize(size);
+            mBuffer.assign(size,0);
+            generateWaveform();
+            mChordMutex.unlock();
+            while (mRunning and mAudioPlayer->getFreeBufferSize() < mBuffer.size()) msleep(0.1);
+            if (mRunning) mAudioPlayer->write(mBuffer);
         }
         else
         {
             msleep(10);
-            if (audio) audio->flush();
+            if (mAudioPlayer) mAudioPlayer->flush();
         }
     }
-    running=false;
+    mRunning=false;
 }
 
 
@@ -166,18 +166,18 @@ void Synthesizer::workerFunction (void)
 void Synthesizer::createSound (int id, double volume, double stereo,
         double attack, double decayrate, double sustain, double release)
 {
-    chordmutex.lock();
-    chord[id].amplitude=0;
-    chord[id].clock=0;
-    chord[id].fouriermodes.clear();
-    chord[id].stage=0;
-    chord[id].volume=volume;
-    chord[id].stereo=stereo;
-    chord[id].attack=attack;
-    chord[id].decayrate=decayrate;
-    chord[id].sustain=sustain;
-    chord[id].release=release;
-    chordmutex.unlock();
+    mChordMutex.lock();
+    mChord[id].amplitude=0;
+    mChord[id].clock=0;
+    mChord[id].fouriermodes.clear();
+    mChord[id].stage=0;
+    mChord[id].volume=volume;
+    mChord[id].stereo=stereo;
+    mChord[id].attack=attack;
+    mChord[id].decayrate=decayrate;
+    mChord[id].sustain=sustain;
+    mChord[id].release=release;
+    mChordMutex.unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -195,44 +195,47 @@ void Synthesizer::createSound (int id, double volume, double stereo,
 /// \param snd : Reference of the sound to be converted.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::GenerateWaveform ()
+void Synthesizer::generateWaveform ()
 {
-    int SampleRate = audio->getSamplingRate();
-    int channels = audio->getChannelCount();
+    int SampleRate = mAudioPlayer->getSamplingRate();
+    int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
-    int samples = buffer.size()/channels;
-    std::vector<double> amplitudes(samples,0);
+    int samples = mBuffer.size()/channels;
+    std::vector<double> envelope(samples,0);
 
-    for (auto &ch : chord)
+    for (auto &ch : mChord)
     {
-        sound &snd = ch.second;
-        double amplitude = snd.amplitude;
-        for (auto &a : amplitudes)
+        Sound &snd = ch.second;         // get sound of the key
+        double y = snd.amplitude;       // get last amplitude
+        for (auto &amp : envelope)      // loop over the envelope
         {
-            // Manage the ADSR envelope
-            switch (snd.stage)
+            switch (snd.stage)          // Manage ADSR
             {
-                case 1: amplitude += snd.attack*snd.volume/SampleRate;
+                case 1: // ATTACK
+                        y += snd.attack*snd.volume/SampleRate;
                         if (snd.decayrate>0)
                         {
-                            if (snd.amplitude >= snd.volume) snd.stage++;
+                            if (y >= snd.volume) snd.stage++;
                         }
                         else
                         {
-                            if (snd.amplitude >= snd.sustain*snd.volume) snd.stage+=2;
+                            if (y >= snd.sustain*snd.volume) snd.stage+=2;
                         }
                         break;
-                case 2: amplitude *= (1-snd.decayrate/SampleRate);
-                        if (snd.amplitude <= snd.sustain*snd.volume) snd.stage++;
+                case 2: // DECAY
+                        y *= (1-snd.decayrate/SampleRate); // DECAY
+                        if (y <= snd.sustain*snd.volume) snd.stage++;
                         break;
-                case 3: amplitude += (snd.sustain-amplitude) * snd.release/SampleRate;
+                case 3: // SUSTAIN
+                        y += (snd.sustain-y) * snd.release/SampleRate;
                         break;
-                case 4: amplitude *= (1-snd.release/SampleRate);
+                case 4: // RELEASE
+                        y *= (1-snd.release/SampleRate);
                         break;
             }
-            a = amplitude;
+            amp = y;
         }
-        snd.amplitude = amplitude;
+        snd.amplitude = y;           // save last amplitude
 
         int64_t c = static_cast<int64_t>(100*SampleRate);
         int64_t d = static_cast<int64_t>(SineLength);
@@ -254,15 +257,15 @@ void Synthesizer::GenerateWaveform ()
             if (channels==1)
             {
                 for (int64_t i = 0; i < n; ++i)
-                    buffer[i] += amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
+                    mBuffer[i] += M*envelope[i]*mSineWave[((a*i+b)/c)%d];
             }
             else // if stereo
             {
                 for (int64_t i = 0; i < n; ++i)
                 {
                     //double signal = amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
-                    buffer[2*i]   += L*amplitudes[i]*sinewave[((a*i+b)/c)%d];
-                    buffer[2*i+1] += R*amplitudes[i]*sinewave[((a*i+p)/c)%d];
+                    mBuffer[2*i]   += L*envelope[i]*mSineWave[((a*i+b)/c)%d];
+                    mBuffer[2*i+1] += R*envelope[i]*mSineWave[((a*i+p)/c)%d];
                 }
             }
         }
@@ -284,10 +287,10 @@ void Synthesizer::GenerateWaveform ()
 /// \param id : Identifier of the sound
 ///////////////////////////////////////////////////////////////////////////////
 
-Synthesizer::sound* Synthesizer::GetSoundPtr (int id)
+Synthesizer::Sound* Synthesizer::getSoundPtr (int id)
 {
-    auto snd = chord.find(id);
-    if (snd!=chord.end()) return &(snd->second);
+    auto snd = mChord.find(id);
+    if (snd!=mChord.end()) return &(snd->second);
     else return nullptr;
 }
 
@@ -311,11 +314,11 @@ Synthesizer::sound* Synthesizer::GetSoundPtr (int id)
 
 void Synthesizer::addFourierComponent (int id, double f, double amplitude)
 {
-    chordmutex.lock();
-    auto snd = GetSoundPtr(id);
+    mChordMutex.lock();
+    auto snd = getSoundPtr(id);
     if (snd) snd->fouriermodes[f]=amplitude;
     else WARNING("id does not exist");
-    chordmutex.unlock();
+    mChordMutex.unlock();
 }
 
 
@@ -334,11 +337,11 @@ void Synthesizer::addFourierComponent (int id, double f, double amplitude)
 
 void Synthesizer::playSound (int id)
 {
-    chordmutex.lock();
-    auto snd = GetSoundPtr(id);
+    mChordMutex.lock();
+    auto snd = getSoundPtr(id);
     if (snd) snd->stage = 1;
     else WARNING("id does not exist");
-    chordmutex.unlock();
+    mChordMutex.unlock();
 }
 
 
@@ -356,11 +359,11 @@ void Synthesizer::playSound (int id)
 
 void Synthesizer::releaseSound (int id)
 {
-    chordmutex.lock();
-    auto snd = GetSoundPtr(id);
+    mChordMutex.lock();
+    auto snd = getSoundPtr(id);
     if (snd) snd->stage=4;
     else WARNING("id does not exist");
-    chordmutex.unlock();
+    mChordMutex.unlock();
 }
 
 
@@ -377,9 +380,9 @@ void Synthesizer::releaseSound (int id)
 
 bool Synthesizer::isPlaying (int id)
 {
-    chordmutex.lock();
-    bool isplaying = (chord.find(id) != chord.end());
-    chordmutex.unlock();
+    mChordMutex.lock();
+    bool isplaying = (mChord.find(id) != mChord.end());
+    mChordMutex.unlock();
     return isplaying;
 }
 
@@ -401,9 +404,9 @@ bool Synthesizer::isPlaying (int id)
 
 void Synthesizer::ModifySustainLevel (int id, double level)
 {
-    chordmutex.lock();
-    auto snd = GetSoundPtr(id);
+    mChordMutex.lock();
+    auto snd = getSoundPtr(id);
     if (snd) snd->sustain = level;
     else WARNING ("id does not exist");
-    chordmutex.unlock();
+    mChordMutex.unlock();
 }

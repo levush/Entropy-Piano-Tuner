@@ -44,7 +44,7 @@ class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
     //static constexpr DataFormat SIGNAL_SCALING  = 1;
 public:
     AudioPlayerForQt(QObject *parent);
-    virtual ~AudioPlayerForQt();
+    virtual ~AudioPlayerForQt() {}
 
     void init() override;
     void exit() override;
