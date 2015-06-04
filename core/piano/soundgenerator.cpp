@@ -126,7 +126,7 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
         switch (Settings::getSingleton().getSoundGeneratorMode())
         {
         case SGM_REFERENCE_TONE:
-            playMagneticWave(key,keynumber,frequ, 0.5);
+            playReferenceTone(key,keynumber,frequ, 0.5);
             break;
         case SGM_SYNTHESIZE_KEY:
             playOriginalSoundOfKey(key,mNumberOfKeys+keynumber,
@@ -443,7 +443,7 @@ void SoundGenerator::playSineWave(int keynumber, double frequency, double volume
 /// \param volume : Volume of the tone
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundGenerator::playMagneticWave (const Key &key, int keynumber, double frequency, double volume)
+void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double frequency, double volume)
 {
     auto &peaks = key.getPeaks();
     if (peaks.size()==0 or frequency==0 or volume==0) return;
@@ -488,25 +488,17 @@ void SoundGenerator::playOriginalSoundOfKey (const Key &key, int id,
                                              double sustain, double release)
 {
     if (key.getPeaks().size()==0)
-    { WARNING ("try to play sound with empty list of peaks."); }
+        WARNING ("try to play sound with empty list of peaks.")
     else
     {
-        // To save CPU time, do not play all spectral lines
-        // Retain only the 25 first peaks
-        std::vector<std::pair<double,double> > peaks(key.getPeaks().begin(), key.getPeaks().end());
-
-        //if (peaks.size()>40) peaks.resize(40); // limit to 40 peaks
-
-        double recordedFrequency = key.getRecordedFrequency();
         double sum=0;
-        for (auto &peak : peaks) sum+=peak.second;
-        EptAssert(sum>0,"Peak series without intensity");
+        for (auto &peak : key.getPeaks()) sum+=peak.second;
+        if (sum<=0) return;
         mSynthesizer.createSound(id,volume, getStereo(id), attack, decay, sustain, release);
-        for (auto &peak : peaks)
+        for (auto &peak : key.getPeaks())
         {
-            double f = frequency / recordedFrequency * peak.first;
+            double f = frequency / key.getRecordedFrequency() * peak.first;
             double vol = pow(peak.second/sum,0.5);
-            //std::cout << "fcomp=" << f << ", vol=" << vol << std::endl;
             if (f>24 and f<10000 and vol>0.01)
                 mSynthesizer.addFourierComponent(id,f,vol);
         }

@@ -91,7 +91,7 @@ public:
     void ModifySustainLevel (int id, double level) override final;
 
 private:    
-    const int SineLength = 65536;           ///< sine value buffer length.
+    const int SineLength = 16384;           ///< sine value buffer length.
     const double cutoff_volume = 0.00001;   ///< Fade-out volume cutoff.
 
     AudioBase::PacketType sinewave;         ///< Sine wave vector.

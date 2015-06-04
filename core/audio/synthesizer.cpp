@@ -113,32 +113,25 @@ void Synthesizer::workerFunction (void)
     {
         chordmutex.lock();
         bool active = (audio and not chord.empty());
+        chordmutex.unlock();
         if (active)
         {
             // first remove all sounds with an amplitude below the cutoff:
+            chordmutex.lock();
             for (auto it = chord.begin(); it != chord.end(); )
                 if (it->second.stage>=2 and it->second.amplitude<cutoff_volume)
-                {
-                    chord.erase(it++);
-                }
+                { chord.erase(it++); }
                 else ++it;
+
             // create an empty buffer of a suitable size
             size_t size = std::max(audio->getMinBufferSamples(),audio->getFreeBufferSize());
             size -= size%2; // size must be even for stereo signals
             buffer.resize(size);
             buffer.assign(size,0);
-
             GenerateWaveform();
-        }
-        chordmutex.unlock();
-
-        if (active)
-        {
-            while (running and audio->getFreeBufferSize() < buffer.size())
-            {
-                msleep(1);
-            }
-            audio->write(buffer);
+            chordmutex.unlock();
+            while (running and audio->getFreeBufferSize() < buffer.size()) msleep(0.1);
+            if (running) audio->write(buffer);
         }
         else
         {
@@ -251,24 +244,25 @@ void Synthesizer::GenerateWaveform ()
         double shift = snd.clock;
 
         // time-critical loop
-        for (auto &mode : snd.fouriermodes)
+        for (auto &mode : snd.fouriermodes) if (mode.second>0.00)
         {
             int64_t a = static_cast<int64_t>(100.0*mode.first*SineLength);
             int64_t b = static_cast<int64_t>(100.0*(mode.first*shift+100)*SineLength) + 100*d*c;
+            int64_t p = b + a*phase;
+            double M=mode.second, L=left*M, R=right*M;
 
             if (channels==1)
             {
-                for (int64_t i = 0; i < n; i++)
+                for (int64_t i = 0; i < n; ++i)
                     buffer[i] += amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
             }
             else // if stereo
             {
-
-                for (int64_t i = 0; i < n; i++)
+                for (int64_t i = 0; i < n; ++i)
                 {
                     //double signal = amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
-                    buffer[2*i]   += left*amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
-                    buffer[2*i+1] += right*amplitudes[i]*mode.second*sinewave[((a*(i+phase)+b)/c)%d];
+                    buffer[2*i]   += L*amplitudes[i]*sinewave[((a*i+b)/c)%d];
+                    buffer[2*i+1] += R*amplitudes[i]*sinewave[((a*i+p)/c)%d];
                 }
             }
         }
