@@ -96,9 +96,14 @@
 #
 
 #elif _WIN32
+#include <winapifamily.h>
 // ======================================================================
 // WINDOWS
 // ======================================================================
+#   if WINAPI_FAMILY_PARTITION( WINAPI_PARTITION_DESKTOP )
+#       define CONFIG_ENABLE_RTMIDI           1
+#       define __WINDOWS_MM__                 1    // for RtMidi
+#   endif
 #else
 
 #error Unknown system

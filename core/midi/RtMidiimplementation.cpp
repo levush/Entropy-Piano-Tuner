@@ -25,8 +25,9 @@
 
 #if CONFIG_ENABLE_RTMIDI
 
-#include <unistd.h>
 #include <sstream>
+#include <chrono>
+#include <thread>
 
 #include "../system/log.h"
 
@@ -213,7 +214,8 @@ void RtMidiImplementation::ClearQueue ()
             clearing=false;
             for (int i=0; i<256; ++i)
             {
-                usleep(2);
+                std::this_thread::sleep_for(
+                            std::chrono::microseconds(2));
                 mRtMidi->getMessage(&message);
                 if (message.size()>0) clearing=true;
             }
