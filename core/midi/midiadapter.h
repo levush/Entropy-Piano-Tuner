@@ -63,7 +63,7 @@ public:
     /// representing the MIDI operation code in a simplified manner
 
     enum Event {
-            MIDI_UNDEFINED,     ///< Midi event undefined
+            MIDI_UNDEFINED = 0, ///< Midi event undefined
             MIDI_KEY_PRESS,     ///< Midi event when a key is released
             MIDI_KEY_RELEASE,   ///< Midi event for everything else
             MIDI_CONTROL_CHANGE,  ///< Midi event for chaning voice
