@@ -30,7 +30,7 @@ Debug:UI_DIR = debug/.ui
 # MacOS X (no iOS)
 macx {
     LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
-    LIBS += -framework CoreFoundation
+    LIBS += -framework CoreFoundation -framework CoreAudio -framework CoreMidi
 
     # icons
     ICON = $$PWD/appstore/icons/entropytuner.icns

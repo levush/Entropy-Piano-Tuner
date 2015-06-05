@@ -75,18 +75,23 @@
 // ======================================================================
 // APPLE
 // ======================================================================
+#include "TargetConditionals.h"
 
 #define CONFIG_OPTIMIZE_FFT            0
-#define CONFIG_ENABLE_RTMIDI           0
 #define CONFIG_ENABLE_PULSEAUDIO       0
 #define CONFIG_ENABLE_XMGRACE          0
 
 #   if TARGET_IPHONE_SIMULATOR
-#       define CONFIG_USE_SIMPLE_FILE_DIALOG 1
-#       define CONFIG_DIALOG_SIZE            1
+#       define CONFIG_USE_SIMPLE_FILE_DIALOG  1
+#       define CONFIG_DIALOG_SIZE             1
+#       define CONFIG_ENABLE_RTMIDI           0
 #   elif TARGET_OS_IPHONE
-#       define CONFIG_USE_SIMPLE_FILE_DIALOG 1
-#       define CONFIG_DIALOG_SIZE            1
+#       define CONFIG_USE_SIMPLE_FILE_DIALOG  1
+#       define CONFIG_DIALOG_SIZE             1
+#       define CONFIG_ENABLE_RTMIDI           0
+#   else
+#       define CONFIG_ENABLE_RTMIDI           1
+#       define __MACOSX_CORE__         // for RtMidi
 #   endif
 #
 

@@ -81,11 +81,11 @@ double restrictToInterval (double x, double xmin, double xmax);
 template <typename T>
 void transformVector (const std::vector<T> &v, std::vector<T> &w,
                       std::function<T(T)> f)
-{ w.resize(v.size()); for (int i=0; i<v.size(); i++) w[i]=f(v[i]); }
+{ w.resize(v.size()); for (size_t i=0; i<v.size(); i++) w[i]=f(v[i]); }
 
 template <typename T>
 std::vector<T> transformVector (const std::vector<T> &v, std::function<T(T)> f)
-{ std::vector<T> w(v.size()); for (uint i=0; i<v.size(); i++) w[i]=f(v[i]); return w; }
+{ std::vector<T> w(v.size()); for (size_t i=0; i<v.size(); i++) w[i]=f(v[i]); return w; }
 
 } // MathTools
 
