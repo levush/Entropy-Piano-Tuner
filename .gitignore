@@ -22,7 +22,6 @@
 # generated files
 dependencies
 *.pdf
-build*
 docs/doxy*
 *.autosave
 log

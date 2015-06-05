@@ -21,6 +21,8 @@
 
 #include "androidnativewrapper.h"
 #include "platformtools.h"
+#include "core/messages/messagehandler.h"
+#include "core/messages/messagemidievent.h"
 #include <QDebug>
 
 
@@ -46,10 +48,18 @@ static void java_openFile(JNIEnv *env, jobject thiz, jstring string, jboolean ca
     env->ReleaseStringUTFChars(string, file);
 }
 
+static void java_sendMidiMessage(JNIEnv *env, jobject thiz, jint event, jint byte1, jint byte2, jdouble deltaTime) {
+    Q_UNUSED(env);
+    Q_UNUSED(thiz);
+    MidiAdapter::Data data = {static_cast<MidiAdapter::Event>(event), byte1, byte2, deltaTime};
+    MessageHandler::send<MessageMidiEvent>(data);
+}
+
 static JavaVM* s_javaVM = 0;
 
 static JNINativeMethod jniNativeMethods[] = {
-    {"java_openFile", "(Ljava/lang/String;Z)V", (void *)java_openFile}
+    {"java_openFile", "(Ljava/lang/String;Z)V", (void *)java_openFile},
+    {"java_sendMidiMessage", "(IIID)V", (void *)java_sendMidiMessage}
 };
 
 // this method is called immediately after the module is load

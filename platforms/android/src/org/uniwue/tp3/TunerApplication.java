@@ -101,6 +101,7 @@ public class TunerApplication extends QtActivity {
 
 
     public static native void java_openFile(String s, boolean cached);
+    public static native void java_sendMidiMessage(int event, int byte1, int byte2, double deltaTime);
 
     private void parseIntent(Intent intent) {
         if (intent != null) {

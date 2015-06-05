@@ -20,6 +20,7 @@
 package org.uniwue.tp3;
 
 import android.content.Context;
+import android.widget.Toast;
 import android.hardware.usb.UsbDevice;
 import android.util.Log;
 
@@ -31,9 +32,10 @@ import jp.kshoji.driver.midi.util.UsbMidiDriver;
 public class UsbMidiDriverAdapter {
     private UsbMidiDriver usbMidiDriver;
 
-    public static native void java_sendMidiMessage(String s, boolean cached);
+    public static Context mContext;
 
     public void create(Context context) {
+        mContext = context;
         usbMidiDriver = new UsbMidiDriver(context) {
             @Override
             public void onDeviceAttached(UsbDevice usbDevice) {
@@ -42,7 +44,6 @@ public class UsbMidiDriverAdapter {
 
             @Override
             public void onMidiInputDeviceAttached(MidiInputDevice midiInputDevice) {
-
             }
 
             @Override
@@ -65,12 +66,12 @@ public class UsbMidiDriverAdapter {
 
             @Override
             public void onMidiNoteOff(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-                Log.d("MIDI", "Key released");
+                TunerApplication.java_sendMidiMessage(2, note, velocity, 0);
             }
 
             @Override
             public void onMidiNoteOn(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-                Log.d("MIDI", "Key pressed");
+                TunerApplication.java_sendMidiMessage(1, note, velocity, 0);
             }
 
             @Override
