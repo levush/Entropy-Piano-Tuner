@@ -29,6 +29,8 @@
 #include <mutex>
 #include <cstdint>
 
+class RawDataWriter;
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract adapter class for playing audio signals
 ///
@@ -49,30 +51,13 @@ public:
     static const uint64_t MIN_BUFFER_SIZE_IN_MSECS;
 
 public:
-    AudioPlayerAdapter();
+    AudioPlayerAdapter(RawDataWriter *writer = nullptr);
     ~AudioPlayerAdapter() {};
 
-    /// \brief Write a packet to the audio stream.
-    /// \details  The maximum size of the packet is limited by mFreeBufferSize.
-    /// This is a virtual function, to be defined in the implementation.
-    /// \param packet : reference to the packet containing the audio data.
-    virtual void write(const PacketType &packet) = 0;
-
-    /// \brief Flush the buffer.
-    /// \details This is a virtual function, to be defined in the implementation
-    virtual void flush()= 0;
-
-    uint64_t getFreeBufferSize() const;         // get available buffer size
-    uint64_t getMinBufferSamples() const;       // get the minimal samples to write
+    void setRawDataWriter(RawDataWriter *writer);
 
 protected:
-    void setFreeBufferSize(uint64_t size);      // set the free buffer size
-    void addFreeBufferSize(uint32_t size);      // increase available buffer size
-    void shrinkFreeBufferSize(uint32_t size);   // decrease available buffer size
-
-private:
-    uint64_t mFreeBufferSize;                   ///< Maximal free buffer size
-    mutable std::mutex mDataAccessMutex;        ///< Mutex protecting access
+    RawDataWriter *mWriter;                     ///< Writer of the pcm data
 };
 
 #endif // AUDIOPLAYERADAPTER_H

@@ -28,6 +28,8 @@
 #include <assert.h>
 #include <cstring>
 
+#include "core/system/eptexception.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Template class for a circular buffer
 ///
@@ -47,6 +49,7 @@ public:
     void push_back(const data_type &data);          ///< Add a new data element to the buffer
     void resize(std::size_t maximum_size);          ///< Resize the buffer, shrink data if necessary
     std::vector<data_type> getOrderedData() const;  ///< Retrieve time-ordered data
+    std::vector<data_type> readData(size_t n);      ///< Retrieve time-ordeded data with maximum size of n and remove if from the buffer
     std::size_t size() const {return mCurrentSize;} ///< Return current buffer size
     std::size_t maximum_size() const
         {return mMaximumSize;}                      ///< Return actual maximal size
@@ -136,6 +139,22 @@ std::vector<data_type> CircularBuffer<data_type>::getOrderedData() const
     return data_out;
 }
 
+template <class data_type>
+std::vector<data_type> CircularBuffer<data_type>::readData(size_t n)
+{
+    std::vector<data_type> data_out(std::move(getOrderedData()));
+    if (data_out.size() > n) {
+        data_out.resize(n);
+    }
+
+    EptAssert(mCurrentSize >= data_out.size(), "There may not be more data read than be existent.");
+
+    // reset read position
+    mCurrentReadPosition = (mCurrentReadPosition + data_out.size()) % mMaximumSize;
+    mCurrentSize = mCurrentSize - data_out.size();
+
+    return data_out;
+}
 
 //---------------------------- resize the buffer ------------------------------
 

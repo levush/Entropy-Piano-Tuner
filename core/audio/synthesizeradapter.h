@@ -20,6 +20,8 @@
 #ifndef SYNTHESIZERADAPTER_H
 #define SYNTHESIZERADAPTER_H
 
+#include "rawdatawriter.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Adapter class for a simple synthesizer based on Fourier modes.
 ///
@@ -42,7 +44,7 @@
 /// This adapter has no implementation file.
 ///////////////////////////////////////////////////////////////////////////////
 
-class SynthesizerAdapter
+class SynthesizerAdapter : public RawDataWriter
 {
 public:
     // Create a new sound (note)

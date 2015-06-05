@@ -95,7 +95,6 @@ private:
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
     AudioBase::PacketType mSineWave;        ///< Sine wave vector.
-    AudioBase::PacketType mBuffer;          ///< Audio buffer.
 
     struct Sound
     {

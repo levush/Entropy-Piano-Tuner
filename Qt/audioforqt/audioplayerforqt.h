@@ -52,9 +52,6 @@ public:
     void start() override;
     void stop() override;
 
-
-    virtual void write(const PacketType &packet) override final;
-    virtual void flush() override;
 public slots:
     void onWriteMoreData();
 
@@ -65,8 +62,6 @@ private:
     QIODevice *mIODevice;
     int mNotifyIntervall;
     float mBufferSize; /// buffer size of qt in seconds, on slow devices use a bigger value
-    PacketType mPacketToWrite;
-    std::mutex mPacketMutex;
     QTimer mWriteTimer;
 };
 

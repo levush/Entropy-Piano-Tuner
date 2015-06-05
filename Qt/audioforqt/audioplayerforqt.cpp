@@ -20,6 +20,7 @@
 #include "audioplayerforqt.h"
 #include "../core/system/log.h"
 #include "settingsforqt.h"
+#include "core/audio/rawdatawriter.h"
 #include <qdebug.h>
 
 // Maximal absolute value by which the signal is limited
@@ -54,8 +55,6 @@ AudioPlayerForQt::AudioPlayerForQt(QObject *parent)
 
 void AudioPlayerForQt::init()
 {
-    std::lock_guard<std::mutex> lock(mPacketMutex);
-
     // Format specification:
     QAudioFormat format;
     format.setSampleRate(getSamplingRate());
@@ -153,10 +152,7 @@ void AudioPlayerForQt::start() {
         return;
     }
     if (!mIODevice) {
-        std::lock_guard<std::mutex> lock(mPacketMutex);
-
         mIODevice = mAudioOutput->start();
-        addFreeBufferSize(mAudioOutput->bytesFree() / sizeof(DataFormat));
         if (mAudioOutput->error() != QAudio::NoError) {
             qWarning() << "Error opening QAudioOutput with error " << mAudioOutput->error();
             return;
@@ -177,79 +173,33 @@ void AudioPlayerForQt::stop() {
         return;
     }
     if (mIODevice) {
-        std::lock_guard<std::mutex> lock(mPacketMutex);
         mAudioOutput->stop();
         mIODevice = nullptr;
     }
-    setFreeBufferSize(0);
-}
-
-
-void AudioPlayerForQt::write(const PacketType &packet) {
-    // less buffer size is available
-    shrinkFreeBufferSize(packet.size());
-
-    // copy the data
-    mPacketMutex.lock();
-    mPacketToWrite.reserve(mPacketToWrite.size() + packet.size());
-    std::move(packet.begin(), packet.end(), std::back_inserter(mPacketToWrite));
-    mPacketMutex.unlock();
-
-    // wait for free buffer size
-    // TODO terminated flag inactivated, not clear what happens here
-//    while (getFreeBufferSize() == 0 && !TunerBase::terminated) {
-        /*while (getFreeBufferSize() == 0 ) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    }*/
-}
-
-void AudioPlayerForQt::flush() {
-
 }
 
 void AudioPlayerForQt::onWriteMoreData() {
-    std::lock_guard<std::mutex> lock(mPacketMutex);
-    if (!mAudioOutput || !mIODevice) {
+    if (!mAudioOutput || !mIODevice || !mWriter) {
         return;
-    }
-
-    if (mAudioOutput->state() == QAudio::SuspendedState && mPacketToWrite.size() > 0) {
-        // resume the output
-        mAudioOutput->resume();
     }
 
     int nbBytes = mAudioOutput->bytesFree();
     int bufferSize = nbBytes / sizeof(DataFormat);
 
     if (bufferSize > 0) {
+        // the pcm data from the synthesize (non scaled)
+        PacketType packet(std::move(mWriter->readPacket(bufferSize)));
+
+        // the pcm data ready for the audio device (scaled)
         std::vector<DataFormat> _buffer;
 
-        _buffer.resize(std::min<int>(bufferSize, mPacketToWrite.size()));
-        if (_buffer.size() == 0) {
-            // no more data available, suspend the output
-            mAudioOutput->suspend();
-            return;
-        }
+        _buffer.resize(std::min<int>(bufferSize, packet.size()));
 
         for (size_t i = 0; i < _buffer.size(); ++i) {
-            _buffer[i] = mPacketToWrite[i] * SIGNAL_SCALING;
-        }
-
-        if (mPacketToWrite.size() == _buffer.size()) {
-            // all data was written
-            mPacketToWrite.clear();
-        } else {
-            // still data available, crop it
-            int remainingSize = mPacketToWrite.size() - _buffer.size();
-            int offset = _buffer.size();
-            for (size_t i = 0; i < (size_t)remainingSize; ++i) {
-                mPacketToWrite[i] = mPacketToWrite[i + offset];
-            }
-            mPacketToWrite.resize(remainingSize);
+            _buffer[i] = packet[i] * SIGNAL_SCALING;
         }
 
         mIODevice->write((const char*)_buffer.data(), _buffer.size() * sizeof(DataFormat));
-        addFreeBufferSize(_buffer.size());
     }
 }
 

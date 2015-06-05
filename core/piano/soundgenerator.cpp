@@ -61,6 +61,7 @@ SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioadapter) :
     mResonatingKey(-1),
     mResonatingVolume(0)
 {
+    audioadapter->setRawDataWriter(&mSynthesizer);
 }
 
 

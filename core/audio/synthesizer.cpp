@@ -42,7 +42,6 @@
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mSineWave(SineLength),
-    mBuffer(),
     mRunning(false),
     mChord(),
     mChordMutex(),
@@ -123,20 +122,13 @@ void Synthesizer::workerFunction (void)
                 { mChord.erase(it++); }
                 else ++it;
 
-            // create an empty buffer of a suitable size
-            size_t size = std::max(mAudioPlayer->getMinBufferSamples(),mAudioPlayer->getFreeBufferSize());
-            size -= size%2; // size must be even for stereo signals
-            mBuffer.resize(size);
-            mBuffer.assign(size,0);
             generateWaveform();
             mChordMutex.unlock();
-            while (mRunning and mAudioPlayer->getFreeBufferSize() < mBuffer.size()) msleep(0.1);
-            if (mRunning) mAudioPlayer->write(mBuffer);
+            while (mRunning and getFreePacketSize() < MIN_FREE_PACKET_SIZE) msleep(1);
         }
         else
         {
             msleep(10);
-            if (mAudioPlayer) mAudioPlayer->flush();
         }
     }
     mRunning=false;
@@ -197,10 +189,15 @@ void Synthesizer::createSound (int id, double volume, double stereo,
 
 void Synthesizer::generateWaveform ()
 {
+    // create an empty buffer of a suitable size
+    size_t size = getFreePacketSize();
+    size -= size%2; // size must be even for stereo signals
+    AudioBase::PacketType buffer(size, 0);
+
     int SampleRate = mAudioPlayer->getSamplingRate();
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
-    int samples = mBuffer.size()/channels;
+    int samples = buffer.size()/channels;
     std::vector<double> envelope(samples,0);
 
     for (auto &ch : mChord)
@@ -257,21 +254,23 @@ void Synthesizer::generateWaveform ()
             if (channels==1)
             {
                 for (int64_t i = 0; i < n; ++i)
-                    mBuffer[i] += M*envelope[i]*mSineWave[((a*i+b)/c)%d];
+                    buffer[i] += M*envelope[i]*mSineWave[((a*i+b)/c)%d];
             }
             else // if stereo
             {
                 for (int64_t i = 0; i < n; ++i)
                 {
                     //double signal = amplitudes[i]*mode.second*sinewave[((a*i+b)/c)%d];
-                    mBuffer[2*i]   += L*envelope[i]*mSineWave[((a*i+b)/c)%d];
-                    mBuffer[2*i+1] += R*envelope[i]*mSineWave[((a*i+p)/c)%d];
+                    buffer[2*i]   += L*envelope[i]*mSineWave[((a*i+b)/c)%d];
+                    buffer[2*i+1] += R*envelope[i]*mSineWave[((a*i+p)/c)%d];
                 }
             }
         }
     // increase clock variable of the sound by the buffer size
     snd.clock += samples;
     }
+
+    writeData(buffer);
 }
 
 
