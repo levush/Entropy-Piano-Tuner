@@ -79,7 +79,7 @@ winrt {
     CONFIG += windeployqt
     WINDEPLOYQT_OPTIONS = -no-svg -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
 } else:winphone {
-} else {
+} else:win32 {
     # windows desktop
 
     # windows multimedia is required for rt midi
