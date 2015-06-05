@@ -41,7 +41,7 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mSoundGenerator (playerAdapter)
 {
     EptAssert(log, "A log has to be specified during creation of the core");
-    INFORMATION("Core created");
+    LogI("Core created");
 }
 
 Core::~Core()
@@ -78,7 +78,7 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
 
     std::stringstream ss;
     ss << "We have " << mMidi.GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi.GetPortNames();
-    INFORMATION ("%s", ss.str().c_str());
+    LogI("%s", ss.str().c_str());
     mMidi.OpenPort(); // Open default midi port
 
     initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_END, 100);

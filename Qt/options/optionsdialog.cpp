@@ -127,7 +127,7 @@ void OptionsDialog::onCurrentSelectionChanged(int index) {
         mCentralWidget = new PageAudio(this);
         break;
     default:
-        WARNING("Message page %d not implemented.", index);
+        LogW("Message page %d not implemented.", index);
         return;
     }
 

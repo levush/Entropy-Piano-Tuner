@@ -62,22 +62,22 @@ void AudioRecorderForQt::init() {
         }
 
         if (!device.isFormatSupported(format)) {
-            ERROR("Selected device settings are not supported!");
+            LogE("Selected device settings are not supported!");
         }
     }
     else {
         // only necessary if default settings
         if (!device.isFormatSupported(format)) {
-            WARNING("Raw audio format not supported by backend, falling back to nearest supported");
+            LogW("Raw audio format not supported by backend, falling back to nearest supported");
             format = device.nearestFormat(format);
             // update sampling rate, buffer type has to stay the same!
             setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8) {
-                WARNING("Sample size not supported");
+                LogW("Sample size not supported");
                 return;
             }
             if (format.sampleType() != QAudioFormat::SignedInt) {
-                WARNING("Sample format not supported");
+                LogW("Sample format not supported");
                 return;
             }
         }
@@ -85,7 +85,7 @@ void AudioRecorderForQt::init() {
 
     mAudioInput = new QAudioInput(device, format);
     if (mAudioInput->error() != QAudio::NoError) {
-        ERROR("Error creating QAudioInput with error %d", mAudioInput->error());
+        LogE("Error creating QAudioInput with error %d", mAudioInput->error());
         return;
     }
     mAudioInput->setNotifyInterval(20);
@@ -95,7 +95,7 @@ void AudioRecorderForQt::init() {
 
     QObject::connect(&mReadTimer, SIGNAL(timeout()), this, SLOT(onReadPacket()));
 
-    INFORMATION("Initialized Qt audio recorder using device: %s", getDeviceName().c_str());
+    LogI("Initialized Qt audio recorder using device: %s", getDeviceName().c_str());
 }
 
 void AudioRecorderForQt::exit() {
@@ -110,12 +110,12 @@ void AudioRecorderForQt::exit() {
         delete mAudioInput;
         mAudioInput = nullptr;
     }
-    INFORMATION("Qt audio recorder closed.");
+    LogI("Qt audio recorder closed.");
 }
 
 void AudioRecorderForQt::start() {
     if (!mAudioInput) {
-        INFORMATION("Audio device not created, cannot start it.");
+        LogI("Audio device not created, cannot start it.");
         return;
     }
     mIODevice = mAudioInput->start();

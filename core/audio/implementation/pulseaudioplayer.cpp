@@ -51,8 +51,8 @@ void PulseAudioPlayer::init ()
     outstream = pa_simple_new (nullptr, "ENTROPY TUNER PLAYBACK",
                                PA_STREAM_PLAYBACK, nullptr,"playback",
                                &out, nullptr, &outattr, &errorcode);
-    if (outstream) { INFORMATION("Pulse audio player initialized"); }
-    else { ERROR("Player: Could not open pulse audio output stream: %s",pa_strerror(errorcode)); }
+    if (outstream) { LogI("Pulse audio player initialized"); }
+    else { LogE("Player: Could not open pulse audio output stream: %s",pa_strerror(errorcode)); }
 
 }
 
@@ -65,7 +65,7 @@ void PulseAudioPlayer::exit ()
     {
         pa_simple_free (outstream);
         outstream = nullptr;
-        INFORMATION("Pulse audio player shutdown");
+        LogI("Pulse audio player shutdown");
     }
 }
 
@@ -110,8 +110,8 @@ void PulseAudioPlayer::write (const PacketType &packet)
 
     int result = pa_simple_write(outstream, copy.data(), (size_t) copy.size()*sizeof(float), &errorcode);
     if (result < 0) {
-        ERROR("Could not write to pulse audio stream: ");
-        ERROR(pa_strerror(errorcode));
+        LogE("Could not write to pulse audio stream: ");
+        LogE(pa_strerror(errorcode));
     }
 }
 

@@ -104,7 +104,7 @@ std::string AlgorithmInformationParser::parseLanguageString(const tinyxml2::XMLE
 
     // language string not found. Check if default string exist, then return this one
     if (defaultLanguageString.size() > 0) {
-        DEBUG("Element '%s' has missing translation for '%s'", element->Value(), languageId.c_str());
+        LogD("Element '%s' has missing translation for '%s'", element->Value(), languageId.c_str());
         return defaultLanguageString;
     }
 
@@ -131,7 +131,7 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
     if (descriptionElement) {
         description = parseLanguageString(descriptionElement);
     } else {
-        DEBUG("Desciption of parameter not set.");
+        LogD("Desciption of parameter not set.");
     }
 
     if (type == "double") {

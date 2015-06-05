@@ -269,7 +269,7 @@ void SignalAnalyzer::recordSignal()
 
             if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
                 if (mDataBuffer.size() == mDataBuffer.maximum_size()) {
-                    WARNING("Audio buffer size in SignalAnalyzer reached.");
+                    LogW("Audio buffer size in SignalAnalyzer reached.");
                 }
             }
 
@@ -326,7 +326,7 @@ void SignalAnalyzer::analyzeSignal()
 
     //  and determine key from the key statistics
     int keynumber = identifySelectedKey();
-    INFORMATION("Detected key: %d", keynumber);
+    LogI("Detected key: %d", keynumber);
 
     // check the audio signal for possible
     // clipping effects and unusually long strings of zero amplitudes
@@ -339,13 +339,13 @@ void SignalAnalyzer::analyzeSignal()
 
     // check if a correct key was found
     if (keynumber < 0) {
-        INFORMATION("Final key could not be found. Cancel analysis.");
+        LogI("Final key could not be found. Cancel analysis.");
         return;
     }
 
     // check if found key equates the keynumber
     if (keynumber != mSelectedKey) {
-        DEBUG("Final detected key does not match the selected key. Cancel analysis.");
+        LogD("Final detected key does not match the selected key. Cancel analysis.");
         return;
     }
 
@@ -609,12 +609,12 @@ bool SignalAnalyzer::detectClipping(FFTWVector signal)
     const int threshold = signal.size()/50;
     if (maxcnt+mincnt > threshold)
     {
-        WARNING("SignalAnalyzer: High-amplitude clipping detected");
+        LogW("SignalAnalyzer: High-amplitude clipping detected");
         return true;
     }
     else if (nullcnt>threshold)
     {
-        WARNING("SignalAnalyzer: Highly intermittent signal detected (lot of zero amplitudes)");
+        LogW("SignalAnalyzer: Highly intermittent signal detected (lot of zero amplitudes)");
         return true;
     }
     return false;

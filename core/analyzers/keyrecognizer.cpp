@@ -81,14 +81,14 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
 
 void KeyRecognizer::init(bool optimize)
 {
-    VERBOSE("KeyRecognizer: starting initialization");
+    LogV("KeyRecognizer: starting initialization");
     defineKernel();
     if (optimize)
     {
         mFFT.optimize(mLogSpec);
         mFFT.optimize(mFlatFFT);
     }
-    VERBOSE("KeyRecognizer: initialization finished");
+    LogV("KeyRecognizer: initialization finished");
 }
 
 

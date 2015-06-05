@@ -200,7 +200,7 @@ bool ProjectManagerAdapter::onQuit() {
         }
     }
 
-    INFORMATION("Quitting accepted");
+    LogI("Quitting accepted");
 
     return true;
 }
@@ -284,12 +284,12 @@ void ProjectManagerAdapter::setChangesInFile(bool b) {
 ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path) {
     try {
         if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano())) {
-            WARNING("File could not be saved");
+            LogW("File could not be saved");
             return R_CANCELED;
         }
 
 
-        INFORMATION("File saved!");
+        LogI("File saved!");
         mCurrentFilePath = path;
         setChangesInFile(false);
 
@@ -306,12 +306,12 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string
 ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string &path, bool cached) {
     try {
         if (!mPianoFile.read(path, mCore->getPianoManager()->getPiano())) {
-            WARNING("File could not be opened");
+            LogW("File could not be opened");
             return R_CANCELED;
         }
 
 
-        INFORMATION("File opened!");
+        LogI("File opened!");
         if (cached) {
             // file is in cache, we need to save it at a new position
             mCurrentFilePath.clear();

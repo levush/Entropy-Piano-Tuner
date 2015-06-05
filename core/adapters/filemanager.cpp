@@ -69,12 +69,12 @@ bool FileManager::open(std::ifstream &stream,
     stream.open(absolute, mode);
     if (!stream)
     {
-        WARNING("Stream at '%s' could not be opened.", absolute.c_str());
+        LogW("Stream at '%s' could not be opened.", absolute.c_str());
         return false;
     }
     else
     {
-        INFORMATION("Stream at '%s' is open.", absolute.c_str());
+        LogI("Stream at '%s' is open.", absolute.c_str());
         return true;
     }
 }
@@ -98,10 +98,10 @@ bool FileManager::open(std::ofstream &stream,
 {
     stream.open(absolute, mode);
     if (!stream) {
-        WARNING("Stream at '%s' could not be opened.", absolute.c_str());
+        LogW("Stream at '%s' could not be opened.", absolute.c_str());
         return false;
     } else {
-        INFORMATION("Stream at '%s' is open.", absolute.c_str());
+        LogI("Stream at '%s' is open.", absolute.c_str());
         return true;
     }
 }

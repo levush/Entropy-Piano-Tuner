@@ -488,7 +488,7 @@ void SoundGenerator::playOriginalSoundOfKey (const Key &key, int id,
                                              double sustain, double release)
 {
     if (key.getPeaks().size()==0)
-        WARNING ("try to play sound with empty list of peaks.")
+        LogW ("try to play sound with empty list of peaks.")
     else
     {
         double sum=0;

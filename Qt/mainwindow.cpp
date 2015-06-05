@@ -322,7 +322,7 @@ void MainWindow::handleMessage(MessagePtr m) {
             statusBar()->showMessage(tr("File saved"));
             break;
         default:
-            WARNING("MessagePojectFile::Type Not implemented");
+            LogW("MessagePojectFile::Type Not implemented");
             break;
         }
 
@@ -535,7 +535,7 @@ void MainWindow::onOpenSoundControl() {
     for (auto &program : programNames) {
         process->start(program.first, program.second);
         if (process->waitForStarted()) {
-            INFORMATION("Sound control program '%s' started", program.first.toStdString().c_str());
+            LogI("Sound control program '%s' started", program.first.toStdString().c_str());
             return;
         }
     }
@@ -624,13 +624,13 @@ void MainWindow::onTutorial() {
     QResource manual(":/tutorial/tutorial_" + languageStr + ".html");
     QString text;
     if (manual.isValid() == false) {
-        WARNING("Manual not found for language %s. Using english as fallback.",
+        LogW("Manual not found for language %s. Using english as fallback.",
                 languageStr.toStdString().c_str());
 
         // use english as fallback
         QResource enManual(":/tutorial/tutorial_en.html");
         if (enManual.isValid() == false) {
-            ERROR("Engish manual not found. Maybe the location of the manual changed?");
+            LogE("Engish manual not found. Maybe the location of the manual changed?");
             text = "No manual found. Please use the online manual instead.";
         } else {
             text = QByteArray(reinterpret_cast<const char*>(enManual.data()), enManual.size());

@@ -183,12 +183,12 @@ void TuningCurveGraphDrawer::manuallyEditTuningCurveByClick (double relX, double
 
     if (keynumber == mKeyNumberOfA4)
     {
-        INFORMATION("The pitch of A4 cannot be changed manually.");
+        LogI("The pitch of A4 cannot be changed manually.");
         return;
     }
     double yfrac=1 - relY;
     int cents = MathTools::roundToInteger(rangeInCents * (2 * yfrac - 1));
-    WARNING("Set tuningcurve manually keynumber=%d, cents=%d.",keynumber,cents);
+    LogW("Set tuningcurve manually keynumber=%d, cents=%d.",keynumber,cents);
     MessageHandler::send<MessageChangeTuningCurve>
             (keynumber,mPiano->getDefiningTempFrequency(keynumber,cents,440));
 }

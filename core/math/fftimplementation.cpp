@@ -83,7 +83,7 @@ FFT_Implementation::~FFT_Implementation()
         if (mCvec1) fftw_free(mCvec1);
         if (mRvec2) free(mRvec2);
     }
-    catch (...) ERROR("fftw3_destroy_plan throwed an exception");
+    catch (...) LogE("fftw3_destroy_plan throwed an exception");
 }
 
 
@@ -168,7 +168,7 @@ void FFT_Implementation::updatePlan (const FFTRealVector &in,
         EptAssert(mCvec2, "May not be nullptr");
         mPlanRC = fftw_plan_dft_r2c_1d (mNRC, mRvec1, mCvec2, flags);
     }
-    catch (...) ERROR("fftw_pplan_dft_r2c_1d throwed an exception");
+    catch (...) LogE("fftw_pplan_dft_r2c_1d throwed an exception");
 }
 
 
@@ -211,7 +211,7 @@ void FFT_Implementation::updatePlan (const FFTComplexVector &in,
         EptAssert(mRvec2, "May not be nullptr");
         mPlanCR = fftw_plan_dft_c2r_1d (mNCR, mCvec1, mRvec2, flags);
     }
-    catch (...) ERROR("fftw_pplan_dft_c2r_1d throwed an exception");
+    catch (...) LogE("fftw_pplan_dft_c2r_1d throwed an exception");
 }
 
 
@@ -238,7 +238,7 @@ void FFT_Implementation::calculateFFT  (const FFTRealVector &in, FFTComplexVecto
         fftw_execute(mPlanRC);
         std::memcpy(out.data(),mCvec2,(mNRC/2+1)*sizeof(fftw_complex));
     }
-    catch (...) ERROR("fftw_execute throwed an exception");
+    catch (...) LogE("fftw_execute throwed an exception");
 }
 
 
@@ -265,5 +265,5 @@ void FFT_Implementation::calculateFFT  (const FFTComplexVector &in, FFTRealVecto
         fftw_execute(mPlanCR);
         std::memcpy(out.data(),mRvec2,mNCR*sizeof(double));
     }
-    catch (...) ERROR("fftw_execute throwed an exception");
+    catch (...) LogE("fftw_execute throwed an exception");
 }

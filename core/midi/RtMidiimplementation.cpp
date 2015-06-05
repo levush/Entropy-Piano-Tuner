@@ -52,7 +52,7 @@ void RtMidiImplementation::init() {
         mRtMidi.reset(new RtMidiIn());
     }
     catch (const RtMidiError &error) {
-        ERROR("%s", error.getMessage().c_str());
+        LogE("%s", error.getMessage().c_str());
     }
 }
 
@@ -76,13 +76,13 @@ void RtMidiImplementation::exit() {
 int RtMidiImplementation::GetNumberOfPorts ()
 {
     if (!mRtMidi) {
-        WARNING("Midi has not been initialized");
+        LogW("Midi has not been initialized");
         return 0;
     }
 
     int cnt=0;
     try { cnt = mRtMidi->getPortCount(); }
-    catch (const RtMidiError &error) ERROR("%s", error.getMessage().c_str());
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
     return cnt;
 }
 
@@ -104,7 +104,7 @@ std::string RtMidiImplementation::GetPortName (int i)
             ss << "Midi input port #" << i << " not available.";
         else ss << i << mRtMidi->getPortName(i);
     }
-    catch (const RtMidiError &error) ERROR("%s", error.getMessage().c_str());
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
     return ss.str();
 }
 
@@ -118,7 +118,7 @@ std::string RtMidiImplementation::GetPortName (int i)
 std::string RtMidiImplementation::GetPortNames()
 {
     if (!mRtMidi) {
-        WARNING("Midi has not been initialized");
+        LogW("Midi has not been initialized");
         return std::string();
     }
 
@@ -129,7 +129,7 @@ std::string RtMidiImplementation::GetPortNames()
         for (int i=0; i<static_cast<int>(mRtMidi->getPortCount()); i++)
             ss << "Midi input port #" << i << ": " << mRtMidi->getPortName(i) << '\n';
     }
-    catch (const RtMidiError &error) ERROR("%s", error.getMessage().c_str());
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
     return ss.str();
 }
 
@@ -149,7 +149,7 @@ bool RtMidiImplementation::OpenPort (int i, std::string AppName)
     {
         if (i<0 or i>=static_cast<int>(mRtMidi->getPortCount()))
         {
-            WARNING ("Invalid port number");
+            LogW ("Invalid port number");
             return false;
         }
         else
@@ -163,7 +163,7 @@ bool RtMidiImplementation::OpenPort (int i, std::string AppName)
             mCurrentPort = i;
         }
     }
-    catch (const RtMidiError &error) ERROR("%s", error.getMessage().c_str());
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
     return true;
 }
 
@@ -222,7 +222,7 @@ void RtMidiImplementation::ClearQueue ()
         }
         while (clearing and --timeout>0);
     }
-    catch (const RtMidiError &error) ERROR("%s", error.getMessage().c_str());
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////

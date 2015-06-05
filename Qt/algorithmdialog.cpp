@@ -58,7 +58,7 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
                 auto info(std::move(CalculationManager::getSingleton().loadAlgorithmInformation(name)));
                 mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdString(info->getName())));
             } catch (...) {
-                WARNING("Error during loading and adding the algorithm '%s'. Skipping...", name.c_str());
+                LogW("Error during loading and adding the algorithm '%s'. Skipping...", name.c_str());
             }
         }
     }

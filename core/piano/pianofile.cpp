@@ -79,11 +79,11 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
         EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, errormsg.str());
     }
 
-    INFORMATION("Succesfully parsed Xml-File: %s", absolutePath.c_str());
+    LogI("Succesfully parsed Xml-File: %s", absolutePath.c_str());
 
     tinyxml2::XMLElement *root = doc.FirstChildElement();
     if (!root) {
-        WARNING("Xml-document has no root node");
+        LogW("Xml-document has no root node");
         return;
     }
 
@@ -119,7 +119,7 @@ void PianoFile::writeXmlFile(const std::string &absolutePath, const Piano &piano
         EPT_EXCEPT(EptException::ERR_CANNOT_WRITE_TO_FILE, errormsg.str());
     }
 
-    INFORMATION("Succesfully saved Xml-File: %s", absolutePath.c_str());
+    LogI("Succesfully saved Xml-File: %s", absolutePath.c_str());
 }
 
 std::string PianoFile::getText(const tinyxml2::XMLElement *element) {
@@ -199,7 +199,7 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Keyboard &keyboard) {
             int key = -1;
             keyElement->QueryAttribute("key", &key);
             if (key < 0) {
-                ERROR("Key attribute not provided.");
+                LogE("Key attribute not provided.");
                 return;
             }
 

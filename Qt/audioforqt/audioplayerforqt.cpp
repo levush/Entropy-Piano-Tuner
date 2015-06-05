@@ -77,21 +77,21 @@ void AudioPlayerForQt::init()
         }
 
         if (!device.isFormatSupported(format)) {
-            ERROR("Selected device settings are not supported!");
+            LogE("Selected device settings are not supported!");
         }
     }
     else {
         if (!device.isFormatSupported(format)) {
-            WARNING("Raw audio format not supported by backend, falling back to default supported");
+            LogW("Raw audio format not supported by backend, falling back to default supported");
             format = device.preferredFormat();
             // update sampling rate, buffer type has to stay the same!
             setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8) {
-                WARNING("Sample size not supported");
+                LogW("Sample size not supported");
                 return;
             }
             if (format.sampleType() != QAudioFormat::SignedInt) {
-                WARNING("Sample format not supported");
+                LogW("Sample format not supported");
                 return;
             }
         }
@@ -100,7 +100,7 @@ void AudioPlayerForQt::init()
     // Open the audio output stream
     mAudioOutput = new QAudioOutput(device, format);
     if (mAudioOutput->error() != QAudio::NoError) {
-        ERROR("Error opening QAudioOutput with error %d", mAudioOutput->error());
+        LogE("Error opening QAudioOutput with error %d", mAudioOutput->error());
         return;
     }
 
@@ -115,7 +115,7 @@ void AudioPlayerForQt::init()
 
     //QObject::connect(mAudioOutput, SIGNAL(notify()), this, SLOT(onWriteMoreData()));
     if (mAudioOutput->error() != QAudio::NoError) {
-        ERROR("Error opening QAudioOutput with error %d", mAudioOutput->error());
+        LogE("Error opening QAudioOutput with error %d", mAudioOutput->error());
         return;
     }
 
@@ -123,7 +123,7 @@ void AudioPlayerForQt::init()
     // timer have to be started from the main thread
     QObject::connect(&mWriteTimer, SIGNAL(timeout()), this, SLOT(onWriteMoreData()));
 
-    INFORMATION("Initialized Qt audio player using device: %s", getDeviceName().c_str());
+    LogI("Initialized Qt audio player using device: %s", getDeviceName().c_str());
 }
 
 
@@ -139,7 +139,7 @@ void AudioPlayerForQt::exit() {
         mAudioOutput = nullptr;
         mIODevice = nullptr;
     }
-    INFORMATION("Qt audio player closed.");
+    LogI("Qt audio player closed.");
 }
 
 
@@ -149,7 +149,7 @@ void AudioPlayerForQt::exit() {
 
 void AudioPlayerForQt::start() {
     if (!mAudioOutput) {
-        INFORMATION("Audio device not created, cannot start it.");
+        LogI("Audio device not created, cannot start it.");
         return;
     }
     if (!mIODevice) {

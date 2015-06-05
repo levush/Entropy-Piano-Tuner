@@ -42,7 +42,7 @@ Algorithm::~Algorithm()
 
 void Algorithm::workerFunction()
 {
-    INFORMATION("Start calculation.");
+    LogI("Start calculation.");
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_STARTED);
 
@@ -53,7 +53,7 @@ void Algorithm::workerFunction()
 
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_ENDED);
-    INFORMATION("End of calculation");
+    LogI("End of calculation");
 }
 
 void Algorithm::updateTuningCurve(int keynumber, double frequency)

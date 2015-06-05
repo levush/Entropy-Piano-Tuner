@@ -155,7 +155,7 @@ void EntropyMinimizer::handleMessage(MessagePtr m)
             int keynumber = message->getKeyNumber();
             if (keynumber>=0) if (f != mKeyboard[keynumber].getComputedFrequency())
             {
-                INFORMATION ("Manual change of tuning curve during computation");
+                LogI ("Manual change of tuning curve during computation");
                 mRecalculateEntropy = true;
                 mRecalculateFrequency = f;
                 mRecalculateKey = keynumber;
@@ -189,12 +189,12 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
     for (int k=0; k < mNumberOfKeys; ++k) writeSpectrum(k,"before");
 #endif // CONFIG_ENABLE_XMGRACE
 
-    INFORMATION("EntropyMinimizer: start auditory preprocessing");
+    LogI("EntropyMinimizer: start auditory preprocessing");
     AuditoryPreprocessing AP(mPiano);
 
     if (not AP.checkDataConsistency()) return false;
 
-    INFORMATION("EntropyMinimzer: Normalize spectra ");
+    LogI("EntropyMinimzer: Normalize spectra ");
     for (auto &key : mKeys)
     {
         AP.normalizeSpectrum(key);
@@ -202,7 +202,7 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
         if (cancelThread()) return false;
     }
 
-    INFORMATION("EntropyMinimzer: Clean spectra ");
+    LogI("EntropyMinimzer: Clean spectra ");
     for (auto &key : mKeys)
     {
         AP.cleanSpectrum(key);
@@ -210,7 +210,7 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
         if (cancelThread()) return false;
     }
 
-    INFORMATION("EntropyMinimizer: Cut low frequencies ");
+    LogI("EntropyMinimizer: Cut low frequencies ");
     for (auto &key : mKeys)
     {
         AP.cutLowFrequencies(key);
@@ -218,7 +218,7 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
         if (cancelThread()) return false;
     }
 
-    INFORMATION("EntropyMinimzer: Apply SPLA filter");
+    LogI("EntropyMinimzer: Apply SPLA filter");
     AP.initializeSPLAFilter();
     for (auto &key : mKeys)
     {
@@ -228,7 +228,7 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
         if (cancelThread()) return false;
     }
 
-    INFORMATION("EntropyMinimizer: Extrapolate missing inharmonicity values");
+    LogI("EntropyMinimizer: Extrapolate missing inharmonicity values");
     AP.extrapolateInharmonicity();
     if (cancelThread()) return false;
 
@@ -243,10 +243,10 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
     os.close();
 #endif // CONFIG_ENABLE_XMGRACE
 
-    INFORMATION("EntropyMinimizer: Amend high-frequency spectral lines");
+    LogI("EntropyMinimizer: Amend high-frequency spectral lines");
     AP.improveHighFrequencyPeaks();
 
-    INFORMATION("EntropyMinimizer: Mollify spectral lines");
+    LogI("EntropyMinimizer: Mollify spectral lines");
     for (auto &key : mKeys)
     {
         AP.applyMollifier(key);
@@ -260,7 +260,7 @@ bool EntropyMinimizer::performAuditoryPreprocessing()
 #endif // CONFIG_ENABLE_XMGRACE
 
     showCalculationProgress(0);
-    INFORMATION("EntropyMinimizer: Stop auditory preprocessing");
+    LogI("EntropyMinimizer: Stop auditory preprocessing");
     return true;
 }
 
@@ -629,10 +629,10 @@ void EntropyMinimizer::minimizeEntropy ()
     else if (accuracy == "standard") {stepsToFinish = 60;}
     else if (accuracy == "high") {stepsToFinish = 120;}
     else if (accuracy == "infinite") {stepsToFinish = -1;}
-    else {ERROR("Accuracy %s is not supported, using standard.", accuracy.c_str());}
+    else {LogE("Accuracy %s is not supported, using standard.", accuracy.c_str());}
 
 
-    VERBOSE("Accuracy is %s, using %d as max steps.", accuracy.c_str(), stepsToFinish);
+    LogV("Accuracy is %s, using %d as max steps.", accuracy.c_str(), stepsToFinish);
 
     if (stepsToFinish < 0) {
         // infinite, reset progress to 0
@@ -655,7 +655,7 @@ void EntropyMinimizer::minimizeEntropy ()
             lastProgress = progress;
             showCalculationProgress (progress);
             if (attemptsCounter % 100 == 0) {
-                VERBOSE("Progress: %f", progress);
+                LogV("Progress: %f", progress);
             }
 
             if (progress > 1) {

@@ -106,8 +106,8 @@ void TunerApplication::init() {
 
     auto log = new LogForQt();
     // writeout args to log
-    INFORMATION("Number of arguments: %d", arguments().size());
-    INFORMATION("Program arguments: %s", arguments().join(", ").toStdString().c_str());
+    LogI("Number of arguments: %d", arguments().size());
+    LogI("Program arguments: %s", arguments().join(", ").toStdString().c_str());
 
     // create core
     mCore.reset(new Core(
@@ -191,7 +191,7 @@ void TunerApplication::playStartupSound() {
 bool TunerApplication::openFile(QString filePath, bool cached) {
     if (!mCore || !mCore->getProjectManager() || !mCore->isInitialized()) {
         // not initiated, save file for later use
-        INFORMATION("Storing startup file: %s", filePath.toStdString().c_str());
+        LogI("Storing startup file: %s", filePath.toStdString().c_str());
         mStartupFile = filePath;
         return true;
     }
@@ -280,24 +280,24 @@ void TunerApplication::stopCore() {
 void TunerApplication::onApplicationStateChanged(Qt::ApplicationState state) {
     if (state & Qt::ApplicationSuspended) {
         // called if application is 'shut down'
-        INFORMATION("Application suspended: exiting core");
+        LogI("Application suspended: exiting core");
         setApplicationExitState(EXIT_SUCCESS);
         stopCore();
         exitCore();
     } else if (state & Qt::ApplicationActive) {
         // init and start core components
-        INFORMATION("Application gone active: starting core");
+        LogI("Application gone active: starting core");
         setApplicationExitState(EXIT_FAILURE);
         initCore();
         startCore();
     } else if (state & Qt::ApplicationHidden ) {
         // delete core components
-        INFORMATION("Application gone hidden: exiting core");
+        LogI("Application gone hidden: exiting core");
         exitCore();
     } else if (state & Qt::ApplicationInactive) {
         // stop the core on mobile platforms
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(Q_OS_WINPHONE)
-        INFORMATION("Application gone inactive: stopping core");
+        LogI("Application gone inactive: stopping core");
         stopCore();
         setApplicationExitState(EXIT_SUCCESS);
 #endif

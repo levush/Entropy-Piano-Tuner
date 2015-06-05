@@ -164,7 +164,7 @@ void SimpleFileDialog::onDeleteFile() {
     EptAssert(file.exists(), "File has to exists.");
 
     if (!file.remove()) {
-        WARNING("File '%s' could not be removed.", file.fileName().toStdString().c_str());
+        LogW("File '%s' could not be removed.", file.fileName().toStdString().c_str());
         return;
     }
 

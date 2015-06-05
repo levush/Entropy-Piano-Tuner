@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <fstream>
+#include <cstdio>
 #include "../config.h"
 #include "prerequisites.h"
 
@@ -34,33 +35,33 @@
 #endif
 
 #if LOG_LEVEL <= 1
-#   define VERBOSE(...) {char b[ERROR_BUFFER_SIZE]; sprintf(b, __VA_ARGS__); Log::verbose(b, __LINE__, __FILE__, __func__);}
+#   define LogV(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::verbose(b, __LINE__, __FILE__, __func__);}
 #else
-#   define VERBOSE(...)
+#   define LogV(...)
 #endif
 
 #if LOG_LEVEL <= 2
-#   define DEBUG(...) {char b[ERROR_BUFFER_SIZE]; sprintf(b, __VA_ARGS__); Log::debug(b, __LINE__, __FILE__, __func__);}
+#   define LogD(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::debug(b, __LINE__, __FILE__, __func__);}
 #else
-#   define DEBUG(...)
+#   define LogD(...)
 #endif
 
 #if LOG_LEVEL <= 3
-#   define INFORMATION(...) {char b[ERROR_BUFFER_SIZE]; sprintf(b, __VA_ARGS__); Log::information(b, __LINE__, __FILE__, __func__);}
+#   define LogI(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::information(b, __LINE__, __FILE__, __func__);}
 #else
-#   define INFORMATION(...)
+#   define LogI(...)
 #endif
 
 #if LOG_LEVEL <= 4
-#   define WARNING(...) {char b[ERROR_BUFFER_SIZE]; sprintf(b, __VA_ARGS__); Log::warning(b, __LINE__, __FILE__, __func__);}
+#   define LogW(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::warning(b, __LINE__, __FILE__, __func__);}
 #else
-#   define WARNING(...)
+#   define LogW(...)
 #endif
 
 #if LOG_LEVEL <= 5
-#   define ERROR(...) {char b[ERROR_BUFFER_SIZE]; sprintf(b, __VA_ARGS__); Log::error(b, __LINE__, __FILE__, __func__);}
+#   define LogE(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::error(b, __LINE__, __FILE__, __func__);}
 #else
-#   define ERROR(...)
+#   define LogE(...)
 #endif
 
 class Log

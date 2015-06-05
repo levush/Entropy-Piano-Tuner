@@ -74,9 +74,9 @@ void Synthesizer::init ()
         // start the synthesizer in a separate autonomous thread:
         mRunning = true;
         start();
-        INFORMATION ("Synthesizer started.");
+        LogI ("Synthesizer started.");
     }
-    else WARNING("Could not start synthesizer: AudioPlayer not connected.");
+    else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
 
 
@@ -94,7 +94,7 @@ if (mRunning)
     {
         mRunning = false;        // terminate the loop
         stop();
-        INFORMATION ("Synthesizer shutting down");
+        LogI ("Synthesizer shutting down");
     }
 }
 
@@ -317,7 +317,7 @@ void Synthesizer::addFourierComponent (int id, double f, double amplitude)
     mChordMutex.lock();
     auto snd = getSoundPtr(id);
     if (snd) snd->fouriermodes[f]=amplitude;
-    else WARNING("id does not exist");
+    else LogW("id does not exist");
     mChordMutex.unlock();
 }
 
@@ -340,7 +340,7 @@ void Synthesizer::playSound (int id)
     mChordMutex.lock();
     auto snd = getSoundPtr(id);
     if (snd) snd->stage = 1;
-    else WARNING("id does not exist");
+    else LogW("id does not exist");
     mChordMutex.unlock();
 }
 
@@ -362,7 +362,7 @@ void Synthesizer::releaseSound (int id)
     mChordMutex.lock();
     auto snd = getSoundPtr(id);
     if (snd) snd->stage=4;
-    else WARNING("id does not exist");
+    else LogW("id does not exist");
     mChordMutex.unlock();
 }
 
@@ -407,6 +407,6 @@ void Synthesizer::ModifySustainLevel (int id, double level)
     mChordMutex.lock();
     auto snd = getSoundPtr(id);
     if (snd) snd->sustain = level;
-    else WARNING ("id does not exist");
+    else LogW ("id does not exist");
     mChordMutex.unlock();
 }

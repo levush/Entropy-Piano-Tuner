@@ -133,7 +133,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::share() {
         env->ExceptionClear();
     }
 #else
-    INFORMATION("Sharing for this platform is not supported yet.");
+    LogI("Sharing for this platform is not supported yet.");
 #endif
     return R_CANCELED; // function has to return something, therefore I put this here
 }

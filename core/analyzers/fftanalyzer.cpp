@@ -74,7 +74,7 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
     std::shared_ptr<Key> key;  // the key output
 
 
-    VERBOSE("FFTAnalyzer started");
+    LogV("FFTAnalyzer started");
 
     // Map the final FFT to a logarithmically binned spectrum:
     static SpectrumType spectrum(NumberOfBins);
@@ -100,28 +100,28 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
     int m = Key::FrequencyToIndex(f1);
     double f = Key::IndexToFrequency(locatePeak(spectrum,m,40)) / factor;
 
-    VERBOSE("FFTAnalyzer: Estimated frequency f = %f, key = %d", f, finalKey);
+    LogV("FFTAnalyzer: Estimated frequency f = %f, key = %d", f, finalKey);
 
 
     if (f>20 and f<6000)
     {
         // Inharmonicity estimation.
         double B = estimateInharmonicity(finalFFT, spectrum,f);
-        VERBOSE("FFTAnalyzer: Inharmonicity    B = %f", B);
+        LogV("FFTAnalyzer: Inharmonicity    B = %f", B);
 
         // Correct frequency, taking inharmonicty into account
         f = findAccuratePeakFrequency(finalFFT, factor*f)/factor/sqrt((1+B*factor*factor)/(1+B));
-        VERBOSE("FFTAnalyzer: Accurate frequency f = %f", f);
+        LogV("FFTAnalyzer: Accurate frequency f = %f", f);
 
         // Quality check by collapsing higher partials (except of highest ocatave)
         double Q=0;
         if (f<2200)
         {
             Q = estimateQuality();
-            VERBOSE("FFTAnalyzer: Quality measure (cents)    Q = %f", Q);
+            LogV("FFTAnalyzer: Quality measure (cents)    Q = %f", Q);
 
             double cents = estimateFrequencyShift();
-            VERBOSE("FFTAnalyzer: frequency correction cents C = %f", cents);
+            LogV("FFTAnalyzer: frequency correction cents C = %f", cents);
         }
 
         // Create a new key:
@@ -136,14 +136,14 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
         key->setRecorded(true);
 
         auto peaks = identifyPeaks(finalFFT, spectrum,f,B);
-        VERBOSE("FFTAnalyzer: found %u peaks.", peaks.size());
+        LogV("FFTAnalyzer: found %u peaks.", peaks.size());
         key->setPeaks(peaks);
     } else {
-        WARNING("Frequence %f is out of bounds", f);
+        LogW("Frequence %f is out of bounds", f);
         return std::make_pair(FFTAnalyzerErrorTypes::ERR_FREQUENCY_OUT_OF_BOUNDS, key);
     }
 
-    VERBOSE("leaving FFTAnalyzer thread.");
+    LogV("leaving FFTAnalyzer thread.");
 
     return std::make_pair(FFTAnalyzerErrorTypes::ERR_NONE, key);
 }
@@ -160,7 +160,7 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey(
     EptAssert(finalFFT->isValid(), "The FFT data is not valid");
     EptAssert(keyIndex >= 0, "The final key has to be set.");
 
-    VERBOSE("FFTAnalyzer started");
+    LogV("FFTAnalyzer started");
 
     FrequencyDetectionResult result = std::make_shared<FrequencyDetectionResultStruct>();
 
@@ -198,9 +198,9 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey(
     result->positionOfMaximum = index;
     result->tuningDeviationCurve = std::move(out);
 
-    VERBOSE("Deviation %d, comp index %d", result->deviationInCents, computedIndex);
+    LogV("Deviation %d, comp index %d", result->deviationInCents, computedIndex);
 
-    VERBOSE("leaving FFTAnalyzer thread.");
+    LogV("leaving FFTAnalyzer thread.");
 
     return result;
 }
@@ -459,7 +459,7 @@ double FFTAnalyzer::estimateInharmonicity (FFTDataPointer fftData, SpectrumType 
         double z = f2*f2/f/f;
         if (z>4.4 or z<4) return 0;
         double B = (4-z)/(z-16);
-        VERBOSE("FFTAnalyzer: treble: B = %f", B);
+        LogV("FFTAnalyzer: treble: B = %f", B);
         return B;
     }
 
@@ -476,7 +476,7 @@ double FFTAnalyzer::estimateInharmonicity (FFTDataPointer fftData, SpectrumType 
 
     // Calling this function gives a first rough estimate of the inharmonicty
     double expected_B = getExpectedInharmonicity(f);
-    VERBOSE("FFTAnalyzer: expected B = %f", expected_B);
+    LogV("FFTAnalyzer: expected B = %f", expected_B);
 
     mOptimalSuperposition.clear();
     for (double scan_B = expected_B/5; scan_B <= expected_B*5; scan_B*=1.03)
@@ -510,7 +510,7 @@ double FFTAnalyzer::estimateInharmonicity (FFTDataPointer fftData, SpectrumType 
             Write("7-find-inharmonicity.dat",superposition);
         }
     }
-    VERBOSE("FFTAnalyzer: finished estimating inharmonicity: B = %f", B);
+    LogV("FFTAnalyzer: finished estimating inharmonicity: B = %f", B);
 
 #if CONFIG_ENABLE_XMGRACE
     //system("killall -9 xmgrace; xmgrace -maxpath 200000  -fixed 570 440 -geometry 800x660 7-find-inharmonicity.dat &");

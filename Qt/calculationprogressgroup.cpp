@@ -98,7 +98,7 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
             QString errorText;
             switch (mcp->getErrorCode()) {
             case MessageCaluclationProgress::CALCULATION_ERROR_NONE:
-                WARNING("Calculation error message was sent but no error code was set");
+                LogW("Calculation error message was sent but no error code was set");
                 errorText = tr("An unknown error occured during the calculation.");
                 break;
             case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA:

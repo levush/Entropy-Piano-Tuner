@@ -83,7 +83,7 @@ bool openFileFromArgs(const QStringList &args) {
 
 void openFile(const char *file, bool cached) {
     QString fileName(file);
-    INFORMATION("Opening external file %s", file);
+    LogI("Opening external file %s", file);
     QMetaObject::invokeMethod(TunerApplication::getSingletonPtr(),
                               "openFile",
                               Qt::QueuedConnection,

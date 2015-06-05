@@ -88,7 +88,7 @@ bool AuditoryPreprocessing::checkDataConsistency()
         MessageHandler::send<MessageCaluclationProgress>
                 (MessageCaluclationProgress::CALCULATION_FAILED,
                  MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA);
-        WARNING("Calculation started without data");
+        LogW("Calculation started without data");
         return false;
     }
     if (not allkeysrecorded)
@@ -96,7 +96,7 @@ bool AuditoryPreprocessing::checkDataConsistency()
         MessageHandler::send<MessageCaluclationProgress>
                 (MessageCaluclationProgress::CALCULATION_FAILED,
                  MessageCaluclationProgress::CALCULATION_ERROR_NOT_ALL_KEYS_RECORDED);
-        WARNING("Not all keys have been recorded");
+        LogW("Not all keys have been recorded");
         return false;
     }
 
@@ -109,19 +109,19 @@ bool AuditoryPreprocessing::checkDataConsistency()
         double f = key.getRecordedFrequency();
         if (f<20 or f>20000)
         {
-            WARNING("Key %d: Frequency f=%f out of range.",keynumber,f);
+            LogW("Key %d: Frequency f=%f out of range.",keynumber,f);
             consistent = false;
         }
         double B = key.getMeasuredInharmonicity();
         if (B<0 or B>1)
         {
-            WARNING("Key %d: Inharmonicity B=%f out of range.",keynumber,B);
+            LogW("Key %d: Inharmonicity B=%f out of range.",keynumber,B);
             consistent=false;
         }
         Key::SpectrumType &spectrum = key.getSpectrum();
         if (spectrum.size() != static_cast<size_t>(Key::NumberOfBins))
         {
-            WARNING("Key %d: Logspec size is %d, expected %d.",
+            LogW("Key %d: Logspec size is %d, expected %d.",
                     keynumber,
                     static_cast<int>(spectrum.size()),
                     static_cast<int>(Key::NumberOfBins));
@@ -129,7 +129,7 @@ bool AuditoryPreprocessing::checkDataConsistency()
         }
         else if (MathTools::computeNorm(spectrum)==0)
         {
-            WARNING("Key %d: Logspec norm = %f.",keynumber,
+            LogW("Key %d: Logspec norm = %f.",keynumber,
                     MathTools::computeNorm(spectrum));
             consistent=false;
         }

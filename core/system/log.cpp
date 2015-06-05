@@ -46,35 +46,35 @@ Log::~Log()
 
 void Log::verbose(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    sprintf(buffer, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_verbose(buffer);
     mLog->writeToLogfile(LEVEL_VERBOSE, text, line, file, function);
 }
 
 void Log::debug(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    sprintf(buffer, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_debug(buffer);
     mLog->writeToLogfile(LEVEL_DEBUG, text, line, file, function);
 }
 
 void Log::information(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    sprintf(buffer, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_information(buffer);
     mLog->writeToLogfile(LEVEL_INFORMATION, text, line, file, function);
 }
 
 void Log::warning(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    sprintf(buffer, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_warning(buffer);
     mLog->writeToLogfile(LEVEL_WARNING, text, line, file, function);
 }
 
 void Log::error(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    sprintf(buffer, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_error(buffer);
     mLog->writeToLogfile(LEVEL_ERROR, text, line, file, function);
 }

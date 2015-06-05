@@ -51,8 +51,8 @@ void PulseAudioRecorder::init ()
                               PA_STREAM_RECORD, nullptr,"record",
                               &in, nullptr, &inattr, &errorcode);
 
-    if (instream) { INFORMATION("Pulse audio recorder initialized"); }
-    else { ERROR("Recorder: Could not open pulse audio input stream: %s",pa_strerror(errorcode)); }
+    if (instream) { LogI("Pulse audio recorder initialized"); }
+    else { LogE("Recorder: Could not open pulse audio input stream: %s",pa_strerror(errorcode)); }
 }
 
 
@@ -66,7 +66,7 @@ void PulseAudioRecorder::exit ()
     if (instream)  {
         pa_simple_free (instream);
         instream = nullptr;
-        INFORMATION("Pulse audio recorder shutdown");
+        LogI("Pulse audio recorder shutdown");
     }
 }
 
@@ -98,7 +98,7 @@ void PulseAudioRecorder::workerFunction()
     {
         int errorcode=0;
         int result = pa_simple_read(instream, (void*)(buffer.data()), (size_t) BufferSize*sizeof(float), &errorcode);
-        if (result < 0) { ERROR("Could not read from audio stream: %s",pa_strerror(errorcode));}
+        if (result < 0) { LogE("Could not read from audio stream: %s",pa_strerror(errorcode));}
         else pushRawData(buffer);
     }
 }
