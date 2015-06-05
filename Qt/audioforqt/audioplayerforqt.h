@@ -61,7 +61,6 @@ private:
     QAudioOutput *mAudioOutput;
     QIODevice *mIODevice;
     int mNotifyIntervall;
-    float mBufferSize; /// buffer size of qt in seconds, on slow devices use a bigger value
     QTimer mWriteTimer;
 };
 

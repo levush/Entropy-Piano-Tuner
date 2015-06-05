@@ -38,11 +38,10 @@ AudioPlayerForQt::AudioPlayerForQt(QObject *parent)
     : QObject(parent),
       mAudioOutput(nullptr),
       mIODevice(nullptr),
-      mNotifyIntervall(MIN_BUFFER_SIZE_IN_MSECS),
-      mBufferSize(MIN_BUFFER_SIZE_IN_MSECS / 1000.f * 2)
+      mNotifyIntervall(MIN_BUFFER_SIZE_IN_MSECS)
 {
 #if __ANDROID__
-      mBufferSize *= 5;  // on mobile devices, use a bigger value
+      mBufferSize *= 2;  // on mobile devices, use a bigger value
 #endif
     setDeviceName(SettingsForQt::getSingleton().getOuputDeviceName().toStdString());
     setSamplingRate(SettingsForQt::getSingleton().getOutputDeviceSamplingRate());
@@ -104,15 +103,12 @@ void AudioPlayerForQt::init()
     }
 
 
-    //mAudioOutput->setNotifyInterval(0);
-    mAudioOutput->setBufferSize(getSamplingRate() * mBufferSize * sizeof(DataFormat) * getChannelCount());  // 0.01 seconds buffer size
-    //mAudioOutput->setBufferSize(mAudioOutput->periodSize() * 10);
-    //mAudioOutput->setBufferSize(getSamplingRate() * sizeof(DataFormat) * 2);
+    // the buffer size is twice of the intervall time
+    mAudioOutput->setBufferSize(getSamplingRate() * getChannelCount() * 2 * mNotifyIntervall / 1000.f);
 
 
     setDeviceName(device.deviceName().toStdString());
 
-    //QObject::connect(mAudioOutput, SIGNAL(notify()), this, SLOT(onWriteMoreData()));
     if (mAudioOutput->error() != QAudio::NoError) {
         LogE("Error opening QAudioOutput with error %d", mAudioOutput->error());
         return;
@@ -152,7 +148,8 @@ void AudioPlayerForQt::start() {
         return;
     }
     if (!mIODevice) {
-        mWriter->setup(getSamplingRate(), 2 * mNotifyIntervall / 1000.0 * getSamplingRate() * getChannelCount());
+        // the writer shall write twice the actual buffer size
+        mWriter->setup(getSamplingRate(), mAudioOutput->bufferSize() * 2);
         mIODevice = mAudioOutput->start();
         if (mAudioOutput->error() != QAudio::NoError) {
             qWarning() << "Error opening QAudioOutput with error " << mAudioOutput->error();
