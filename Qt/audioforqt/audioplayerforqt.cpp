@@ -39,7 +39,7 @@ AudioPlayerForQt::AudioPlayerForQt(QObject *parent)
       mAudioOutput(nullptr),
       mIODevice(nullptr),
       mNotifyIntervall(MIN_BUFFER_SIZE_IN_MSECS),
-      mBufferSize(MIN_BUFFER_SIZE_IN_MSECS / 1000.f * 5)
+      mBufferSize(MIN_BUFFER_SIZE_IN_MSECS / 1000.f * 2)
 {
 #if __ANDROID__
       mBufferSize *= 5;  // on mobile devices, use a bigger value
@@ -152,6 +152,7 @@ void AudioPlayerForQt::start() {
         return;
     }
     if (!mIODevice) {
+        mWriter->setup(getSamplingRate(), 2 * mNotifyIntervall / 1000.0 * getSamplingRate() * getChannelCount());
         mIODevice = mAudioOutput->start();
         if (mAudioOutput->error() != QAudio::NoError) {
             qWarning() << "Error opening QAudioOutput with error " << mAudioOutput->error();

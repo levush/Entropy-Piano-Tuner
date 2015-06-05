@@ -124,7 +124,7 @@ void Synthesizer::workerFunction (void)
 
             generateWaveform();
             mChordMutex.unlock();
-            while (mRunning and getFreePacketSize() < MIN_FREE_PACKET_SIZE) msleep(1);
+            while (mRunning and getFreePacketSize() < 1) msleep(1);
         }
         else
         {

@@ -1,9 +1,15 @@
 #include "rawdatawriter.h"
 
-RawDataWriter::RawDataWriter(size_t packetSize)
-    : mPacket(packetSize)
+RawDataWriter::RawDataWriter()
+    : mPacket(0)
 {
 
+}
+
+void RawDataWriter::setup(int samplingRate, int mBufferSize) {
+    std::lock_guard<std::mutex> lock(mPacketMutex);
+    mSamplingRate = samplingRate;
+    mPacket.resize(mBufferSize);
 }
 
 AudioBase::PacketType RawDataWriter::readPacket(size_t size) {
