@@ -34,8 +34,8 @@
 #include "../system/log.h"
 
 const int    KeyRecognizer::M = 1024;
-const double KeyRecognizer::fmin = 10;
-const double KeyRecognizer::fmax = 20000;
+const double KeyRecognizer::fmin = 20;
+const double KeyRecognizer::fmax = 10000;
 const double KeyRecognizer::logfmin = log(fmin);
 const double KeyRecognizer::logfmax = log(fmax);
 
@@ -58,9 +58,9 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
     mKeyNumberOfA(0),                   // Index of the A-key (normally 48)
     mFFT(),                             // Instance of FFT implementation
     mLogSpec(M),                        // Vector holding the log. spectrum
-    mLogLogSpec(M),                     // Vector holding the loglog. spectrum
+    mFlatSpectrum(M),                     // Vector holding the loglog. spectrum
     mKernelFFT(M/2+1),                  // Vector holding the complex FFT of the kernel
-    mLogLogSpecFFT(M/2+1),              // Vector holding the complex FFT of the loglogspec
+    mFlatFFT(M/2+1),              // Vector holding the complex FFT of the loglogspec
     mConvolution(M),                    // Convolution vector, real
     mSelectedKey(-1),                   // Selected key
     mKeyForced(false)                   // selected key is forced
@@ -86,7 +86,7 @@ void KeyRecognizer::init(bool optimize)
     if (optimize)
     {
         mFFT.optimize(mLogSpec);
-        mFFT.optimize(mLogLogSpecFFT);
+        mFFT.optimize(mFlatFFT);
     }
     VERBOSE("KeyRecognizer: initialization finished");
 }
@@ -167,8 +167,6 @@ void KeyRecognizer::workerFunction()
     }
 
     int keynumber = findNearestKey(f);      // determine keynumber
-
-    std::cout << "KeyRecognizer: f=" << f << ", key=" << keynumber << std::endl;
 
     mCallback->keyRecognized(keynumber, f); // notify callback
 }
@@ -331,38 +329,42 @@ void KeyRecognizer::constructLogSpec()
 
 void KeyRecognizer::signalPreprocessing()
 {
-    std::vector<double> copy(M);
-    for (int i=0; i<M; ++i) copy[i]=(mLogSpec[i]>0 ? log(mLogSpec[i]) : 0);
+    Write("01-logspec.dat",mLogSpec);
+    double norm = MathTools::computeNorm(mLogSpec);
+    if (norm<=0) return;
+    auto decibel = [norm](double x) {return 10*log10(x/norm);};
+    auto dB= MathTools::transformVector<double>(mLogSpec,decibel);
+    Write("02-dB.dat",dB);
+
 
     // Flatten noise by subtracting a gliding average
     for (int i=0; i<M; ++i)
     {
-        const int w=30;             // width of the average
+        //const int w=MathTools::roundToInteger(1+5000/mtof(i)); // width of the average
+        const int w=30;
         int a = std::max(0,i-w);
-        int b = std::min(M,i+w+1);
+        int b = std::min(M,i+1);
         double sum=0;
-        for (int k=a; k<b; ++k) sum+=copy[k];
-        mLogLogSpec[i]=copy[i]-sum/(b-a);
+        for (int k=a; k<b; ++k) sum+=dB[k]*dB[k];
+        mFlatSpectrum[i]=std::max(0.0,dB[i]+sqrt(sum/(b-a))-5);
     }
+    Write("03-dBflat.dat",mFlatSpectrum);
 
-    // If key is selected remove all spectral lines below.
-    // For low-lying spectral lines amplify the lowest one.
+
+    // If key is selected decrease all spectral lines below
+    // and slightly increase the main spectral line.
     if (mSelectedKey>=0 and not mKeyForced)
     {
-        const int w=30;
-        int m=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*0.9);
-        for (int k=0; k<m; ++k) mLogLogSpec[k]=0;
-        m=ftom(mPiano->getEqualTempFrequency(mSelectedKey));
-        if (mSelectedKey < 20)
+        int m1=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*0.93);
+        int m2=ftom(mPiano->getEqualTempFrequency(mSelectedKey)*1.07);
+        if (m1>=0 and m1<=m2 and m2<=M)
         {
-            const int w=30;             // width of the amplification
-            int a = std::max(0,m-w);
-            int b = std::min(M,m+w+1);
-            for (int k=a; k<b; ++k) mLogLogSpec[k] += 3.0/w*std::min(k-a,b-k);
+            for (int k=0; k<m1; ++k)  mFlatSpectrum[k] *= 0.75;
+            for (int k=m1; k<m2; ++k) mFlatSpectrum[k] *= 1.2;
         }
     }
+    Write("04-FlatSpectrum.dat",mFlatSpectrum);
 
-    Write("000-loglogspec.dat",mLogLogSpec,false);
 }
 
 
@@ -386,34 +388,36 @@ void KeyRecognizer::defineKernel ()
 
     static const int width=M/300;     // width of the peaks in bins
     static const int partials=20;  // number of partials to be detected (20)
-    static const double B=0.0005;   // here still with a constant inharmonicity
+    static const double B=0.000;   // here still with a constant inharmonicity
 
     static std::vector<double> kernel(M); //must be static for using fftw3
     kernel.assign(M,0);
 
     // lambda function for setting a peak
     auto setpeak = [] (int m, double amplitude)
-    { for (int n=m-width; n<=m+width; n++) kernel[(n+M)%M]+=amplitude*(width-std::abs(n-m)); };
+    { for (int n=m-width; n<=m+width; n++) kernel[(n+M)%M]=amplitude*(width-std::abs(n-m)); };
 
-    // lambda function for computing the frequency of the nth partial
-    auto partial = [] (double f1, int n, double B)
-    { return f1 * n * sqrt((1+B*n*n)/(1+B)); };
+    // lambda function for computing the frequency ratio of the nth partial
+    auto partial = [] (int n, double B)
+    { return n * sqrt((1+B*n*n)/(1+B)); };
 
     // lambda function for computing the index of the nth partial
-    auto partialindex = [this,partial] (int m, int n, double B, int div)
-    { double f=mtof(m); return ftom(f*partial(f/div,n,B)/partial(f/div,div,B)); };
+    auto partialindex = [this,partial] (int n, double B, int div)
+    { return ftom(fmin*partial(n,B)/partial(div,B)); };
 
     // lambda function for the intensity decay of the peaks
-    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.2); };
+    auto intensity = [] (int n) { return pow(static_cast<double>(n),-0.3); };
 
     // Define the kernel function
-    for (int n=1; n<=partials; ++n) setpeak(partialindex(0, n, B, 1),intensity(n));
-        for (int div=2; div<=15; div++) for (int n=1; n<=30; ++n) if (n%div>0)
-            setpeak(partialindex(0,n,B,div),-0.3*intensity(n));
+    for (int div=2; div<=4; div++) for (int n=1; n<=30; ++n) if (n%div>0) if (n>div-2)
+            setpeak(partialindex(n,B,div),-0.3*intensity(n));
+
+    for (int n=1; n<=partials; ++n) setpeak(partialindex(n, B, 1),intensity(n));
+
 
     mFFT.calculateFFT(kernel,mKernelFFT); // calculate FFT
 
-    //Write("keyrecog-kernel.dat",kernel,false);
+    Write("05-keyrecog-kernel.dat",kernel,true);
 }
 
 
@@ -436,11 +440,12 @@ void KeyRecognizer::defineKernel ()
 
 double KeyRecognizer::estimateFrequency ()
 {
-    mFFT.calculateFFT(mLogLogSpec,mLogLogSpecFFT);
-    for (size_t n = 0; n < mLogLogSpecFFT.size(); ++n)
-        mLogLogSpecFFT[n] *= std::conj(mKernelFFT[n]);
-    mFFT.calculateFFT(mLogLogSpecFFT,mConvolution);
+    mFFT.calculateFFT(mFlatSpectrum,mFlatFFT);
+    for (size_t n = 0; n < mFlatFFT.size(); ++n)
+        mFlatFFT[n] *= std::conj(mKernelFFT[n]);
+    mFFT.calculateFFT(mFlatFFT,mConvolution);
     int m  = MathTools::findMaximum(mConvolution);
+    Write("06-convolution.dat",mConvolution,false);
     return mtof(m);
 }
 
@@ -487,7 +492,7 @@ void KeyRecognizer::Write(std::string filename, std::vector<double> &v, bool log
     }
     os.close();
 #else
-    (void)filename; (void)v; // suppress warnings
+    (void)filename; (void)v; (void)log; // suppress warnings
 #endif // CONFIG_ENABLE_XMGRACE
 }
 

@@ -75,7 +75,7 @@ protected:
 
     bool cancelThread() const;              ///< Cancel-flag getter method, thread-safe
     void setCancelThread(bool b);           ///< Cancel-flag setter method, thread-safe
-    void msleep(int milliseconds);          ///< Sleep function for staying idle
+    void msleep(double milliseconds);       ///< Sleep function for staying idle
     bool isThreadRunnding() const;          ///< Flag to check if the thread is running
 
 private:

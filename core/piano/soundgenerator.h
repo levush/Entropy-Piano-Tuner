@@ -51,7 +51,7 @@ private:
     void handleMidiKeypress(MidiAdapter::Data &data);
     double getStereo (int keynumber);
     void playSineWave(int keynumber, double frequency, double volume);
-    void playMagneticWave (const Key &key, int keynumber, double frequency, double volume);
+    void playReferenceTone (const Key &key, int keynumber, double frequency, double volume);
     void playResonatingReferenceSound (int keynumber);
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);

@@ -22,33 +22,42 @@
 #include "settingsforqt.h"
 #include <qdebug.h>
 
-const AudioPlayerForQt::DataFormat AudioPlayerForQt::SIGNAL_SCALING = std::numeric_limits<AudioPlayerForQt::DataFormat>::max();
+// Maximal absolute value by which the signal is limited
+
+const AudioPlayerForQt::DataFormat AudioPlayerForQt::SIGNAL_SCALING =
+        std::numeric_limits<AudioPlayerForQt::DataFormat>::max();
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor
+/// \param parent : Qt object to which the audio player belongs
+///////////////////////////////////////////////////////////////////////////////
 
 AudioPlayerForQt::AudioPlayerForQt(QObject *parent)
     : QObject(parent),
       mAudioOutput(nullptr),
       mIODevice(nullptr),
       mNotifyIntervall(MIN_BUFFER_SIZE_IN_MSECS),
-      mBufferSize(MIN_BUFFER_SIZE_IN_MSECS / 1000.f * 5) {
-    // mSamplingRate = 48000;
+      mBufferSize(MIN_BUFFER_SIZE_IN_MSECS / 1000.f * 5)
+{
 #if __ANDROID__
-    // on mobile devices, use a bigger value
-    mBufferSize *= 5;
+      mBufferSize *= 5;  // on mobile devices, use a bigger value
 #endif
-
     setDeviceName(SettingsForQt::getSingleton().getOuputDeviceName().toStdString());
     setSamplingRate(SettingsForQt::getSingleton().getOutputDeviceSamplingRate());
 }
 
-AudioPlayerForQt::~AudioPlayerForQt()
-{
-}
 
-void AudioPlayerForQt::init() {
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Initialize the audio player.
+///////////////////////////////////////////////////////////////////////////////
+
+void AudioPlayerForQt::init()
+{
     std::lock_guard<std::mutex> lock(mPacketMutex);
 
+    // Format specification:
     QAudioFormat format;
-    // Set up the format, eg.
     format.setSampleRate(getSamplingRate());
     format.setChannelCount(getChannelCount());
     format.setCodec("audio/pcm");
@@ -56,7 +65,7 @@ void AudioPlayerForQt::init() {
     format.setSampleType(QAudioFormat::SignedInt);
     //format.setByteOrder(QAudioFormat::LittleEndian);
 
-
+    // Find the audio device:
     QAudioDeviceInfo device(QAudioDeviceInfo::defaultOutputDevice());
     if (getDeviceName().size() > 0) {
         QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
@@ -88,6 +97,7 @@ void AudioPlayerForQt::init() {
         }
     }
 
+    // Open the audio output stream
     mAudioOutput = new QAudioOutput(device, format);
     if (mAudioOutput->error() != QAudio::NoError) {
         ERROR("Error opening QAudioOutput with error %d", mAudioOutput->error());
@@ -110,11 +120,16 @@ void AudioPlayerForQt::init() {
     }
 
 
-    // time have to be started from the main thread
+    // timer have to be started from the main thread
     QObject::connect(&mWriteTimer, SIGNAL(timeout()), this, SLOT(onWriteMoreData()));
 
     INFORMATION("Initialized Qt audio player using device: %s", getDeviceName().c_str());
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Exit
+///////////////////////////////////////////////////////////////////////////////
 
 void AudioPlayerForQt::exit() {
     if (mAudioOutput) {
@@ -126,6 +141,11 @@ void AudioPlayerForQt::exit() {
     }
     INFORMATION("Qt audio player closed.");
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Start
+///////////////////////////////////////////////////////////////////////////////
 
 void AudioPlayerForQt::start() {
     if (!mAudioOutput) {
@@ -146,6 +166,11 @@ void AudioPlayerForQt::start() {
         }
     }
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stop
+///////////////////////////////////////////////////////////////////////////////
 
 void AudioPlayerForQt::stop() {
     if (!mAudioOutput) {

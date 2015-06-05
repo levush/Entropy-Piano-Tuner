@@ -88,9 +88,10 @@ void SimpleThreadHandler::stop()
 /// Call this function from the thread if you want to let it stay in an
 /// idle state without consuming CPU time
 
-void SimpleThreadHandler::msleep(int milliseconds)
+void SimpleThreadHandler::msleep(double milliseconds)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    std::this_thread::sleep_for(
+                std::chrono::microseconds(static_cast<int>(1000*milliseconds)));
 }
 
 //--------------- Returns whether the thread is running ----------------------
