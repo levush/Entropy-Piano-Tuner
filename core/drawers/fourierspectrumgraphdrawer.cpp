@@ -82,10 +82,11 @@ void FourierSpectrumGraphDrawer::updateSpectrum() {
     auto xposition = [a,b,this] (double f) { return a + b*log(f/mConcertPitch); };
 
 
-    // DRAW PEAKS AS THIN BLUE LINES IN THE BACKGROUND (mKey needed)
+    // MARK PEAKS AS THIN BLUE DOTS IN THE BACKGROUND (mKey needed)
 
     const double exponent = 0.3; // magnify low power spectral lines nonlinearly
-    if (mKey)
+
+    if (mCurrentOperationMode == MODE_RECORDING) if (mKey)
     {
         Key::PeakListType peaks = mKey->getPeaks();
         for (auto p : peaks)

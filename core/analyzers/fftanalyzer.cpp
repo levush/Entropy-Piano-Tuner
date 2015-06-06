@@ -189,7 +189,8 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey(
     index -= searchSize / 2;
 
     double recordedFrequency = key.getRecordedFrequency() * std::pow(2.0, (index) / 1200.0);
-    int computedIndex = MathTools::roundToInteger(log(key.getComputedFrequency() / key.getRecordedFrequency()) * 1200 / MathTools::LOG2);
+    double targetFrequency = piano->getConcertPitch()/440.0 * key.getComputedFrequency();
+    int computedIndex = MathTools::roundToInteger(log(targetFrequency / key.getRecordedFrequency()) * 1200 / MathTools::LOG2);
 
     EptAssert(recordedFrequency > 1 && recordedFrequency < 20000, "Unallowed frequency range");
 
