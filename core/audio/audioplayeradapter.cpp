@@ -26,6 +26,8 @@
 #include <assert.h>
 #include <vector>
 
+#include "../system/simplethreadhandler.h"
+
 const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
 
 
@@ -38,6 +40,17 @@ AudioPlayerAdapter::AudioPlayerAdapter(RawDataWriter *writer) :
 {
     setChannelCount(2);
 }
+
+
+void AudioPlayerAdapter::writeSample(AudioBase::PacketDataType s)
+{
+    mBufferMutex.lock();
+    size_t free = mBuffer.maximum_size()-mBuffer.size();
+    if (free>0) mBuffer.push_back(s);
+    mBufferMutex.unlock();
+    if (free==0) SimpleThreadHandler::msleep();
+}
+
 
 
 void AudioPlayerAdapter::setRawDataWriter(RawDataWriter *writer) {

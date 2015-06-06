@@ -25,6 +25,7 @@
 #define AUDIOPLAYERADAPTER_H
 
 #include "audiobase.h"
+#include "circularbuffer.h"
 
 #include <mutex>
 #include <cstdint>
@@ -54,10 +55,16 @@ public:
     AudioPlayerAdapter(RawDataWriter *writer = nullptr);
     ~AudioPlayerAdapter() {};
 
-    void setRawDataWriter(RawDataWriter *writer);
+//    void setRawDataWriter(RawDataWriter *writer);
+
+    void writeSample (AudioBase::PacketDataType);
 
 protected:
-    RawDataWriter *mWriter;                     ///< Writer of the pcm data
+
+    CircularBuffer<AudioBase::PacketDataType> mBuffer;
+    std::mutex mBufferMutex;
+
+    //RawDataWriter *mWriter;                     ///< Writer of the pcm data
 };
 
 #endif // AUDIOPLAYERADAPTER_H
