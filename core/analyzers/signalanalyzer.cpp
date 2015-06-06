@@ -683,6 +683,7 @@ void SignalAnalyzer::createPolygon (const FFTWVector &powerspec, FFTPolygon &pol
 int SignalAnalyzer::identifySelectedKey()
 {
     // Take the majority selection from KeyRecognizer
+    std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
     if (mKeyCountStatistics.size()==0) return -1;
     auto cmp = [](const std::pair<int,int>& p1, const std::pair<int,int>& p2)
                  { return p1.second < p2.second; };
@@ -699,10 +700,12 @@ int SignalAnalyzer::identifySelectedKey()
 void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
 {
     EptAssert(mPiano, "Piano has to be set.");
+    std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
 
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
         // fetch the current key from the statistics
-        if (keyIndex >= 0 and keyIndex < mPiano->getKeyboard().getNumberOfKeys()) mKeyCountStatistics[keyIndex]++;
+        if (keyIndex >= 0 and keyIndex < mPiano->getKeyboard().getNumberOfKeys())
+            mKeyCountStatistics[keyIndex]++;
         MessageHandler::send<MessagePreliminaryKey>(identifySelectedKey(),frequency);
     } else {
         // this is the sole key

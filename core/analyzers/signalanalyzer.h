@@ -116,6 +116,7 @@ private:
     FFTAnalyzer mFFTAnalyser;               ///< Instance of the FFT analyzer
     KeyRecognizer mKeyRecognizer;           ///< Instance of the Key recognizer
     std::map<int,int> mKeyCountStatistics;  ///< Count which key is selected how often
+    std::mutex mKeyCountStatisticsMutex;    ///< Corresponding mutex
     int mSelectedKey;                       ///< The selected key by the user
     bool mKeyForced;                        ///< Is the key selection forced
 
