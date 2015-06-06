@@ -61,6 +61,7 @@ ios {
 
 win32 {
     RC_ICONS = $$PWD/appstore/icons/entropytuner.ico
+    DEFINES += NOMINMAX
 }
 
 winrt {
