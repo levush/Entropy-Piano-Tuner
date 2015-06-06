@@ -131,11 +131,6 @@ void ZoomedSpectrumDrawer::draw()
 {
     //------- Draw a horizontal and a vertical line separating the field ------
 
-    const int cents = 10; // Width for the squared tuning marker
-    const double dx = 1.0/(2+cents);
-    for (double x=dx; x<1; x+=dx) {
-        mGraphics->drawLine(x, 0.8, x, 1, GraphicsViewAdapter::PEN_THIN_LIGHT_GRAY);
-    }
 
     mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
     mGraphics->drawLine(0,   0.8, 1, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
@@ -146,8 +141,15 @@ void ZoomedSpectrumDrawer::draw()
     if (not mFrequencyDetectionResult) {return;} // we need data
     if (not mPiano) {return;}           // and a piano
 
-    // only show a window of a part of the complete curve
+    // show only a quarter of the actual deviation curve
     const int specWindowSize = mFrequencyDetectionResult->tuningDeviationCurve.size() / 4;
+
+    for (int i=1; i<specWindowSize; i++)
+    {
+        double x = (1.0*i)/specWindowSize;
+        double y = ((i-specWindowSize/2)%10==0 ? 1 : 0.85);
+        mGraphics->drawLine(x, 0.8, x, y, GraphicsViewAdapter::PEN_THIN_LIGHT_GRAY);
+    }
 
     //---------------------- Draw tuning deviation curve -----------------
     if (specWindowSize > 0) {
@@ -176,7 +178,7 @@ void ZoomedSpectrumDrawer::draw()
     double markerHeight = 0.1;
     double deviation = mFrequencyDetectionResult->deviationInCents;
     double mx = 0.5 - markerWidth / 2 + deviation / specWindowSize;
-    double my = 0.85 - markerHeight / 2;
+    double my = 0.9 - markerHeight / 2;
 
 
     auto borderline = GraphicsViewAdapter::PEN_THIN_DARK_GRAY;
