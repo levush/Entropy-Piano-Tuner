@@ -52,15 +52,20 @@ public:
     static const uint64_t MIN_BUFFER_SIZE_IN_MSECS;
 
 public:
-    AudioPlayerAdapter(RawDataWriter *writer = nullptr);
-    ~AudioPlayerAdapter() {};
+    AudioPlayerAdapter();
+    virtual ~AudioPlayerAdapter() {};
 
 //    void setRawDataWriter(RawDataWriter *writer);
 
     void writeSample (AudioBase::PacketDataType);
 
+//    virtual void start() {};
+//    virtual void stop() {};
+//    virtual void init() {};
+//    virtual void exit() {};
 
-protected:
+
+public:
 
     AudioBase::PacketType & getPacket (size_t n);
 

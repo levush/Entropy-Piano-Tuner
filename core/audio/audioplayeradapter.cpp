@@ -25,7 +25,6 @@
 
 #include <assert.h>
 #include <vector>
-#include <thread>
 
 const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
 
@@ -34,7 +33,7 @@ const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
 //			                    Constructor
 //-----------------------------------------------------------------------------
 
-AudioPlayerAdapter::AudioPlayerAdapter(RawDataWriter *writer) :
+AudioPlayerAdapter::AudioPlayerAdapter() :
     mBuffer(1000)
 {
     setChannelCount(2);
@@ -52,7 +51,7 @@ void AudioPlayerAdapter::writeSample (AudioBase::PacketDataType s)
     size_t free = mBuffer.maximum_size()-mBuffer.size();
     if (free>0) mBuffer.push_back(s);
     mBufferMutex.unlock();
-    if (free==0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    //if (free==0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
 //-----------------------------------------------------------------------------

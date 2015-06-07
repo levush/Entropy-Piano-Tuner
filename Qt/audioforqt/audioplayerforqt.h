@@ -22,13 +22,16 @@
 
 #include "../../core/audio/audioplayeradapter.h"
 #include <QAudioOutput>
-#include <QTimer>
+//#include <QTimer>
 #include <mutex>
-#include <thread>
+#include <QThread>
 
-class AudioPlayerForQt : public AudioPlayerAdapter
+
+class Worker;
+
+class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
 {
-//    Q_OBJECT
+    Q_OBJECT
 
     // define the data format of the input/output stream
     // on android float streams are not supported, so we just use
@@ -39,6 +42,7 @@ class AudioPlayerForQt : public AudioPlayerAdapter
     // note that if you chance the data format to float, then set
     // SIGNAL_SCALING to 1 (commented line below)
     /// Data format of the input/output stream
+public:
     typedef int16_t DataFormat;
     /// maximal alloed value of the stream
     static const DataFormat SIGNAL_SCALING;
@@ -62,11 +66,49 @@ private:
 private:
 
 
+    QThread* mThread;
+    Worker* mWorkingInstance;
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class Worker : public QObject {
+    Q_OBJECT
+
+public:
+    Worker(AudioPlayerForQt *audio);
+    ~Worker();
+
+public slots:
+    void process();
+
+signals:
+    void finished();
+    void error(QString err);
+
+private:
+    AudioPlayerForQt *mAudio;
+    bool mRunning;
+    AudioPlayerAdapter *mAdapter;
     QAudioOutput *mAudioOutput;
     QIODevice *mIODevice;
     int mNotifyIntervall;
-    bool mRunning;
-    std::thread mThread;
+
+private:
+    void init();
+    void exit();
+    void start();
+    void stop();
+
+public:
+    void registerForTermination() { mRunning=false; }
+    bool isRunning () { return mRunning; }
+
+    // add your variables here
 };
+
+
 
 #endif // AUDIOPLAYERFORQT_H
