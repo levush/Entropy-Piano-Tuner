@@ -60,6 +60,8 @@ public:
     virtual void stop();                    ///< Stop the thread
 
 protected:
+
+    ///////////////////////////////////////////////////////////////////////////////
     /// \brief Virtual worker function, executed within the new thread.
     ///
     /// Overload this function with the code to be executed within the new thread.
@@ -68,15 +70,23 @@ protected:
     /// a while(not cancelThread()) loop.
     ///
     /// If you want the thread to stay idle call msleep.
+    ///////////////////////////////////////////////////////////////////////////////
+
     virtual void workerFunction() = 0;
 
-    /// called when an exception was caught during the worker function
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief EPT exception handling
+    ///
+    /// Called when an exception is caught during the worker function
+    ///////////////////////////////////////////////////////////////////////////////
+
     virtual void exceptionCaught(const EptException &e);
 
-    bool cancelThread() const;              ///< Cancel-flag getter method, thread-safe
     void setCancelThread(bool b);           ///< Cancel-flag setter method, thread-safe
+    bool cancelThread() const;              ///< Cancel-flag getter method, thread-safe
     void msleep(double milliseconds);       ///< Sleep function for staying idle
     bool isThreadRunnding() const;          ///< Flag to check if the thread is running
+    void setThreadName (std::string s);     ///< Specify the name of the thread
 
 private:
     void simpleWorkerFunction();            ///< Private helper function

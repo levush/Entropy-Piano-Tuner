@@ -108,6 +108,7 @@ if (mRunning)
 
 void Synthesizer::workerFunction (void)
 {
+    setThreadName("Synthesizer");
     while (mRunning and not cancelThread())
     {
         mChordMutex.lock();
