@@ -199,6 +199,7 @@ void SignalAnalyzer::updateDataBufferSize() {
 
 void SignalAnalyzer::workerFunction()
 {
+    setThreadName("SignalAnalyzer");
     // record the signal
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE or mAnalyzerRole == ROLE_ROLLING_FFT)
     {
