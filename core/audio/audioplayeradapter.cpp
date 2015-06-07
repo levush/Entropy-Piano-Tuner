@@ -25,8 +25,7 @@
 
 #include <assert.h>
 #include <vector>
-
-#include "../system/simplethreadhandler.h"
+#include <thread>
 
 const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
 
@@ -36,28 +35,46 @@ const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
 //-----------------------------------------------------------------------------
 
 AudioPlayerAdapter::AudioPlayerAdapter(RawDataWriter *writer) :
-    mWriter(writer)
+    mBuffer(1000)
 {
     setChannelCount(2);
 }
 
 
-void AudioPlayerAdapter::writeSample(AudioBase::PacketDataType s)
+//-----------------------------------------------------------------------------
+//			   Transmit a single PCM value, wait if not ready
+//                  To be called by the user (synthesizer)
+//-----------------------------------------------------------------------------
+
+void AudioPlayerAdapter::writeSample (AudioBase::PacketDataType s)
 {
     mBufferMutex.lock();
     size_t free = mBuffer.maximum_size()-mBuffer.size();
     if (free>0) mBuffer.push_back(s);
     mBufferMutex.unlock();
-    if (free==0) SimpleThreadHandler::msleep();
+    if (free==0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+}
+
+//-----------------------------------------------------------------------------
+//                      Get a packet of a certain size
+//                    To be called by the implementation
+//-----------------------------------------------------------------------------
+
+AudioBase::PacketType & AudioPlayerAdapter::getPacket (size_t n)
+{
+    mBufferMutex.lock();
+    AudioBase::PacketType packet = mBuffer.readData(n);
+    mBufferMutex.unlock();
+    return packet;
 }
 
 
 
-void AudioPlayerAdapter::setRawDataWriter(RawDataWriter *writer) {
-    mWriter = writer;
-    if (mWriter) {
-        start();
-    } else {
-        stop();
-    }
-}
+//void AudioPlayerAdapter::setRawDataWriter(RawDataWriter *writer) {
+//    mWriter = writer;
+//    if (mWriter) {
+//        start();
+//    } else {
+//        stop();
+//    }
+//}

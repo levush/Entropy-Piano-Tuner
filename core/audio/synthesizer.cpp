@@ -45,8 +45,7 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mRunning(false),
     mChord(),
     mChordMutex(),
-    mAudioPlayer(audioadapter),
-    mBuffer(256)
+    mAudioPlayer(audioadapter)
 {
 }
 
@@ -193,89 +192,79 @@ void Synthesizer::generateWaveform ()
     // If there is nothing to play return
     if (mChord.size()==0) return;
 
-    // If the buffer is full return
-    if (mBuffer.size() < mBuffer.maximum_size())
+    int SampleRate = mAudioPlayer->getSamplingRate();
+    int channels = mAudioPlayer->getChannelCount();
+    if (channels<=0 or channels>2) return;
+
+    int64_t c = static_cast<int64_t>(100*SampleRate);
+    int64_t d = static_cast<int64_t>(SineLength);
+
+    mChordMutex.lock();
+    while (true)  ///////////////////////////////////// so lange ich schreiben kann
     {
-
-        int SampleRate = mAudioPlayer->getSamplingRate();
-        int channels = mAudioPlayer->getChannelCount();
-        if (channels<=0 or channels>2) return;
-
-        int64_t c = static_cast<int64_t>(100*SampleRate);
-        int64_t d = static_cast<int64_t>(SineLength);
-
-        mChordMutex.lock();
-        while (mBuffer.size() < mBuffer.maximum_size())
+        double left=0, right=0, mono=0;
+        for (auto &ch : mChord)
         {
-            double left=0, right=0, mono=0;
-            for (auto &ch : mChord)
+            Sound &snd = ch.second;         // get sound of the key
+            double y = snd.amplitude;       // get last amplitude
+            switch (snd.stage)          // Manage ADSR
             {
-                Sound &snd = ch.second;         // get sound of the key
-                double y = snd.amplitude;       // get last amplitude
-                switch (snd.stage)          // Manage ADSR
-                {
-                    case 1: // ATTACK
-                            y += snd.attack*snd.volume/SampleRate;
-                            if (snd.decayrate>0)
-                            {
-                                if (y >= snd.volume) snd.stage++;
-                            }
-                            else
-                            {
-                                if (y >= snd.sustain*snd.volume) snd.stage+=2;
-                            }
-                            break;
-                    case 2: // DECAY
-                            y *= (1-snd.decayrate/SampleRate); // DECAY
-                            if (y <= snd.sustain*snd.volume) snd.stage++;
-                            break;
-                    case 3: // SUSTAIN
-                            y += (snd.sustain-y) * snd.release/SampleRate;
-                            break;
-                    case 4: // RELEASE
-                            y *= (1-snd.release/SampleRate);
-                            break;
-                }
-                snd.amplitude = y;
-                snd.clock ++;
-
-
-                // compute stereo amplitude factors
-                double leftvol=sqrt(0.7-0.4*snd.stereo);
-                double rightvol=sqrt(0.3+0.4*snd.stereo);
-                int64_t phase = static_cast<int64_t>((snd.stereo-0.5)*SampleRate)/800;
-
-                // time-critical loop
-                for (auto &mode : snd.fouriermodes)
-                {
-                    int64_t a = static_cast<int64_t>(100.0*mode.first*d);
-                    int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
-                    int64_t p = b + a*phase;
-                    if (channels==1) mono += mode.second*y*mSineWave[(b/c)%d];
-                    else // if stereo
-                    {
-                        left  += mode.second*leftvol *y*mSineWave[(b/c)%d];
-                        right += mode.second*rightvol*y*mSineWave[(p/c)%d];
-                    }
-                }
+                case 1: // ATTACK
+                        y += snd.attack*snd.volume/SampleRate;
+                        if (snd.decayrate>0)
+                        {
+                            if (y >= snd.volume) snd.stage++;
+                        }
+                        else
+                        {
+                            if (y >= snd.sustain*snd.volume) snd.stage+=2;
+                        }
+                        break;
+                case 2: // DECAY
+                        y *= (1-snd.decayrate/SampleRate); // DECAY
+                        if (y <= snd.sustain*snd.volume) snd.stage++;
+                        break;
+                case 3: // SUSTAIN
+                        y += (snd.sustain-y) * snd.release/SampleRate;
+                        break;
+                case 4: // RELEASE
+                        y *= (1-snd.release/SampleRate);
+                        break;
             }
-            if (channels==1) mBuffer.push_back(static_cast<AudioBase::PacketDataType>(mono));
-            else
+            snd.amplitude = y;
+            snd.clock ++;
+
+
+            // compute stereo amplitude factors
+            double leftvol=sqrt(0.7-0.4*snd.stereo);
+            double rightvol=sqrt(0.3+0.4*snd.stereo);
+            int64_t phase = static_cast<int64_t>((snd.stereo-0.5)*SampleRate)/800;
+
+            // time-critical loop
+            for (auto &mode : snd.fouriermodes)
             {
-                mBuffer.push_back(static_cast<AudioBase::PacketDataType>(left));
-                mBuffer.push_back(static_cast<AudioBase::PacketDataType>(right));
+                int64_t a = static_cast<int64_t>(100.0*mode.first*d);
+                int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
+                int64_t p = b + a*phase;
+                if (channels==1) mono += mode.second*y*mSineWave[(b/c)%d];
+                else // if stereo
+                {
+                    left  += mode.second*leftvol *y*mSineWave[(b/c)%d];
+                    right += mode.second*rightvol*y*mSineWave[(p/c)%d];
+                }
             }
         }
-        mChordMutex.unlock();
+//        if (channels==1) mBuffer.push_back(static_cast<AudioBase::PacketDataType>(mono));
+//        else
+//        {
+//            mBuffer.push_back(static_cast<AudioBase::PacketDataType>(left));
+//            mBuffer.push_back(static_cast<AudioBase::PacketDataType>(right));
+//        }
     }
+    mChordMutex.unlock();
 
+    // Hier müsste das Signal transmittiert werden
 
-    if (getFreePacketSize()>0)
-    {
-        std::cout << getFreePacketSize() << std::endl;
-        auto chunk = mBuffer.readData(getFreePacketSize());
-        writeData(chunk);
-    }
 }
 
 

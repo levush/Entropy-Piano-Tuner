@@ -24,10 +24,11 @@
 #include <QAudioOutput>
 #include <QTimer>
 #include <mutex>
+#include <thread>
 
-class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
+class AudioPlayerForQt : public AudioPlayerAdapter
 {
-    Q_OBJECT
+//    Q_OBJECT
 
     // define the data format of the input/output stream
     // on android float streams are not supported, so we just use
@@ -52,8 +53,11 @@ public:
     void start() override;
     void stop() override;
 
-public slots:
-    void onWriteMoreData();
+//public slots:
+//    void onWriteMoreData();
+
+private:
+    void workerFunction ();
 
 private:
 
@@ -61,7 +65,8 @@ private:
     QAudioOutput *mAudioOutput;
     QIODevice *mIODevice;
     int mNotifyIntervall;
-    QTimer mWriteTimer;
+    bool mRunning;
+    std::thread mThread;
 };
 
 #endif // AUDIOPLAYERFORQT_H

@@ -59,7 +59,12 @@ public:
 
     void writeSample (AudioBase::PacketDataType);
 
+
 protected:
+
+    AudioBase::PacketType & getPacket (size_t n);
+
+private:
 
     CircularBuffer<AudioBase::PacketDataType> mBuffer;
     std::mutex mBufferMutex;
