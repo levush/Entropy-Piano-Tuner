@@ -42,6 +42,7 @@ Algorithm::~Algorithm()
 
 void Algorithm::workerFunction()
 {
+    setThreadName("Algorithm");
     LogI("Start calculation.");
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_STARTED);

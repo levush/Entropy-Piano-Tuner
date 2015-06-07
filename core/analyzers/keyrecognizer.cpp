@@ -145,6 +145,7 @@ void KeyRecognizer::recognizeKey (
 
 void KeyRecognizer::workerFunction()
 {
+    setThreadName("KeyRecognizer");
     EptAssert(mFFTPtr, "FFT Data have to non zero");
     EptAssert(mFFTPtr->isValid(), "FFT Data have to exist");
     EptAssert(mCallback, "Callback class has to exist");

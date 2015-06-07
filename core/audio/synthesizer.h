@@ -111,10 +111,10 @@ private:
         std::map<float,float> fouriermodes;
     };
 
-    bool mRunning;                      ///< Flag that the thread is running.
-    std::map<int,Sound> mChord;         ///< Chord defined as a collection of sounds.
-    std::mutex mChordMutex;             ///< Mutex to protect access to the chord.
-    AudioPlayerAdapter *mAudioPlayer;   ///< Pointer to the audio player.
+    bool mRunning;                          ///< Flag that the thread is running.
+    std::map<int,Sound> mChord;             ///< Chord defined as a collection of sounds.
+    std::mutex mChordMutex;                 ///< Mutex to protect access to the chord.
+    AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
     Sound* getSoundPtr (int id);
     void workerFunction () override final;

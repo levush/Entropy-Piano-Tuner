@@ -92,6 +92,7 @@ void PulseAudioRecorder::stop ()
 
 void PulseAudioRecorder::workerFunction()
 {
+    setThreadName("PulseAudioRecorder");
     std::vector<float> buffer;
     buffer.resize(BufferSize);
     while (not cancelThread())
