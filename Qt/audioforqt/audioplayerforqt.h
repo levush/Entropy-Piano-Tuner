@@ -22,79 +22,70 @@
 
 #include "../../core/audio/audioplayeradapter.h"
 #include <QAudioOutput>
-//#include <QTimer>
 #include <mutex>
 #include <QThread>
 
+class QtAudioManager;
 
-class Worker;
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The AudioPlayerForQt class
+///
+/// This class implements the audio player for Qt. Its main purpose is to
+/// start an indpendent Qt-compatible thread because the Qt audio player must
+/// be operated from a single Qt-thread only.
+///////////////////////////////////////////////////////////////////////////////
 
 class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
 {
     Q_OBJECT
 
-    // define the data format of the input/output stream
-    // on android float streams are not supported, so we just use
-    // in general a singed int stream
-    // the int data will be scaled to the intervall [0,1] to allow an
-    // internal computation with floats independent on the selected stream
-    // size.
-    // note that if you chance the data format to float, then set
-    // SIGNAL_SCALING to 1 (commented line below)
-    /// Data format of the input/output stream
-public:
-    typedef int16_t DataFormat;
-    /// maximal alloed value of the stream
-    static const DataFormat SIGNAL_SCALING;
-    //static constexpr DataFormat SIGNAL_SCALING  = 1;
 public:
     AudioPlayerForQt(QObject *parent);
     virtual ~AudioPlayerForQt() {}
 
-    void init() override;
-    void exit() override;
+    void init() override final;     // Initialize, start thread
+    void exit() override final;     // Exit, stop thread
 
-    void start() override;
-    void stop() override;
-
-//public slots:
-//    void onWriteMoreData();
+    // No functionality for start and stop, the player starts and stops automatically.
+    void start() override final {}
+    void stop() override final {}
 
 private:
-    void workerFunction ();
-
-private:
-
-
-    QThread* mThread;
-    Worker* mWorkingInstance;
+    QThread* mQtThread;
+    QtAudioManager* mQtAudioManager;
 };
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The QtAudioManager class
+///
+/// This class serves as a container for the workerFunction in which the
+/// thread is running
+///////////////////////////////////////////////////////////////////////////////
 
-
-class Worker : public QObject {
+class QtAudioManager : public QObject
+{
     Q_OBJECT
 
 public:
-    Worker(AudioPlayerForQt *audio);
-    ~Worker();
+    typedef int16_t DataFormat;
+    QtAudioManager(AudioPlayerForQt *audio);
+    ~QtAudioManager() {}
 
 public slots:
-    void process();
+    void workerFunction();
 
 signals:
     void finished();
     void error(QString err);
 
 private:
-    AudioPlayerForQt *mAudio;
-    bool mRunning;
-    AudioPlayerAdapter *mAdapter;
-    QAudioOutput *mAudioOutput;
+    AudioPlayerForQt *mAudioSource;
+    bool mThreadRunning;
+    bool mDeviceActive;
+    QAudioOutput *mAudioSink;
     QIODevice *mIODevice;
-    int mNotifyIntervall;
+
 
 private:
     void init();
@@ -103,8 +94,8 @@ private:
     void stop();
 
 public:
-    void registerForTermination() { mRunning=false; }
-    bool isRunning () { return mRunning; }
+    void registerForTermination() { mThreadRunning=false; }
+    bool isRunning () { return mThreadRunning; }
 
     // add your variables here
 };

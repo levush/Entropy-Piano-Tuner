@@ -26,7 +26,9 @@
 #include <assert.h>
 #include <vector>
 
-const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 10;
+#include <iostream> // kann weg
+
+const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 100;
 
 
 //-----------------------------------------------------------------------------
@@ -45,7 +47,7 @@ AudioPlayerAdapter::AudioPlayerAdapter() :
 //                  To be called by the user (synthesizer)
 //-----------------------------------------------------------------------------
 
-void AudioPlayerAdapter::writeSample (AudioBase::PacketDataType s)
+void AudioPlayerAdapter::pushSingleSample (AudioBase::PacketDataType s)
 {
     mBufferMutex.lock();
     size_t free = mBuffer.maximum_size()-mBuffer.size();
@@ -59,21 +61,38 @@ void AudioPlayerAdapter::writeSample (AudioBase::PacketDataType s)
 //                    To be called by the implementation
 //-----------------------------------------------------------------------------
 
-AudioBase::PacketType & AudioPlayerAdapter::getPacket (size_t n)
+AudioBase::PacketType AudioPlayerAdapter::getPacket (size_t n)
 {
     mBufferMutex.lock();
-    AudioBase::PacketType packet = mBuffer.readData(n);
+    size_t m = std::min(mBuffer.size(),n);
+    AudioBase::PacketType packet = mBuffer.readData(m);
     mBufferMutex.unlock();
     return packet;
 }
 
 
+//-----------------------------------------------------------------------------
+//                         Get the free buffer size
+//-----------------------------------------------------------------------------
 
-//void AudioPlayerAdapter::setRawDataWriter(RawDataWriter *writer) {
-//    mWriter = writer;
-//    if (mWriter) {
-//        start();
-//    } else {
-//        stop();
-//    }
-//}
+size_t AudioPlayerAdapter::getFreeSize (void)
+{
+    mBufferMutex.lock();
+    int free = mBuffer.maximum_size()-mBuffer.size();
+    mBufferMutex.unlock();
+    return free;
+}
+
+
+//-----------------------------------------------------------------------------
+//                          Get occupied size
+//-----------------------------------------------------------------------------
+
+size_t AudioPlayerAdapter::getSize (void)
+{
+    mBufferMutex.lock();
+    int occupied = mBuffer.size();
+    mBufferMutex.unlock();
+    return occupied;
+}
+

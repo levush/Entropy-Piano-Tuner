@@ -59,6 +59,8 @@ public:
     virtual void start();                   ///< Start the thread
     virtual void stop();                    ///< Stop the thread
 
+    static void setThreadName(std::string s);///< Specify the name of the thread
+
 protected:
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -86,7 +88,6 @@ protected:
     bool cancelThread() const;              ///< Cancel-flag getter method, thread-safe
     void msleep(double milliseconds);       ///< Sleep function for staying idle
     bool isThreadRunnding() const;          ///< Flag to check if the thread is running
-    void setThreadName (std::string s);     ///< Specify the name of the thread
 
 private:
     void simpleWorkerFunction();            ///< Private helper function

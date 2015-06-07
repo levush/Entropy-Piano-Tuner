@@ -23,306 +23,280 @@
 #include <iostream>
 
 #include "../core/system/log.h"
+#include "../core/system/simplethreadhandler.h"
 #include "settingsforqt.h"
-#include "core/audio/rawdatawriter.h"
 
-
-
-// Maximal absolute value by which the signal is limited
-
-const AudioPlayerForQt::DataFormat AudioPlayerForQt::SIGNAL_SCALING =
-        std::numeric_limits<AudioPlayerForQt::DataFormat>::max();
-
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor, setting
+/// \brief Constructor, starting a Qt-thread
 /// \param parent : Qt object to which the audio player belongs
 ///////////////////////////////////////////////////////////////////////////////
 
 AudioPlayerForQt::AudioPlayerForQt(QObject *parent) :
     QObject(parent),
-    mThread(nullptr),
-    mWorkingInstance(nullptr)
+    mQtThread(nullptr),
+    mQtAudioManager(nullptr)
 {
     setDeviceName(SettingsForQt::getSingleton().getOuputDeviceName().toStdString());
     setSamplingRate(SettingsForQt::getSingleton().getOutputDeviceSamplingRate());
 }
 
 
+//-----------------------------------------------------------------------------
+//                    Initialize the Qt-Player thread
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Initialize the AudioPlayerForQt
+///
+/// This function starts an indpendent Qt-compatible thread in which the
+/// audio device is instantiated and started.
+///////////////////////////////////////////////////////////////////////////////
+
 void AudioPlayerForQt::init()
 {
-    mThread = new QThread;
-    mWorkingInstance = new Worker(this);
-    mWorkingInstance->moveToThread(mThread);
-    connect(mWorkingInstance, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(mThread, SIGNAL(started()), mWorkingInstance, SLOT(process()));
-    connect(mWorkingInstance, SIGNAL(finished()), mThread, SLOT(quit()));
-    connect(mWorkingInstance, SIGNAL(finished()), mWorkingInstance, SLOT(deleteLater()));
-    connect(mThread, SIGNAL(finished()), mThread, SLOT(deleteLater()));
-    mThread->start();
+    mQtThread = new QThread;
+    mQtAudioManager = new QtAudioManager(this);
+    mQtAudioManager->moveToThread(mQtThread);
+    connect(mQtAudioManager, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(mQtThread, SIGNAL(started()), mQtAudioManager, SLOT(workerFunction()));
+    connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(quit()));
+    connect(mQtAudioManager, SIGNAL(finished()), mQtAudioManager, SLOT(deleteLater()));
+    connect(mQtThread, SIGNAL(finished()), mQtThread, SLOT(deleteLater()));
+    mQtThread->start(QThread::HighPriority);
 }
 
+
+//-----------------------------------------------------------------------------
+//                    Exit from the Qt-Player thread
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Exit from the AudioPlayerForQt
+///
+/// Register the execution thread of the audio player for termination.
+/// Wait in idle state until the thread has terminated.
+///////////////////////////////////////////////////////////////////////////////
 
 void AudioPlayerForQt::exit()
 {
-    mWorkingInstance->registerForTermination();
-    while (mWorkingInstance->isRunning()); // Wait
+    mQtAudioManager->registerForTermination();
+    while (mQtAudioManager->isRunning())
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 
-
-
+//-----------------------------------------------------------------------------
+//                            CLASS QtAudioManager
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Start the Qt audio player in an independent thread
+/// \brief Constructor
+/// \param audio : Pointer to the AudioPlayerForQt which created the instance.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioPlayerForQt::start()
-{
-    LogI("*********************Qt Audio player starting up **********************");
-    //mThread = std::thread(&AudioPlayerForQt::workerFunction, this);
-}
+QtAudioManager::QtAudioManager(AudioPlayerForQt *audio) :
+    mAudioSource(audio),
+    mThreadRunning(true),
+    mDeviceActive(false),
+    mAudioSink(nullptr),
+    mIODevice(nullptr)
+{}
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Stop the Qt audio player
-///////////////////////////////////////////////////////////////////////////////
-
-void AudioPlayerForQt::stop()
-{
-    //if (mThread.joinable()) mThread.join(); // Wait for thread to terminate
-    LogI("*********************Qt Audio player shutting down**********************")
-}
-
-
-
-
-void AudioPlayerForQt::workerFunction ()
-{
-//    ////////////////////// Dann Schleife
-
-
-//    ////////////////////// Dann Schleife
-
-
-
-//void AudioPlayerForQt::onWriteMoreData() {
-//    if (!mAudioOutput || !mIODevice || !mWriter) {
-//        return;
-//    }
-
-//    int nbBytes = mAudioOutput->bytesFree();
-//    int bufferSize = nbBytes / sizeof(DataFormat);
-
-//    if (bufferSize > 0) {
-//        // the pcm data from the synthesize (non scaled)
-//        PacketType packet(std::move(mWriter->readPacket(bufferSize)));
-
-//        // the pcm data ready for the audio device (scaled)
-//        std::vector<DataFormat> _buffer;
-
-//        _buffer.resize(std::min<int>(bufferSize, packet.size()));
-
-//        for (size_t i = 0; i < _buffer.size(); ++i) {
-//            _buffer[i] = packet[i] * SIGNAL_SCALING;
-//        }
-
-//        mIODevice->write((const char*)_buffer.data(), _buffer.size() * sizeof(DataFormat));
-//    }
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-// --- CONSTRUCTOR ---
-Worker::Worker(AudioPlayerForQt *audio) :
-    mAudio(audio),
-    mRunning(false),
-    mAudioOutput(nullptr),
-    mIODevice(nullptr),
-    mNotifyIntervall(1000)
-
-{
-#if __ANDROID__
-      mBufferSize *= 2;  // on mobile devices, use a bigger value  ////////////////////////// where defined?
-#endif
-}
-
-
-
-
-// --- DECONSTRUCTOR ---
-Worker::~Worker() {
-    // free resources
-}
-
-
+//-----------------------------------------------------------------------------
+//                              Initialization
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Initialize the audio player.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Worker::init()
+void QtAudioManager::init()
 {
+    SimpleThreadHandler::setThreadName("AudioPlayer");
+
     // Format specification:
     QAudioFormat format;
-    format.setSampleRate(mAudio->getSamplingRate());
-    format.setChannelCount(mAudio->getChannelCount());
+    format.setSampleRate(mAudioSource->getSamplingRate());
+    format.setChannelCount(mAudioSource->getChannelCount());
     format.setCodec("audio/pcm");
-    format.setSampleSize(sizeof(AudioPlayerForQt::DataFormat) * 8);
+    format.setSampleSize(sizeof(DataFormat) * 8);
     format.setSampleType(QAudioFormat::SignedInt);
     //format.setByteOrder(QAudioFormat::LittleEndian);
 
     // Find the audio device:
     QAudioDeviceInfo device(QAudioDeviceInfo::defaultOutputDevice());
-    if (mAudio->getDeviceName().size() > 0) {
+    if (mAudioSource->getDeviceName().size() > 0)
+    {
         QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
-        for (const QAudioDeviceInfo &i : devices) {
-            if (i.deviceName().toStdString() == mAudio->getDeviceName()) {
+        for (const QAudioDeviceInfo &i : devices)
+        {
+            if (i.deviceName().toStdString() == mAudioSource->getDeviceName())
+            {
                 device = i;
                 break;
             }
-        }
 
-        if (!device.isFormatSupported(format)) {
+        if (!device.isFormatSupported(format))
             LogE("Selected device settings are not supported!");
         }
     }
-    else {
-        if (!device.isFormatSupported(format)) {
+    else
+    {
+        if (!device.isFormatSupported(format))
+        {
             LogW("Raw audio format not supported by backend, falling back to default supported");
             format = device.preferredFormat();
             // update sampling rate, buffer type has to stay the same!
-            mAudio->setSamplingRate(format.sampleRate());
-            if (format.sampleSize() != sizeof(AudioPlayerForQt::DataFormat) * 8) {
+            mAudioSource->setSamplingRate(format.sampleRate());
+            if (format.sampleSize() != sizeof(DataFormat) * 8)
+            {
                 LogW("Sample size not supported");
                 return;
             }
-            if (format.sampleType() != QAudioFormat::SignedInt) {
+            if (format.sampleType() != QAudioFormat::SignedInt)
+            {
                 LogW("Sample format not supported");
                 return;
             }
         }
     }
-    mAudio->setDeviceName(device.deviceName().toStdString());
+    mAudioSource->setDeviceName(device.deviceName().toStdString());
 
     // Open the audio output stream
-    mAudioOutput = new QAudioOutput(device, format);
-    if (mAudioOutput->error() != QAudio::NoError) {
-        LogE("Error opening QAudioOutput with error %d", mAudioOutput->error());
+    mAudioSink = new QAudioOutput(device, format);
+    if (mAudioSink->error() != QAudio::NoError)
+    {
+        LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
         return;
     }
 
 
     // Specify the size of the Qt-internal buffer
-    // The buffer size is twice of the interval time
-    mAudioOutput->setBufferSize(mAudio->getSamplingRate() * mAudio->getChannelCount() * 2 * mNotifyIntervall / 1000.f);
-    if (mAudioOutput->error() != QAudio::NoError) {
-        LogE("Error opening QAudioOutput with error %d", mAudioOutput->error());
+    const double BufferMilliseconds = 100;
+    const size_t BufferSize = mAudioSource->getChannelCount() *
+            ((mAudioSource->getSamplingRate() * BufferMilliseconds)/1000);
+    mAudioSink->setBufferSize(BufferSize);
+    if (mAudioSink->error() != QAudio::NoError) {
+        LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
         return;
     }
 
-    LogI("Initialized Qt audio player using device: %s", mAudio->getDeviceName().c_str());
+    LogI("Initialized Qt audio player using device: %s", mAudioSource->getDeviceName().c_str());
 }
 
+
+//-----------------------------------------------------------------------------
+//                                  Exit
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Exit from the Qt audio player
 ///////////////////////////////////////////////////////////////////////////////
 
-void Worker::exit()
+void QtAudioManager::exit()
 {
-    if (mAudioOutput)
+    if (mAudioSink)
     {
-        mAudioOutput->reset();
-        delete mAudioOutput;
-        mAudioOutput = nullptr;
+        mAudioSink->reset();
+        delete mAudioSink;
+        mAudioSink = nullptr;
         mIODevice = nullptr;
     }
     LogI("Qt audio player closed.");
 }
 
 
+//-----------------------------------------------------------------------------
+//                            Start audio device
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Start
+/// \brief Start the Qt audio device
 ///////////////////////////////////////////////////////////////////////////////
 
-
-void Worker::start()
+void QtAudioManager::start()
 {
-    LogI("*********************Qt Audio player create audio **********************")
-    if (!mAudioOutput)
+    LogI("Start Qt audio device")
+    if (!mAudioSink)
     {
         LogI("Audio device not created, cannot start it.");
         return;
     }
     if (!mIODevice)
     {
-        mIODevice = mAudioOutput->start();
-        if (mAudioOutput->error() != QAudio::NoError)
+        mIODevice = mAudioSink->start();
+        if (mAudioSink->error() != QAudio::NoError)
         {
-            qWarning() << "Error opening QAudioOutput with error " << mAudioOutput->error();
+            qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             return;
         }
     }
+    mDeviceActive=true;
 }
 
 
+//-----------------------------------------------------------------------------
+//                            Stop audio device
+//-----------------------------------------------------------------------------
+
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Stop
+/// \brief Stop the Qt audio device
 ///////////////////////////////////////////////////////////////////////////////
 
-
-void Worker::stop()
+void QtAudioManager::stop()
 {
-    LogI("*********************Qt Audio player destroy audio dev **********************")
-
-    if (!mAudioOutput) {
-        return;
-    }
-    if (mIODevice) {
-        mAudioOutput->stop();
+    LogI("Stop Qt audio device");
+    if (!mAudioSink) return;
+    if (mIODevice)
+    {
+        mAudioSink->stop();
         mIODevice = nullptr;
     }
+    mDeviceActive=false;
 }
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief MAIN
+/// \brief Main worker function of the Qt audio manager
 ///////////////////////////////////////////////////////////////////////////////
 
-void Worker::process()
+void QtAudioManager::workerFunction()
 {
-    mRunning=true;
+    // Determine the scaling constant
+    const auto scaling = std::numeric_limits<QtAudioManager::DataFormat>::max();
+
     init();
-    start();
 
-
-    while (mRunning)
+    while (mThreadRunning)
     {
-
+        size_t available = mAudioSource->getSize();
+        if (not mDeviceActive)
         {
-            size_t n = mAudioOutput->bytesFree();
-            if (n==0) QThread::msleep(1);
+            if (available > 0) start();
+            else QThread::msleep(10);
+        }
+        else // if device is active
+        {
+            size_t requested = mAudioSink->bytesFree()/sizeof(DataFormat);
+            if (requested > 0 and available == 0) stop();
+            else if (requested < 32 or available < 32) QThread::msleep(1);
             else
             {
-                auto buffer = mAudio->getPacket(n);
-                size_t m = buffer.size();
-                if (m==0) continue;
-                QByteArray pcm;
-                pcm.resize(m);
-                for (int i=0; i<m; ++i) pcm[i]=(char)(buffer[i]*256);
-                mIODevice->write(pcm.data(),m);
+                auto packet = mAudioSource->getPacket(requested);
+                size_t transferSize = packet.size();
+                EptAssert(transferSize <= requested, "buffer too large");
+                std::vector<DataFormat> buffer(transferSize);
+                for (int i=0; i<transferSize; ++i) buffer[i] =static_cast<DataFormat>(packet[i] * scaling);
+                mIODevice->write((const char*)buffer.data(), transferSize * sizeof(DataFormat));
             }
         }
-
     }
-    stop();
     exit();
     emit finished();
 }

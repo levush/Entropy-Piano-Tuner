@@ -125,7 +125,7 @@ void Synthesizer::workerFunction (void)
             mChordMutex.unlock();
 
             generateWaveform();
-            while (mRunning and getFreePacketSize() < 1) msleep(1);
+            //while (mRunning and getFreePacketSize() < 1) msleep(1);
         }
         else
         {
@@ -200,7 +200,7 @@ void Synthesizer::generateWaveform ()
     int64_t c = static_cast<int64_t>(100*SampleRate);
     int64_t d = static_cast<int64_t>(SineLength);
 
-    while (true)
+    while (mAudioPlayer->getFreeSize()>=2)
     {
         mChordMutex.lock();
         double left=0, right=0, mono=0;
@@ -256,16 +256,13 @@ void Synthesizer::generateWaveform ()
             }
         }
         mChordMutex.unlock();
-        if (channels==1) mAudioPlayer->writeSample(static_cast<AudioBase::PacketDataType>(mono));
-        else
+        if (channels==1) mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(mono));
+        else // if stereo
         {
-            mAudioPlayer->writeSample(static_cast<AudioBase::PacketDataType>(left));
-            mAudioPlayer->writeSample(static_cast<AudioBase::PacketDataType>(right));
+            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(left));
+            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(right));
         }
     }
-
-    // Hier müsste das Signal transmittiert werden
-
 }
 
 

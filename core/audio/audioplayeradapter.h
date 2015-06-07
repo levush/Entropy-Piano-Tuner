@@ -57,7 +57,9 @@ public:
 
 //    void setRawDataWriter(RawDataWriter *writer);
 
-    void writeSample (AudioBase::PacketDataType);
+    size_t getSize (void);
+    size_t getFreeSize (void);
+    void pushSingleSample (AudioBase::PacketDataType);
 
 //    virtual void start() {};
 //    virtual void stop() {};
@@ -67,7 +69,7 @@ public:
 
 public:
 
-    AudioBase::PacketType & getPacket (size_t n);
+    PacketType getPacket(size_t n);
 
 private:
 
