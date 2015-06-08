@@ -547,8 +547,10 @@ void SignalAnalyzer::signalProcessing(FFTWVector &signal, int samplingrate) {
     }
     // if the recognizer finds a key next to the current key, change the selected key
     // of course if the user forced the key, this should not work
+    // also select the key if there is non selected
     int identifiedKey = identifySelectedKey();
-    if (!mKeyForced && abs(identifiedKey - mSelectedKey) == 1 && identifiedKey != -1) {
+    if ((!mKeyForced && abs(identifiedKey - mSelectedKey) == 1 && identifiedKey != -1)
+            || mSelectedKey == -1) {
         MessageHandler::sendUnique<MessageKeySelectionChanged>(identifiedKey, mPiano->getKeyPtr(identifiedKey));
     }
 }
