@@ -42,8 +42,6 @@ fi
 echo -n "Password for keystore: "
 read -s keystorepassword
 echo
-# Run Command
-echo $keystorepassword
 
 rm -f ${APK_FILE}
 
