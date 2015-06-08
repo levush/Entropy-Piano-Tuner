@@ -26,7 +26,7 @@
 #include "../core/system/simplethreadhandler.h"
 #include "settingsforqt.h"
 
-const double QtAudioManager::BufferMilliseconds = 20;
+const double QtAudioManager::BufferMilliseconds = 100;
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -128,7 +128,6 @@ QtAudioManager::QtAudioManager(AudioPlayerForQt *audio) :
     mAudioSource(audio),
     mThreadRunning(true),
     mPause(false),
-    mDeviceActive(false),
     mAudioSink(nullptr),
     mIODevice(nullptr)
 {}
@@ -265,9 +264,8 @@ void QtAudioManager::start()
             qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             return;
         }
-        mAudioSource->setMaximalSize(mAudioSink->bufferSize());
+        mAudioSource->setMaximalSize(mAudioSink->bufferSize() / 5);
     }
-    mDeviceActive=true;
 }
 
 
@@ -288,11 +286,11 @@ void QtAudioManager::stop()
         mAudioSink->stop();
         mIODevice = nullptr;
     }
-    mDeviceActive=false;
 }
 
-
-
+void QtAudioManager::setPause(bool pause) {
+    mPause = pause;
+}
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Main worker function of the Qt audio manager
 ///////////////////////////////////////////////////////////////////////////////
@@ -303,6 +301,8 @@ void QtAudioManager::workerFunction()
     const auto scaling = std::numeric_limits<QtAudioManager::DataFormat>::max();
 
     init();
+    start();
+    mAudioSink->suspend();
 
     while (mThreadRunning)
     {
@@ -312,18 +312,22 @@ void QtAudioManager::workerFunction()
         }
 
         size_t available = mAudioSource->getSize();
-        if (not mDeviceActive)
+        if (mAudioSink->state() == QAudio::SuspendedState)
         {
-            if (available > 0) start();
+            if (available > 0) {mAudioSink->resume();}
             else QThread::msleep(10);
         }
         else // if device is active
         {
             size_t requested = mAudioSink->bytesFree()/sizeof(DataFormat);
-            if (requested > 0 and available == 0) stop();
-            else if (requested < mAudioSink->bufferSize() / 2 or available < mAudioSink->bufferSize() / 2) QThread::msleep(1);
+            if (requested == 0) {QThread::msleep(5); continue;}
+
+            size_t buffersize = mAudioSink->bufferSize() / mAudioSource->getChannelCount();
+            if (requested > 0 and available == 0) mAudioSink->suspend();
+            else if (requested < buffersize / 100 or available < mAudioSource->getMaximalSize() / 2) QThread::msleep(1);
             else
             {
+                std::cout << "av: " << available << " rq: " << requested << std::endl;
                 auto packet = mAudioSource->getPacket(requested);
                 size_t transferSize = packet.size();
                 EptAssert(transferSize <= requested, "buffer too large");

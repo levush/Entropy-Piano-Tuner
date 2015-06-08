@@ -76,7 +76,7 @@ public:
     ~QtAudioManager() {}
 
     void registerForTermination() { mThreadRunning=false; }
-    void setPause(bool pause) { mPause = pause; }
+    void setPause(bool pause);
     bool isRunning () { return mThreadRunning; }
 
 public slots:
@@ -96,7 +96,6 @@ private:
     AudioPlayerForQt *mAudioSource;
     std::atomic<bool> mThreadRunning;
     std::atomic<bool> mPause;
-    bool mDeviceActive;
     QAudioOutput *mAudioSink;
     QIODevice *mIODevice;
 };
