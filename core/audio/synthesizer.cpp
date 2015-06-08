@@ -200,8 +200,11 @@ void Synthesizer::generateWaveform ()
     int64_t c = static_cast<int64_t>(100*SampleRate);
     int64_t d = static_cast<int64_t>(SineLength);
 
-    while (mAudioPlayer->getFreeSize()>=2)
+    int writtenSamples = 0;
+
+    while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
     {
+        ++writtenSamples;
         mChordMutex.lock();
         double left=0, right=0, mono=0;
         for (auto &ch : mChord)

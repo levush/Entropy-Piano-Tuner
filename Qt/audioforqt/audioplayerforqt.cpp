@@ -26,7 +26,7 @@
 #include "../core/system/simplethreadhandler.h"
 #include "settingsforqt.h"
 
-const double QtAudioManager::BufferMilliseconds = 100;
+const double QtAudioManager::BufferMilliseconds = 20;
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -290,7 +290,7 @@ void QtAudioManager::workerFunction()
         {
             size_t requested = mAudioSink->bytesFree()/sizeof(DataFormat);
             if (requested > 0 and available == 0) stop();
-            else if (requested < 32 or available < 32) QThread::msleep(1);
+            else if (requested < mAudioSink->bufferSize() / 2 or available < mAudioSink->bufferSize() / 2) QThread::msleep(1);
             else
             {
                 auto packet = mAudioSource->getPacket(requested);

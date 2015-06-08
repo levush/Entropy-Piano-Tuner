@@ -701,14 +701,17 @@ int SignalAnalyzer::identifySelectedKey()
 void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
 {
     EptAssert(mPiano, "Piano has to be set.");
-    std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
 
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
         // fetch the current key from the statistics
         if (keyIndex >= 0 and keyIndex < mPiano->getKeyboard().getNumberOfKeys())
+        {
+            std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
             mKeyCountStatistics[keyIndex]++;
+        }
         MessageHandler::send<MessagePreliminaryKey>(identifySelectedKey(),frequency);
     } else {
+        std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
         // this is the sole key
         mKeyCountStatistics.clear();
         mKeyCountStatistics[keyIndex]++;
