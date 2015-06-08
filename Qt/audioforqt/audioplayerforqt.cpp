@@ -264,7 +264,7 @@ void QtAudioManager::start()
             qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             return;
         }
-        mAudioSource->setMaximalSize(mAudioSink->bufferSize() / 5);
+        mAudioSource->setMaximalSize(mAudioSink->bufferSize() / 2);
     }
 }
 
@@ -327,7 +327,6 @@ void QtAudioManager::workerFunction()
             else if (requested < buffersize / 100 or available < mAudioSource->getMaximalSize() / 2) QThread::msleep(1);
             else
             {
-                std::cout << "av: " << available << " rq: " << requested << std::endl;
                 auto packet = mAudioSource->getPacket(requested);
                 size_t transferSize = packet.size();
                 EptAssert(transferSize <= requested, "buffer too large");
