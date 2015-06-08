@@ -41,7 +41,7 @@ class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
 
 public:
     AudioPlayerForQt(QObject *parent);
-    virtual ~AudioPlayerForQt() {}
+    ~AudioPlayerForQt() {}
 
     void init() override final;     // Initialize, start thread
     void exit() override final;     // Exit, stop thread
@@ -60,7 +60,7 @@ private:
 /// \brief The QtAudioManager class
 ///
 /// This class serves as a container for the workerFunction in which the
-/// thread is running
+/// thread is running.
 ///////////////////////////////////////////////////////////////////////////////
 
 class QtAudioManager : public QObject
@@ -68,12 +68,22 @@ class QtAudioManager : public QObject
     Q_OBJECT
 
 public:
+    static const double BufferMilliseconds;
     typedef int16_t DataFormat;
     QtAudioManager(AudioPlayerForQt *audio);
     ~QtAudioManager() {}
 
+    void registerForTermination() { mThreadRunning=false; }
+    bool isRunning () { return mThreadRunning; }
+
 public slots:
     void workerFunction();
+
+private:
+    void init();
+    void exit();
+    void start();
+    void stop();
 
 signals:
     void finished();
@@ -85,19 +95,6 @@ private:
     bool mDeviceActive;
     QAudioOutput *mAudioSink;
     QIODevice *mIODevice;
-
-
-private:
-    void init();
-    void exit();
-    void start();
-    void stop();
-
-public:
-    void registerForTermination() { mThreadRunning=false; }
-    bool isRunning () { return mThreadRunning; }
-
-    // add your variables here
 };
 
 

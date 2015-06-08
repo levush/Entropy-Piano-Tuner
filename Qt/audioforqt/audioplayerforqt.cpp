@@ -26,6 +26,8 @@
 #include "../core/system/simplethreadhandler.h"
 #include "settingsforqt.h"
 
+const double QtAudioManager::BufferMilliseconds = 100;
+
 //-----------------------------------------------------------------------------
 //                              Constructor
 //-----------------------------------------------------------------------------
@@ -89,9 +91,9 @@ void AudioPlayerForQt::exit()
 }
 
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 //                            CLASS QtAudioManager
-//-----------------------------------------------------------------------------
+//=============================================================================
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Constructor
@@ -113,6 +115,10 @@ QtAudioManager::QtAudioManager(AudioPlayerForQt *audio) :
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Initialize the audio player.
+///
+/// This function defines the format, looks for the available audio device,
+/// manages fallbacks to supported formats, and defines the size of the
+/// internal Qt buffer.
 ///////////////////////////////////////////////////////////////////////////////
 
 void QtAudioManager::init()
@@ -177,7 +183,6 @@ void QtAudioManager::init()
 
 
     // Specify the size of the Qt-internal buffer
-    const double BufferMilliseconds = 100;
     const size_t BufferSize = mAudioSource->getChannelCount() *
             ((mAudioSource->getSamplingRate() * BufferMilliseconds)/1000);
     mAudioSink->setBufferSize(BufferSize);
@@ -292,7 +297,7 @@ void QtAudioManager::workerFunction()
                 size_t transferSize = packet.size();
                 EptAssert(transferSize <= requested, "buffer too large");
                 std::vector<DataFormat> buffer(transferSize);
-                for (int i=0; i<transferSize; ++i) buffer[i] =static_cast<DataFormat>(packet[i] * scaling);
+                for (size_t i=0; i<transferSize; ++i) buffer[i] =static_cast<DataFormat>(packet[i] * scaling);
                 mIODevice->write((const char*)buffer.data(), transferSize * sizeof(DataFormat));
             }
         }

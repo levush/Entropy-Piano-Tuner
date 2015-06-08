@@ -32,7 +32,6 @@
 #include <mutex>
 #include <chrono>
 
-#include "synthesizeradapter.h"
 #include "audioplayeradapter.h"
 #include "../system/simplethreadhandler.h"
 
@@ -56,7 +55,7 @@
 /// the function ReleaseSound.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Synthesizer : public SynthesizerAdapter, public SimpleThreadHandler
+class Synthesizer : public SimpleThreadHandler
 {
 public:
     Synthesizer (AudioPlayerAdapter *audioadapter);
@@ -71,24 +70,22 @@ public:
                       double attack=10,     // ADSR attack rate
                       double decayrate=0.5, // ADSR decay rate
                       double sustain=0.0,   // ADSR sustain rate
-                      double release=10)    // ADSR release rate
-                      override final;
+                      double release=10);   // ADSR release rate
 
     // Add a Fourier component
-    void addFourierComponent (int id, double f, double amplitude)
-    override final;
+    void addFourierComponent (int id, double f, double amplitude);
 
     // Start playing
-    void playSound (int id) override final;
+    void playSound (int id);
 
     // Stop playing
-    void releaseSound (int id) override final;
+    void releaseSound (int id);
 
     // Check whether sound is still playing
-    bool isPlaying (int id) override final;
+    bool isPlaying (int id);
 
     // Modify the sustain level of a constantly playing sound
-    void ModifySustainLevel (int id, double level) override final;
+    void ModifySustainLevel (int id, double level);
 
 private:    
     const int SineLength = 16384;           ///< sine value buffer length.

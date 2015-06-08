@@ -314,7 +314,6 @@ CORE_AUDIO_HEADERS = \
     core/audio/audiorecorderadapter.h \
     core/audio/audioplayeradapter.h \
     core/audio/synthesizer.h \
-    core/audio/synthesizeradapter.h \
     core/audio/implementation/pulseaudioplayer.h \
     core/audio/implementation/pulseaudiorecorder.h \
     core/audio/circularbuffer.h \
