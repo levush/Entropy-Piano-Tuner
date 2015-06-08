@@ -22,11 +22,11 @@
 
 #define EPT_VERSION_MAJOR      1
 #define EPT_VERSION_MINOR      0
-#define EPT_VERSION_PATCH      3
+#define EPT_VERSION_PATCH      4
 
-#define EPT_VERSION_STRING     "1.0.3"
+#define EPT_VERSION_STRING     "1.0.4"
 
 // The rolling version is an integer that increments with each published verion
-#define EPT_VERSION_ROLLING    7
+#define EPT_VERSION_ROLLING    8
 
 #endif // VERSION_H
