@@ -686,6 +686,9 @@ void MainWindow::onAbout() {
     dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
     dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
     dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
+#ifdef __ANDROID__
+    dependenciesText.append(", <a href=\"https://github.com/kshoji/USB-MIDI-Driver\">USB-Midi-Driver</a>");
+#endif
 
     const QString copyrightText = tr("Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
     const QString licenseText = tr("This software is licensed unter the terms of the %1. The source code can be accessed at %2.").
