@@ -42,7 +42,6 @@
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mSineWave(SineLength),
-    mRunning(false),
     mChord(),
     mChordMutex(),
     mAudioPlayer(audioadapter)
@@ -70,10 +69,6 @@ void Synthesizer::init ()
         for (int i=0; i<SineLength; ++i)
             mSineWave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
 
-        // start the synthesizer in a separate autonomous thread:
-        mRunning = true;
-        start();
-        LogI ("Synthesizer started.");
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
@@ -89,12 +84,7 @@ void Synthesizer::init ()
 
 void Synthesizer::exit ()
 {
-if (mRunning)
-    {
-        mRunning = false;        // terminate the loop
-        stop();
-        LogI ("Synthesizer shutting down");
-    }
+    stop();
 }
 
 
@@ -109,7 +99,7 @@ if (mRunning)
 void Synthesizer::workerFunction (void)
 {
     setThreadName("Synthesizer");
-    while (mRunning and not cancelThread())
+    while (not cancelThread())
     {
         mChordMutex.lock();
         bool active = (mAudioPlayer and not mChord.empty());
@@ -125,14 +115,12 @@ void Synthesizer::workerFunction (void)
             mChordMutex.unlock();
 
             generateWaveform();
-            //while (mRunning and getFreePacketSize() < 1) msleep(1);
         }
         else
         {
             msleep(10);
         }
     }
-    mRunning=false;
 }
 
 

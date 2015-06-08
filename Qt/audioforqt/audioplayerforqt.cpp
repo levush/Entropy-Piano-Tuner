@@ -68,6 +68,7 @@ void AudioPlayerForQt::init()
     connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(quit()));
     connect(mQtAudioManager, SIGNAL(finished()), mQtAudioManager, SLOT(deleteLater()));
     connect(mQtThread, SIGNAL(finished()), mQtThread, SLOT(deleteLater()));
+
     mQtThread->start(QThread::HighPriority);
 }
 
@@ -88,8 +89,31 @@ void AudioPlayerForQt::exit()
     mQtAudioManager->registerForTermination();
     while (mQtAudioManager->isRunning())
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    // deleted automatically upon finished
+    mQtAudioManager = nullptr;
+    mQtThread = nullptr;
 }
 
+
+void AudioPlayerForQt::start()
+{
+    if (!mQtAudioManager) {return;}
+
+    mQtAudioManager->setPause(false);
+}
+
+void AudioPlayerForQt::stop()
+{
+    if (!mQtAudioManager) {return;}
+
+    mQtAudioManager->setPause(true);
+}
+
+void AudioPlayerForQt::errorString(QString s)
+{
+    LogE("Error in QtAudioManager: %s", s.toStdString().c_str());
+}
 
 //=============================================================================
 //                            CLASS QtAudioManager
@@ -103,6 +127,7 @@ void AudioPlayerForQt::exit()
 QtAudioManager::QtAudioManager(AudioPlayerForQt *audio) :
     mAudioSource(audio),
     mThreadRunning(true),
+    mPause(false),
     mDeviceActive(false),
     mAudioSink(nullptr),
     mIODevice(nullptr)
@@ -240,6 +265,7 @@ void QtAudioManager::start()
             qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             return;
         }
+        mAudioSource->setMaximalSize(mAudioSink->bufferSize());
     }
     mDeviceActive=true;
 }
@@ -280,6 +306,11 @@ void QtAudioManager::workerFunction()
 
     while (mThreadRunning)
     {
+        if (mPause) {
+            QThread::msleep(500);
+            continue;
+        }
+
         size_t available = mAudioSource->getSize();
         if (not mDeviceActive)
         {

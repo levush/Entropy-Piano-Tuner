@@ -111,17 +111,17 @@ void Core::exit() {
 }
 
 void Core::start() {
+    mSoundGenerator.start();
     mRecorderAdapter->start();
     mPlayerAdapter->start();
 }
 
 void Core::stop() {
-    //TunerBase::terminated = true;
-
     // stop the signal analysis
     mSignalAnalyzer.stop();
 
     // stop audio
+    mSoundGenerator.stop();
     mRecorderAdapter->stop();
     mPlayerAdapter->stop();
 }

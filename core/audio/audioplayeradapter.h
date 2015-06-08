@@ -59,6 +59,8 @@ public:
 
     size_t getSize (void);
     size_t getFreeSize (void);
+    size_t getMaximalSize (void);
+    void   setMaximalSize(size_t s);
     void pushSingleSample (AudioBase::PacketDataType);
 
 //    virtual void start() {};

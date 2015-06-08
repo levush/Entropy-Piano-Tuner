@@ -23,6 +23,7 @@
 #include "../../core/audio/audioplayeradapter.h"
 #include <QAudioOutput>
 #include <mutex>
+#include <atomic>
 #include <QThread>
 
 class QtAudioManager;
@@ -46,10 +47,11 @@ public:
     void init() override final;     // Initialize, start thread
     void exit() override final;     // Exit, stop thread
 
-    // No functionality for start and stop, the player starts and stops automatically.
-    void start() override final {}
-    void stop() override final {}
+    void start() override final;
+    void stop() override final;
 
+private slots:
+    void errorString(QString);
 private:
     QThread* mQtThread;
     QtAudioManager* mQtAudioManager;
@@ -74,6 +76,7 @@ public:
     ~QtAudioManager() {}
 
     void registerForTermination() { mThreadRunning=false; }
+    void setPause(bool pause) { mPause = pause; }
     bool isRunning () { return mThreadRunning; }
 
 public slots:
@@ -91,7 +94,8 @@ signals:
 
 private:
     AudioPlayerForQt *mAudioSource;
-    bool mThreadRunning;
+    std::atomic<bool> mThreadRunning;
+    std::atomic<bool> mPause;
     bool mDeviceActive;
     QAudioOutput *mAudioSink;
     QIODevice *mIODevice;

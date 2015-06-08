@@ -46,6 +46,9 @@ public:
     void init ();
     void exit ();
 
+    void start();
+    void stop();
+
 private:
     void handleMessage(MessagePtr m) override final;
     void handleMidiKeypress(MidiAdapter::Data &data);

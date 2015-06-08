@@ -96,3 +96,16 @@ size_t AudioPlayerAdapter::getSize (void)
     return occupied;
 }
 
+size_t AudioPlayerAdapter::getMaximalSize ()
+{
+    std::lock_guard<std::mutex> lock(mBufferMutex);
+    return mBuffer.maximum_size();
+}
+
+void AudioPlayerAdapter::setMaximalSize(size_t s)
+{
+    std::lock_guard<std::mutex> lock(mBufferMutex);
+    if (s != mBuffer.maximum_size()) {
+        mBuffer.resize(s);
+    }
+}

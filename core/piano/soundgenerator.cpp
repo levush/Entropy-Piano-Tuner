@@ -92,6 +92,15 @@ void SoundGenerator::exit ()
     mSynthesizer.exit();        // Shut down the snythesizer
 }
 
+void SoundGenerator::start()
+{
+    mSynthesizer.start();
+}
+
+void SoundGenerator::stop()
+{
+    mSynthesizer.stop();
+}
 
 //-----------------------------------------------------------------------------
 //            Play a resonating reference sound in the tuning mode
