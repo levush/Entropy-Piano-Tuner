@@ -131,7 +131,7 @@ void AudioBase::setChannelCount(uint8_t c)
 /// \param volume The volume
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioBase::setVolume(float volume)
+void AudioBase::setVolume(double volume)
 { (void)volume; }
 
 
@@ -144,5 +144,5 @@ void AudioBase::setVolume(float volume)
 /// \returns The volume
 ///////////////////////////////////////////////////////////////////////////////
 
-float AudioBase::getVolume() const
+double AudioBase::getVolume() const
 { return 1; }

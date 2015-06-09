@@ -229,7 +229,8 @@ double KeyRecognizer::detectFrequencyInTreble()
     int sr = mFFTPtr->samplingRate;
     auto ftoq = [n,sr] (double f) { return MathTools::roundToInteger(2*n*f/sr); };
     auto qtof = [n,sr] (double q) { return sr*q/(2*n); };
-    double q1=ftoq(20), q2=ftoq(1000), q3=ftoq(4500), m1=0, m2=0;
+    const int q1=ftoq(20), q2=ftoq(1000), q3=ftoq(4500);
+    double m1=0, m2=0;
     if (n<=0 or q1<0 or q3>=n) return 0;
     for (int q=q1; q<=q3; ++q)
     {

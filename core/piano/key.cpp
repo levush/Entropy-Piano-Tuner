@@ -83,12 +83,25 @@ double Key::FrequencyToRealIndex (double f)
 /// value may lie outside of the allowed index range of the logbin spectrum.
 ///////////////////////////////////////////////////////////////////////////////
 
-double Key::FrequencyToIndex (double f)
+int Key::FrequencyToIndex (double f)
 { return MathTools::roundToInteger(FrequencyToRealIndex(f)); }
 
 //-----------------------------------------------------------------------------
 //                  map logspec index to frequency
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// Converts a logbin index to the corresponding frequency in Hz.
+/// \param m : Index of the logbin spectrum in the range [0,NumberOfBins]
+/// \return Frequency in Hz
+///////////////////////////////////////////////////////////////////////////////
+
+double Key::IndexToFrequency (double m)
+{
+    EptAssert(m >= 0 && m < NumberOfBins,
+      "The key has to be in the range of the maximum number of slots");
+    return fmin * pow(2, m / BinsPerOctave);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Converts a logbin index to the corresponding frequency in Hz.
@@ -102,7 +115,6 @@ double Key::IndexToFrequency (int m)
       "The key has to be in the range of the maximum number of slots");
     return fmin * pow(2, static_cast<double>(m) / BinsPerOctave);
 }
-
 
 //-----------------------------------------------------------------------------
 //                   set and get recorded frequency

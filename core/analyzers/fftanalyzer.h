@@ -78,7 +78,7 @@ private:
     int    locatePeak (const SpectrumType &spectrum, int m, int width);
     double interpolatePeakPosition (const SpectrumType &spectrum, int m, int width);
     int    findNearestKey (double f, double conertPitch, int numberOfKeys, int keyNumberOfA);
-    double estimateFrequency (int keynumber, int concertPitch, int keyNumberOfA);
+    double estimateFrequency (int keynumber, double concertPitch, int keyNumberOfA);
     double findAccuratePeakFrequency (FFTDataPointer fftData, double f, int cents=5);
 
     double getExpectedInharmonicity (double f);

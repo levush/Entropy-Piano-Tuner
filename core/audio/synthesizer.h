@@ -105,7 +105,7 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
-        std::map<float,float> fouriermodes;
+        std::map<double,double> fouriermodes;
     };
 
     std::map<int,Sound> mChord;             ///< Chord defined as a collection of sounds.

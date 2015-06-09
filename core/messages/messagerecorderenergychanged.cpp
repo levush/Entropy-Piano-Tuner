@@ -21,7 +21,7 @@
 
 /// \param level new level to display
 /// \param offLevel the level when recording will be turned off. This is variable. If offLevel is negative then there was no change made
-MessageRecorderEnergyChanged::MessageRecorderEnergyChanged(LevelType type, float level)
+MessageRecorderEnergyChanged::MessageRecorderEnergyChanged(LevelType type, double level)
     : Message(MSG_RECORDER_ENERGY_CHANGED),
       mLevelType(type),
       mLevel(level) {

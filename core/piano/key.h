@@ -57,9 +57,10 @@ public:
     using SpectrumTypePtr = std::shared_ptr<SpectrumType>;     ///< Type of a shared pointer to SpectrumType
     using PeakListType = std::map<double,double>;   ///< Type for a peak map
 
-    static double FrequencyToIndex (double f);      ///< Convert frequency to logbin index
+    static int FrequencyToIndex(double f);          ///< Convert frequency to logbin index
     static double FrequencyToRealIndex (double f);  ///< Convert frequency to real-valued logbin index
-    static double IndexToFrequency (int m);         ///< Convert continuous slot index to frequency in Hz
+    static double IndexToFrequency (double m);      ///< Convert continuous slot index to frequency in Hz
+    static double IndexToFrequency (int m);         ///< Convert integer slot index to frequency in Hz
 
 public:
 

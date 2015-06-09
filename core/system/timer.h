@@ -40,13 +40,13 @@ class Timer
 {
 public:
     Timer();
-    ~Timer(){};
+    ~Timer() {}
 
     void reset ();
-    int getMilliseconds();
+    int64_t getMilliseconds();
     void wait (int milliseconds);
-    bool timeout (int milliseconds);
-    void waitUntil (int milliseconds, int interval_ms=5);
+    bool timeout (int64_t milliseconds);
+    void waitUntil (int64_t milliseconds, int interval_ms=5);
 
 private:
     std::chrono::time_point<std::chrono::system_clock> mStart;

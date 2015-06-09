@@ -39,6 +39,6 @@ void GraphicsItem::setKeyIndexAndItemRole(int index, RoleType role) {
     setKeyIndex(index);
 }
 
-void GraphicsItem::setZOrder(float z) {
+void GraphicsItem::setZOrder(double z) {
     (void) z;
 }

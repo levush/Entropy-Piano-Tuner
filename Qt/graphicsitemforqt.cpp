@@ -37,11 +37,11 @@ GraphicsItemForQt::~GraphicsItemForQt()
     }
 }
 
-void GraphicsItemForQt::setPosition(float x, float y) {
+void GraphicsItemForQt::setPosition(double x, double y) {
     QPointF pos(static_cast<GraphicsViewAdapterForQt*>(mGraphicsView)->convertRelToAbs(QPointF(x, y)));
     mItem->setPos(pos);
 }
 
-void GraphicsItemForQt::setZOrder(float z) {
+void GraphicsItemForQt::setZOrder(double z) {
     mItem->setZValue(z);
 }

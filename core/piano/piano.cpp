@@ -60,9 +60,15 @@ Piano::Piano() :
 
 void Piano::setNow() {
     time_t rawtime = time(0);
-    struct tm *nowtime = gmtime(&rawtime);
+    struct tm nowtime;
+#ifdef _MSC_VER
+    // msvc has swapped arguments
+    gmtime_s(&nowtime, &rawtime);
+#else
+    gmtime_s(&rawtime, &nowtime);
+#endif
     char buffer[50];
-    strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", nowtime);
+    strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", &nowtime);
     mTuningTime = buffer;
 }
 

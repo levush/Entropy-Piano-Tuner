@@ -370,7 +370,7 @@ void EntropyMinimizer::modifySpectralComponent (int keynumber,
 
     Key &key = mKeys[keynumber];
     SpectrumType &spectrum = key.getSpectrum();
-    int  recorded_pitch  = getRecordedPitchET440(keynumber);
+    int  recorded_pitch  = getRecordedPitchET440AsInt(keynumber);
     int    old_pitchdiff = mPitch[keynumber] - recorded_pitch;
     int    new_pitchdiff = pitch             - recorded_pitch;
 
@@ -391,7 +391,7 @@ void EntropyMinimizer::setAllSpectralComponents ()
     {
         Key &key = mKeys[k];
         SpectrumType spectrum = key.getSpectrum();
-        int  recorded_pitch  = getRecordedPitchET440(k);
+        int  recorded_pitch  = getRecordedPitchET440AsInt(k);
         int pitchdiff = mPitch[k] - recorded_pitch;
 
         addToAccumulator(spectrum,pitchdiff,1);
@@ -612,9 +612,9 @@ void EntropyMinimizer::minimizeEntropy ()
 
         // output
         writeAccumulator("0-accumulator.dat");
-        writeSpectrum(4,"tuned",mPitch[4]-getRecordedPitchET440(4));
-        writeSpectrum(16,"tuned",mPitch[16]-getRecordedPitchET440(16));
-        writeSpectrum(28,"tuned",mPitch[28]-getRecordedPitchET440(28));
+        writeSpectrum(4,"tuned",mPitch[4]-getRecordedPitchET440AsInt(4));
+        writeSpectrum(16,"tuned",mPitch[16]-getRecordedPitchET440AsInt(16));
+        writeSpectrum(28,"tuned",mPitch[28]-getRecordedPitchET440AsInt(28));
     };
 
     double methodratio = 1;
@@ -646,7 +646,7 @@ void EntropyMinimizer::minimizeEntropy ()
 
         // update progress
         if (stepsToFinish > 0) {
-            double progress = updatesSinceLastChange / stepsToFinish;
+            double progress = static_cast<double>(updatesSinceLastChange) / stepsToFinish;
             progress = std::max(progress, lastProgress);
             pbAcc = std::max(-1.0, std::min(1.0, (progress - lastProgress)));
             pbVel += pbAcc * 1.0;
@@ -752,6 +752,11 @@ double EntropyMinimizer::getRecordedPitchET440(int keynumber)
     double ET440 = 440.0 * pow(2,1.0/12.0*(keynumber-mKeyNumberOfA4));
     double frec = mKeys[keynumber].getRecordedFrequency();
     return 1200*log(frec/ET440)/MathTools::LOG2;
+}
+
+int EntropyMinimizer::getRecordedPitchET440AsInt(int keynumber)
+{
+    return MathTools::roundToInteger(getRecordedPitchET440(keynumber));
 }
 
 

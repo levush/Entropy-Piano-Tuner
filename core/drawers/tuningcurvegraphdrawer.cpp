@@ -55,7 +55,7 @@ const FillType TuningCurveGraphDrawer::allowdAreaFill = GraphicsViewAdapter::FIL
 /// temperament level in cents.
 ///////////////////////////////////////////////////////////////////////////////
 
-const double TuningCurveGraphDrawer::rangeInCents = 60;
+const int TuningCurveGraphDrawer::rangeInCents = 60;
 
 
 //-----------------------------------------------------------------------------
@@ -294,7 +294,7 @@ void TuningCurveGraphDrawer::draw()
 /// \return y-coordinate between 0 and 1.
 ///////////////////////////////////////////////////////////////////////////////
 
-float TuningCurveGraphDrawer::getMarkerPosition (int keyindex, RoleType role)
+double TuningCurveGraphDrawer::getMarkerPosition(int keyindex, RoleType role)
 {
     // Get the key data of the piano
     if (not mPiano) return -1;

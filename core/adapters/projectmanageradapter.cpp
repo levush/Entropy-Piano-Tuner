@@ -296,6 +296,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_SAVED, mCore->getPianoManager()->getPiano());
     }
     catch (const EptException &e) {
+        LogW("Exception during saving a file: %s", e.what());
         // show message box, that there is an error
         showSaveError();
         return R_CANCELED;
@@ -324,6 +325,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_OPENED, mCore->getPianoManager()->getPiano());
     }
     catch (const EptException &e) {
+        LogW("Exception during opening a file: %s", e.what());
         // show message box, that there is an error
         showOpenError();
         return R_CANCELED;

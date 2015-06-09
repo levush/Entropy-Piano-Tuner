@@ -46,7 +46,7 @@ public:
 protected:
     /// \brief Change the shown level.
     /// \param value : Level value between 0 and 1.
-    virtual void levelChanged(float value) = 0;
+    virtual void levelChanged(double value) = 0;
 };
 
 #endif // RECORDERLEVEL_H

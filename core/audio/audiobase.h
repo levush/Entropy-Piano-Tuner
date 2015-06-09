@@ -64,8 +64,8 @@ public:
     virtual void setChannelCount(uint8_t c);      // set number of channels
 
     // Adjust the volume of the audio device.
-    virtual void setVolume(float volume);         // set the volume
-    virtual float getVolume() const;              // get the volume
+    virtual void setVolume(double volume);         // set the volume
+    virtual double getVolume() const;              // get the volume
 
 private:
     std::string mAudioDeviceName;       ///< User readable string of the used audio device

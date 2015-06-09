@@ -125,9 +125,9 @@ public:
     /// \param x : The relative x coord
     /// \param y : The relative y coord
     ///////////////////////////////////////////////////////////////////////////////
-    virtual void setPosition(float x, float y) = 0;
+    virtual void setPosition(double x, double y) = 0;
 
-    virtual void setZOrder(float z);
+    virtual void setZOrder(double z);
 
 protected:
     /// Poiter to the parent GraphicsViewAdapter.

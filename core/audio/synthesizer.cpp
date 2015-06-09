@@ -238,11 +238,11 @@ void Synthesizer::generateWaveform ()
                 int64_t a = static_cast<int64_t>(100.0*mode.first*d);
                 int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
                 int64_t p = b + a*phase;
-                if (channels==1) mono += mode.second*y*mSineWave[(b/c)%d];
+                if (channels==1) mono += mode.second*y*mSineWave[static_cast<size_t>((b/c)%d)];
                 else // if stereo
                 {
-                    left  += mode.second*leftvol *y*mSineWave[(b/c)%d];
-                    right += mode.second*rightvol*y*mSineWave[(p/c)%d];
+                    left  += mode.second*leftvol *y*mSineWave[static_cast<size_t>((b/c)%d)];
+                    right += mode.second*rightvol*y*mSineWave[static_cast<size_t>((p/c)%d)];
                 }
             }
         }
