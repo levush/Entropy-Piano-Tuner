@@ -232,7 +232,13 @@ bool ParseRfcTime(const char* buf, struct tm *tm) {
 // See http://www.w3.org/TR/NOTE-datetime
 const std::string FormatW3CTime(const time_t &time) {
   tm gmt;
+
+#ifdef _MSC_VER
   gmtime_s(&gmt, &time);
+#else
+  gmt = *gmtime(&time);
+#endif
+
   char buffer[80];
   strftime(buffer, 80,
            "%Y-%m-%dT%H:%M:%SZ",  // like 2001-12-31T23:59:59Z
@@ -243,7 +249,11 @@ const std::string FormatW3CTime(const time_t &time) {
 std::string FormatHttpDate(time_t t) {
   // Convert 'time_t' to struct tm (GMT)
   tm gmt;
+#ifdef _MSC_VER
   gmtime_s(&gmt, &t);
+#else
+  gmt = *gmtime(&t);
+#endif
 
   // Convert struct tm to HTTP-date string
   char buff[256];

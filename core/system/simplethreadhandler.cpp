@@ -190,7 +190,7 @@ void SimpleThreadHandler::simpleWorkerFunction()
     }
     catch (const EptException &e)
     {
-        LogE("Worker thread stopped with EptException: ", e.what());
+        LogE("Worker thread stopped with EptException: %s", e.what());
         exceptionCaught(e);
     }
     catch (const std::exception &e)

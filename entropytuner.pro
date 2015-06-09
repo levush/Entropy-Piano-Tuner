@@ -120,7 +120,7 @@ linux-g++*:!android {
     LIBS += -lpulse -lpulse-simple
 
     # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS += -std=c++11 -Wall -Werror
 
     # additional defines in debug modus
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
