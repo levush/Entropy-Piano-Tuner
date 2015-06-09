@@ -37,6 +37,9 @@ macx {
 
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/osx/Info.plist
+
+    # all warnings, and as error
+    QMAKE_CXXFLAGS += -Werror
 }
 
 # iOS
@@ -127,6 +130,9 @@ android {
     LIBS += -lfftw3
     QT += androidextras
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platforms/android
+
+    # all warnings, and as error
+    QMAKE_CXXFLAGS += -Werror
 }
 
 #------------------- Qt -----------------------

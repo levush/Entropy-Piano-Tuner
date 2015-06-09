@@ -62,9 +62,6 @@ public:
 private:
     Keys mKeys;
 
-    /// total number of keys of the piano
-    int mNumberOfKeys;
-
     /// index of the key A (corresponding with the concert pitch)
     int mKeyNumberOfA4;
 };

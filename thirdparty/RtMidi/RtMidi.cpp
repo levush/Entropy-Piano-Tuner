@@ -2,6 +2,7 @@
 // into the project and to suppress some warning during compilation.
 #include "../../core/config.h"
 #if CONFIG_ENABLE_RTMIDI
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
 
 /**********************************************************************/
