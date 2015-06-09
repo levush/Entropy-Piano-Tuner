@@ -29,6 +29,7 @@ class PianoFile
 public:
     using FileVersionType = int;
     static const std::string FILE_TYPE_NAME;
+    static const FileVersionType UNSET_FILE_VERSION;
     static const FileVersionType CURRENT_FILE_VERSION;
     static const FileVersionType MIN_SUPPORTED_FILE_VERSION;
 public:

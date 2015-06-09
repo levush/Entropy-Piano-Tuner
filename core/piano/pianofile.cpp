@@ -30,6 +30,7 @@
 #include "piano.h"
 
 const std::string PianoFile::FILE_TYPE_NAME("EntropyPianoTunerFile");
+const PianoFile::FileVersionType PianoFile::UNSET_FILE_VERSION(-1);
 const PianoFile::FileVersionType PianoFile::CURRENT_FILE_VERSION(1);
 const PianoFile::FileVersionType PianoFile::MIN_SUPPORTED_FILE_VERSION(1);
 
@@ -85,6 +86,22 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
     if (!root) {
         LogW("Xml-document has no root node");
         return;
+    }
+
+    // read version
+    mFileVersion = UNSET_FILE_VERSION;
+    root->QueryIntAttribute("version", &mFileVersion);
+
+    if (mFileVersion == UNSET_FILE_VERSION) {
+        LogW("No file version specified. Trying to continue with minimum supported.");
+        mFileVersion = MIN_SUPPORTED_FILE_VERSION;
+    }
+
+    // check version
+    if (mFileVersion < MIN_SUPPORTED_FILE_VERSION) {
+        std::stringstream errormsg;
+        errormsg << "File version " << mFileVersion << " is not supported anymore. Minimum file version is " << MIN_SUPPORTED_FILE_VERSION;
+        EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, errormsg.str());
     }
 
     // parse all child elements
