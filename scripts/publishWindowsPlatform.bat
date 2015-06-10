@@ -21,7 +21,7 @@ cd ..
 
 set tunerdir=%CD%
 set publishdir=%tunerdir%\.publishWindows%postfix%
-set setupname=EntropyPianoTuner_Setup_%postfix%.exe
+set setupname=EntropyPianoTuner_Online_%postfix%.exe
 
 :: update translations (lupdate on all ts files)
 forfiles /p %tunerdir%\translations /m *.ts /c "cmd /c lrelease @file"
@@ -38,28 +38,41 @@ qmake ..\entropytuner.pro -r -spec %msvc_spec%
 :: deploy dlls
 cd %tunerdir%
 
-set dataDir=%tunerdir%\appstore\installer\packages\org.entropytuner.app\data
+set appDataDir=%tunerdir%\appstore\installer\packages\org.entropytuner.app\data
+set depsDataDir=%tunerdir%\appstore\installer\packages\org.entropytuner.deps\data
 
-:: clear data dir
-move %dataDir%\.keepme %publishDir%\
-rd %dataDir% /s /q
-mkdir %dataDir%
-move %publishDir%\.keepme %dataDir%\
+:: clear data dirs
+move %appDataDir%\.keepme %publishDir%\
+rd %appDataDir% /s /q
+mkdir %appDataDir%
+move %publishDir%\.keepme %appDataDir%\
 
-windeployqt --compiler-runtime --dir %tunerdir%\appstore\installer\packages\org.entropytuner.app\data %publishdir%\release\EntropyTuner.exe
+move %depsDataDir%\.keepme %publishDir%\
+rd %depsDataDir% /s /q
+mkdir %depsDataDir%
+move %publishDir%\.keepme %depsDataDir%\
+
+windeployqt --compiler-runtime --dir %depsDataDir% %publishdir%\release\EntropyTuner.exe
 echo Copy EntropyTuner.exe and fftw dll
-copy /Y %publishdir%\release\EntropyTuner.exe %tunerdir%\appstore\installer\packages\org.entropytuner.app\data
-copy /Y %publishdir%\release\libfftw3-3.dll %tunerdir%\appstore\installer\packages\org.entropytuner.app\data
-copy /Y %tunerdir%\appstore\icons\entropytuner.ico %dataDir%
+copy /Y %publishdir%\release\EntropyTuner.exe %appDataDir%
+copy /Y %publishdir%\release\libfftw3-3.dll %depsDataDir%
+copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir%
 :: move vcredist_xxx to vcredist
 echo Moving vcredist
-del %dataDir%\vcredist.exe
-move %dataDir%\vcredist_%vcredist%.exe %dataDir%\vcredist.exe
+del %depsDataDir%\vcredist.exe
+move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit /b
 
 :: cd to installer
 cd %tunerdir%\appstore\installer
 echo Creating installer. This may take a while.
-binarycreator -v -c config\config.xml -p packages %setupname%
+:: create online installer packages
+rd windows_repository_%postfix% /s /q
+del config\windows_config_%postfix%.xml
+repogen -p packages windows_repository_%postfix%
+:: create windows config pointing to the correct repository
+call %tunerdir%\scripts\BatchSubstitute.bat dummy_repository windows_repository_%postfix% config\config.xml > config\windows_config_%postfix%.xml
+:: create online/offline installer
+binarycreator -v -n -c config\windows_config_%postfix%.xml -p packages %setupname%
 
 :: move installer to publish dir
 cd %tunerdir%

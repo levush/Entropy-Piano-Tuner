@@ -1,6 +1,12 @@
 # All data in the installer packages will be ignored
 packages/*/data/*
 
+# Repositories
+*repository*
+
+# platform dependent config files
+windows_config*
+
 # Ignore the runnable file
 EntropyPianoTuner_Setup.exe
 EntropyPianoTuner_Setup.run

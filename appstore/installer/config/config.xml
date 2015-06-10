@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>Entropy Piano Tuner</Name>
-    <Version>1.0.0</Version>
+    <Version>1.0.4</Version>
     <Title>Entropy Piano Tuner Installer</Title>
     <Publisher>TP III Universität Würzburg</Publisher>
     <ProductUrl>http://www.entropy-tuner.org</ProductUrl>
@@ -12,4 +12,11 @@
     <RunProgram>@TargetDir@/EntropyTuner</RunProgram>
     <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
     <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
+	<RemoteRepositories>
+		<Repository>
+             <Url>http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/Repository/dummy_repository</Url>
+             <Enabled>1</Enabled>
+			 <DisplayName>Base repository</DisplayName>
+		</Repository>
+	</RemoteRepositories>
 </Installer>
