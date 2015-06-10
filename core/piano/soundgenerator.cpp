@@ -291,6 +291,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             mConcertPitch = mPiano->getConcertPitch();
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
             mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
+            updateAllWaveforms();
         }
         break;
     case Message::MSG_MIDI_EVENT:
@@ -340,7 +341,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 {
                     auto key = message->getFinalKey();
                     double frequency = key->getRecordedFrequency();
-                    playOriginalSoundOfKey(*key,id,frequency,0.5,5,5);
+                    playOriginalSoundOfKey(*key,id,frequency,0.5,5,5);   //****************************** recording echo sound
                 }
             }
         }
@@ -517,3 +518,13 @@ void SoundGenerator::playOriginalSoundOfKey (const Key &key, int id,
 }
 
 
+
+
+
+void SoundGenerator::updateAllWaveforms()
+{
+    auto getRuntime = [] (double i) { return 5.0 * pow(2.0,-i/12); };
+    for (int i=0; i<mNumberOfKeys; i++)
+        mSynthesizer.registerSoundForCreation(i,mPiano->getKey(i).getPeaks(),
+                                              getStereo(i), getRuntime(i));
+}

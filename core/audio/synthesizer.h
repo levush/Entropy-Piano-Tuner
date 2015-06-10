@@ -27,6 +27,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <queue>
 #include <cmath>
 #include <thread>
 #include <mutex>
@@ -57,6 +58,50 @@
 
 class Synthesizer : public SimpleThreadHandler
 {
+public:
+    struct Envelope
+    {
+        double volume=1;        // overall volume
+        double stereo=0.5;      // stereo position (0..1)
+        bool hammer=false;      // hammer noise
+        double attack=10;       // ADSR attack rate
+        double decayrate=0.5;   // ADSR decay rate
+        double sustain=0.0;     // ADSR sustain rate
+        double release=10;      // ADSR release rate
+    };
+
+
+    using Spectrum = std::map<double,double>;
+
+
+    void registerSoundForCreation (const int id,
+                                   const Spectrum &spectrum,
+                                   const double stereo,
+                                   const double time=1);
+    void play (int id, double frequency, Envelope &env);
+    void play (int id, Spectrum &spectrum, Envelope &env);
+    void release (int id);
+
+private:
+    struct Sound
+    {
+        Spectrum spectrum;      // the spectrum of the sound
+        double stereo;          // its stereo location (0..1)
+        double time;            // the required sampling time
+    };
+
+    std::map<int,Sound> mRegistrationQueue;
+    std::mutex mRegistrationQueueMutex;
+
+    using WaveForm = std::vector<double>;
+
+    void createWaveforms();
+
+    std::map<int,WaveForm> mWaveForms;
+
+
+    /////////////////////////////////////////////////////////
+
 public:
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
@@ -93,9 +138,10 @@ private:
 
     AudioBase::PacketType mSineWave;        ///< Sine wave vector.
 
-    struct Sound
+    struct Tone
     {
         int clock;                          ///< Running time in sample cycles.
+        int clock_timeout;                  ///< Timeout when forced to release
         int stage;                          ///< Stage of envelope:  0=off
                                             ///< 1=attack 2=decay 3=sustain 4=release.
         double amplitude;                   ///< Actual time-dependent amplitude.
@@ -105,14 +151,14 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
-        std::map<float,float> fouriermodes;
+        std::map<float,float> fouriermodes; //********************** kommt weg **********************
     };
 
-    std::map<int,Sound> mChord;             ///< Chord defined as a collection of sounds.
+    std::map<int,Tone> mChord;             ///< Chord defined as a collection of tones.
     std::mutex mChordMutex;                 ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
-    Sound* getSoundPtr (int id);
+    Tone* getSoundPtr (int id);
     void workerFunction () override final;
     void generateWaveform();
 };
