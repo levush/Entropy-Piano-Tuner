@@ -22,6 +22,8 @@
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+#include <chrono>
+#include <fstream>
 
 #include "../system/eptexception.h"
 #include "../adapters/filemanager.h"
@@ -72,6 +74,8 @@ bool PianoFile::write(const std::string &absolutePath, const Piano &piano) const
 }
 
 void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
+    auto startTime = std::chrono::high_resolution_clock::now();
+
     tinyxml2::XMLDocument doc(true, tinyxml2::COLLAPSE_WHITESPACE);
     doc.LoadFile(absolutePath.c_str());
     if (doc.Error()) {
@@ -80,7 +84,9 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
         EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, errormsg.str());
     }
 
-    LogI("Succesfully parsed Xml-File: %s", absolutePath.c_str());
+    auto parsedTime = std::chrono::high_resolution_clock::now();
+
+    LogI("Succesfully loaded Xml-File: %s. This took %li ms", absolutePath.c_str(), std::chrono::duration_cast<std::chrono::milliseconds>(parsedTime - startTime).count());
 
     tinyxml2::XMLElement *root = doc.FirstChildElement();
     if (!root) {
@@ -111,6 +117,14 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
             read(child, piano);
         }
     }
+
+    auto contentParseTime = std::chrono::high_resolution_clock::now();
+
+    int64_t contentTime = std::chrono::duration_cast<std::chrono::milliseconds>(contentParseTime - parsedTime).count();
+    int64_t totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(contentParseTime - startTime).count();
+
+    LogI("Content parsed in %li ms. Complete file opening took %li ms.", contentTime, totalTime);
+
 }
 
 void PianoFile::writeXmlFile(const std::string &absolutePath, const Piano &piano) const {
@@ -154,7 +168,7 @@ void PianoFile::createTextXMLElement(tinyxml2::XMLElement *parent, const char *l
 }
 
 void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
-    assert(e);
+    EptAssert(e, "XMLElement has to exist.");
     int type = piano.getPianoType();
 
     e->QueryDoubleAttribute("concertPitch", &piano.getConcertPitch());
@@ -238,15 +252,29 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Keyboard &keyboard) {
                  child = child->NextSiblingElement()) {
                 if (strcmp(child->Value(), "spectrum") == 0) {
                     // spectrum
-                    std::string text(child->GetText());
-                    std::istringstream iss(text);
-                    int spec = 0;
-                    while (iss >> keyboard[key].getSpectrum()[spec]) {
-                        spec++;
-                        if (spec >= Key::NumberOfBins) {
-                            break;
-                        }
-                    }
+                    auto &spectrum = keyboard[key].getSpectrum();
+                    // pointer to the text
+                    const char *s = child->GetText();
+                    // pointer to the last char that was read by strtod
+                    char *p = 0;
+                    // pointer to the data structure to fill
+                    double *spec = spectrum.data();
+                    do {
+                        // read value
+                        double val = strtod(s, &p);
+                        // nothing to read, finish
+                        if (s == p) break;
+
+                        // store value and increase write position
+                        *spec = (val);
+                        ++spec;
+
+                        // check if we reached the end
+                        if (spec == &spectrum[0] + Key::NumberOfBins) {break;}
+
+                        // adjust read position
+                        s = p+1;
+                    } while (*p);
                 } else if (strcmp(child->Value(), "peak") == 0) {
                     // peak
                     double frequency = -1;
