@@ -22,6 +22,15 @@
 
 #include "core/config.h"
 
+#include <QtGlobal>
+
+// define mobile/desktop version defines
+#if defined Q_OS_BLACKBERRY || defined Q_OS_ANDROID || defined Q_OS_IOS || defined Q_OS_WP
+#define Q_OS_MOBILE
+#else
+#define Q_OS_DESKTOP
+#endif
+
 #if CONFIG_DIALOG_SIZE == 2
 #   define SHOW_DIALOG(d) {(d)->showMaximized();}
 #elif CONFIG_DIALOG_SIZE == 3
@@ -35,6 +44,11 @@
 #   define CONFIG_MENU_ICONS 0
 #else
 #   define CONFIG_MENU_ICONS 1
+#endif
+
+// update check
+#if defined Q_OS_DESKTOP && !defined Q_OS_MACX
+#   define CONFIG_ENABLE_UPDATE_TOOL     1
 #endif
 
 #endif // QTCONFIG_H
