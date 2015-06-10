@@ -30,6 +30,92 @@
 #include "../system/eptexception.h"
 #include "../system/timer.h"
 
+
+Sound::Sound() :
+    mChannels(0),
+    mSampleRate(0),
+    mSineWave(),
+    mSpectrum(),
+    mStereo(0.5),
+    mTime(0),
+    mWaveForm(),
+    mReady(false)
+{}
+
+void Sound::set (const int channels, const int samplerate, const WaveForm &sinewave,
+                 const Spectrum &spectrum, const double stereo, const double time)
+{
+    mChannels = channels;
+    mSampleRate = samplerate;
+    mSineWave = sinewave;
+    mSpectrum = spectrum;
+    mStereo = stereo;
+    mTime = time;
+    mWaveForm.clear();
+    mReady = false;
+    start();
+}
+
+
+void Sound::workerFunction()
+{
+    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
+    const int64_t SampleLength = round(mSampleRate * mTime);
+    const int64_t BufferSize = SampleLength * mChannels;
+    const double leftvol  = sqrt(0.7-0.4*mStereo);
+    const double rightvol = sqrt(0.3+0.4*mStereo);
+    mWaveForm.resize(BufferSize);
+    mWaveForm.assign(BufferSize,0);
+
+    double sum=0;
+    for (auto &mode : mSpectrum) sum+=mode.second;
+    if (sum<=0) return;
+
+    const int64_t SineLength = mSineWave.size();
+    for (auto &mode : mSpectrum)
+    {
+        const double f = mode.first;
+        const double volume = pow(mode.second / sum,0.4);
+
+        if (f>24 and f<10000 and volume>0.001)
+        {
+            const int64_t periods = round((SampleLength * f) / mSampleRate);
+            if (mChannels==1)
+            {
+                const int64_t phase = rand();
+                for (int64_t i=0; i<SampleLength; ++i)
+                    mWaveForm[i] += volume *
+                        mSineWave[((i*periods*SineLength)/SampleLength+phase)%SineLength];
+            }
+            else if (mChannels==2)
+            {
+                const int64_t phasediff = round(periods * mSampleRate *
+                                                (0.5-mStereo) / 500);
+                const int64_t leftphase  = rand();
+                const int64_t rightphase = leftphase + phasediff;
+                for (int64_t i=0; i<SampleLength; ++i)
+                {
+                    mWaveForm[2*i] += volume * leftvol *
+                        mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
+                    mWaveForm[2*i+1] += volume * rightvol *
+                        mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
+                }
+            }
+        }
+    }
+    mReady = true;
+    LogI ("Created waveform");
+
+//    if (id !=0) return;
+//    std::ofstream os("0000-waveform.dat");
+//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
+//    os << "&" << std::endl;
+//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
+//    os.close();
+
+
+}
+
 //-----------------------------------------------------------------------------
 //	                             Constructor
 //-----------------------------------------------------------------------------
@@ -409,95 +495,94 @@ void Synthesizer::ModifySustainLevel (int id, double level)
 
 
 
-//-----------------------------------------------------------------------------
+////-----------------------------------------------------------------------------
 
 void Synthesizer::registerSoundForCreation  (const int id,
                                              const Spectrum &spectrum,
                                              const double stereo,
                                              const double time)
 {
-    Sound tone;
-    tone.spectrum=spectrum;
-    tone.stereo=stereo;
-    tone.time=time;
-    mRegistrationQueueMutex.lock();
-    mRegistrationQueue[id]=tone;
+    (mAudioPlayer->getChannelCount(),
+                                      mAudioPlayer->getSamplingRate(),
+                                      &mSineWave, spectrum, stereo, time);mRegistrationQueueMutex.lock();
+    mRegistrationQueueMutex.unlock();
+    mRegistrationQueue[id]=snd
     mRegistrationQueueMutex.unlock();
     LogI ("*************** register ******************");
     std::cout << mRegistrationQueue.size() << std::endl;
 }
 
 
-//-----------------------------------------------------------------------------
+////-----------------------------------------------------------------------------
 
 
-void Synthesizer::createWaveforms ()
-{
-    int64_t SampleRate = mAudioPlayer->getSamplingRate();
-    int channels = mAudioPlayer->getChannelCount();
-    if (channels<=0 or channels>2) return;
+//void Synthesizer::createWaveforms ()
+//{
+//    int64_t SampleRate = mAudioPlayer->getSamplingRate();
+//    int channels = mAudioPlayer->getChannelCount();
+//    if (channels<=0 or channels>2) return;
 
-    mRegistrationQueueMutex.lock();
-    if (mRegistrationQueue.size()==0) {  mRegistrationQueueMutex.unlock(); return; }
-    const int id = mRegistrationQueue.begin()->first;
-    const Sound tone = mRegistrationQueue.begin()->second;
-    mRegistrationQueue.erase(mRegistrationQueue.begin()); // erase
-    mRegistrationQueueMutex.unlock();
+//    mRegistrationQueueMutex.lock();
+//    if (mRegistrationQueue.size()==0) {  mRegistrationQueueMutex.unlock(); return; }
+//    const int id = mRegistrationQueue.begin()->first;
+//    const Sound tone = mRegistrationQueue.begin()->second;
+//    mRegistrationQueue.erase(mRegistrationQueue.begin()); // erase
+//    mRegistrationQueueMutex.unlock();
 
-    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
-    const int64_t SampleLength = round(SampleRate * tone.time);
-    const int64_t BufferSize = SampleLength * channels;
-    const double leftvol  = sqrt(0.7-0.4*tone.stereo);
-    const double rightvol = sqrt(0.3+0.4*tone.stereo);
-    WaveForm buffer (BufferSize,0);
+//    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
+//    const int64_t SampleLength = round(SampleRate * tone.time);
+//    const int64_t BufferSize = SampleLength * channels;
+//    const double leftvol  = sqrt(0.7-0.4*tone.stereo);
+//    const double rightvol = sqrt(0.3+0.4*tone.stereo);
+//    WaveForm buffer (BufferSize,0);
 
-    double sum=0;
-    for (auto &mode : tone.spectrum) sum+=mode.second;
-    if (sum<=0) return;
+//    double sum=0;
+//    for (auto &mode : tone.spectrum) sum+=mode.second;
+//    if (sum<=0) return;
 
 
-    for (auto &mode : tone.spectrum)
-    {
-        const double f = mode.first;
-        const double volume = pow(mode.second / sum,0.4);
+//    for (auto &mode : tone.spectrum)
+//    {
+//        const double f = mode.first;
+//        const double volume = pow(mode.second / sum,0.4);
 
-        if (f>24 and f<10000 and volume>0.001)
-        {
-            const int64_t periods = round((SampleLength * f) / SampleRate);
-            if (channels==1)
-            {
-                const int64_t phase = rand();
-                for (int64_t i=0; i<SampleLength; ++i)
-                    buffer[i] += volume *
-                        mSineWave[((i*periods*SineLength)/SampleLength+phase)%SineLength];
-            }
-            else if (channels==2)
-            {
-                const int64_t phasediff = round(periods * SampleRate *
-                                                (0.5-tone.stereo) / 500);
-                const int64_t leftphase  = rand();
-                const int64_t rightphase = leftphase + phasediff;
-                for (int64_t i=0; i<SampleLength; ++i)
-                {
-                    buffer[2*i] += volume * leftvol *
-                        mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
-                    buffer[2*i+1] += volume * rightvol *
-                        mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
-                }
-            }
-        }
-    }
+//        if (f>24 and f<10000 and volume>0.001)
+//        {
+//            const int64_t periods = round((SampleLength * f) / SampleRate);
+//            if (channels==1)
+//            {
+//                const int64_t phase = rand();
+//                for (int64_t i=0; i<SampleLength; ++i)
+//                    buffer[i] += volume *
+//                        mSineWave[((i*periods*SineLength)/SampleLength+phase)%SineLength];
+//            }
+//            else if (channels==2)
+//            {
+//                const int64_t phasediff = round(periods * SampleRate *
+//                                                (0.5-tone.stereo) / 500);
+//                const int64_t leftphase  = rand();
+//                const int64_t rightphase = leftphase + phasediff;
+//                for (int64_t i=0; i<SampleLength; ++i)
+//                {
+//                    buffer[2*i] += volume * leftvol *
+//                        mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
+//                    buffer[2*i+1] += volume * rightvol *
+//                        mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
+//                }
+//            }
+//        }
+//    }
 
-    mWaveForms[id] = buffer;
-    LogI ("Created waveform %d", id);
+//    mWaveForms[id] = buffer;
+//    LogI ("Created waveform %d", id);
 
-//    if (id !=0) return;
-//    std::ofstream os("0000-waveform.dat");
-//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
-//    os << "&" << std::endl;
-//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
-//    os.close();
+////    if (id !=0) return;
+////    std::ofstream os("0000-waveform.dat");
+////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
+////    os << "&" << std::endl;
+////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
+////    os.close();
 
-}
+//}
 
 

@@ -36,6 +36,33 @@
 #include "audioplayeradapter.h"
 #include "../system/simplethreadhandler.h"
 
+class Sound : public SimpleThreadHandler
+{
+public:
+    using Spectrum = std::map<double,double>;
+    using WaveForm = std::vector<double>;
+
+    Sound ();
+    ~Sound() {};
+    void set (int channels, int samplerate, const WaveForm &sinewave,
+              const Spectrum &spectrum, const double stereo, const double time);
+
+
+private:
+    int mChannels;              // number of channels (1,2)
+    int mSampleRate;            // sample rate
+    WaveForm mSineWave;        // Sine wave pcm data
+    Spectrum mSpectrum;         // the spectrum of the sound
+    double mStereo;             // its stereo location (0..1)
+    double mTime;               // the required sampling time
+    WaveForm mWaveForm;         // Computed wave form
+    std::atomic<bool> mReady;    // flag that the wave form is ready
+
+    void workerFunction () override final;
+
+
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a simple synthesizer based on Fourier modes.
 ///
@@ -83,12 +110,6 @@ public:
     void release (int id);
 
 private:
-    struct Sound
-    {
-        Spectrum spectrum;      // the spectrum of the sound
-        double stereo;          // its stereo location (0..1)
-        double time;            // the required sampling time
-    };
 
     std::map<int,Sound> mRegistrationQueue;
     std::mutex mRegistrationQueueMutex;
