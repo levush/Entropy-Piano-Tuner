@@ -86,7 +86,7 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
 
     auto parsedTime = std::chrono::high_resolution_clock::now();
 
-    LogI("Succesfully loaded Xml-File: %s. This took %d ms", absolutePath.c_str(), std::chrono::duration_cast<std::chrono::milliseconds>(parsedTime - startTime).count());
+    LogI("Succesfully loaded Xml-File: %s. This took %li ms", absolutePath.c_str(), std::chrono::duration_cast<std::chrono::milliseconds>(parsedTime - startTime).count());
 
     tinyxml2::XMLElement *root = doc.FirstChildElement();
     if (!root) {
@@ -123,7 +123,7 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
     int64_t contentTime = std::chrono::duration_cast<std::chrono::milliseconds>(contentParseTime - parsedTime).count();
     int64_t totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(contentParseTime - startTime).count();
 
-    LogI("Content parsed in %lli ms. Complete file opening took %lli ms.", contentTime, totalTime);
+    LogI("Content parsed in %li ms. Complete file opening took %li ms.", contentTime, totalTime);
 
 }
 
