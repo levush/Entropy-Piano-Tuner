@@ -60,6 +60,9 @@ ios {
     # app icons
     ios_icon.files = $$files($$PWD/appstore/icons/ios/AppIcon*.png)
     QMAKE_BUNDLE_DATA += ios_icon
+
+    # Set "Devices" (1=iPhone, 2=iPad, 1,2=Universal)
+    QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
 }
 
 win32 {
