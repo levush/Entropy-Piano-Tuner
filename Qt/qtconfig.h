@@ -47,7 +47,7 @@
 #endif
 
 // update check
-#if defined Q_OS_DESKTOP && !defined Q_OS_MACX
+#if defined Q_OS_DESKTOP
 #   define CONFIG_ENABLE_UPDATE_TOOL     1
 #endif
 

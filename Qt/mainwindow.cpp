@@ -724,6 +724,15 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
     mb.setInformativeText(tr("The online app version is %1. Do you want to install this update?").arg(information.mAppVersion));
     mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     if (mb.exec() == QMessageBox::Yes) {
+#ifdef Q_OS_MACX
+        // download new dmg file
+        if (!QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org/Resources/Public/Downloads/EntropyPianoTuner_MacOsX.dmg"))) {
+            LogW("Online installer file for mac could not be found.");
+            QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org"));
+        } else {
+            this->close();
+        }
+#else
         // run maintenace tool in updater mode
         if (QProcess::startDetached("maintenancetool", QStringList() << "--updater") == false) {
             LogW("Maintenace tool could not be started.");
@@ -732,5 +741,6 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
             // close the program for the installer
             this->close();
         }
+#endif
     }
 }
