@@ -24,8 +24,6 @@
 #include "audioforqt/audiorecorderforqt.h"
 #include "audioforqt/audioplayerforqt.h"
 #include "mainwindow.h"
-#include "../core/audio/implementation/pulseaudiorecorder.h"
-#include "../core/audio/implementation/pulseaudioplayer.h"
 #include "initializedialog.h"
 
 ///////////////////////////////////////////////////////////////////////////////

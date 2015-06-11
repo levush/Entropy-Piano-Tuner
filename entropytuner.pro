@@ -60,6 +60,9 @@ ios {
     # app icons
     ios_icon.files = $$files($$PWD/appstore/icons/ios/AppIcon*.png)
     QMAKE_BUNDLE_DATA += ios_icon
+
+    # Set "Devices" (1=iPhone, 2=iPad, 1,2=Universal)
+    QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
 }
 
 win32 {
@@ -322,16 +325,12 @@ CORE_AUDIO_HEADERS = \
     core/audio/audiorecorderadapter.h \
     core/audio/audioplayeradapter.h \
     core/audio/synthesizer.h \
-    core/audio/implementation/pulseaudioplayer.h \
-    core/audio/implementation/pulseaudiorecorder.h \
     core/audio/circularbuffer.h \
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
     core/audio/audiobase.cpp \
     core/audio/audioplayeradapter.cpp \
-    core/audio/implementation/pulseaudiorecorder.cpp \
-    core/audio/implementation/pulseaudioplayer.cpp \
     core/audio/synthesizer.cpp \
 
 #----------------- Midi ------------------
