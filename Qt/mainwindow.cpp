@@ -724,8 +724,8 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
     mb.setInformativeText(tr("The online app version is %1. Do you want to install this update?").arg(information.mAppVersion));
     mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     if (mb.exec() == QMessageBox::Yes) {
-        // run maintenace tool
-        if (QProcess::startDetached("maintenancetool") == false) {
+        // run maintenace tool in updater mode
+        if (QProcess::startDetached("maintenancetool", QStringList() << "--updater") == false) {
             LogW("Maintenace tool could not be started.");
             QMessageBox::warning(this, tr("Warnung"), tr("The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool automatically."));
         } else {

@@ -21,7 +21,7 @@ cd ..
 
 set tunerdir=%CD%
 set publishdir=%tunerdir%\.publishWindows%postfix%
-set setupname=EntropyPianoTuner_Online_%postfix%.exe
+set setupname=EntropyPianoTuner_Windows_online_%postfix%.exe
 
 :: update translations (lupdate on all ts files)
 forfiles /p %tunerdir%\translations /m *.ts /c "cmd /c lrelease @file"
