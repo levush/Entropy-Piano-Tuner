@@ -37,6 +37,10 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     titleLayout->addWidget(new QLabel(QString("<h1>%1 %2</h1>").arg(tr("Entropy Piano Tuner"), EPT_VERSION_STRING)));
     titleLayout->addStretch();
 
+    QLabel *webpage = new QLabel("<a href=\"http://www.entropy-tuner.org\">www.entropy-tuner.org</a> - <a href=\"mailto:info@entropy-tuner.org\">Feedback</a>");
+    QObject::connect(webpage, SIGNAL(linkActivated(QString)), this, SLOT(onOpenAboutLink(QString)));
+    mainLayout->addWidget(webpage);
+
     QString iconPath = ":/media/images/icon_256x256" + iconPostfix + ".png";
     QTextBrowser *text = new QTextBrowser;
     text->setStyleSheet("background-color: transparent;");
@@ -107,3 +111,8 @@ void AboutDialog::onOpenAboutUrl(QUrl url) {
         QDesktopServices::openUrl(url);
     }
 }
+
+void AboutDialog::onOpenAboutLink(QString link) {
+    QDesktopServices::openUrl(QUrl::fromUserInput(link));
+}
+

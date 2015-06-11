@@ -22,6 +22,8 @@ private slots:
     ///////////////////////////////////////////////////////////////////////////////
     void onOpenAboutUrl(QUrl url);
 
+    void onOpenAboutLink(QString link);
+
 };
 
 #endif // ABOUTDIALOG_H
