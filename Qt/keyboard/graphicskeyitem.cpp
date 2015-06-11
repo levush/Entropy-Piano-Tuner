@@ -21,7 +21,7 @@ void GraphicsKeyItem::initShapes(qreal b_w, qreal b_h, qreal w_w, qreal w_h) {
     const std::array<qreal, KC_COUNT> radius {{b_w * KEY_RADIUS_FACTOR[0], w_w * KEY_RADIUS_FACTOR[1]}};
     std::array<QRectF, KC_COUNT> rWithMargin = mKeyRects;
 
-    for (size_t i = 0; i < KC_COUNT; ++i) {
+    for (int i = 0; i < KC_COUNT; ++i) {
         const auto &m = MARGINS[i];
         rWithMargin[i].adjust(m[0], m[1], m[2], m[3]);
 

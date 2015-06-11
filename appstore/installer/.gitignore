@@ -6,7 +6,11 @@ packages/*/data/*
 
 # platform dependent config files
 windows_config*
+linux_config*
 
 # Ignore the runnable file
 EntropyPianoTuner_Setup.exe
 EntropyPianoTuner_Setup.run
+
+# Ignore the version file
+version.xml

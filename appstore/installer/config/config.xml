@@ -8,15 +8,15 @@
     <InstallerWindowIcon>icon_256x256</InstallerWindowIcon>
     <InstallerApplicationIcon>icons/entropytuner</InstallerApplicationIcon>
     <Logo>icon_512x512</Logo>
-	<AllowSpaceInPath>true</AllowSpaceInPath>
+    <AllowSpaceInPath>true</AllowSpaceInPath>
     <RunProgram>@TargetDir@/EntropyTuner</RunProgram>
     <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
     <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
-	<RemoteRepositories>
-		<Repository>
-             <Url>http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/Repository/dummy_repository</Url>
-             <Enabled>1</Enabled>
-			 <DisplayName>Base repository</DisplayName>
-		</Repository>
-	</RemoteRepositories>
+    <RemoteRepositories>
+        <Repository>
+            <Url>http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/Repository/dummy_repository</Url>
+            <Enabled>1</Enabled>
+            <DisplayName>Base repository</DisplayName>
+        </Repository>
+    </RemoteRepositories>
 </Installer>
