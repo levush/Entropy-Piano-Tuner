@@ -4,19 +4,11 @@
 #include <QDialog>
 #include <QUrl>
 #include <QHBoxLayout>
-#include "qtconfig.h"
-
-#if CONFIG_ENABLE_UPDATE_TOOL
-#include <QNetworkReply>
-#endif
 
 class AboutDialog : public QDialog {
     Q_OBJECT
 public:
     AboutDialog(QWidget *parent, QString iconPostfix);
-
-private:
-    void addUpdateAvailableButton();
 
 private:
     QHBoxLayout *mTitleBarLayout;
@@ -30,10 +22,6 @@ private slots:
     ///////////////////////////////////////////////////////////////////////////////
     void onOpenAboutUrl(QUrl url);
 
-    void onUpdate();
-#if CONFIG_ENABLE_UPDATE_TOOL
-    void onNetworkReply(QNetworkReply *reply);
-#endif
 };
 
 #endif // ABOUTDIALOG_H

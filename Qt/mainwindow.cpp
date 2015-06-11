@@ -282,6 +282,10 @@ void MainWindow::start() {
     mCore->getProjectManager()->init(mCore);
 
     updateWindowTitle();
+
+    // check for updates
+    VersionCheck *versionChecker = new VersionCheck(this);
+    QObject::connect(versionChecker, SIGNAL(updateAvailable(VersionInformation)), this, SLOT(onVersionUpdate(VersionInformation)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -711,5 +715,22 @@ void MainWindow::onToggleFullscreen() {
         showNormal();
     } else {
         showFullScreen();
+    }
+}
+
+void MainWindow::onVersionUpdate(VersionInformation information) {
+    QMessageBox mb;
+    mb.setText(tr("A new update is available!"));
+    mb.setInformativeText(tr("The online app version is %1. Do you want to install this update?").arg(information.mAppVersion));
+    mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    if (mb.exec() == QMessageBox::Yes) {
+        // run maintenace tool
+        if (QProcess::startDetached("maintenancetool") == false) {
+            LogW("Maintenace tool could not be started.");
+            QMessageBox::warning(this, tr("Warnung"), tr("The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool automatically."));
+        } else {
+            // close the program for the installer
+            this->close();
+        }
     }
 }

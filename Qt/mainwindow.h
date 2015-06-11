@@ -31,6 +31,7 @@
 #include "../core/adapters/modeselectoradapter.h"
 #include "projectmanagerforqt.h"
 #include "calculationprogressgroup.h"
+#include "versioncheck.h"
 
 namespace Ui {
 class MainWindow;
@@ -300,6 +301,10 @@ public slots:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void onToggleFullscreen();
+
+
+private slots:
+    void onVersionUpdate(VersionInformation information);
 };
 
 #endif // MAINWINDOW_H

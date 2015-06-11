@@ -15,6 +15,7 @@
 #include "core/system/eptexception.h"
 #include "core/system/version.h"
 #include "core/system/log.h"
+#include "qtconfig.h"
 
 
 AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
@@ -97,24 +98,6 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
 
     SHOW_DIALOG(this);
 
-
-#if CONFIG_ENABLE_UPDATE_TOOL
-    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
-    QUrl versionFileUrl("http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/version.info");
-
-    QObject::connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
-    nam->get(QNetworkRequest(versionFileUrl));
-#endif
-}
-
-void AboutDialog::addUpdateAvailableButton() {
-    QPushButton *updateButton = new QPushButton;
-    updateButton->setToolTip(tr("Update available"));
-    updateButton->setIcon(QIcon(":/media/icons/update-information.png"));
-    updateButton->setFlat(true);
-    mTitleBarLayout->addWidget(updateButton);
-
-    QObject::connect(updateButton, SIGNAL(clicked(bool)), this, SLOT(onUpdate()));
 }
 
 void AboutDialog::onOpenAboutUrl(QUrl url) {
@@ -124,57 +107,3 @@ void AboutDialog::onOpenAboutUrl(QUrl url) {
         QDesktopServices::openUrl(url);
     }
 }
-
-void AboutDialog::onUpdate() {
-    // run maintenace tool
-    if (QProcess::startDetached("maintenancetool") == false) {
-        LogW("Maintenace tool could not be started.");
-    }
-
-    // let the user press the button just once
-    QObject::disconnect(sender(), SIGNAL(clicked(bool)), this, SLOT(onUpdate()));
-}
-
-#if CONFIG_ENABLE_UPDATE_TOOL
-
-void AboutDialog::onNetworkReply(QNetworkReply *reply) {
-    if (reply->error() == QNetworkReply::NoError) {
-        int httpstatuscode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
-        switch(httpstatuscode) {
-        case 200:  // status code ok
-            if (reply->isReadable()) {
-                QString replyString = QString::fromUtf8(reply->readAll().data());
-                // first line contains the app version code
-                // second line contains the dependencies version code
-                QStringList splitted = replyString.split(QRegExp("\\s"), QString::SkipEmptyParts);
-                if (splitted.size() != 2) {
-                    // we dont expect this atm. Therefore there must be an update!
-                    LogD("Online version file has non expected format. Requesting update.");
-                    addUpdateAvailableButton();
-                    return;
-                } else {
-                    int appVersion = splitted[0].mid(splitted[0].indexOf("=") + 1).toInt();
-                    int depsVersion = splitted[1].mid(splitted[1].indexOf("=") + 1).toInt();
-                    LogD("Online version is: Apps %i, Dependencies %i.", appVersion, depsVersion);
-                    if (appVersion > EPT_VERSION_ROLLING || depsVersion > EPT_DEPS_VERSION_ROLLING) {
-                        LogD("Update available");
-                        // updates available
-                        addUpdateAvailableButton();
-                    }
-                }
-            } else {
-                LogE("File not readable");
-            }
-        break;
-        default:
-            LogD("Invalid network status. Code (%i)", httpstatuscode);
-            break;
-        }
-    } else {
-        LogD("No network reply: %s.", reply->errorString().toStdString().c_str());
-    }
-
-    reply->deleteLater();
-}
-
-#endif  // CONFIG_ENABLE_UPDATE_TOOL

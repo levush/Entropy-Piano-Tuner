@@ -17,6 +17,7 @@ reVersionString="EPT_VERSION_STRING[[:space:]]+\"([0-9\.]+)\""
 reVersionRolling="EPT_VERSION_ROLLING[[:space:]]+([0-9]+)"
 
 reDepsVersionString="EPT_DEPS_VERSION_STRING[[:space:]]+\"([0-9\.]+)\""
+reDepsVersionRolling="EPT_DEPS_VERSION_ROLLING[[:space:]]+([0-9]+)"
 
 
 if [[ $versioncontents =~ $reVersionString ]]; then
@@ -33,6 +34,11 @@ fi
 if [[ $versioncontents =~ $reDepsVersionString ]]; then
 	export depsVersionString=${BASH_REMATCH[1]}
 	echo "Detected dependencies version: $depsVersionString"
+fi
+
+if [[ $versioncontents =~ $reDepsVersionRolling ]]; then
+	export depsVersionRolling=${BASH_REMATCH[1]}
+	echo "Detected dependencies rolling version: $depsVersionRolling"
 fi
 	
 # write it to AndroidManifest.xml
@@ -63,3 +69,10 @@ sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$depsVersionString<\/V
 echo Update date in the installer
 sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" ../appstore/installer/packages/org.entropytuner.app/meta/package.xml
 sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" ../appstore/installer/packages/org.entropytuner.deps/meta/package.xml
+
+echo Update the version.xml file
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<version>
+	<app rolling=\"$versionRolling\" string=\"$versionString\" />
+	<dependencies rolling=\"$depsVersionRolling\" string=\"$depsVersionString\" />
+</version>" > ../appstore/installer/version.xml
