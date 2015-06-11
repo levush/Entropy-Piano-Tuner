@@ -136,7 +136,8 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
         key->setRecorded(true);
 
         auto peaks = identifyPeaks(finalFFT, spectrum,f,B);
-        LogV("FFTAnalyzer: found %zu peaks.", peaks.size());
+        // %zu is c++ standard, but windows doenst support this... workaround use int
+        LogV("FFTAnalyzer: found %i peaks.", static_cast<int>(peaks.size()));
         key->setPeaks(peaks);
     } else {
         LogW("Frequence %f is out of bounds", f);

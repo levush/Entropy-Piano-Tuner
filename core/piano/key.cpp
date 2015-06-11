@@ -98,8 +98,7 @@ int Key::FrequencyToIndex (double f)
 
 double Key::IndexToFrequency (double m)
 {
-    EptAssert(m >= 0 && m < NumberOfBins,
-      "The key has to be in the range of the maximum number of slots");
+    // m may be negative aswell here
     return fmin * pow(2, m / BinsPerOctave);
 }
 
