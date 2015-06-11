@@ -39,12 +39,14 @@ Sound::Sound() :
     mStereo(0.5),
     mTime(0),
     mWaveForm(),
-    mReady(false)
+    mReady(false),
+    mHash(0)
 {}
 
 void Sound::set (const int channels, const int samplerate, const WaveForm &sinewave,
                  const Spectrum &spectrum, const double stereo, const double time)
 {
+    std::lock_guard<std::mutex> lock(mMutex);
     mChannels = channels;
     mSampleRate = samplerate;
     mSineWave = sinewave;
@@ -53,12 +55,22 @@ void Sound::set (const int channels, const int samplerate, const WaveForm &sinew
     mTime = time;
     mWaveForm.clear();
     mReady = false;
+    mHash = computeHash(spectrum);
     start();
 }
 
 
+Sound::WaveForm Sound::getWaveForm()
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+    return mWaveForm;
+}
+
+
+
 void Sound::workerFunction()
 {
+    std::lock_guard<std::mutex> lock(mMutex);
     auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
     const int64_t SampleLength = round(mSampleRate * mTime);
     const int64_t BufferSize = SampleLength * mChannels;
@@ -102,6 +114,7 @@ void Sound::workerFunction()
                 }
             }
         }
+        if (cancelThread()) return;
     }
     mReady = true;
     LogI ("Created waveform");
@@ -116,6 +129,27 @@ void Sound::workerFunction()
 
 }
 
+
+
+size_t Sound::computeHash (const Spectrum &spectrum)
+{
+    size_t hash = 0;
+    for (auto &f : spectrum) hash ^= std::hash<double>() (f.second);
+    return hash;
+}
+
+
+bool Sound::coincidesWith (const Spectrum &spectrum)
+{
+    return mHash == computeHash(spectrum);
+}
+
+
+//=============================================================================
+//                          CLASS SYNTHESIZER
+//=============================================================================
+
+
 //-----------------------------------------------------------------------------
 //	                             Constructor
 //-----------------------------------------------------------------------------
@@ -127,12 +161,10 @@ void Sound::workerFunction()
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
-    mSineWave(SineLength),
-    mChord(),
-    mChordMutex(),
+    mSineWave(),
+    mScheduler(),
     mAudioPlayer(audioadapter)
-{
-}
+{}
 
 
 //-----------------------------------------------------------------------------
@@ -185,26 +217,29 @@ void Synthesizer::exit ()
 void Synthesizer::workerFunction (void)
 {
     setThreadName("Synthesizer");
+    std::cout << "************** Synthi started *************" << std::endl;
+
     while (not cancelThread())
     {
-        mChordMutex.lock();
-        bool active = (mAudioPlayer and not mChord.empty());
-        mChordMutex.unlock();
+        mSchedulerMutex.lock();
+        bool active = (mAudioPlayer and mScheduler.size()>0);
+        mSchedulerMutex.unlock();
         if (active)
         {
-            // first remove all sounds with an amplitude below the cutoff:
-            mChordMutex.lock();
-            for (auto it = mChord.begin(); it != mChord.end(); )
-                if (it->second.stage>=2 and it->second.amplitude<CutoffVolume)
-                { mChord.erase(it++); }
+            //first remove all sounds with an amplitude below the cutoff:
+            mSchedulerMutex.lock();
+            for (auto it = mScheduler.begin(); it != mScheduler.end();)
+                if (it->stage>=2 and it->amplitude<CutoffVolume)
+                { it=mScheduler.erase(it);
+                    std::cout << "********* Deleted sound in schedule, size=" << mScheduler.size() << std::endl;
+                }
                 else ++it;
-            mChordMutex.unlock();
+            mSchedulerMutex.unlock();
 
-            generateWaveform();
+            generateAudioSignal();
         }
         else
         {
-            createWaveforms();
             msleep(10);
         }
     }
@@ -234,19 +269,23 @@ void Synthesizer::workerFunction (void)
 void Synthesizer::createSound (int id, double volume, double stereo,
         double attack, double decayrate, double sustain, double release)
 {
-    std::cout << "create sound *********************************** " << (id%2 ? "old" : "new") << std::endl;
-    mChordMutex.lock();
-    mChord[id].amplitude=0;
-    mChord[id].clock=0;
-    mChord[id].fouriermodes.clear();
-    mChord[id].stage=0;
-    mChord[id].volume=volume;
-    mChord[id].stereo=stereo;
-    mChord[id].attack=attack;
-    mChord[id].decayrate=decayrate;
-    mChord[id].sustain=sustain;
-    mChord[id].release=release;
-    mChordMutex.unlock();
+    std::cout << "create sound *********************************** " << std::endl;
+    Tone tone;
+    tone.id=id;
+    tone.amplitude=0;
+    tone.clock=0;
+    tone.stage=0;
+    tone.volume=volume;
+    tone.stereo=stereo;
+    tone.attack=attack;
+    tone.decayrate=decayrate;
+    tone.sustain=sustain;
+    tone.release=release;
+    tone.stage = 1;
+    tone.waveform = mSoundCollection[id].getWaveForm();
+    mSchedulerMutex.lock();
+    mScheduler.push_back(tone);
+    mSchedulerMutex.unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -264,90 +303,66 @@ void Synthesizer::createSound (int id, double volume, double stereo,
 /// \param snd : Reference of the sound to be converted.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::generateWaveform ()
+void Synthesizer::generateAudioSignal ()
 {
+    mSchedulerMutex.lock();
+    size_t N = mScheduler.size();
+    mSchedulerMutex.unlock();
+
     // If there is nothing to play return
-    if (mChord.size()==0) return;  /// ACHTUNG MUTEX *****************
+    if (N==0) return;
 
     int SampleRate = mAudioPlayer->getSamplingRate();
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
-
-    int64_t c = static_cast<int64_t>(100*SampleRate);
-    int64_t d = static_cast<int64_t>(SineLength);
 
     int writtenSamples = 0;
 
     while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
     {
         ++writtenSamples;
-        mChordMutex.lock();
         double left=0, right=0, mono=0;
-        for (auto &ch : mChord)
+        mSchedulerMutex.lock();
+        for (auto &ch : mScheduler)
         {
-            int id = ch.first;
-            Tone &snd = ch.second;         // get sound of the key
-            double y = snd.amplitude;       // get last amplitude
-            switch (snd.stage)          // Manage ADSR
+            int id = ch.id;
+            double y = ch.amplitude;       // get last amplitude
+            switch (ch.stage)          // Manage ADSR
             {
                 case 1: // ATTACK
-                        y += snd.attack*snd.volume/SampleRate;
-                        if (snd.decayrate>0)
+                        y += ch.attack*ch.volume/SampleRate;
+                        if (ch.decayrate>0)
                         {
-                            if (y >= snd.volume) snd.stage++;
+                            if (y >= ch.volume) ch.stage++;
                         }
                         else
                         {
-                            if (y >= snd.sustain*snd.volume) snd.stage+=2;
+                            if (y >= ch.sustain*ch.volume) ch.stage+=2;
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-snd.decayrate/SampleRate); // DECAY
-                        if (y <= snd.sustain*snd.volume) snd.stage++;
+                        y *= (1-ch.decayrate/SampleRate); // DECAY
+                        if (y <= ch.sustain*ch.volume) ch.stage++;
                         break;
                 case 3: // SUSTAIN
-                        y += (snd.sustain-y) * snd.release/SampleRate;
+                        y += (ch.sustain-y) * ch.release/SampleRate;
                         break;
                 case 4: // RELEASE
-                        y *= (1-snd.release/SampleRate);
+                        y *= (1-ch.release/SampleRate);
                         break;
             }
-            snd.amplitude = y;
-            snd.clock ++;
+            ch.amplitude = y;
+            ch.clock ++;
 
-            if (id%2 or id>=88 or id<0)
+            int size = ch.waveform.size();
+            if (size!=0)
             {
-                // compute stereo amplitude factors
-                double leftvol=sqrt(0.7-0.4*snd.stereo);
-                double rightvol=sqrt(0.3+0.4*snd.stereo);
-                int64_t phase = static_cast<int64_t>((snd.stereo-0.5)*SampleRate)/800;
-
-                // time-critical loop
-                for (auto &mode : snd.fouriermodes)
-                {
-                    int64_t a = static_cast<int64_t>(100.0*mode.first*d);
-                    int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
-                    int64_t p = b + a*phase;
-                    if (channels==1) mono += mode.second*y*mSineWave[(b/c)%d];
-                    else // if stereo
-                    {
-                        left  += mode.second*leftvol *y*mSineWave[(b/c)%d];
-                        right += mode.second*rightvol*y*mSineWave[(p/c)%d];
-                    }
-                }
-            }
-            else
-            {
-                int size = mWaveForms[id].size();
-                if (size!=0)
-                {
-                    left  = y*mWaveForms[id][(2*snd.clock)%size];
-                    right = y*mWaveForms[id][(2*snd.clock+1)%size];
-                }
+                left  += y*ch.waveform[(2*ch.clock)%size];
+                right += y*ch.waveform[(2*ch.clock+1)%size];
             }
         }
-        mChordMutex.unlock();
-        if (channels==1) mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(mono));
+        mSchedulerMutex.unlock();
+        if (channels==1) mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>((left+right)/2));
         else // if stereo
         {
             mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(left));
@@ -369,61 +384,13 @@ void Synthesizer::generateWaveform ()
 /// \param id : Identifier of the sound
 ///////////////////////////////////////////////////////////////////////////////
 
-Synthesizer::Tone* Synthesizer::getSoundPtr (int id)
+Synthesizer::Tone* Synthesizer::getSchedulerPointer (int id)
 {
-    auto snd = mChord.find(id);
-    if (snd!=mChord.end()) return &(snd->second);
-    else return nullptr;
-}
-
-
-//-----------------------------------------------------------------------------
-// 	                Add a Fourier component to a sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Add a Fourier component to a sound.
-///
-/// This function adds a Fourier component (sine wave) to an existing sound
-/// identified by an integer 'id'. The function is only carried out if the
-/// sound with the identifier 'id' has already been created (see Create Sound)
-/// or if the sound is still active, otherwise the function call is ignored.
-///
-/// \param id : identity tag of the sound (number of key).
-/// \param f : Frequency of the spectral line in Hz.
-/// \param amplitude : Amplitude of the spectral line.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::addFourierComponent (int id, double f, double amplitude)
-{
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->fouriermodes[f]=amplitude;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
-}
-
-
-
-//-----------------------------------------------------------------------------
-// 	                         Play a sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Play a sound.
-///
-/// This function marks the sound as ready for being played in the main loop.
-///
-/// \param id : identity tag of the sound (number of key).
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::playSound (int id)
-{
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->stage = 1;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
+    Tone *snd(nullptr);
+    mSchedulerMutex.lock();
+    for (auto &ch : mScheduler) if (ch.id==id) { snd=&ch; break; }
+    mSchedulerMutex.unlock();
+    return snd;
 }
 
 
@@ -435,17 +402,17 @@ void Synthesizer::playSound (int id)
 /// \brief Terminate a sound.
 ///
 /// This function forces the sound to fade out, entering the release phase.
-///
 /// \param id : identity tag of the sound (number of key).
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::releaseSound (int id)
 {
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->stage=4;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
+    Tone *snd(nullptr);
+    bool released=false;
+    mSchedulerMutex.lock();
+    for (auto &ch : mScheduler) if (ch.id==id) { ch.stage=4; released=true; }
+    mSchedulerMutex.unlock();
+    if (not released) LogW("Sound #%d does not exist.",id);
 }
 
 
@@ -462,10 +429,7 @@ void Synthesizer::releaseSound (int id)
 
 bool Synthesizer::isPlaying (int id)
 {
-    mChordMutex.lock();
-    bool isplaying = (mChord.find(id) != mChord.end());
-    mChordMutex.unlock();
-    return isplaying;
+    return (getSchedulerPointer(id) != nullptr);
 }
 
 
@@ -486,103 +450,33 @@ bool Synthesizer::isPlaying (int id)
 
 void Synthesizer::ModifySustainLevel (int id, double level)
 {
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
+    auto snd = getSchedulerPointer(id);
+    mSchedulerMutex.lock();
     if (snd) snd->sustain = level;
     else LogW ("id does not exist");
-    mChordMutex.unlock();
+    mSchedulerMutex.unlock();
 }
 
 
 
 ////-----------------------------------------------------------------------------
 
-void Synthesizer::registerSoundForCreation  (const int id,
-                                             const Spectrum &spectrum,
-                                             const double stereo,
-                                             const double time)
+void Synthesizer::addSound  (const int id, const Spectrum &spectrum,
+                             const double stereo, const double time)
 {
-    (mAudioPlayer->getChannelCount(),
-                                      mAudioPlayer->getSamplingRate(),
-                                      &mSineWave, spectrum, stereo, time);mRegistrationQueueMutex.lock();
-    mRegistrationQueueMutex.unlock();
-    mRegistrationQueue[id]=snd
-    mRegistrationQueueMutex.unlock();
-    LogI ("*************** register ******************");
-    std::cout << mRegistrationQueue.size() << std::endl;
+    Sound &sound = mSoundCollection[id];
+    if (sound.coincidesWith(spectrum))
+    {
+        std::cout << "*********** Not necessary to add sound " << id << std::endl;
+        return;
+    }
+    sound.stop();
+    sound.set(mAudioPlayer->getChannelCount(),
+              mAudioPlayer->getSamplingRate(),
+              mSineWave, spectrum, stereo,time);
+    std::cout << "*********** Added sound #  " << id << std::endl;
 }
 
 
-////-----------------------------------------------------------------------------
-
-
-//void Synthesizer::createWaveforms ()
-//{
-//    int64_t SampleRate = mAudioPlayer->getSamplingRate();
-//    int channels = mAudioPlayer->getChannelCount();
-//    if (channels<=0 or channels>2) return;
-
-//    mRegistrationQueueMutex.lock();
-//    if (mRegistrationQueue.size()==0) {  mRegistrationQueueMutex.unlock(); return; }
-//    const int id = mRegistrationQueue.begin()->first;
-//    const Sound tone = mRegistrationQueue.begin()->second;
-//    mRegistrationQueue.erase(mRegistrationQueue.begin()); // erase
-//    mRegistrationQueueMutex.unlock();
-
-//    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
-//    const int64_t SampleLength = round(SampleRate * tone.time);
-//    const int64_t BufferSize = SampleLength * channels;
-//    const double leftvol  = sqrt(0.7-0.4*tone.stereo);
-//    const double rightvol = sqrt(0.3+0.4*tone.stereo);
-//    WaveForm buffer (BufferSize,0);
-
-//    double sum=0;
-//    for (auto &mode : tone.spectrum) sum+=mode.second;
-//    if (sum<=0) return;
-
-
-//    for (auto &mode : tone.spectrum)
-//    {
-//        const double f = mode.first;
-//        const double volume = pow(mode.second / sum,0.4);
-
-//        if (f>24 and f<10000 and volume>0.001)
-//        {
-//            const int64_t periods = round((SampleLength * f) / SampleRate);
-//            if (channels==1)
-//            {
-//                const int64_t phase = rand();
-//                for (int64_t i=0; i<SampleLength; ++i)
-//                    buffer[i] += volume *
-//                        mSineWave[((i*periods*SineLength)/SampleLength+phase)%SineLength];
-//            }
-//            else if (channels==2)
-//            {
-//                const int64_t phasediff = round(periods * SampleRate *
-//                                                (0.5-tone.stereo) / 500);
-//                const int64_t leftphase  = rand();
-//                const int64_t rightphase = leftphase + phasediff;
-//                for (int64_t i=0; i<SampleLength; ++i)
-//                {
-//                    buffer[2*i] += volume * leftvol *
-//                        mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
-//                    buffer[2*i+1] += volume * rightvol *
-//                        mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
-//                }
-//            }
-//        }
-//    }
-
-//    mWaveForms[id] = buffer;
-//    LogI ("Created waveform %d", id);
-
-////    if (id !=0) return;
-////    std::ofstream os("0000-waveform.dat");
-////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
-////    os << "&" << std::endl;
-////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
-////    os.close();
-
-//}
 
 

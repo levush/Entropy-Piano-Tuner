@@ -46,6 +46,9 @@ public:
     ~Sound() {};
     void set (int channels, int samplerate, const WaveForm &sinewave,
               const Spectrum &spectrum, const double stereo, const double time);
+    bool coincidesWith (const Spectrum &spectrum);
+    bool isReady() { return mReady; };
+    WaveForm getWaveForm();
 
 
 private:
@@ -56,12 +59,16 @@ private:
     double mStereo;             // its stereo location (0..1)
     double mTime;               // the required sampling time
     WaveForm mWaveForm;         // Computed wave form
+    std::mutex mMutex;               // Access mutex
     std::atomic<bool> mReady;    // flag that the wave form is ready
+    std::atomic<size_t> mHash;  // Hash value for comparison
 
     void workerFunction () override final;
 
+    size_t computeHash (const Spectrum &spectrum);
 
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a simple synthesizer based on Fourier modes.
@@ -101,7 +108,7 @@ public:
     using Spectrum = std::map<double,double>;
 
 
-    void registerSoundForCreation (const int id,
+    void addSound (const int id,
                                    const Spectrum &spectrum,
                                    const double stereo,
                                    const double time=1);
@@ -111,14 +118,12 @@ public:
 
 private:
 
-    std::map<int,Sound> mRegistrationQueue;
-    std::mutex mRegistrationQueueMutex;
+    std::map<int,Sound> mSoundCollection;
+
 
     using WaveForm = std::vector<double>;
 
     void createWaveforms();
-
-    std::map<int,WaveForm> mWaveForms;
 
 
     /////////////////////////////////////////////////////////
@@ -138,12 +143,6 @@ public:
                       double sustain=0.0,   // ADSR sustain rate
                       double release=10);   // ADSR release rate
 
-    // Add a Fourier component
-    void addFourierComponent (int id, double f, double amplitude);
-
-    // Start playing
-    void playSound (int id);
-
     // Stop playing
     void releaseSound (int id);
 
@@ -161,6 +160,7 @@ private:
 
     struct Tone
     {
+        int id;                             ///< Identification tag
         int clock;                          ///< Running time in sample cycles.
         int clock_timeout;                  ///< Timeout when forced to release
         int stage;                          ///< Stage of envelope:  0=off
@@ -172,16 +172,16 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
-        std::map<float,float> fouriermodes; //********************** kommt weg **********************
+        WaveForm waveform;                     // Computed wave form
     };
 
-    std::map<int,Tone> mChord;             ///< Chord defined as a collection of tones.
-    std::mutex mChordMutex;                 ///< Mutex to protect access to the chord.
+    std::vector<Tone> mScheduler;             ///< Chord defined as a collection of tones.
+    std::mutex mSchedulerMutex;                 ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
-    Tone* getSoundPtr (int id);
+    Tone* getSchedulerPointer (int id);
     void workerFunction () override final;
-    void generateWaveform();
+    void generateAudioSignal();
 };
 
 #endif // SYNTHESIZER_H

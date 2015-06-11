@@ -160,10 +160,10 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
 
 void SoundGenerator::stopResonatingReferenceSound ()
 {
-    if (mSynthesizer.isPlaying(mNumberOfKeys+mResonatingKey))
-        mSynthesizer.releaseSound(mNumberOfKeys+mResonatingKey);
-    mResonatingKey = -1;
-    mResonatingVolume = 0;
+//    if (mSynthesizer.isPlaying(mNumberOfKeys+mResonatingKey))
+//        mSynthesizer.releaseSound(mNumberOfKeys+mResonatingKey);
+//    mResonatingKey = -1;
+//    mResonatingVolume = 0;
 }
 
 
@@ -436,9 +436,9 @@ double SoundGenerator::getStereo (int keynumber)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-    mSynthesizer.createSound(keynumber,0.8,getStereo(keynumber),40,5,0.7,10);
-    mSynthesizer.addFourierComponent(keynumber,frequency,volume);
-    mSynthesizer.playSound(keynumber);
+//    mSynthesizer.createSound(keynumber,0.8,getStereo(keynumber),40,5,0.7,10);
+//    mSynthesizer.addFourierComponent(keynumber,frequency,volume);
+//    mSynthesizer.playSound(keynumber);
 }
 
 
@@ -467,9 +467,9 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
     //double f = it->first/2*factor; // half frequency
     double f = it->first*factor;
     int id = mNumberOfKeys + keynumber;
-    mSynthesizer.createSound(id,1,0.5,30,5,1,30);
-    mSynthesizer.addFourierComponent(id,f,0.5);
-    mSynthesizer.playSound(id);
+//    mSynthesizer.createSound(id,1,0.5,30,5,1,30);
+//    mSynthesizer.addFourierComponent(id,f,0.5);
+//    mSynthesizer.playSound(id);
 }
 
 
@@ -506,14 +506,14 @@ void SoundGenerator::playOriginalSoundOfKey (const Key &key, int id,
         for (auto &peak : key.getPeaks()) sum+=peak.second;
         if (sum<=0) return;
         mSynthesizer.createSound(id,volume, getStereo(id), attack, decay, sustain, release);
-        for (auto &peak : key.getPeaks())
-        {
-            double f = frequency / key.getRecordedFrequency() * peak.first;
-            double vol = pow(peak.second/sum,0.5);
-            if (f>24 and f<10000 and vol>0.01)
-                mSynthesizer.addFourierComponent(id,f,vol);
-        }
-        mSynthesizer.playSound(id);
+//        for (auto &peak : key.getPeaks())
+//        {
+//            double f = frequency / key.getRecordedFrequency() * peak.first;
+//            double vol = pow(peak.second/sum,0.5);
+//            if (f>24 and f<10000 and vol>0.01)
+//                mSynthesizer.addFourierComponent(id,f,vol);
+//        }
+//        mSynthesizer.playSound(id);
     }
 }
 
@@ -525,6 +525,6 @@ void SoundGenerator::updateAllWaveforms()
 {
     auto getRuntime = [] (double i) { return 5.0 * pow(2.0,-i/12); };
     for (int i=0; i<mNumberOfKeys; i++)
-        mSynthesizer.registerSoundForCreation(i,mPiano->getKey(i).getPeaks(),
+        mSynthesizer.addSound(i,mPiano->getKey(i).getPeaks(),
                                               getStereo(i), getRuntime(i));
 }
