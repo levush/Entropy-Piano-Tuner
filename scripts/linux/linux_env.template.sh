@@ -5,8 +5,6 @@
 # This file is a template for an user file that will be
 # used by the actual script.
 #
-# NOTE: DO NOT CHANGE THIS FILE
-#
 # Copy this file to linux_env.user.sh and adjust the path
 # settings (QTIFWDIR and QTDIR)
 ###########################################################
@@ -22,7 +20,7 @@ export QTIFWDIR=
 export QTDIR=
 
 # arguments for the make command (e.g. -j4)
-export MAKE_ARGS=-j4
+export MAKE_ARGS=
 
 
 # minor important settings
@@ -73,10 +71,18 @@ fi
 
 # set working directory to the tuner root
 cd ${0%/*}
-cd ..
+cd ../..
 
 # useful directories
 export TUNER_BASE_DIR=${PWD}
+
+if [ ! -d "$TUNER_BASE_DIR" ]; then
+    echo "Tuner base dir coult not be located at $TUNER_BASE_DIR."
+    exit -1
+fi
+
+export UNIX_SHARED=${TUNER_BASE_DIR}/scripts/unix_shared
+export SCRIPT_DIR=${TUNER_BASE_DIR}/scripts/linux
 export PUBLISH_DIR=${TUNER_BASE_DIR}/${PUBLISH_SUB_DIR}
 export BUILD_DIR=${TUNER_BASE_DIR}/${BUILD_SUB_DIR}
 export RUN_FILE=${PUBLISH_DIR}/${RUN_FILE_NAME}.run
