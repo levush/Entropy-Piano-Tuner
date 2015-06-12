@@ -1,5 +1,14 @@
 # run this file in cygwin with installed packages: rsync,openssh
 
+# add ssh-key
+eval `ssh-agent -s`
+for sshkey in ~/.ssh/*id_rsa
+do
+	echo Adding ssh-key: $sshkey
+	ssh-add $sshkey
+done
+
+# normal upload script
 USERNAME=hinrichsen
 SERVER=webpages.physik.uni-wuerzburg.de
 ROOT_DIR=public_html/ept
