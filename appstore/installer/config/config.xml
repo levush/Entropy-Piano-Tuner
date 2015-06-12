@@ -5,9 +5,9 @@
     <Title>Entropy Piano Tuner Installer</Title>
     <Publisher>TP III Universität Würzburg</Publisher>
     <ProductUrl>http://www.entropy-tuner.org</ProductUrl>
-    <InstallerWindowIcon>icon_256x256</InstallerWindowIcon>
-    <InstallerApplicationIcon>icons/entropytuner</InstallerApplicationIcon>
-    <Logo>icon_512x512</Logo>
+    <InstallerWindowIcon>windowicon</InstallerWindowIcon>
+    <InstallerApplicationIcon>appicon</InstallerApplicationIcon>
+    <Logo>logo.png</Logo>
     <AllowSpaceInPath>true</AllowSpaceInPath>
     <RunProgram>@TargetDir@/EntropyTuner</RunProgram>
     <StartMenuDir>Entropy Piano Tuner</StartMenuDir>

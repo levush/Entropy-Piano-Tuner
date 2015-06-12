@@ -1,3 +1,7 @@
+# automatic fail on errors
+set -e
+
+# server config
 USERNAME=hinrichsen
 SERVER=webpages.physik.uni-wuerzburg.de
 ROOT_DIR=public_html/ept
@@ -5,16 +9,9 @@ DOWNLOADS_DIR=Resources/Public/Downloads
 
 SERVER_DOWNLOADS=$SERVER:$ROOT_DIR/$DOWNLOADS_DIR
 
-# set working directory to the tuner root
+# load the user environment
 cd ${0%/*}
-cd ..
-
-# tuner base dir
-TUNER_BASE_DIR=${PWD}
-
-PUBLISH_DIR=$TUNER_BASE_DIR/publish
-INSTALLER_DIR=$TUNER_BASE_DIR/appstore/installer
-
+. ./linux_env.user.sh
 
 # upload fles
 

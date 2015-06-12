@@ -2,12 +2,15 @@
 echo "Creating Qt windows icon"
 convert icon_no_bg_1024x1024.png -resize 256x256 ../../media/images/icon_256x256.png
 convert icon_no_bg_1024x1024.png -resize 512x512 ../../media/images/icon_256x256@2x.png
-convert icon_no_bg_1024x1024.png -resize 128x128 ../../media/images/mode_idle.png
 convert icon_1024x1024.png -resize 512x512 icon_512x512.png
 convert icon_1024x1024.png -resize 256x256 icon_256x256.png
 convert icon_1024x1024.png -resize 128x128 icon_128x128.png
 
 convert icon_no_bg_1024x1024.png -resize 256x256 icon_no_bg_256x256.png
+
+
+convert icon_no_bg_1024x1024.png -resize 256x256 ../installer/config/windowicon.png
+convert icon_no_bg_1024x1024.png -resize 64x64 ../installer/config/logo.png
 
 # IOS AppIcons
 # see http://doc.qt.io/qt-5/platform-notes-ios.html#icons
@@ -49,6 +52,7 @@ convert icon_no_bg_1024x1024.png -resize 512x512 entropytuner.iconset/icon_256x2
 convert icon_no_bg_1024x1024.png -resize 512x512 entropytuner.iconset/icon_512x512.png
 convert icon_no_bg_1024x1024.png -resize 1024x1024 entropytuner.iconset/icon_512x512@2.png
 iconutil -c icns entropytuner.iconset
+cp entropytuner.ics ../installer/config/appicon.icns
 rm -rf entropytuner.iconset
 
 
@@ -68,6 +72,7 @@ convert icon_1024x1024.png -resize 40x40 ../../android/res/drawable-ldpi/icon.pn
 # icons will we written into one .ico file
 echo "Creating Windows icons"
 convert icon_no_bg_1024x1024.png -depth 32 -define icon:auto-resize=256,128,64,48,32,16 entropytuner.ico
+cp entropytuner.ico ../installer/config/appicon.ico
 
 # windows rt icons
 echo "Creating Windows RT icons"

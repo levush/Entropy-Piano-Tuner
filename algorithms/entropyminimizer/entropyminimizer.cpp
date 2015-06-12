@@ -625,9 +625,9 @@ void EntropyMinimizer::minimizeEntropy ()
     // accuracy (duration) of algorithm
     int stepsToFinish = 100;
     std::string accuracy = mFactoryDescription.getStringParameter("accuracy");
-    if (accuracy == "low") {stepsToFinish = 10;}
-    else if (accuracy == "standard") {stepsToFinish = 60;}
-    else if (accuracy == "high") {stepsToFinish = 120;}
+    if (accuracy == "low") {stepsToFinish = 50;}
+    else if (accuracy == "standard") {stepsToFinish = 100;}
+    else if (accuracy == "high") {stepsToFinish = 150;}
     else if (accuracy == "infinite") {stepsToFinish = -1;}
     else {LogE("Accuracy %s is not supported, using standard.", accuracy.c_str());}
 
