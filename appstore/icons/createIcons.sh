@@ -10,7 +10,7 @@ convert icon_no_bg_1024x1024.png -resize 256x256 icon_no_bg_256x256.png
 
 
 convert icon_no_bg_1024x1024.png -resize 256x256 ../installer/config/windowicon.png
-convert icon_no_bg_1024x1024.png -resize 256x256 ../installer/config/logo.png
+convert icon_no_bg_1024x1024.png -resize 64x64 ../installer/config/logo.png
 
 # IOS AppIcons
 # see http://doc.qt.io/qt-5/platform-notes-ios.html#icons
