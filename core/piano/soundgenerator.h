@@ -43,11 +43,11 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioadapter);
     ~SoundGenerator(){}
 
-    void init ();
-    void exit ();
+    void init () {mSynthesizer.init();}
+    void exit () {mSynthesizer.exit();}
 
-    void start();
-    void stop();
+    void start() {mSynthesizer.start();}
+    void stop()  {mSynthesizer.stop();}
 
 private:
     void handleMessage(MessagePtr m) override final;
@@ -59,8 +59,7 @@ private:
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const Key &key, int id,
-                                 double frequency, double volume,
+    void playOriginalSoundOfKey (int id, double volume,
                                  double attack=30, double decay=0.5,
                                  double sustain=0, double release=30);
 

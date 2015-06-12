@@ -34,40 +34,8 @@
 #include <chrono>
 
 #include "audioplayeradapter.h"
+#include "complexsound.h"
 #include "../system/simplethreadhandler.h"
-
-class Sound : public SimpleThreadHandler
-{
-public:
-    using Spectrum = std::map<double,double>;
-    using WaveForm = std::vector<double>;
-
-    Sound ();
-    ~Sound() {};
-    void set (int channels, int samplerate, const WaveForm &sinewave,
-              const Spectrum &spectrum, const double stereo, const double time);
-    bool coincidesWith (const Spectrum &spectrum);
-    bool isReady() { return mReady; };
-    WaveForm getWaveForm();
-
-
-private:
-    int mChannels;              // number of channels (1,2)
-    int mSampleRate;            // sample rate
-    WaveForm mSineWave;        // Sine wave pcm data
-    Spectrum mSpectrum;         // the spectrum of the sound
-    double mStereo;             // its stereo location (0..1)
-    double mTime;               // the required sampling time
-    WaveForm mWaveForm;         // Computed wave form
-    std::mutex mMutex;               // Access mutex
-    std::atomic<bool> mReady;    // flag that the wave form is ready
-    std::atomic<size_t> mHash;  // Hash value for comparison
-
-    void workerFunction () override final;
-
-    size_t computeHash (const Spectrum &spectrum);
-
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -93,35 +61,29 @@ private:
 class Synthesizer : public SimpleThreadHandler
 {
 public:
-    struct Envelope
-    {
-        double volume=1;        // overall volume
-        double stereo=0.5;      // stereo position (0..1)
-        bool hammer=false;      // hammer noise
-        double attack=10;       // ADSR attack rate
-        double decayrate=0.5;   // ADSR decay rate
-        double sustain=0.0;     // ADSR sustain rate
-        double release=10;      // ADSR release rate
-    };
 
 
     using Spectrum = std::map<double,double>;
 
 
-    void addSound (const int id,
-                                   const Spectrum &spectrum,
-                                   const double stereo,
-                                   const double time=1);
-    void play (int id, double frequency, Envelope &env);
-    void play (int id, Spectrum &spectrum, Envelope &env);
+    void registerSound (const int id,
+                        const Spectrum &spectrum,
+                        const double stereo,
+                        const double time=1);
+    void play (int id,               // Id of the sound
+               double f, //Sine frequ
+                      double volume=1,      // overall volume
+                      double stereo=0.5,    // stereo position (0..1)
+                      double attack=10,     // ADSR attack rate
+                      double decayrate=0.5, // ADSR decay rate
+                      double sustain=0.0,   // ADSR sustain rate
+                      double release=10);   // ADSR release rate
     void release (int id);
 
 private:
 
-    std::map<int,Sound> mSoundCollection;
-
-
     using WaveForm = std::vector<double>;
+    std::map<int,ComplexSound> mSoundCollection;
 
     void createWaveforms();
 
@@ -135,13 +97,6 @@ public:
     void exit ();
 
     // Create a new sound (note)
-    void createSound (int id,               // Id of the sound
-                      double volume=1,      // overall volume
-                      double stereo=0.5,    // stereo position (0..1)
-                      double attack=10,     // ADSR attack rate
-                      double decayrate=0.5, // ADSR decay rate
-                      double sustain=0.0,   // ADSR sustain rate
-                      double release=10);   // ADSR release rate
 
     // Stop playing
     void releaseSound (int id);
@@ -153,7 +108,7 @@ public:
     void ModifySustainLevel (int id, double level);
 
 private:    
-    const int SineLength = 16384;           ///< sine value buffer length.
+    const int_fast64_t  SineLength = 16384;           ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
     AudioBase::PacketType mSineWave;        ///< Sine wave vector.
@@ -161,8 +116,8 @@ private:
     struct Tone
     {
         int id;                             ///< Identification tag
-        int clock;                          ///< Running time in sample cycles.
-        int clock_timeout;                  ///< Timeout when forced to release
+        int_fast64_t  clock;                          ///< Running time in sample cycles.
+        int_fast64_t  clock_timeout;                  ///< Timeout when forced to release
         int stage;                          ///< Stage of envelope:  0=off
                                             ///< 1=attack 2=decay 3=sustain 4=release.
         double amplitude;                   ///< Actual time-dependent amplitude.
@@ -172,11 +127,8 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
-<<<<<<< HEAD
-        WaveForm waveform;                     // Computed wave form
-=======
-        std::map<double,double> fouriermodes;
->>>>>>> c258867d1bcd0aed79cfe9c38192eeaef3bcc940
+        int_fast64_t frequency;             ///< converted sine frequency, 0 for waveform
+        WaveForm waveform;                     // Computed wave form stored here
     };
 
     std::vector<Tone> mScheduler;             ///< Chord defined as a collection of tones.

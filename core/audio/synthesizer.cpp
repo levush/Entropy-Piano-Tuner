@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //=============================================================================
-//                       A simple sine wave synthesizer
+//                               SYNTHESIZER
 //=============================================================================
 
 #include "synthesizer.h"
@@ -29,126 +29,6 @@
 #include "../math/mathtools.h"
 #include "../system/eptexception.h"
 #include "../system/timer.h"
-
-
-Sound::Sound() :
-    mChannels(0),
-    mSampleRate(0),
-    mSineWave(),
-    mSpectrum(),
-    mStereo(0.5),
-    mTime(0),
-    mWaveForm(),
-    mReady(false),
-    mHash(0)
-{}
-
-void Sound::set (const int channels, const int samplerate, const WaveForm &sinewave,
-                 const Spectrum &spectrum, const double stereo, const double time)
-{
-    std::lock_guard<std::mutex> lock(mMutex);
-    mChannels = channels;
-    mSampleRate = samplerate;
-    mSineWave = sinewave;
-    mSpectrum = spectrum;
-    mStereo = stereo;
-    mTime = time;
-    mWaveForm.clear();
-    mReady = false;
-    mHash = computeHash(spectrum);
-    start();
-}
-
-
-Sound::WaveForm Sound::getWaveForm()
-{
-    std::lock_guard<std::mutex> lock(mMutex);
-    return mWaveForm;
-}
-
-
-
-void Sound::workerFunction()
-{
-    std::lock_guard<std::mutex> lock(mMutex);
-    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
-    const int64_t SampleLength = round(mSampleRate * mTime);
-    const int64_t BufferSize = SampleLength * mChannels;
-    const double leftvol  = sqrt(0.7-0.4*mStereo);
-    const double rightvol = sqrt(0.3+0.4*mStereo);
-    mWaveForm.resize(BufferSize);
-    mWaveForm.assign(BufferSize,0);
-
-    double sum=0;
-    for (auto &mode : mSpectrum) sum+=mode.second;
-    if (sum<=0) return;
-
-    const int64_t SineLength = mSineWave.size();
-    for (auto &mode : mSpectrum)
-    {
-        const double f = mode.first;
-        const double volume = pow(mode.second / sum,0.4);
-
-        if (f>24 and f<10000 and volume>0.001)
-        {
-            const int64_t periods = round((SampleLength * f) / mSampleRate);
-            if (mChannels==1)
-            {
-                const int64_t phase = rand();
-                for (int64_t i=0; i<SampleLength; ++i)
-                    mWaveForm[i] += volume *
-                        mSineWave[((i*periods*SineLength)/SampleLength+phase)%SineLength];
-            }
-            else if (mChannels==2)
-            {
-                const int64_t phasediff = round(periods * mSampleRate *
-                                                (0.5-mStereo) / 500);
-                const int64_t leftphase  = rand();
-                const int64_t rightphase = leftphase + phasediff;
-                for (int64_t i=0; i<SampleLength; ++i)
-                {
-                    mWaveForm[2*i] += volume * leftvol *
-                        mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
-                    mWaveForm[2*i+1] += volume * rightvol *
-                        mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
-                }
-            }
-        }
-        if (cancelThread()) return;
-    }
-    mReady = true;
-    LogI ("Created waveform");
-
-//    if (id !=0) return;
-//    std::ofstream os("0000-waveform.dat");
-//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
-//    os << "&" << std::endl;
-//    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
-//    os.close();
-
-
-}
-
-
-
-size_t Sound::computeHash (const Spectrum &spectrum)
-{
-    size_t hash = 0;
-    for (auto &f : spectrum) hash ^= std::hash<double>() (f.second);
-    return hash;
-}
-
-
-bool Sound::coincidesWith (const Spectrum &spectrum)
-{
-    return mHash == computeHash(spectrum);
-}
-
-
-//=============================================================================
-//                          CLASS SYNTHESIZER
-//=============================================================================
-
 
 //-----------------------------------------------------------------------------
 //	                             Constructor
@@ -206,48 +86,38 @@ void Synthesizer::exit ()
 }
 
 
+
 //-----------------------------------------------------------------------------
-//	                    Main Loop (worker function)
+//                        Register a complex sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Main loop of the synthesizer running in an independent thread.
+/// \brief Register a complex sound
+///
+/// This function registers a complex sound for future use. T
+/// \param id : The identification tag or the sound (usually the keynumber).
+/// \param spectrum : The discrete power spectrum (frequency - power).
+/// \param stereo : Stereo location ranging from 0 (left) to 1 (right).
+/// \param time : Time of the generated PCM sample in seconds.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::workerFunction (void)
+void Synthesizer::registerSound  (const int id, const Spectrum &spectrum,
+                                  const double stereo, const double time)
 {
-    setThreadName("Synthesizer");
-    std::cout << "************** Synthi started *************" << std::endl;
-
-    while (not cancelThread())
+    ComplexSound &sound = mSoundCollection[id];
+    if (sound.coincidesWith(spectrum))
     {
-        mSchedulerMutex.lock();
-        bool active = (mAudioPlayer and mScheduler.size()>0);
-        mSchedulerMutex.unlock();
-        if (active)
-        {
-            //first remove all sounds with an amplitude below the cutoff:
-            mSchedulerMutex.lock();
-            for (auto it = mScheduler.begin(); it != mScheduler.end();)
-                if (it->stage>=2 and it->amplitude<CutoffVolume)
-                { it=mScheduler.erase(it);
-                    std::cout << "********* Deleted sound in schedule, size=" << mScheduler.size() << std::endl;
-                }
-                else ++it;
-            mSchedulerMutex.unlock();
-
-            generateAudioSignal();
-        }
-        else
-        {
-            msleep(10);
-        }
+        std::cout << "*********** Not necessary to add sound " << id << std::endl;
+        return;
     }
+    sound.stop(); // if necessary interrupt ongoing computation
+    sound.init(spectrum, stereo, mAudioPlayer->getSamplingRate(), mSineWave, time);
+    std::cout << "*********** Added sound #  " << id << std::endl;
 }
 
 
 //-----------------------------------------------------------------------------
-//	                     Create a new sound
+//	                          Play a new sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,6 +125,8 @@ void Synthesizer::workerFunction (void)
 ///
 /// This function creates or new (or recreates an existing) sound.
 /// \param id : Identifier of the sound (usually the piano key number)
+/// \param f : Frequency in Hz. If f>0 a pure sine function is generated. For
+/// f=0 the program fetches a complex sound from the SoundCollection.
 /// \param volume : Overall volume of the sound (intensity of keypress)
 /// with typical values between 0 and 1.
 /// \param stereo : Stereo position of the sound, ranging from 0 (left) to 1 (right).
@@ -266,10 +138,9 @@ void Synthesizer::workerFunction (void)
 /// \param release : Rate at which the sound disappears after release in units of 1/sec.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::createSound (int id, double volume, double stereo,
+void Synthesizer::play (int id, double f, double volume, double stereo,
         double attack, double decayrate, double sustain, double release)
 {
-    std::cout << "create sound *********************************** " << std::endl;
     Tone tone;
     tone.id=id;
     tone.amplitude=0;
@@ -282,11 +153,49 @@ void Synthesizer::createSound (int id, double volume, double stereo,
     tone.sustain=sustain;
     tone.release=release;
     tone.stage = 1;
-    tone.waveform = mSoundCollection[id].getWaveForm();
+    tone.frequency = static_cast<int_fast64_t>(100.0*f*SineLength);
+
+    if (f==0) tone.waveform = mSoundCollection[id].getWaveForm();
     mSchedulerMutex.lock();
     mScheduler.push_back(tone);
     mSchedulerMutex.unlock();
 }
+
+
+//-----------------------------------------------------------------------------
+//	                    Main thread (worker function)
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Main thread of the synthesizer
+///////////////////////////////////////////////////////////////////////////////
+
+void Synthesizer::workerFunction (void)
+{
+    setThreadName("Synthesizer");
+    while (not cancelThread())
+    {
+        mSchedulerMutex.lock();
+        bool active = (mAudioPlayer and mScheduler.size()>0);
+        mSchedulerMutex.unlock();
+        if (not active) msleep(10); // Synthesizer in idle state
+        else
+        {
+            // first remove all sounds with a volume below cutoff:
+            mSchedulerMutex.lock();
+            for (auto it = mScheduler.begin(); it != mScheduler.end(); /* no inc */)
+                if (it->stage>=2 and it->amplitude<CutoffVolume)
+                    it=mScheduler.erase(it);
+                else ++it;
+            mSchedulerMutex.unlock();
+
+            // then generate the audio signal:
+            generateAudioSignal();
+        }
+    }
+}
+
+
 
 //-----------------------------------------------------------------------------
 //	                        Generate the waveform
@@ -312,7 +221,8 @@ void Synthesizer::generateAudioSignal ()
     // If there is nothing to play return
     if (N==0) return;
 
-    int SampleRate = mAudioPlayer->getSamplingRate();
+    int_fast64_t SampleRate = mAudioPlayer->getSamplingRate();
+    int_fast64_t cycle = 100L * SampleRate;
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
 
@@ -321,11 +231,11 @@ void Synthesizer::generateAudioSignal ()
     while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
     {
         ++writtenSamples;
-        double left=0, right=0, mono=0;
+        double left=0, right=0;
         mSchedulerMutex.lock();
         for (auto &ch : mScheduler)
         {
-            int id = ch.id;
+            //int id = ch.id;
             double y = ch.amplitude;       // get last amplitude
             switch (ch.stage)          // Manage ADSR
             {
@@ -354,27 +264,27 @@ void Synthesizer::generateAudioSignal ()
             ch.amplitude = y;
             ch.clock ++;
 
-            int size = ch.waveform.size();
-            if (size!=0)
+            if (ch.frequency>0)
             {
-<<<<<<< HEAD
-                left  += y*ch.waveform[(2*ch.clock)%size];
-                right += y*ch.waveform[(2*ch.clock+1)%size];
-=======
-                int64_t a = static_cast<int64_t>(100.0*mode.first*d);
-                int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
-                int64_t p = b + a*phase;
-                if (channels==1) mono += mode.second*y*mSineWave[static_cast<size_t>((b/c)%d)];
-                else // if stereo
+                double sinewave = y * ch.volume * mSineWave[((ch.frequency*ch.clock)/cycle)%SineLength];
+                left += (1-ch.stereo) * sinewave;
+                right += ch.stereo * sinewave;
+            }
+            else
+            {
+                int size = ch.waveform.size();
+                if (size>0)
                 {
-                    left  += mode.second*leftvol *y*mSineWave[static_cast<size_t>((b/c)%d)];
-                    right += mode.second*rightvol*y*mSineWave[static_cast<size_t>((p/c)%d)];
+                    left  += y*ch.waveform[(2*ch.clock)%size];
+                    right += y*ch.waveform[(2*ch.clock+1)%size];
                 }
->>>>>>> c258867d1bcd0aed79cfe9c38192eeaef3bcc940
             }
         }
         mSchedulerMutex.unlock();
-        if (channels==1) mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>((left+right)/2));
+        if (channels==1)
+        {
+            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>((left+right)/2));
+        }
         else // if stereo
         {
             mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(left));
@@ -419,7 +329,7 @@ Synthesizer::Tone* Synthesizer::getSchedulerPointer (int id)
 
 void Synthesizer::releaseSound (int id)
 {
-    Tone *snd(nullptr);
+    //Tone *snd(nullptr);
     bool released=false;
     mSchedulerMutex.lock();
     for (auto &ch : mScheduler) if (ch.id==id) { ch.stage=4; released=true; }
@@ -467,26 +377,6 @@ void Synthesizer::ModifySustainLevel (int id, double level)
     if (snd) snd->sustain = level;
     else LogW ("id does not exist");
     mSchedulerMutex.unlock();
-}
-
-
-
-////-----------------------------------------------------------------------------
-
-void Synthesizer::addSound  (const int id, const Spectrum &spectrum,
-                             const double stereo, const double time)
-{
-    Sound &sound = mSoundCollection[id];
-    if (sound.coincidesWith(spectrum))
-    {
-        std::cout << "*********** Not necessary to add sound " << id << std::endl;
-        return;
-    }
-    sound.stop();
-    sound.set(mAudioPlayer->getChannelCount(),
-              mAudioPlayer->getSamplingRate(),
-              mSineWave, spectrum, stereo,time);
-    std::cout << "*********** Added sound #  " << id << std::endl;
 }
 
 

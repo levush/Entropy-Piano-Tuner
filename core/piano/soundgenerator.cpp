@@ -60,47 +60,8 @@ SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioadapter) :
     mSelectedKey(-1),
     mResonatingKey(-1),
     mResonatingVolume(0)
-{
-    //audioadapter->setRawDataWriter(&mSynthesizer);
-}
+{}
 
-
-//-----------------------------------------------------------------------------
-//			            Initialize the sound generator
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-///  \brief Initialize the sound generator and play a welcome sound.
-///////////////////////////////////////////////////////////////////////////////
-///
-void SoundGenerator::init ()
-{
-    mSynthesizer.init();        // Initialize the synthesizer
-}
-
-
-//-----------------------------------------------------------------------------
-//			                     Shut down
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Shut down the sound generator.
-///////////////////////////////////////////////////////////////////////////////
-
-void SoundGenerator::exit ()
-{
-    mSynthesizer.exit();        // Shut down the snythesizer
-}
-
-void SoundGenerator::start()
-{
-    mSynthesizer.start();
-}
-
-void SoundGenerator::stop()
-{
-    mSynthesizer.stop();
-}
 
 //-----------------------------------------------------------------------------
 //            Play a resonating reference sound in the tuning mode
@@ -139,8 +100,8 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
             playReferenceTone(key,keynumber,frequ, 0.5);
             break;
         case SGM_SYNTHESIZE_KEY:
-            playOriginalSoundOfKey(key,mNumberOfKeys+keynumber,
-                                   frequ, 0, 50, 50, mResonatingVolume, 20);
+            playOriginalSoundOfKey(mNumberOfKeys+keynumber,
+                                   0, 50, 50, mResonatingVolume, 20);
             break;
         default:
             break;
@@ -341,7 +302,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 {
                     auto key = message->getFinalKey();
                     double frequency = key->getRecordedFrequency();
-                    playOriginalSoundOfKey(*key,id,frequency,0.5,5,5);   //****************************** recording echo sound
+                    playOriginalSoundOfKey(id,frequency,0.5,5,5);   //****************************** recording echo sound
                 }
             }
         }
@@ -378,26 +339,23 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     {
     case MODE_IDLE:
     {
-        // In this mode play sine ways with respect to the selected concert pitch
+        // In this mode play sine waves with respect to the selected concert pitch
         double frequency = mPiano->getEqualTempFrequency(key,0,mPiano->getConcertPitch());
-        playSineWave(key,frequency,volume);
+        playSineWave(key,frequency,0.7*volume);
     }
     break;
     case MODE_RECORDING:
     {
         // In this mode play the original sound in the original pitch
         MessageHandler::send<MessageKeySelectionChanged>(key, &mPiano->getKey(key));
-        double frequency = mPiano->getKey(key).getRecordedFrequency();
-        playOriginalSoundOfKey(mPiano->getKey(key),key,frequency,0.3*volume);
+        playOriginalSoundOfKey(key,0.3*volume);
     }
     break;
     case MODE_TUNING:
     case MODE_CALCULATION:
     {
         // In these modes play the computed sound in selected concert pitch
-        double frequency = mPiano->getKey(key).getComputedFrequency()*
-                mPiano->getConcertPitch()/440.0;
-        playOriginalSoundOfKey(mPiano->getKey(key),key,frequency,0.3*volume);
+        playOriginalSoundOfKey(key,0.3*volume);
     }
     break;
     default:
@@ -411,7 +369,12 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
 //			               Stereo location of a key
 //-----------------------------------------------------------------------------
 
-/// \brief Compute a stereo location on the basis of the key number.
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Compute a stereo location depending on the key number.
+///
+/// \param keynumber : Number of the key
+/// \return : Stereo location between 0 (left) and 1 (right)
+///////////////////////////////////////////////////////////////////////////////
 
 double SoundGenerator::getStereo (int keynumber)
 {
@@ -436,9 +399,7 @@ double SoundGenerator::getStereo (int keynumber)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-//    mSynthesizer.createSound(keynumber,0.8,getStereo(keynumber),40,5,0.7,10);
-//    mSynthesizer.addFourierComponent(keynumber,frequency,volume);
-//    mSynthesizer.playSound(keynumber);
+    mSynthesizer.play(keynumber,frequency,volume,getStereo(keynumber),90,5,0.7,10);
 }
 
 
@@ -467,6 +428,8 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
     //double f = it->first/2*factor; // half frequency
     double f = it->first*factor;
     int id = mNumberOfKeys + keynumber;
+
+    if(f){}; if (id){};
 //    mSynthesizer.createSound(id,1,0.5,30,5,1,30);
 //    mSynthesizer.addFourierComponent(id,f,0.5);
 //    mSynthesizer.playSound(id);
@@ -485,7 +448,6 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 /// Each peak contributes with an individual sine wave.
 /// \param key : Reference to the key to be played (access to list of peaks).
 /// \param id : Identification tag, usually number of the key.
-/// \param frequency : Frequency of the key.
 /// \param volume : Volume of the key.
 /// \param attack : Attack rate at which the sound is initiated.
 /// \param decay : Decay rate at which the sound disappears.
@@ -493,28 +455,12 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 /// \param release : Release rate.
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundGenerator::playOriginalSoundOfKey (const Key &key, int id,
-                                             double frequency, double volume,
+void SoundGenerator::playOriginalSoundOfKey (int id,
+                                             double volume,
                                              double attack, double decay,
                                              double sustain, double release)
 {
-    if (key.getPeaks().size()==0)
-        LogW ("try to play sound with empty list of peaks.")
-    else
-    {
-        double sum=0;
-        for (auto &peak : key.getPeaks()) sum+=peak.second;
-        if (sum<=0) return;
-        mSynthesizer.createSound(id,volume, getStereo(id), attack, decay, sustain, release);
-//        for (auto &peak : key.getPeaks())
-//        {
-//            double f = frequency / key.getRecordedFrequency() * peak.first;
-//            double vol = pow(peak.second/sum,0.5);
-//            if (f>24 and f<10000 and vol>0.01)
-//                mSynthesizer.addFourierComponent(id,f,vol);
-//        }
-//        mSynthesizer.playSound(id);
-    }
+    mSynthesizer.play(id,0,volume, getStereo(id), attack, decay, sustain, release);
 }
 
 
@@ -525,6 +471,6 @@ void SoundGenerator::updateAllWaveforms()
 {
     auto getRuntime = [] (double i) { return 5.0 * pow(2.0,-i/12); };
     for (int i=0; i<mNumberOfKeys; i++)
-        mSynthesizer.addSound(i,mPiano->getKey(i).getPeaks(),
+        mSynthesizer.registerSound(i,mPiano->getKey(i).getPeaks(),
                                               getStereo(i), getRuntime(i));
 }
