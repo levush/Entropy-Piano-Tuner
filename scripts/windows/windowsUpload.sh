@@ -1,4 +1,5 @@
 # run this file in cygwin with installed packages: rsync,openssh
+PATH=$PATH:/usr/local/bin:/usr/bin
 
 # add ssh-key
 eval `ssh-agent -s`
@@ -17,8 +18,8 @@ DOWNLOADS_DIR=Resources/Public/Downloads
 SERVER_DOWNLOADS=$SERVER:$ROOT_DIR/$DOWNLOADS_DIR
 
 # set working directory to the tuner root
-cd ${0%/*}
-cd ..
+cd $(dirname $0)
+cd ../..
 
 # tuner base dir
 TUNER_BASE_DIR=${PWD}
