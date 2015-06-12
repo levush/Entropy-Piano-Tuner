@@ -63,16 +63,20 @@ del %depsDataDir%\vcredist.exe
 move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit /b
 
 :: cd to installer
+set relConfigFile=config\windows_config_%postfix%.xml
+set repository=windows_repository_%postfix%
 cd %tunerdir%\appstore\installer
 echo Creating installer. This may take a while.
 :: create online installer packages
-rd windows_repository_%postfix% /s /q
-del config\windows_config_%postfix%.xml
-repogen -p packages windows_repository_%postfix%
+rd %repository% /s /q
+del %relConfigFile%
+repogen -p packages %repository%
 :: create windows config pointing to the correct repository
-call %tunerdir%\scripts\BatchSubstitute.bat dummy_repository windows_repository_%postfix% config\config.xml > config\windows_config_%postfix%.xml
+call %tunerdir%\scripts\BatchSubstitute.bat dummy_repository %repository% config\config.xml > %relConfigFile%.tmp
+:: correct path for windows for default install dir
+call %tunerdir%\scripts\BatchSubstitute.bat "<TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>" "<TargetDir>@ApplicationsDir@/EntropyPianoTuner</TargetDir>" %relConfigFile%.tmp > %relConfigFile%
 :: create online/offline installer
-binarycreator -v -n -c config\windows_config_%postfix%.xml -p packages %setupname%
+binarycreator -v -n -c %relConfigFile% -p packages %setupname%
 
 :: move installer to publish dir
 cd %tunerdir%
