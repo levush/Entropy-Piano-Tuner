@@ -1,7 +1,12 @@
 set -e
 
+cd ${0%/*}
+cd ../..
+
+export TUNER_BASE_DIR=$PWD
+
 # read version from version.h
-versionfile="../core/system/version.h"
+versionfile="$TUNER_BASE_DIR/core/system/version.h"
 if [ -f "$versionfile" ]
 then
 	echo "$versionfile found."

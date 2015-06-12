@@ -1,0 +1,2 @@
+# ignore user environment files
+*env.user.*

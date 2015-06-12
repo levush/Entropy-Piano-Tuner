@@ -1,6 +1,10 @@
-export QTDIR="/Library/Qt/5.4/clang_64"
+set -e
+cd ${0%/*}
+# load environment
+. ./linux_env.user.sh
+
 QTLANGDIR=$QTDIR/translations
-translationsdir="../translations"
+translationsdir="$TUNER_BASE_DIR/translations"
 
 function convertLang {
 	if [ -f $QTLANGDIR/qtbase_$1.qm ];
