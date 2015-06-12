@@ -50,8 +50,8 @@ public:
     void start() override;
     void stop() override;
 
-    virtual void setVolume(float volume) override final;
-    virtual float getVolume() const override final;
+    virtual void setVolume(double volume) override final;
+    virtual double getVolume() const override final;
 
 public slots:
     void onReadPacket();

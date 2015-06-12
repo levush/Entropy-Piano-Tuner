@@ -357,8 +357,20 @@ void Synthesizer::generateAudioSignal ()
             int size = ch.waveform.size();
             if (size!=0)
             {
+<<<<<<< HEAD
                 left  += y*ch.waveform[(2*ch.clock)%size];
                 right += y*ch.waveform[(2*ch.clock+1)%size];
+=======
+                int64_t a = static_cast<int64_t>(100.0*mode.first*d);
+                int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
+                int64_t p = b + a*phase;
+                if (channels==1) mono += mode.second*y*mSineWave[static_cast<size_t>((b/c)%d)];
+                else // if stereo
+                {
+                    left  += mode.second*leftvol *y*mSineWave[static_cast<size_t>((b/c)%d)];
+                    right += mode.second*rightvol*y*mSineWave[static_cast<size_t>((p/c)%d)];
+                }
+>>>>>>> c258867d1bcd0aed79cfe9c38192eeaef3bcc940
             }
         }
         mSchedulerMutex.unlock();

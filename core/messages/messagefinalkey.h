@@ -29,7 +29,7 @@ public:
     MessageFinalKey(int keyNumber, std::shared_ptr<Key> key);
     ~MessageFinalKey();
 
-    double getKeyNumber() { return mKeyNumber; }
+    int getKeyNumber() { return mKeyNumber; }
     std::shared_ptr<Key> getFinalKey() const { return mKey; }
 
 private:

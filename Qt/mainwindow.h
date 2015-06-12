@@ -31,6 +31,7 @@
 #include "../core/adapters/modeselectoradapter.h"
 #include "projectmanagerforqt.h"
 #include "calculationprogressgroup.h"
+#include "versioncheck.h"
 
 namespace Ui {
 class MainWindow;
@@ -254,14 +255,6 @@ public slots:
     void onAbout();
 
     ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Slot called by the about dialog when clicked a url.
-    /// \param url : The url to handle.
-    ///
-    ///  If usually will open a web browser if url is a web link.
-    ///////////////////////////////////////////////////////////////////////////////
-    void onOpenAboutUrl(QUrl url);
-
-    ///////////////////////////////////////////////////////////////////////////////
     /// \brief Slot to open the log viewer.
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -308,6 +301,10 @@ public slots:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void onToggleFullscreen();
+
+
+private slots:
+    void onVersionUpdate(VersionInformation information);
 };
 
 #endif // MAINWINDOW_H

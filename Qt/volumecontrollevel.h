@@ -55,7 +55,7 @@ protected:
     ///
     /// This will change the value of mValueBuffer.
     ///////////////////////////////////////////////////////////////////////////////
-    void levelChanged(float value) override;
+    void levelChanged(double value) override;
 
 private slots:
     ///////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ private:
     ///
     /// It will be displayed by updateValue() and set by levelChanged(float).
     ///////////////////////////////////////////////////////////////////////////////
-    float mValueBuffer;
+    double mValueBuffer;
 };
 
 #endif // VOLUMECONTROLLEVEL_H

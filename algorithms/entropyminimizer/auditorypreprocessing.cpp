@@ -426,7 +426,7 @@ void AuditoryPreprocessing::applyMollifier (Key &key)
     {
         double f = mtof(m);
         const double df=55.0/f+f/2000.0;
-        int dm = ftom(f+df) - m;
+        int dm = MathTools::roundToInteger(ftom(f+df)) - m;
         double sum=0,norm=0;
         for (int ms = std::max(1,m-3*dm); ms<=std::min(m+3*dm,M-1); ms++)
         {

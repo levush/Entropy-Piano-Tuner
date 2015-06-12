@@ -46,7 +46,7 @@ using FillType = GraphicsViewAdapter::FillTypes;
 class TuningCurveGraphDrawer : public DrawerBase, public MessageListener
 {
 protected:
-    static const double rangeInCents;
+    static const int rangeInCents;
 
 private:
 
@@ -105,7 +105,7 @@ protected:
 
     // Private functions:
     double convertCentsToY (double cents);
-    float getMarkerPosition(int keyindex, RoleType role);
+    double getMarkerPosition(int keyindex, RoleType role);
     void drawMarkers(int8_t key);
     void drawGrid ();
     PenType getMarkerPenType(RoleType role);

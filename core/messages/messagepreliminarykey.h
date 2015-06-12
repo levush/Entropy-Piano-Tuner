@@ -29,7 +29,7 @@ public:
     MessagePreliminaryKey(int key, double f);
     ~MessagePreliminaryKey();
 
-    double getKeyNumber() { return mKeyNumber; }
+    int getKeyNumber() { return mKeyNumber; }
     double getFrequency() { return mFrequency; }
 
 private:

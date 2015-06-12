@@ -58,6 +58,7 @@
 #include "options/optionsdialog.h"
 #include "donotshowagainmessagebox.h"
 #include "autoclosingmessagebox.h"
+#include "aboutdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -281,6 +282,10 @@ void MainWindow::start() {
     mCore->getProjectManager()->init(mCore);
 
     updateWindowTitle();
+
+    // check for updates
+    VersionCheck *versionChecker = new VersionCheck(this);
+    QObject::connect(versionChecker, SIGNAL(updateAvailable(VersionInformation)), this, SLOT(onVersionUpdate(VersionInformation)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -661,84 +666,10 @@ void MainWindow::onManual() {
 }
 
 void MainWindow::onAbout() {
-    QDialog d(this, Qt::Window);
-    QRect r(this->geometry());
-    d.setGeometry(r.left() + r.width() / 4, r.top() + r.height() / 4, r.width() / 2, r.height() / 2);
-    d.setWindowTitle(tr("About"));
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(0);
-    d.setLayout(mainLayout);
-
-    mainLayout->addWidget(new QLabel(QString("<h1>%1 %2</h1>").arg(tr("Entropy Piano Tuner"), EPT_VERSION_STRING)));
-
-    QString iconPath = ":/media/images/icon_256x256" + mIconPostfix + ".png";
-    QTextBrowser *text = new QTextBrowser;
-    text->setStyleSheet("background-color: transparent;");
-    text->setFrameShape(QFrame::NoFrame);
-    text->setOpenLinks(false);
-    QObject::connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(onOpenAboutUrl(QUrl)));
-    mainLayout->addWidget(text);
-
-    const QString buildText = tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate));
-    const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
-
-    QString dependenciesText = tr("Based on");
-    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
-    dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
-    dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
-
-    const QString copyrightText = tr("Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
-    const QString licenseText = tr("This software is licensed unter the terms of the %1. The source code can be accessed at %2.").
-            arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
-                "<a href=\"https://gitlab.com/entropytuner/Entropy-Piano-Tuner\">GitLab</a>");
-
-    const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
-
-    const QString acknowledgementsText = tr("We thank all those who have contributed to the project:") +
-           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich.";
-
-    auto makeParagraphTags = [](const QString &t) {return "<p>" + t + "</p>";};
-    QString completeText;
-    completeText.append("<html><img src=\"" + iconPath + "\" style=\"float: left;\"/>");
-
-    completeText.append(makeParagraphTags(buildText));
-    completeText.append(makeParagraphTags(buildByText));
-    completeText.append(makeParagraphTags(dependenciesText));
-    completeText.append(makeParagraphTags(copyrightText));
-    completeText.append(makeParagraphTags(licenseText));
-    completeText.append(makeParagraphTags(warrantyText));
-    completeText.append(makeParagraphTags(acknowledgementsText));
-
-    completeText.append("</html>");
-
-    text->setHtml(completeText);
-
-    QHBoxLayout *okButtonLayout = new QHBoxLayout;
-    okButtonLayout->setMargin(0);
-    mainLayout->addLayout(okButtonLayout);
-    okButtonLayout->addStretch();
-
-    QPushButton *okButton = new QPushButton(tr("Ok"));
-    okButtonLayout->addWidget(okButton);
-
-    QObject::connect(okButton, SIGNAL(clicked()), &d, SLOT(accept()));
-
-    QScroller::grabGesture(text);
-    text->setReadOnly(true);
-    text->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
-
-    SHOW_DIALOG(&d);
-
+    AboutDialog d(this, mIconPostfix);
     d.exec();
 }
 
-void MainWindow::onOpenAboutUrl(QUrl url) {
-    if (url.toString() == "Qt") {
-        QMessageBox::aboutQt(this);
-    } else {
-        QDesktopServices::openUrl(url);
-    }
-}
 
 void MainWindow::onViewLog() {
     LogViewer logViewer(this);
@@ -784,5 +715,32 @@ void MainWindow::onToggleFullscreen() {
         showNormal();
     } else {
         showFullScreen();
+    }
+}
+
+void MainWindow::onVersionUpdate(VersionInformation information) {
+    QMessageBox mb;
+    mb.setText(tr("A new update is available!"));
+    mb.setInformativeText(tr("The online app version is %1. Do you want to install this update?").arg(information.mAppVersion));
+    mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    if (mb.exec() == QMessageBox::Yes) {
+#ifdef Q_OS_MACX
+        // download new dmg file
+        if (!QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org/Resources/Public/Downloads/EntropyPianoTuner_MacOsX.dmg"))) {
+            LogW("Online installer file for mac could not be found.");
+            QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org"));
+        } else {
+            this->close();
+        }
+#else
+        // run maintenace tool in updater mode
+        if (QProcess::startDetached("maintenancetool", QStringList() << "--updater") == false) {
+            LogW("Maintenace tool could not be started.");
+            QMessageBox::warning(this, tr("Warnung"), tr("The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool automatically."));
+        } else {
+            // close the program for the installer
+            this->close();
+        }
+#endif
     }
 }

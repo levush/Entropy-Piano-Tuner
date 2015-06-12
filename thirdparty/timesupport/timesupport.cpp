@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // MODIFICATIONS
-// used _strnicmp instead of strnicmp (warning on visual studio compiler as deprecated)
+// used _strnicmp instead of strnicmp and gmtime_s instead of gmtime (warning on visual studio compiler as deprecated)
 
 
 #include "timesupport.h"
@@ -231,20 +231,33 @@ bool ParseRfcTime(const char* buf, struct tm *tm) {
 // Covert the time to W3C Datetime formats.
 // See http://www.w3.org/TR/NOTE-datetime
 const std::string FormatW3CTime(const time_t &time) {
+  tm gmt;
+
+#ifdef _MSC_VER
+  gmtime_s(&gmt, &time);
+#else
+  gmt = *gmtime(&time);
+#endif
+
   char buffer[80];
   strftime(buffer, 80,
            "%Y-%m-%dT%H:%M:%SZ",  // like 2001-12-31T23:59:59Z
-           gmtime(&time));
+           &gmt);
   return buffer;
 }
 
 std::string FormatHttpDate(time_t t) {
   // Convert 'time_t' to struct tm (GMT)
-  tm* gmt_p = gmtime(&t);
+  tm gmt;
+#ifdef _MSC_VER
+  gmtime_s(&gmt, &t);
+#else
+  gmt = *gmtime(&t);
+#endif
 
   // Convert struct tm to HTTP-date string
   char buff[256];
-  strftime(buff, sizeof(buff), "%a, %d %b %Y %H:%M:%S GMT", gmt_p);
+  strftime(buff, sizeof(buff), "%a, %d %b %Y %H:%M:%S GMT", &gmt);
   return buff;
 }
 

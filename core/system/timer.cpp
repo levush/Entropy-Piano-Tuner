@@ -74,10 +74,10 @@ void Timer::wait(int milliseconds)
 //                      Get elapsed time in milliseconds
 //-----------------------------------------------------------------------------
 
-int Timer::getMilliseconds()
+int64_t Timer::getMilliseconds()
 {
-auto now = std::chrono::system_clock::now();
-return std::chrono::duration_cast<std::chrono::milliseconds>(now-mStart).count();
+    auto now = std::chrono::system_clock::now();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(now-mStart).count();
 }
 
 
@@ -91,9 +91,9 @@ return std::chrono::duration_cast<std::chrono::milliseconds>(now-mStart).count()
 /// \param milliseconds : Timeout time in milliseconds.
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Timer::timeout (int milliseconds)
+bool Timer::timeout (int64_t milliseconds)
 {
-    int delta_t = getMilliseconds();
+    int64_t delta_t = getMilliseconds();
     return (delta_t > milliseconds);
 }
 
@@ -109,7 +109,7 @@ bool Timer::timeout (int milliseconds)
 /// \param interval_ms : Checking interval in milliseconds, default = 5ms
 ///////////////////////////////////////////////////////////////////////////////
 
-void Timer::waitUntil (int milliseconds, int interval_ms)
+void Timer::waitUntil (int64_t milliseconds, int interval_ms)
 {
     while (not timeout(milliseconds)) wait(interval_ms);
 }

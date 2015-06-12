@@ -1,32 +1,5 @@
-set -e
-
-# read version from version.h
-versionfile="../core/system/version.h"
-if [ -f "$versionfile" ]
-then
-	echo "$versionfile found."
-else
-	echo "$versionfile not found."
-	exit 1
-fi
-
-versioncontents=`cat $versionfile`
-
-reVersionString="EPT_VERSION_STRING[[:space:]]+\"([0-9\.]+)\""
-reVersionRolling="EPT_VERSION_ROLLING[[:space:]]+([0-9]+)"
-
-
-if [[ $versioncontents =~ $reVersionString ]]; then
-    export versionString=${BASH_REMATCH[1]}
-    echo "Detected version: $versionString"
-fi
-
-if [[ $versioncontents =~ $reVersionRolling ]]; then
-    export versionRolling=${BASH_REMATCH[1]}
-    echo "Detected rolling version: $versionRolling"
-fi
-
-
+. ./loadVersion.sh
+	
 # write it to AndroidManifest.xml
 
 echo "Updating AndroidManifest.xml"
@@ -46,3 +19,19 @@ perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/st
 # osx
 perl -i.bak -p -000 -e 's/(<key>CFBundleShortVersionString<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionString}$2/' ../platforms/osx/Info.plist
 perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionRolling}$2/' ../platforms/osx/Info.plist
+
+echo Write it to the installer
+sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" ../appstore/installer/packages/org.entropytuner.app/meta/package.xml
+sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" ../appstore/installer/config/config.xml
+sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$depsVersionString<\/Version>/" ../appstore/installer/packages/org.entropytuner.deps/meta/package.xml
+
+echo Update date in the installer
+sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" ../appstore/installer/packages/org.entropytuner.app/meta/package.xml
+sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" ../appstore/installer/packages/org.entropytuner.deps/meta/package.xml
+
+echo Update the version.xml file
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<version>
+	<app rolling=\"$versionRolling\" string=\"$versionString\" />
+	<dependencies rolling=\"$depsVersionRolling\" string=\"$depsVersionString\" />
+</version>" > ../appstore/installer/version.xml

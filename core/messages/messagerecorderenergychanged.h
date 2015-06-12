@@ -31,15 +31,15 @@ public:
     };
 
 public:
-    MessageRecorderEnergyChanged(LevelType type, float level);
+    MessageRecorderEnergyChanged(LevelType type, double level);
     ~MessageRecorderEnergyChanged();
 
     LevelType getLevelType() const {return mLevelType;}
-    float getLevel() const {return mLevel;}
+    double getLevel() const {return mLevel;}
 
 private:
     const LevelType mLevelType;
-    const float mLevel;
+    const double mLevel;
 };
 
 #endif // MESSAGERECORDERENERGYCHANGED_H

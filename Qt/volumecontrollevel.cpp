@@ -37,9 +37,9 @@ VolumeControlLevel::~VolumeControlLevel()
 }
 
 
-void VolumeControlLevel::levelChanged(float value)
+void VolumeControlLevel::levelChanged(double value)
 {
-    mValueBuffer = std::max(0.f, std::min(value, 1.f)) * 100000;
+    mValueBuffer = std::max(0.0, std::min(value, 1.0)) * maximum();
 }
 
 void VolumeControlLevel::updateValue()

@@ -1,7 +1,7 @@
 echo "This script will create a signed .apk file that build from the current git branch. This apk can be uploaded directly to the play store."
 
 # global variables
-BUILD_SUB_DIR=".publish_android"
+BUILD_SUB_DIR="android-build"
 PUBLISH_SUB_DIR="publish"
 APK_FILE_NAME="EntropyPianoTuner_android"
 QT_BIN_DIR="/Library/Qt/5.4/android_armv7/bin/"
@@ -38,6 +38,10 @@ fi
 if [ ! -d "$PUBLISH_DIR" ]; then
 	mkdir $PUBLISH_DIR
 fi
+# Read Password
+echo -n "Password for keystore: "
+read -s keystorepassword
+echo
 
 rm -f ${APK_FILE}
 
@@ -59,16 +63,18 @@ make install INSTALL_ROOT=$BUILD_DIR
 echo "Deploying for android"
 
 ${QT_BIN_DIR}androiddeployqt \
+		--gradle \
 		--input "android-libEntropyTuner.so-deployment-settings.json" \
 		--output "${BUILD_DIR}" \
 		--sign "../ept_android_release.keystore" "entropyk" \
+		--storepass $keystorepassword \
 
 
-cp ${BUILD_DIR}/bin/QtApp-release-signed.apk ${APK_FILE}
+cp ${BUILD_DIR}/build/outputs/apk/android-build-release-signed.apk ${APK_FILE}
 
 cd ..
 
 echo "Removing build dir"
-rm -rf $BUILD_DIR
+# rm -rf $BUILD_DIR
 
 echo "Created ${APK_FILE}. This file can be uploaded to the google play store."

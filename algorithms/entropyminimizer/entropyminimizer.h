@@ -91,7 +91,8 @@ private:
     int mRecalculateKey;
     double mRecalculateFrequency;
 
-    double getRecordedPitchET440(int keynumber);                ///< Get recorded pitch
+    double getRecordedPitchET440(int keynumber);               ///< Get recorded pitch
+    int    getRecordedPitchET440AsInt(int keynumber);          ///< Get recorded pitch
     int getPitchET440(int keynumber, double f);                ///< Get pitch from frequ
 
 protected:

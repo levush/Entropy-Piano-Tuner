@@ -176,7 +176,7 @@ void SignalAnalyzer::updateDataBufferSize() {
         const double timeAtHighest = 0.5;
         const double timeAtLowest = 3;
         const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
-        mDataBuffer.resize(mAudioRecorder->getSamplingRate() * time);
+        mDataBuffer.resize(static_cast<size_t>(mAudioRecorder->getSamplingRate() * time));
         break;
     }
     }

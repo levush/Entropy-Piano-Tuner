@@ -30,8 +30,8 @@ public:
     ~GraphicsItemForQt();
 
     void setItem(QGraphicsItem *item) {mItem = item;}
-    virtual void setPosition(float x, float y) override final;
-    virtual void setZOrder(float z) override final;
+    virtual void setPosition(double x, double y) override final;
+    virtual void setZOrder(double z) override final;
 
 private:
     QGraphicsItem *mItem;

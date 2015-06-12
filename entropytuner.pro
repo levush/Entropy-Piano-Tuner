@@ -37,6 +37,9 @@ macx {
 
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/osx/Info.plist
+
+    # all warnings, and as error
+    QMAKE_CXXFLAGS += -Werror
 }
 
 # iOS
@@ -57,6 +60,9 @@ ios {
     # app icons
     ios_icon.files = $$files($$PWD/appstore/icons/ios/AppIcon*.png)
     QMAKE_BUNDLE_DATA += ios_icon
+
+    # Set "Devices" (1=iPhone, 2=iPad, 1,2=Universal)
+    QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
 }
 
 win32 {
@@ -117,7 +123,7 @@ linux-g++*:!android {
     LIBS += -lpulse -lpulse-simple
 
     # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS += -std=c++11 -Wall -Werror
 
     # additional defines in debug modus
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
@@ -127,6 +133,9 @@ android {
     LIBS += -lfftw3
     QT += androidextras
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platforms/android
+
+    # all warnings, and as error
+    QMAKE_CXXFLAGS += -Werror
 }
 
 #------------------- Qt -----------------------
@@ -182,7 +191,9 @@ HEADERS  += \
     Qt/algorithmdialog.h \
     Qt/qtconfig.h \
     Qt/keyboard/graphicskeyitem.h \
-    core/piano/pianodefines.h
+    core/piano/pianodefines.h \
+    Qt/aboutdialog.h \
+    Qt/versioncheck.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -234,7 +245,9 @@ SOURCES +=  \
     Qt/doubleslider.cpp \
     Qt/simplefiledialog.cpp \
     Qt/algorithmdialog.cpp \
-    Qt/keyboard/graphicskeyitem.cpp
+    Qt/keyboard/graphicskeyitem.cpp \
+    Qt/aboutdialog.cpp \
+    Qt/versioncheck.cpp
 
 #------------- Message system --------------------
 

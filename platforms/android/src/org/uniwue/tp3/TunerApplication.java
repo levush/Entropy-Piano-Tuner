@@ -61,11 +61,14 @@ public class TunerApplication extends QtActivity {
 
         // keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // create midi driver
         mMidiDriver.create(this);
     }
 
     @Override
     public void onDestroy() {
+        // destroy midi driver
         mMidiDriver.destroy();
 
         super.onDestroy();

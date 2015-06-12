@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <time.h>
 
 #include "../system/eptexception.h"
 
@@ -60,9 +61,14 @@ Piano::Piano() :
 
 void Piano::setNow() {
     time_t rawtime = time(0);
-    struct tm *nowtime = gmtime(&rawtime);
+    struct tm nowtime;
+#ifdef _MSC_VER
+    gmtime_s(&nowtime, &rawtime);
+#else
+    nowtime = *gmtime(&rawtime);
+#endif
     char buffer[50];
-    strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", nowtime);
+    strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", &nowtime);
     mTuningTime = buffer;
 }
 

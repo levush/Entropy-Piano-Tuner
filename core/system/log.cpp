@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <ctime>
+#include <time.h>
 #include <fstream>
 #include "../adapters/filemanager.h"
 
@@ -107,7 +108,12 @@ void Log::writeToLogfile(ELevel level, const char *text, int line, const char *f
 
     // current time
     std::time_t t = std::time(0); //obtain the current time_t value
-    tm now = *std::localtime(&t); //convert it to tm
+    tm now;
+#ifdef _MSC_VER
+    localtime_s(&now, &t); //convert it to tm
+#else
+    now = *localtime(&t);
+#endif
     char tmdescr[20]={0};
     const char fmt[]="%X";
     strftime(tmdescr, sizeof(tmdescr) - 1, fmt, &now);

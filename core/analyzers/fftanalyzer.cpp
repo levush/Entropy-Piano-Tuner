@@ -136,7 +136,8 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
         key->setRecorded(true);
 
         auto peaks = identifyPeaks(finalFFT, spectrum,f,B);
-        LogV("FFTAnalyzer: found %lu peaks.", peaks.size());
+        // %zu is c++ standard, but windows doenst support this... workaround use int
+        LogV("FFTAnalyzer: found %i peaks.", static_cast<int>(peaks.size()));
         key->setPeaks(peaks);
     } else {
         LogW("Frequence %f is out of bounds", f);
@@ -194,7 +195,7 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey(
 
     EptAssert(recordedFrequency > 1 && recordedFrequency < 20000, "Unallowed frequency range");
 
-    result->deviationInCents = index - computedIndex;
+    result->deviationInCents = static_cast<int>(index - computedIndex);
     result->detectedFrequency = recordedFrequency;
     result->positionOfMaximum = index;
     result->tuningDeviationCurve = std::move(out);
@@ -353,7 +354,7 @@ int FFTAnalyzer::findNearestKey (double f, double conertPitch, int numberOfKeys,
 /// \return Frequency in Hz with respect to the actual mConcertPitch.
 ///////////////////////////////////////////////////////////////////////////////
 
-double FFTAnalyzer::estimateFrequency (int keynumber, int concertPitch, int keyNumberOfA)
+double FFTAnalyzer::estimateFrequency (int keynumber, double concertPitch, int keyNumberOfA)
 {
     EptAssert(concertPitch>390 or concertPitch<500,"Concert pitch unreasonable.");
     // Distance in keys from A-440:
@@ -492,7 +493,7 @@ double FFTAnalyzer::estimateInharmonicity (FFTDataPointer fftData, SpectrumType 
             {
                 for (int r=0; r<R; r++)
                 {
-                    int m = mn+r-R/2;
+                    int m = static_cast<int>(mn+r-R/2);
                     EptAssert (m>=0 and m<NumberOfBins,"m invalid");
                     partialspectrum[r]=pow(spectrum[m],2);
                 }
@@ -576,7 +577,7 @@ FFTAnalyzer::PeakListType FFTAnalyzer::identifyPeaks (FFTDataPointer fftData,
     for (int n=1; n<=N; ++n)
     {
         double fn = InharmonicPartial(f,n,B);
-        int m= locatePeak (spectrum, Key::FrequencyToRealIndex(fn), 20);
+        int m= locatePeak (spectrum, Key::FrequencyToIndex(fn), 20);
         if (m>0)
         {
             double f = Key::IndexToFrequency(m);

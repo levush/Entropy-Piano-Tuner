@@ -172,7 +172,11 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
+<<<<<<< HEAD
         WaveForm waveform;                     // Computed wave form
+=======
+        std::map<double,double> fouriermodes;
+>>>>>>> c258867d1bcd0aed79cfe9c38192eeaef3bcc940
     };
 
     std::vector<Tone> mScheduler;             ///< Chord defined as a collection of tones.
