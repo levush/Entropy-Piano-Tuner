@@ -67,6 +67,7 @@ public:
 
 
     void registerSound (const int id,
+                        const double f1,
                         const Spectrum &spectrum,
                         const double stereo,
                         const double time=1);
@@ -82,7 +83,7 @@ public:
 
 private:
 
-    using WaveForm = std::vector<double>;
+    using WaveForm = std::vector<float>;
     std::map<int,ComplexSound> mSoundCollection;
 
     void createWaveforms();
@@ -111,7 +112,8 @@ private:
     const int_fast64_t  SineLength = 16384;           ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    AudioBase::PacketType mSineWave;        ///< Sine wave vector.
+    std::vector<float> mSineWave;           ///< Sine wave vector.
+    std::vector<float> mHammerWave;         ///< Hammer noise PCM data
 
     struct Tone
     {

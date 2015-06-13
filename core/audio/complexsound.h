@@ -52,13 +52,13 @@ class ComplexSound : public SimpleThreadHandler
 {
 public:
     using Spectrum = std::map<double,double>;   // frequency-power spectrum
-    using WaveForm = std::vector<double>;       // stereo waveform
+    using WaveForm = std::vector<float>;        // stereo waveform
 
     ComplexSound ();
     ~ComplexSound() {};
 
     // Initialize a newly created complex sound:
-    void init (const Spectrum &spectrum, const double stereo, const int samplerate,
+    void init (const double frequency, const Spectrum &spectrum, const double stereo, const int samplerate,
                const WaveForm &sinewave, const double time, const double waitingtime = 0);
 
     bool coincidesWith (const Spectrum &spectrum)

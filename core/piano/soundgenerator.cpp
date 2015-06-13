@@ -155,10 +155,6 @@ void SoundGenerator::changeVolumeOfResonatingReferenceSound (double level)
 }
 
 
-
-
-
-
 //-----------------------------------------------------------------------------
 //			               Message listener
 //-----------------------------------------------------------------------------
@@ -242,6 +238,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             auto message(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = message->getMode();
             stopResonatingReferenceSound();
+            updateAllWaveforms();
         }
         break;
     case Message::MSG_PROJECT_FILE:
@@ -271,6 +268,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 {
                     int key = data.byte1-69+mKeyNumberOfA4;
                     mSynthesizer.releaseSound(key);
+                    mSynthesizer.releaseSound(key+100);
                     break;
                 }
             case MidiAdapter::MIDI_CONTROL_CHANGE:
@@ -355,7 +353,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     case MODE_CALCULATION:
     {
         // In these modes play the computed sound in selected concert pitch
-        playOriginalSoundOfKey(key,0.3*volume);
+        playOriginalSoundOfKey(key+100,0.3*volume);
     }
     break;
     default:
@@ -455,10 +453,9 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 /// \param release : Release rate.
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundGenerator::playOriginalSoundOfKey (int id,
-                                             double volume,
-                                             double attack, double decay,
-                                             double sustain, double release)
+void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
+                                             const double attack, const double decay,
+                                             const double sustain, const double release)
 {
     mSynthesizer.play(id,0,volume, getStereo(id), attack, decay, sustain, release);
 }
@@ -466,11 +463,19 @@ void SoundGenerator::playOriginalSoundOfKey (int id,
 
 
 
+void SoundGenerator::updateWaveform (const int keynumber)
+{
+    auto getRuntime = [] (double keynumber) { return 5.0 * pow(2.0,-keynumber/12.0); };
+    const Key &key = mPiano->getKey(keynumber);
+    mSynthesizer.registerSound(keynumber,    key.getRecordedFrequency(),key.getPeaks(),
+                               getStereo(keynumber), getRuntime(keynumber));
+    mSynthesizer.registerSound(keynumber+100,key.getComputedFrequency(),key.getPeaks(),
+                               getStereo(keynumber), getRuntime(keynumber));
+}
+
+
 
 void SoundGenerator::updateAllWaveforms()
 {
-    auto getRuntime = [] (double i) { return 5.0 * pow(2.0,-i/12); };
-    for (int i=0; i<mNumberOfKeys; i++)
-        mSynthesizer.registerSound(i,mPiano->getKey(i).getPeaks(),
-                                              getStereo(i), getRuntime(i));
+    for (int i=0; i<mNumberOfKeys; i++) updateWaveform(i);
 }

@@ -24,6 +24,7 @@
 #include "synthesizer.h"
 
 #include <algorithm>
+#include <random>
 
 #include "../system/log.h"
 #include "../math/mathtools.h"
@@ -42,6 +43,7 @@
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mSineWave(),
+    mHammerWave(),
     mScheduler(),
     mAudioPlayer(audioadapter)
 {}
@@ -67,6 +69,22 @@ void Synthesizer::init ()
         for (int i=0; i<SineLength; ++i)
             mSineWave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
 
+        // Pre-calculate the hammer noise (one second)
+        size_t samplerate = mAudioPlayer->getSamplingRate();
+        mHammerWave.resize(samplerate);
+        mHammerWave.assign(samplerate,0);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::normal_distribution<> d(-1,1);
+        double y=0, f=2*3.14159/samplerate;
+        for (size_t i=0; i<samplerate; i++)
+        {       y = - 0.1*y + d(gen);
+                mHammerWave[i]=
+                (sin(f*11.0*i)+sin(f*17.0*i)+sin(f*19.0*i)
+                 +sin(f*23.0*i)-sin(f*29.0*i)+sin(f*37.0*i)
+                 +0.1*y)
+                *exp(-f*0.5*i);
+        }
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
@@ -96,13 +114,16 @@ void Synthesizer::exit ()
 ///
 /// This function registers a complex sound for future use. T
 /// \param id : The identification tag or the sound (usually the keynumber).
+/// \param frequency : Frequency of lowest partial to be set
 /// \param spectrum : The discrete power spectrum (frequency - power).
 /// \param stereo : Stereo location ranging from 0 (left) to 1 (right).
 /// \param time : Time of the generated PCM sample in seconds.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::registerSound  (const int id, const Spectrum &spectrum,
-                                  const double stereo, const double time)
+void Synthesizer::registerSound  (const int id, const double frequency,
+                                  const Spectrum &spectrum,
+                                  const double stereo,
+                                  const double time)
 {
     ComplexSound &sound = mSoundCollection[id];
     if (sound.coincidesWith(spectrum))
@@ -111,7 +132,7 @@ void Synthesizer::registerSound  (const int id, const Spectrum &spectrum,
         return;
     }
     sound.stop(); // if necessary interrupt ongoing computation
-    sound.init(spectrum, stereo, mAudioPlayer->getSamplingRate(), mSineWave, time);
+    sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(), mSineWave, time);
     std::cout << "*********** Added sound #  " << id << std::endl;
 }
 
@@ -264,6 +285,7 @@ void Synthesizer::generateAudioSignal ()
             ch.amplitude = y;
             ch.clock ++;
 
+
             if (ch.frequency>0)
             {
                 double sinewave = y * ch.volume * mSineWave[((ch.frequency*ch.clock)/cycle)%SineLength];
@@ -272,6 +294,12 @@ void Synthesizer::generateAudioSignal ()
             }
             else
             {
+                if (ch.clock < static_cast<int>(mHammerWave.size()/2-1))
+                {
+                    left += 0.2 * ch.volume* (1-ch.stereo) * mHammerWave[2*ch.clock];
+                    right += 0.2 * ch.volume *  ch.stereo * mHammerWave[2*ch.clock+1];
+                }
+
                 int size = ch.waveform.size();
                 if (size>0)
                 {

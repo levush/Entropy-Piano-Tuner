@@ -25,6 +25,7 @@
 #define SOUNDGENERATOR_H
 
 #include "soundgeneratormode.h"
+
 #include "../audio/synthesizer.h"
 #include "../midi/midiadapter.h"
 #include "../piano/piano.h"
@@ -63,6 +64,7 @@ private:
                                  double attack=30, double decay=0.5,
                                  double sustain=0, double release=30);
 
+    void updateWaveform (const int keynumber);
     void updateAllWaveforms ();
 
 private:

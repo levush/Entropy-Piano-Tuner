@@ -62,17 +62,24 @@ ComplexSound::ComplexSound() :
 /// \param waitingtime : Technical sleep time before compuatation (seconds).
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSound::init (const Spectrum &spectrum,
+void ComplexSound::init (const double frequency,
+                         const Spectrum &spectrum,
                          const double stereo,
                          const int samplerate,
                          const WaveForm &sinewave,
                          const double time,
                          const double waitingtime)
 {
+    if (frequency<=0) return;
     std::lock_guard<std::mutex> lock(mMutex);
     mSampleRate = samplerate;
     mSineWave = sinewave;
-    mSpectrum = spectrum;
+    mSpectrum.clear();
+    if (spectrum.size()>0)
+    {
+        double f1 = spectrum.begin()->first;
+        for (auto &s : spectrum) mSpectrum[s.first*frequency/f1]=s.second;
+    }
     mStereo = stereo;
     mTime = time;
     mWaveForm.clear();
