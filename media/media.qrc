@@ -3,7 +3,6 @@
         <file>images/status_checked.png</file>
         <file>images/status_unchecked.png</file>
         <file>images/icon_256x256.png</file>
-        <file>audio/startup_sound.mp3</file>
         <file>images/micro_active.png</file>
         <file>images/micro_mute.png</file>
         <file>images/refresh.png</file>
@@ -30,5 +29,6 @@
         <file>icons/help-context.png</file>
         <file>icons/application-exit.png</file>
         <file>icons/update-information.png</file>
+        <file>audio/startup_sound.ogg</file>
     </qresource>
 </RCC>

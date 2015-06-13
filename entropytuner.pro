@@ -120,13 +120,12 @@ win32:contains(QT_ARCH, x86_64):{
 # linux libs
 linux-g++*:!android {
     LIBS += -lfftw3 -lasound
-    LIBS += -lpulse -lpulse-simple
 
     # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11 -Wall -Werror
+    QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -WerrorG
 }
 # android libs
 android {

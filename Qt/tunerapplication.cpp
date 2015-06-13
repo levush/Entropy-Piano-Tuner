@@ -166,15 +166,15 @@ void TunerApplication::playStartupSound() {
 
     // first copy startup sound from resource location to disk
     // it cannot be played out a resource file
-    QFile audioFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/startup_sound.mp3");
+    QFile audioFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/startup_sound.ogg");
     if (!audioFile.exists()) {
         // file does not exits yet, copy it
-        QFile::copy(":/media/audio/startup_sound.mp3", audioFile.fileName());
+        QFile::copy(":/media/audio/startup_sound.ogg", audioFile.fileName());
     } else {
-        if (audioFile.size() != QResource(":/media/audio/startup_sound.mp3").size()) {
+        if (audioFile.size() != QResource(":/media/audio/startup_sound.ogg").size()) {
             // size changed, this usually means a new size, remove and copy
             audioFile.remove();
-            QFile::copy(":/media/audio/startup_sound.mp3", audioFile.fileName());
+            QFile::copy(":/media/audio/startup_sound.ogg", audioFile.fileName());
         }
     }
 
