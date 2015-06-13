@@ -9,7 +9,7 @@
     <InstallerApplicationIcon>appicon</InstallerApplicationIcon>
     <Logo>logo.png</Logo>
     <AllowSpaceInPath>true</AllowSpaceInPath>
-    <RunProgram>@TargetDir@/EntropyTuner</RunProgram>
+    <RunProgram>@TargetDir@/entropypianotuner</RunProgram>
     <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
     <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
     <RemoteRepositories>

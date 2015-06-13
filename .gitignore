@@ -1,6 +1,7 @@
 # temporary files
 *~
 *.bak
+*.swp
 
 # hidden files
 *.db

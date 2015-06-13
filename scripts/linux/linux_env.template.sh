@@ -41,7 +41,7 @@ PUBLISH_SUB_DIR="publish"
 # the binary file name must be the same as in
 # 'installer/config/config.xml' Tag <RunProgram>
 # Elsewise the program wont start after intallation
-BINARY_FILE_NAME="EntropyTuner"
+BINARY_FILE_NAME="entropypianotuner"
 
 
 # validate paths

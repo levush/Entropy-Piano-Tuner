@@ -8,7 +8,7 @@ QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = EntropyTuner
+TARGET = entropypianotuner
 TEMPLATE = app
 CONFIG += c++11
 
@@ -520,3 +520,15 @@ for(algorithmDir, algorithmDirs) {
         }
     }
 }
+
+# ------------- install ------------
+target.path = /bin
+
+pixmaps.path = /share/pixmaps
+pixmaps.files += $$PWD/appstore/icons/entropypianotuner.png
+
+icons.path = /share/icons
+icons.files += $$PWD/appstore/icons/application-ept.png
+
+INSTALLS += target pixmaps icons
+
