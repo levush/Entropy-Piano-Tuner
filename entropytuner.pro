@@ -530,5 +530,8 @@ pixmaps.files += $$PWD/appstore/icons/entropypianotuner.png
 icons.path = /share/icons
 icons.files += $$PWD/appstore/icons/application-ept.png
 
-INSTALLS += target pixmaps icons
+mime.path = /share/mime/packages
+mime.files += $$PWD/appstore/installer/scripts/entropypianotuner-mime.xml
+
+INSTALLS += target pixmaps icons mime
 
