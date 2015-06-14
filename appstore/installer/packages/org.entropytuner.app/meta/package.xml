@@ -3,7 +3,7 @@
     <DisplayName>Entropy Piano Tuner</DisplayName>
     <Description>Install the Entropy Pinano Tuner core components.</Description>
     <Version>1.0.4</Version>
-    <ReleaseDate>2015-06-12</ReleaseDate>
+    <ReleaseDate>2015-06-13</ReleaseDate>
     <Name>org.entropytuner.app</Name>
     <Licenses>
         <License name="GNU General Public License v3.0" file="LICENSE" />

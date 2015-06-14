@@ -30,3 +30,6 @@ publish
 /Qt/.directory
 .directory
 
+
+# archies
+*.tar.gz
