@@ -64,8 +64,8 @@ private:
                                  double attack=30, double decay=0.5,
                                  double sustain=0, double release=30);
 
-    void updateWaveform (const int keynumber);
-    void updateAllWaveforms ();
+    void updateWaveform (const int keynumber, const double waitingtime=0);
+    void updateAllWaveforms (const double waitingtime=0);
 
 private:
     Synthesizer mSynthesizer;           ///< Instance of the synthesizer.

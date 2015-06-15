@@ -23,6 +23,8 @@
 
 #include "complexsound.h"
 
+#include "../math/mathtools.h"
+
 //-----------------------------------------------------------------------------
 //                               Constructor
 //-----------------------------------------------------------------------------
@@ -57,7 +59,7 @@ ComplexSound::ComplexSound() :
 /// \param spectrum : The power spectrum of the sound (frequency - power)
 /// \param stereo : Stereo location in the range 0 (left) to 1 (right)
 /// \param samplerate : Sample rate to be used for generating PCM
-/// \param sinewave : Referemce to a pre-calculated sine wave
+/// \param sinewave : Reference to a pre-calculated sine wave
 /// \param time : Duration of the PCM waveform to be generated in seconds
 /// \param waitingtime : Technical sleep time before compuatation (seconds).
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,6 +77,8 @@ void ComplexSound::init (const double frequency,
     mSampleRate = samplerate;
     mSineWave = sinewave;
     mSpectrum.clear();
+    // The spectrum is shifted in such a way that the fundamental
+    // frequency f1 is scaled down to the parameter 'frequency'.
     if (spectrum.size()>0)
     {
         double f1 = spectrum.begin()->first;
@@ -97,9 +101,14 @@ void ComplexSound::init (const double frequency,
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Generate the PCM waveform of a complex sound.
 ///
-/// This function generates the PCM data according to the specified power
+/// This function generates the PCM waveform according to the specified power
 /// spectrum for the predetermined length. By default a stereo singnal is
-/// generated (format LRLR...)
+/// generated (format LRLR...).
+///
+/// The wave consists of a superposition of sine functions. In order to avoid
+/// an initial "klick" all sine waves are randomly phase-shifted. Moreover,
+/// the phase between the two stereo channels is phase-shifted to mimic the
+/// phase delay in the real world. This leads to a more stereo-like sound.
 ///////////////////////////////////////////////////////////////////////////////
 
 void ComplexSound::generateWaveform()
@@ -111,23 +120,26 @@ void ComplexSound::generateWaveform()
     const double rightvol = sqrt(0.1+0.8*mStereo);
     mWaveForm.resize(2*SampleLength);
     mWaveForm.assign(2*SampleLength,0);
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> flatDistribution(0,SampleLength);
 
-    double sum=0;
-    for (auto &mode : mSpectrum) sum+=mode.second;
-    if (sum<=0) return;
+
+    double norm = 0;
+    for (auto &s : mSpectrum) norm += s.second;
+    if (norm<=0) return;
 
     const int64_t SineLength = mSineWave.size();
     for (auto &mode : mSpectrum)
     {
         const double f = mode.first;
-        const double volume = pow(mode.second / sum,0.5);
+        const double volume = sqrt(mode.second/norm);
 
         if (f>24 and f<10000 and volume>0.001)
         {
             const int64_t periods = round((SampleLength * f) / mSampleRate);
             const int64_t phasediff = round(periods * mSampleRate *
                                             (0.5-mStereo) / 500);
-            const int64_t leftphase  = rand();
+            const int64_t leftphase  = flatDistribution(generator);;
             const int64_t rightphase = leftphase + phasediff;
             for (int64_t i=0; i<SampleLength; ++i)
             {
@@ -159,7 +171,16 @@ void ComplexSound::generateWaveform()
 /// \brief ComplexSound::workerFunction
 ///
 /// This function executes the thread which is started in the initialization
-/// procedure. To avoid an overload of the CPU, only a certain maximal number
+/// procedure.
+///
+/// The function does not compute the new waveform immediately, instead it
+/// waits for mWaitingTime (double in seconds) before the computation is
+/// started. Whenever the the same thread is started once again during the
+/// waiting period, the current thread is cancelled. This ensures that only
+/// the newest thread survives. On the other hand, a high CPU load in
+/// situations with many changes (during tuning) is avoided.
+///
+/// To further avoid an overload of the CPU, only a certain maximal number
 /// of threads is allows to be active at the same time. The worker function
 /// manages this thread limitation and calls the function generateWafeform().
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,8 +189,11 @@ std::atomic<int> ComplexSound::numberOfThreads(0); // static thread counter
 
 void ComplexSound::workerFunction()
 {
-    if (mWaitingTime > 0) msleep (1000.0 * mWaitingTime);
+    // First wait and cancel if retriggered
+    for (double t=0; t<1000.0*mWaitingTime and not cancelThread(); t+=0.001) msleep (1);
     if (cancelThread()) return;
+
+    // Avoid CPU overload by limiting the number of threads
     const int maxNumberOfThreads = 8;
     while (numberOfThreads >= maxNumberOfThreads) msleep(1);
     if (cancelThread()) return;

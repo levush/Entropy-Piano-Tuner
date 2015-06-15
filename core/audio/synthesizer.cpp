@@ -76,15 +76,22 @@ void Synthesizer::init ()
         std::random_device rd;
         std::mt19937 gen(rd());
         std::normal_distribution<> d(-1,1);
-        double y=0, f=2*3.14159/samplerate;
+        double f=2*3.14159/samplerate;
         for (size_t i=0; i<samplerate; i++)
-        {       y = - 0.1*y + d(gen);
-                mHammerWave[i]=
-                (sin(f*11.0*i)+sin(f*17.0*i)+sin(f*19.0*i)
-                 +sin(f*23.0*i)-sin(f*29.0*i)+sin(f*37.0*i)
-                 +0.1*y)
-                *exp(-f*0.5*i);
-        }
+            {
+                mHammerWave[i] = 2*d(gen);
+                mHammerWave[i] *= exp(-f*0.5*i);;
+            }
+
+//if ((y)==0) {};
+//        for (size_t i=0; i<samplerate; i++)
+//        {       y = - 0.1*y + d(gen);
+//                mHammerWave[i]=
+//                (sin(f*11.0*i)+sin(f*17.0*i)+sin(f*19.0*i)
+//                 +sin(f*23.0*i)-sin(f*29.0*i)+sin(f*37.0*i)
+//                 +0.1*y)
+//                *exp(-f*0.5*i);
+//        }
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
@@ -123,7 +130,8 @@ void Synthesizer::exit ()
 void Synthesizer::registerSound  (const int id, const double frequency,
                                   const Spectrum &spectrum,
                                   const double stereo,
-                                  const double time)
+                                  const double time,
+                                  const double waitingtime)
 {
     ComplexSound &sound = mSoundCollection[id];
     if (sound.coincidesWith(spectrum))
@@ -132,7 +140,8 @@ void Synthesizer::registerSound  (const int id, const double frequency,
         return;
     }
     sound.stop(); // if necessary interrupt ongoing computation
-    sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(), mSineWave, time);
+    sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(),
+               mSineWave, time, waitingtime);
     std::cout << "*********** Added sound #  " << id << std::endl;
 }
 

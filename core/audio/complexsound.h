@@ -34,10 +34,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a complex sound
 ///
-/// A complex sound is a tone with a complex spectrum of higher partials.
+/// A complex sound is a tone with a spectrum containing many higher partials.
 /// By defining a suitable spectrum one can generate different textures of
-/// the sound. In the EPT complex sounds are used to mimic the original sound
-/// of the recorded piano key on the basis of the actual spectrum.
+/// the sound. In the EPT, complex sounds are used to mimic the original sound
+/// of the recorded piano key on the basis of the actually measured spectrum.
 ///
 /// This class describes the spectral content of a complex sound. It does not
 /// tell us anything about the dynamics (volume, duration envelope). This
@@ -45,7 +45,8 @@
 ///
 /// The playback of complex sounds is computationally expensive. Therefore, the
 /// waveform is computed in advance: Whenever a sound is initialized, an
-/// independent thread is automatically started which computes the waveform.
+/// independent thread is automatically started which computes the waveform
+/// and stores it locally in the member variable mWaveForm.
 ///////////////////////////////////////////////////////////////////////////////
 
 class ComplexSound : public SimpleThreadHandler

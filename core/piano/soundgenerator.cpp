@@ -300,7 +300,8 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 {
                     auto key = message->getFinalKey();
                     double frequency = key->getRecordedFrequency();
-                    playOriginalSoundOfKey(id,frequency,0.5,5,5);   //****************************** recording echo sound
+                    updateWaveform(id,0);
+                    playOriginalSoundOfKey(id,frequency,0.5,5,5);   // echo sound
                 }
             }
         }
@@ -463,19 +464,21 @@ void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
 
 
 
-void SoundGenerator::updateWaveform (const int keynumber)
+void SoundGenerator::updateWaveform (const int keynumber, const double waitingtime)
 {
     auto getRuntime = [] (double keynumber) { return 5.0 * pow(2.0,-keynumber/12.0); };
     const Key &key = mPiano->getKey(keynumber);
     mSynthesizer.registerSound(keynumber,    key.getRecordedFrequency(),key.getPeaks(),
-                               getStereo(keynumber), getRuntime(keynumber));
-    mSynthesizer.registerSound(keynumber+100,key.getComputedFrequency(),key.getPeaks(),
-                               getStereo(keynumber), getRuntime(keynumber));
+                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
+    mSynthesizer.registerSound(keynumber+100,
+                               key.getComputedFrequency()/440.0*mPiano->getConcertPitch(),
+                               key.getPeaks(),
+                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
 }
 
 
 
-void SoundGenerator::updateAllWaveforms()
+void SoundGenerator::updateAllWaveforms(const double waitingtime)
 {
-    for (int i=0; i<mNumberOfKeys; i++) updateWaveform(i);
+    for (int i=0; i<mNumberOfKeys; i++) updateWaveform(i,waitingtime);
 }

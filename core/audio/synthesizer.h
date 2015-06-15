@@ -70,7 +70,9 @@ public:
                         const double f1,
                         const Spectrum &spectrum,
                         const double stereo,
-                        const double time=1);
+                        const double time=1,
+                        const double waitingtime=1);
+
     void play (int id,               // Id of the sound
                double f, //Sine frequ
                       double volume=1,      // overall volume
