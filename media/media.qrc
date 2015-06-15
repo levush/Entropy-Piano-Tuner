@@ -30,5 +30,6 @@
         <file>icons/application-exit.png</file>
         <file>icons/update-information.png</file>
         <file>audio/startup_sound.ogg</file>
+        <file>audio/startup_sound.mp3</file>
     </qresource>
 </RCC>

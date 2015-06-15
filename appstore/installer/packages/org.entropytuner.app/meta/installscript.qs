@@ -13,15 +13,15 @@ Component.prototype.createOperations = function()
 		// register file type
         component.addOperation("RegisterFileType",
                                "ept",
-                               "@TargetDir@\\EntropyTuner.exe '%1'",
+                               "@TargetDir@\\entropypianotuner.exe '%1'",
                                "Entropy Piano Tuner file",
                                "application/xml",
                                "@TargetDir@\\entropytuner.ico",
                                "ProgId=entropytuner.ept");
 	
 	// create desktop entry
-	component.addOperation("CreateShortcut", "@TargetDir@/EntropyTuner.exe", "@DesktopDir@/Entropy Piano Tuner.lnk");
-	component.addOperation("CreateShortcut", "@TargetDir@/EntropyTuner.exe", "@StartMenuDir@/Entropy Piano Tuner.lnk");
+	component.addOperation("CreateShortcut", "@TargetDir@/entropypianotuner.exe", "@DesktopDir@/Entropy Piano Tuner.lnk");
+	component.addOperation("CreateShortcut", "@TargetDir@/entropypianotuner.exe", "@StartMenuDir@/Entropy Piano Tuner.lnk");
 	// component.addOperation("CreateShortcut", "@TargetDir@/maintenancetool.exe", "@StartMenuDir@/maintenancetool.lnk", "iconPath=%TargetDir%\\entropytuner.ico");
     }
     if (systemInfo.kernelType === "linux") {
