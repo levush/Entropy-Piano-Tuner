@@ -16,8 +16,10 @@ Homepage: http://www.entropy-tuner.org
 
 Package: entropypianotuner
 Architecture: amd64
-Depends: ${shlibs:Depends},
-         ${misc:Depends}
+Depends: 
+ libqt5multimedia5-plugins,
+ ${shlibs:Depends},
+ ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: A program to tune your piano.
 
