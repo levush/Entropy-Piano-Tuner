@@ -8,7 +8,7 @@ QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = EntropyTuner
+TARGET = entropypianotuner
 TEMPLATE = app
 CONFIG += c++11
 
@@ -120,13 +120,12 @@ win32:contains(QT_ARCH, x86_64):{
 # linux libs
 linux-g++*:!android {
     LIBS += -lfftw3 -lasound
-    LIBS += -lpulse -lpulse-simple
 
     # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11 -Wall -Werror
+    QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -WerrorG
 }
 # android libs
 android {
@@ -522,3 +521,18 @@ for(algorithmDir, algorithmDirs) {
         }
     }
 }
+
+# ------------- install ------------
+target.path = /bin
+
+pixmaps.path = /share/pixmaps
+pixmaps.files += $$PWD/appstore/icons/entropypianotuner.png
+
+icons.path = /share/icons
+icons.files += $$PWD/appstore/icons/application-ept.png
+
+mime.path = /share/mime/packages
+mime.files += $$PWD/appstore/installer/scripts/entropypianotuner-mime.xml
+
+INSTALLS += target pixmaps icons mime
+

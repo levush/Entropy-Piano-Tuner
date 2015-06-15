@@ -27,11 +27,11 @@ Component.prototype.createOperations = function()
     if (systemInfo.kernelType === "linux") {
 	// create desktop entry
 	component.addOperation("CreateDesktopEntry",
-			       "EntropyPianoTuner.desktop",
-			       "Version=1.0\nType=Application\nTerminal=false\nExec=@TargetDir@/EntropyTuner.sh %f\nName=EntropyTuner\nIcon=@TargetDir@/icon.png\nName[en_US]=Entropy Piano Tuner\nMimeType=application/ept;\nActions=Gallery;Create;");
+			       "entropypianotuner.desktop",
+			       "Version=1.0\nType=Application\nTerminal=false\nExec=@TargetDir@/entropypianotuner.sh %f\nName=EntropyTuner\nIcon=@TargetDir@/icon.png\nName[en_US]=Entropy Piano Tuner\nMimeType=application/ept;\n");
 	component.addOperation("Execute", "mkdir", "-p", "@HomeDir@/.local/share/mime/packages");
         component.addOperation("Execute", "mkdir", "-p", "@HomeDir@/.local/share/icons");
-	component.addOperation("Move", "@TargetDir@/EntropyTunerMIME.xml", "@HomeDir@/.local/share/mime/packages/EntropyPianoTuner.xml");
+	component.addOperation("Move", "@TargetDir@/entropypianotuner-mime.xml", "@HomeDir@/.local/share/mime/packages/entropypianotuner-mime.xml");
 	component.addOperation("Copy", "@TargetDir@/icon.png", "@HomeDir@/.local/share/icons/application-ept.png");
 	component.addOperation("Execute", "update-mime-database", "@HomeDir@/.local/share/mime");
     }

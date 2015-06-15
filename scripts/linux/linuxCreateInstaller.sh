@@ -54,10 +54,13 @@ function copyQtLib {
 }
 
 # copy app to app data dir
-cp $BUILD_DIR/EntropyTuner $INSTALLER_PACKAGE_APP_DATA_DIR/$BINARY_FILE_NAME
-cp $INSTALLER_DIR/scripts/EntropyTuner.sh $INSTALLER_PACKAGE_APP_DATA_DIR/$BINARY_FILE_NAME.sh
+mkdir -p $INSTALLER_PACKAGE_APP_DATA_DIR
+mkdir -p $INSTALLER_PACKAGE_DEPS_DATA_DIR
+
+cp $BUILD_DIR/$BINARY_FILE_NAME $INSTALLER_PACKAGE_APP_DATA_DIR/$BINARY_FILE_NAME
+cp $INSTALLER_DIR/scripts/$BINARY_FILE_NAME.sh $INSTALLER_PACKAGE_APP_DATA_DIR/$BINARY_FILE_NAME.sh
 chmod +x $INSTALLER_PACKAGE_APP_DATA_DIR/$BINARY_FILE_NAME.sh
-cp $INSTALLER_DIR/scripts/EntropyTunerMIME.xml $INSTALLER_PACKAGE_APP_DATA_DIR
+cp $INSTALLER_DIR/scripts/$BINARY_FILE_NAME-mime.xml $INSTALLER_PACKAGE_APP_DATA_DIR
 cp $TUNER_BASE_DIR/appstore/icons/icon_no_bg_256x256.png $INSTALLER_PACKAGE_APP_DATA_DIR/icon.png
 
 # copy deps
@@ -73,8 +76,12 @@ if $UPDATE_DEPENDENCIES ; then
   copySharedLib icui
   copySharedLib icuuc
   copySharedLib icudata
+  # copy plugins: platform
   mkdir -p $INSTALLER_PACKAGE_DEPS_DATA_DIR/platforms
   cp $QTDIR/plugins/platforms/libqxcb.so $INSTALLER_PACKAGE_DEPS_DATA_DIR/platforms
+  # copy plugins: audio
+  mkdir -p $INSTALLER_PACKAGE_DEPS_DATA_DIR/audio
+  cp $QTDIR/plugins/audio/* $INSTALLER_PACKAGE_DEPS_DATA_DIR/audio
 fi
 
 
@@ -96,7 +103,7 @@ if $UPDATE_INSTALLER ; then
   # create linux config pointing to the correct repository, and run .sh instead of normal executable
   rm -f config/linux_config_$POSTFIX.xml
   sed "s/dummy_repository/linux_repository_$POSTFIX/" config/config.xml > config/linux_config_$POSTFIX.xml
-  perl -i.bak -p -000 -e 's/(<RunProgram>\@TargetDir\@\/EntropyTuner)(<\/RunProgram>)/$1.sh$2/' config/linux_config_$POSTFIX.xml
+  perl -i.bak -p -000 -e 's/(<RunProgram>\@TargetDir\@\/entropypianotuner)(<\/RunProgram>)/$1.sh$2/' config/linux_config_$POSTFIX.xml
   binarycreator -n -c config/linux_config_$POSTFIX.xml -p packages $RUN_FILE
   echo "Setup created"
 fi

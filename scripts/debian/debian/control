@@ -1,0 +1,23 @@
+Source: entropypianotuner
+Section: sound
+Priority: optional
+Maintainer: Christoph Wick <info@entropy-tuner.org>
+Build-Depends:
+ debhelper (>= 9),
+ qtbase5-dev,
+ qtbase5-dev-tools,
+ qtmultimedia5-dev,
+ qt5-qmake,
+ fftw3-dev,
+ libasound2-dev,
+ libjack-dev
+Standards-Version: 3.9.5
+Homepage: http://www.entropy-tuner.org
+
+Package: entropypianotuner
+Architecture: amd64
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: A program to tune your piano.
+

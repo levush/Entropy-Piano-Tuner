@@ -1,6 +1,7 @@
 # temporary files
 *~
 *.bak
+*.swp
 
 # hidden files
 *.db
@@ -29,3 +30,6 @@ publish
 /Qt/.directory
 .directory
 
+
+# archies
+*.tar.gz

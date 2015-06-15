@@ -1,0 +1,3 @@
+ection="Applications/Audio" \
+      title="Entropy Piano Tuner" \
+      command="/usr/bin/entropypianotuner"
