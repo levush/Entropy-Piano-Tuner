@@ -22,9 +22,9 @@ VersionCheck::VersionCheck(QObject *parent) : QObject(parent)
 #endif
 }
 
-#if CONFIG_ENABLE_UPDATE_TOOL
 
 void VersionCheck::onNetworkReply(QNetworkReply *reply) {
+#if CONFIG_ENABLE_UPDATE_TOOL
     if (reply->error() == QNetworkReply::NoError) {
         int httpstatuscode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
         switch(httpstatuscode) {
@@ -81,6 +81,9 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
 
     reply->deleteLater();
     this->deleteLater();
+#else
+    Q_UNUSED(reply);
+#endif  // CONFIG_ENABLE_UPDATE_TOOL
+
 }
 
-#endif  // CONFIG_ENABLE_UPDATE_TOOL

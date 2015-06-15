@@ -1,0 +1,34 @@
+Follow these instructions to use the script build system to automatically build the code and publish it to the webserver.
+
+1. Preparation
+==============
+
+These steps have to be done once. They are required for setting up your user build environment.
+
+- Copy the file mac_env.template.sh to mac_env.user.sh and open it.
+- Follow the instructions in the file to set up the paths correctly.
+- Add the ssh key for the webserver to your keychain.
+
+2. Build and publish
+====================
+
+Always repeat this steps if you want to publish a new version.
+
+- cd to the scripts/mac
+- run ./macPublish to build and publish the versions automatically to the webspace.
+
+3. Hints (optional)
+====================
+
+You can also do single steps of the whole progress by using ./macMake.sh (the actual script) with options
+ -c clear the old build
+ -b compile and build binary
+ -d make the dmg file
+ -u upload the files to the server
+ -t release translations
+ -v update the version in all files
+
+4. Issues (optional)
+====================
+
+If you get ask for a passwort this means there is the ssh-key missing in your keychain for uploading to the webspace. Consider to add the ssh-key.

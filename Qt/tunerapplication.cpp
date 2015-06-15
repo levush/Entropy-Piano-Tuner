@@ -163,18 +163,23 @@ void TunerApplication::stop() {
 
 void TunerApplication::playStartupSound() {
     // play a startup sound
+#ifdef __linux__
+    QString fileName="startup_sound.ogg";
+#else
+    QString fileName="startup_sound.mp3";
+#endif
 
     // first copy startup sound from resource location to disk
     // it cannot be played out a resource file
-    QFile audioFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/startup_sound.ogg");
+    QFile audioFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + fileName);
     if (!audioFile.exists()) {
         // file does not exits yet, copy it
-        QFile::copy(":/media/audio/startup_sound.ogg", audioFile.fileName());
+        QFile::copy(":/media/audio/" + fileName, audioFile.fileName());
     } else {
-        if (audioFile.size() != QResource(":/media/audio/startup_sound.ogg").size()) {
+        if (audioFile.size() != QResource(":/media/audio/" + fileName).size()) {
             // size changed, this usually means a new size, remove and copy
             audioFile.remove();
-            QFile::copy(":/media/audio/startup_sound.ogg", audioFile.fileName());
+            QFile::copy(":/media/audio/" + fileName, audioFile.fileName());
         }
     }
 
@@ -186,6 +191,9 @@ void TunerApplication::playStartupSound() {
     player->setMedia(QUrl::fromLocalFile(audioFile.fileName()));
     player->setVolume(50);
     player->play();
+    if (player->error() != QMediaPlayer::NoError) {
+        LogW("Error in QMediaPlayer: %s", player->errorString().toStdString().c_str());
+    }
 }
 
 bool TunerApplication::openFile(QString filePath, bool cached) {

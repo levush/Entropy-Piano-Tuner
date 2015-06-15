@@ -31,7 +31,7 @@
                 <data android:pathPattern=".*\\.ept"/>
             </intent-filter>
 
-            <meta-data android:name="android.app.lib_name" android:value="EntropyTuner"/>
+            <meta-data android:name="android.app.lib_name" android:value="entropypianotuner"/>
             <meta-data android:name="android.app.qt_sources_resource_id" android:resource="@array/qt_sources"/>
             <meta-data android:name="android.app.repository" android:value="default"/>
             <meta-data android:name="android.app.qt_libs_resource_id" android:resource="@array/qt_libs"/>

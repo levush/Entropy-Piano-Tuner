@@ -49,6 +49,8 @@
 // update check
 #if defined Q_OS_DESKTOP
 #   define CONFIG_ENABLE_UPDATE_TOOL     1
+#else
+#   define CONFIG_ENABLE_UPDATE_TOOL     0
 #endif
 
 #endif // QTCONFIG_H

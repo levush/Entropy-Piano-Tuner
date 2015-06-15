@@ -3,7 +3,9 @@ set -e
 cd ${0%/*}
 cd ../..
 
-export TUNER_BASE_DIR=$PWD
+if [ -z "$TUNER_BASE_DIR" ] ; then
+	export TUNER_BASE_DIR=$PWD
+fi
 
 # read version from version.h
 versionfile="$TUNER_BASE_DIR/core/system/version.h"

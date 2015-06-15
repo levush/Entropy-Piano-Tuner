@@ -110,7 +110,7 @@ if %updateDependencies%==1 (
 	move "%builddir%\.keepme" %depsDataDir%
 
 	echo Calling windeployqt
-	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\release\EntropyTuner.exe"
+	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\release\entropypianotuner.exe"
 	
 	copy /Y "%builddir%\release\libfftw3-3.dll" %depsDataDir%
 	
@@ -125,7 +125,7 @@ if %updateDependencies%==1 (
 :: if build, then copy new exe
 if %build%==1 (
 	echo Copying built exe and icon started.
-	copy /Y %builddir%\release\EntropyTuner.exe %appDataDir%
+	copy /Y %builddir%\release\entropypianotuner.exe %appDataDir%
 	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir%
 	echo Copying build exe and icon finished.
 )
