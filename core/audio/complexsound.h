@@ -26,10 +26,8 @@
 
 #include <map>
 #include <vector>
-#include <cmath>
 
 #include "../system/simplethreadhandler.h"
-#include "../system/log.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a complex sound
@@ -55,24 +53,30 @@ public:
     using Spectrum = std::map<double,double>;   // frequency-power spectrum
     using WaveForm = std::vector<float>;        // stereo waveform
 
-    ComplexSound ();
-    ~ComplexSound() {};
+    ComplexSound ();                            // constructor
+    ~ComplexSound() {}                          // empty destructor
 
-    // Initialize a newly created complex sound:
-    void init (const double frequency, const Spectrum &spectrum, const double stereo, const int samplerate,
-               const WaveForm &sinewave, const double time, const double waitingtime = 0);
+    // Initialize a newly created instance of a complex sound:
+    void init (const double frequency,
+               const Spectrum &spectrum,
+               const double stereo,
+               const int samplerate,
+               const WaveForm &sinewave,
+               const double playingtime,
+               const double waitingtime = 0);
 
-    bool coincidesWith (const Spectrum &spectrum)
-    { return mHash == computeHashTag(spectrum); }
+    bool coincidesWith (const double frequency, const Spectrum &spectrum)
+    { return mHash == computeHashTag(frequency,spectrum); }
 
     WaveForm getWaveForm();
 
 private:
     int mSampleRate;                // Sample rate
     WaveForm mSineWave;             // Copy of the sine wave pcm data
-    Spectrum mSpectrum;             // The spectrum of the sound
+    Spectrum mSpectrum;             // The spectrum (true frequencies)
     double mStereo;                 // Its stereo position (0..1)
     double mTime;                   // The required sampling time
+    int64_t mSampleLength;          // Number of stereo sample pairs
     WaveForm mWaveForm;             // Computed wave form
     std::mutex mMutex;              // Access mutex
     std::atomic<bool> mReady;       // Flag that the wave form is ready
@@ -84,7 +88,7 @@ private:
     void workerFunction () override final;          // Thread worker function
     void generateWaveform ();                       // PCM waveform generator
 
-    long computeHashTag (const Spectrum &spectrum);
+    long computeHashTag (const double frequency, const Spectrum &spectrum);
 };
 
 #endif // SOUND_H

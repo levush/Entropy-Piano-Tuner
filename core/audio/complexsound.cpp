@@ -24,6 +24,8 @@
 #include "complexsound.h"
 
 #include "../math/mathtools.h"
+#include "../system/log.h"
+
 
 //-----------------------------------------------------------------------------
 //                               Constructor
@@ -38,7 +40,7 @@ ComplexSound::ComplexSound() :
     mSineWave(),
     mSpectrum(),
     mStereo(0.5),
-    mTime(0),
+    mSampleLength(0),
     mWaveForm(),
     mReady(false),
     mHash(0)
@@ -69,7 +71,7 @@ void ComplexSound::init (const double frequency,
                          const double stereo,
                          const int samplerate,
                          const WaveForm &sinewave,
-                         const double time,
+                         const double playingtime,
                          const double waitingtime)
 {
     if (frequency<=0) return;
@@ -85,12 +87,12 @@ void ComplexSound::init (const double frequency,
         for (auto &s : spectrum) mSpectrum[s.first*frequency/f1]=s.second;
     }
     mStereo = stereo;
-    mTime = time;
     mWaveForm.clear();
+    mSampleLength = MathTools::roundToInteger(mSampleRate * playingtime);
     mReady = false;
-    mHash = computeHashTag(spectrum);
+    mHash = computeHashTag(frequency,spectrum);
     mWaitingTime = waitingtime;
-    start();
+    start();                        // start the thread (workerFunction)
 }
 
 
@@ -114,14 +116,12 @@ void ComplexSound::init (const double frequency,
 void ComplexSound::generateWaveform()
 {
     std::lock_guard<std::mutex> lock(mMutex);
-    auto round = [] (double x) { return static_cast<int64_t>(x+0.5); };
-    const int64_t SampleLength = round(mSampleRate * mTime);
     const double leftvol  = sqrt(0.9-0.8*mStereo);
     const double rightvol = sqrt(0.1+0.8*mStereo);
-    mWaveForm.resize(2*SampleLength);
-    mWaveForm.assign(2*SampleLength,0);
+    mWaveForm.resize(2*mSampleLength);
+    mWaveForm.assign(2*mSampleLength,0);
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> flatDistribution(0,SampleLength);
+    std::uniform_int_distribution<int> flatDistribution(0,mSampleLength);
 
 
     double norm = 0;
@@ -136,17 +136,17 @@ void ComplexSound::generateWaveform()
 
         if (f>24 and f<10000 and volume>0.001)
         {
-            const int64_t periods = round((SampleLength * f) / mSampleRate);
+            const int64_t periods = round((mSampleLength * f) / mSampleRate);
             const int64_t phasediff = round(periods * mSampleRate *
                                             (0.5-mStereo) / 500);
             const int64_t leftphase  = flatDistribution(generator);;
             const int64_t rightphase = leftphase + phasediff;
-            for (int64_t i=0; i<SampleLength; ++i)
+            for (int64_t i=0; i<mSampleLength; ++i)
             {
                 mWaveForm[2*i] += volume * leftvol *
-                    mSineWave[((i*periods*SineLength)/SampleLength+leftphase)%SineLength];
+                    mSineWave[((i*periods*SineLength)/mSampleLength+leftphase)%SineLength];
                 mWaveForm[2*i+1] += volume * rightvol *
-                    mSineWave[((i*periods*SineLength)/SampleLength+rightphase)%SineLength];
+                    mSineWave[((i*periods*SineLength)/mSampleLength+rightphase)%SineLength];
             }
         }
         if (cancelThread()) return;
@@ -213,18 +213,22 @@ void ComplexSound::workerFunction()
 /// As soon as the frequency of a key changes, the waveform of the ComplexSound
 /// has to be computed once again. However, if the spectrum happens to
 /// coincide with the actual spectrum, then there is no need for a renewed
-/// computation.
+/// computation. Since the frequency of the spectral lines may change during
+/// tuning, the hash tag is computed exclusively from the fundamental
+/// frequency and the peaks heights.
 ///
 /// Since during computation a comparison of the spectrum would be difficult
 /// because of mutex blocking, the class saves a hash tag of the spectrum as
 /// a necessary condition for coincidence.
+///
+/// \param frequency : Fundamental frequency in Hz
 /// \param spectrum : Reference to the spectrum.
 /// \return Corresponding hash tag.
 ///////////////////////////////////////////////////////////////////////////////
 
-long ComplexSound::computeHashTag (const Spectrum &spectrum)
+long ComplexSound::computeHashTag (const double frequency, const Spectrum &spectrum)
 {
-    long hash = 0;
+    long hash = std::hash<double>() (frequency);
     for (auto &f : spectrum) hash ^= std::hash<double>() (f.second);
     return hash;
 }

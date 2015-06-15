@@ -298,10 +298,8 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 // replay only if the selected key was recognized:
                 if (id == mSelectedKey)
                 {
-                    auto key = message->getFinalKey();
-                    double frequency = key->getRecordedFrequency();
                     updateWaveform(id,0);
-                    playOriginalSoundOfKey(id,frequency,0.5,5,5);   // echo sound
+                    playOriginalSoundOfKey(id,0.5,5,5,0,30);   // echo sound
                 }
             }
         }
@@ -347,14 +345,14 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     {
         // In this mode play the original sound in the original pitch
         MessageHandler::send<MessageKeySelectionChanged>(key, &mPiano->getKey(key));
-        playOriginalSoundOfKey(key,0.3*volume);
+        playOriginalSoundOfKey(key,0.3*volume,40,0.5,0,30,true);
     }
     break;
     case MODE_TUNING:
     case MODE_CALCULATION:
     {
         // In these modes play the computed sound in selected concert pitch
-        playOriginalSoundOfKey(key+100,0.3*volume);
+        playOriginalSoundOfKey(key+100,0.3*volume,40,0.5,0,30,true);
     }
     break;
     default:
@@ -398,7 +396,7 @@ double SoundGenerator::getStereo (int keynumber)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-    mSynthesizer.play(keynumber,frequency,volume,getStereo(keynumber),90,5,0.7,10);
+    mSynthesizer.playSound(keynumber,frequency,volume,getStereo(keynumber),90,5,0.7,10);
 }
 
 
@@ -456,9 +454,10 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 
 void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
                                              const double attack, const double decay,
-                                             const double sustain, const double release)
+                                             const double sustain, const double release,
+                                             const bool hammer)
 {
-    mSynthesizer.play(id,0,volume, getStereo(id), attack, decay, sustain, release);
+    mSynthesizer.playSound(id,0,volume, getStereo(id), attack, decay, sustain, release, hammer);
 }
 
 

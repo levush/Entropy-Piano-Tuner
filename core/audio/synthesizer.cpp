@@ -98,21 +98,6 @@ void Synthesizer::init ()
 
 
 //-----------------------------------------------------------------------------
-//	                             Shut down
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Stop the synthesizer, request its execution thread to terminate.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::exit ()
-{
-    stop();
-}
-
-
-
-//-----------------------------------------------------------------------------
 //                        Register a complex sound
 //-----------------------------------------------------------------------------
 
@@ -134,7 +119,7 @@ void Synthesizer::registerSound  (const int id, const double frequency,
                                   const double waitingtime)
 {
     ComplexSound &sound = mSoundCollection[id];
-    if (sound.coincidesWith(spectrum))
+    if (sound.coincidesWith(frequency,spectrum))
     {
         std::cout << "*********** Not necessary to add sound " << id << std::endl;
         return;
@@ -154,22 +139,26 @@ void Synthesizer::registerSound  (const int id, const double frequency,
 /// \brief Create a new sound (note).
 ///
 /// This function creates or new (or recreates an existing) sound.
+///
 /// \param id : Identifier of the sound (usually the piano key number)
 /// \param f : Frequency in Hz. If f>0 a pure sine function is generated. For
-/// f=0 the program fetches a complex sound from the SoundCollection.
+///            f=0 the program fetches a complex sound from the SoundCollection.
 /// \param volume : Overall volume of the sound (intensity of keypress)
-/// with typical values between 0 and 1.
+///                 with typical values between 0 and 1.
 /// \param stereo : Stereo position of the sound, ranging from 0 (left) to 1 (right).
 /// \param attack : Rate of initial volume increase in units of 1/sec.
 /// \param decayrate : Rate of the subsequent volume decrease in units of 1/sec.
-/// If this rate is zero the decay phase is omitted and the volume
+///                    If this rate is zero the decay phase is omitted
+///                    and the volume
 /// increases directly towards the sustain level controlled by the attack rate.
 /// \param sustain : Level at which the volume saturates after decay in (0..1).
 /// \param release : Rate at which the sound disappears after release in units of 1/sec.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::play (int id, double f, double volume, double stereo,
-        double attack, double decayrate, double sustain, double release)
+void Synthesizer::playSound (const int id, const double f, const double volume,
+                             const double stereo, const double attack,
+                             const double decayrate, const double sustain,
+                             const double release, const bool hammer)
 {
     Tone tone;
     tone.id=id;
@@ -182,6 +171,7 @@ void Synthesizer::play (int id, double f, double volume, double stereo,
     tone.decayrate=decayrate;
     tone.sustain=sustain;
     tone.release=release;
+    tone.hammer=hammer;
     tone.stage = 1;
     tone.frequency = static_cast<int_fast64_t>(100.0*f*SineLength);
 
@@ -303,7 +293,7 @@ void Synthesizer::generateAudioSignal ()
             }
             else
             {
-                if (ch.clock < static_cast<int>(mHammerWave.size()/2-1))
+                if (ch.hammer) if (ch.clock < static_cast<int>(mHammerWave.size()/2-1))
                 {
                     left += 0.2 * ch.volume* (1-ch.stereo) * mHammerWave[2*ch.clock];
                     right += 0.2 * ch.volume *  ch.stereo * mHammerWave[2*ch.clock+1];

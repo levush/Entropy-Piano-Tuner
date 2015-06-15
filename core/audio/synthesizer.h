@@ -24,10 +24,9 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
-#include <iostream>
+#include <iostream> // ******************** später weg
 #include <vector>
 #include <map>
-#include <queue>
 #include <cmath>
 #include <thread>
 #include <mutex>
@@ -53,18 +52,20 @@
 /// Each sound is identified by an ID, usually the number of the piano key.
 ///
 /// The synthesizer supports basic ADSR-envelopes (attack-decay-sustain-release)
-/// which are known from traditional synthesizers. The ADSR-envelope of each sound
-/// (note) can be chosen individually. The release phase is triggered by calling
+/// which are known from traditional synthesizers. The ADSR-envelope of each
+/// sound can be chosen individually. The release phase is triggered by calling
 /// the function ReleaseSound.
 ///////////////////////////////////////////////////////////////////////////////
 
 class Synthesizer : public SimpleThreadHandler
 {
 public:
-
-
     using Spectrum = std::map<double,double>;
 
+    Synthesizer (AudioPlayerAdapter *audioadapter);
+
+    void init ();
+    void exit () { stop(); }
 
     void registerSound (const int id,
                         const double f1,
@@ -73,35 +74,16 @@ public:
                         const double time=1,
                         const double waitingtime=1);
 
-    void play (int id,               // Id of the sound
-               double f, //Sine frequ
-                      double volume=1,      // overall volume
-                      double stereo=0.5,    // stereo position (0..1)
-                      double attack=10,     // ADSR attack rate
-                      double decayrate=0.5, // ADSR decay rate
-                      double sustain=0.0,   // ADSR sustain rate
-                      double release=10);   // ADSR release rate
-    void release (int id);
+    void playSound (const int id,                     // Id of the sound
+                    const double f,                   // fundamental frequency
+                    const double volume=1,            // overall volume
+                    const double stereo=0.5,          // stereo position (0..1)
+                    const double attack=10,           // ADSR attack rate
+                    const double decayrate=0.5,       // ADSR decay rate
+                    const double sustain=0.0,         // ADSR sustain rate
+                    const double releaseSound=10, // ADSR release rate
+                    const bool hammer=false);
 
-private:
-
-    using WaveForm = std::vector<float>;
-    std::map<int,ComplexSound> mSoundCollection;
-
-    void createWaveforms();
-
-
-    /////////////////////////////////////////////////////////
-
-public:
-    Synthesizer (AudioPlayerAdapter *audioadapter);
-
-    void init ();
-    void exit ();
-
-    // Create a new sound (note)
-
-    // Stop playing
     void releaseSound (int id);
 
     // Check whether sound is still playing
@@ -110,8 +92,14 @@ public:
     // Modify the sustain level of a constantly playing sound
     void ModifySustainLevel (int id, double level);
 
-private:    
-    const int_fast64_t  SineLength = 16384;           ///< sine value buffer length.
+
+private:
+
+    using WaveForm = std::vector<float>;
+
+    std::map<int,ComplexSound> mSoundCollection;
+
+    const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
     std::vector<float> mSineWave;           ///< Sine wave vector.
@@ -120,8 +108,8 @@ private:
     struct Tone
     {
         int id;                             ///< Identification tag
-        int_fast64_t  clock;                          ///< Running time in sample cycles.
-        int_fast64_t  clock_timeout;                  ///< Timeout when forced to release
+        int_fast64_t clock;                 ///< Running time in sample cycles.
+        int_fast64_t clock_timeout;         ///< Timeout when forced to release
         int stage;                          ///< Stage of envelope:  0=off
                                             ///< 1=attack 2=decay 3=sustain 4=release.
         double amplitude;                   ///< Actual time-dependent amplitude.
@@ -131,12 +119,13 @@ private:
         double decayrate;                   ///< Decay rate for envelope.
         double sustain;                     ///< Sustain rate for envelope.
         double release;                     ///< Release rate for envelope.
+        bool hammer;                        ///< Flag for hammer texture
         int_fast64_t frequency;             ///< converted sine frequency, 0 for waveform
-        WaveForm waveform;                     // Computed wave form stored here
+        WaveForm waveform;                  ///< Computed wave form stored here
     };
 
-    std::vector<Tone> mScheduler;             ///< Chord defined as a collection of tones.
-    std::mutex mSchedulerMutex;                 ///< Mutex to protect access to the chord.
+    std::vector<Tone> mScheduler;           ///< Chord defined as a collection of tones.
+    std::mutex mSchedulerMutex;             ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
     Tone* getSchedulerPointer (int id);
