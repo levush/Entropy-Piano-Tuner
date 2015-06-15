@@ -61,6 +61,10 @@ ios {
     ios_icon.files = $$files($$PWD/appstore/icons/ios/AppIcon*.png)
     QMAKE_BUNDLE_DATA += ios_icon
 
+    # lauch screen file
+    launch_screen.files = $$PWD/platforms/ios/Launch.xib
+    QMAKE_BUNDLE_DATA += launch_screen
+
     # Set "Devices" (1=iPhone, 2=iPad, 1,2=Universal)
     QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
 }
