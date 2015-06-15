@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Entropy Piano Tuner
+Comment=Tune your piano
+Exec=entropypianotuner %f
+Icon=entropypianotuner.png
+Terminal=false
+Type=Application
+MimeType=application/ept;
+Categories=Application;

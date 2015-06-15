@@ -527,16 +527,19 @@ for(algorithmDir, algorithmDirs) {
 }
 
 # ------------- install ------------
-target.path = /bin
+target.path = $$PREFIX/bin
 
-pixmaps.path = /share/pixmaps
+pixmaps.path = $$PREFIX/share/pixmaps
 pixmaps.files += $$PWD/appstore/icons/entropypianotuner.png
 
-icons.path = /share/icons
+icons.path = $$PREFIX/share/icons/hicolor/256x256/mimetypes
 icons.files += $$PWD/appstore/icons/application-ept.png
 
-mime.path = /share/mime/packages
+mime.path = $$PREFIX/share/mime/packages
 mime.files += $$PWD/appstore/installer/scripts/entropypianotuner-mime.xml
 
-INSTALLS += target pixmaps icons mime
+application.path = $$PREFIX/share/applications
+application.files += $$PWD/appstore/installer/scripts/entropypianotuner.desktop
+
+INSTALLS += target pixmaps icons mime application
 

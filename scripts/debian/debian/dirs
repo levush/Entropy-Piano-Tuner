@@ -1,5 +1,5 @@
 usr/bin
 usr/share/applications
-usr/share/pixmap
+usr/share/pixmaps
 usr/share/mime/packages
-usr/share/icons
+usr/share/icons/hicolor/256x256/mimetypes
