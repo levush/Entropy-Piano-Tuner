@@ -31,6 +31,15 @@
 #include "../system/eptexception.h"
 #include "../system/timer.h"
 
+/// \param attack : Rate of initial volume increase in units of 1/sec.
+/// \param decayrate : Rate of the subsequent volume decrease in units of 1/sec.
+///        If this rate is zero the decay phase is omitted and the volume
+/// increases directly towards the sustain level controlled by the attack rate.
+/// \param sustain : Level at which the volume saturates after decay in (0..1).
+/// \param release : Rate at which the sound disappears after release in units of 1/sec.
+
+
+
 //-----------------------------------------------------------------------------
 //	                             Constructor
 //-----------------------------------------------------------------------------
@@ -44,7 +53,7 @@
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mSineWave(),
     mHammerWave(),
-    mScheduler(),
+    mPlayingTones(),
     mAudioPlayer(audioadapter)
 {}
 
@@ -82,53 +91,29 @@ void Synthesizer::init ()
                 mHammerWave[i] = 2*d(gen);
                 mHammerWave[i] *= exp(-f*0.5*i);;
             }
-
-//if ((y)==0) {};
-//        for (size_t i=0; i<samplerate; i++)
-//        {       y = - 0.1*y + d(gen);
-//                mHammerWave[i]=
-//                (sin(f*11.0*i)+sin(f*17.0*i)+sin(f*19.0*i)
-//                 +sin(f*23.0*i)-sin(f*29.0*i)+sin(f*37.0*i)
-//                 +0.1*y)
-//                *exp(-f*0.5*i);
-//        }
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
 
 
-//-----------------------------------------------------------------------------
-//                        Register a complex sound
-//-----------------------------------------------------------------------------
+//void Synthesizer::registerSound  (const int id, const double frequency,
+//                                  const Spectrum &spectrum,
+//                                  const double stereo,
+//                                  const double time,
+//                                  const double waitingtime)
+//{
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Register a complex sound
-///
-/// This function registers a complex sound for future use. T
-/// \param id : The identification tag or the sound (usually the keynumber).
-/// \param frequency : Frequency of lowest partial to be set
-/// \param spectrum : The discrete power spectrum (frequency - power).
-/// \param stereo : Stereo location ranging from 0 (left) to 1 (right).
-/// \param time : Time of the generated PCM sample in seconds.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::registerSound  (const int id, const double frequency,
-                                  const Spectrum &spectrum,
-                                  const double stereo,
-                                  const double time,
-                                  const double waitingtime)
-{
-    ComplexSound &sound = mSoundCollection[id];
-    if (sound.coincidesWith(frequency,spectrum))
-    {
-        std::cout << "*********** Not necessary to add sound " << id << std::endl;
-        return;
-    }
-    sound.stop(); // if necessary interrupt ongoing computation
-    sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(),
-               mSineWave, time, waitingtime);
-    std::cout << "*********** Added sound #  " << id << std::endl;
-}
+//    ComplexSound &sound = mSoundCollection[id];
+//    if (sound.coincidesWith(frequency,spectrum))
+//    {
+//        std::cout << "*********** Not necessary to add sound " << id << std::endl;
+//        return;
+//    }
+//    sound.stop(); // if necessary interrupt ongoing computation
+//    sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(),
+//               mSineWave, time, waitingtime);
+//    std::cout << "*********** Added sound #  " << id << std::endl;
+//}
 
 
 //-----------------------------------------------------------------------------
@@ -140,44 +125,54 @@ void Synthesizer::registerSound  (const int id, const double frequency,
 ///
 /// This function creates or new (or recreates an existing) sound.
 ///
-/// \param id : Identifier of the sound (usually the piano key number)
-/// \param f : Frequency in Hz. If f>0 a pure sine function is generated. For
-///            f=0 the program fetches a complex sound from the SoundCollection.
+/// \param id : Identification tag or the sound (usually the keynumber).
+/// \param frequency : Frequency of lowest partial
+/// \param spectrum : The discrete power spectrum (frequency - power).
+///                   The base frequency of the spectrum is irrelevant.
+///                   If the spectrum is empty a sine wave is produced.
+/// \param stereo : Stereo position ranging from 0 (left) to 1 (right).
 /// \param volume : Overall volume of the sound (intensity of keypress)
 ///                 with typical values between 0 and 1.
 /// \param stereo : Stereo position of the sound, ranging from 0 (left) to 1 (right).
-/// \param attack : Rate of initial volume increase in units of 1/sec.
-/// \param decayrate : Rate of the subsequent volume decrease in units of 1/sec.
-///                    If this rate is zero the decay phase is omitted
-///                    and the volume
-/// increases directly towards the sustain level controlled by the attack rate.
-/// \param sustain : Level at which the volume saturates after decay in (0..1).
-/// \param release : Rate at which the sound disappears after release in units of 1/sec.
+/// \param envelope : Reference to the envelope structure (ADSR-data).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::playSound (const int id, const double f, const double volume,
-                             const double stereo, const double attack,
-                             const double decayrate, const double sustain,
-                             const double release, const bool hammer)
+void Synthesizer::playSound (
+        const int id,                   // Id of the sound
+        const double frequency,         // fundamental frequency
+        const Spectrum &spectrum,       // spectrum of partials, empty for sine wave
+        const double stereo,            // stereo position (0..1)
+        const double volume,            // overall volume
+        const Envelope &envelope)       // envelope data
 {
+
+    ComplexSound &sound = mSoundCollection[id];
+    if (not sound.coincidesWith(frequency,spectrum))
+    {
+        sound.stop(); // if necessary interrupt ongoing computation
+        sound.init(frequency, spectrum, stereo, mAudioPlayer->getSamplingRate(),
+                   mSineWave, 1, 1); //********************************************** waiting time
+        std::cout << "*********** Added sound #  " << id << std::endl;
+    }
+
     Tone tone;
     tone.id=id;
+    tone.spectrum = spectrum;
     tone.amplitude=0;
-    tone.clock=0;
-    tone.stage=0;
     tone.volume=volume;
     tone.stereo=stereo;
-    tone.attack=attack;
-    tone.decayrate=decayrate;
-    tone.sustain=sustain;
-    tone.release=release;
-    tone.hammer=hammer;
-    tone.stage = 1;
-    tone.frequency = static_cast<int_fast64_t>(100.0*f*SineLength);
+    tone.envelope=envelope;
 
-    if (f==0) tone.waveform = mSoundCollection[id].getWaveForm();
+    tone.frequency = static_cast<int_fast64_t>(100.0*frequency*SineLength);
+    tone.clock=0;
+    tone.clock_timeout=0;
+    tone.stage=1;
+
+    tone.waveform.clear();
+
+//    if (f==0) tone.waveform = mSoundCollection[id].getWaveForm();
     mSchedulerMutex.lock();
-    mScheduler.push_back(tone);
+    mPlayingTones.push_back(tone);
     mSchedulerMutex.unlock();
 }
 
@@ -196,21 +191,22 @@ void Synthesizer::workerFunction (void)
     while (not cancelThread())
     {
         mSchedulerMutex.lock();
-        bool active = (mAudioPlayer and mScheduler.size()>0);
+        bool active = (mAudioPlayer and mPlayingTones.size()>0);
         mSchedulerMutex.unlock();
         if (not active) msleep(10); // Synthesizer in idle state
         else
         {
             // first remove all sounds with a volume below cutoff:
             mSchedulerMutex.lock();
-            for (auto it = mScheduler.begin(); it != mScheduler.end(); /* no inc */)
+            for (auto it = mPlayingTones.begin(); it != mPlayingTones.end(); /* no inc */)
                 if (it->stage>=2 and it->amplitude<CutoffVolume)
-                    it=mScheduler.erase(it);
+                    it=mPlayingTones.erase(it);
                 else ++it;
+            size_t N = mPlayingTones.size();
             mSchedulerMutex.unlock();
 
             // then generate the audio signal:
-            generateAudioSignal();
+            if (N>0) generateAudioSignal();
         }
     }
 }
@@ -234,13 +230,6 @@ void Synthesizer::workerFunction (void)
 
 void Synthesizer::generateAudioSignal ()
 {
-    mSchedulerMutex.lock();
-    size_t N = mScheduler.size();
-    mSchedulerMutex.unlock();
-
-    // If there is nothing to play return
-    if (N==0) return;
-
     int_fast64_t SampleRate = mAudioPlayer->getSamplingRate();
     int_fast64_t cycle = 100L * SampleRate;
     int channels = mAudioPlayer->getChannelCount();
@@ -253,57 +242,57 @@ void Synthesizer::generateAudioSignal ()
         ++writtenSamples;
         double left=0, right=0;
         mSchedulerMutex.lock();
-        for (auto &ch : mScheduler)
+        for (auto &tone : mPlayingTones)
         {
-            //int id = ch.id;
-            double y = ch.amplitude;       // get last amplitude
-            switch (ch.stage)          // Manage ADSR
+            //============== MANAGE THE ENVELOPE =================
+            double y = tone.amplitude;          // get last amplitude
+            Envelope &envelope = tone.envelope; // get ADSR
+            switch (tone.stage)                 // Manage ADSR
             {
                 case 1: // ATTACK
-                        y += ch.attack*ch.volume/SampleRate;
-                        if (ch.decayrate>0)
+                        y += envelope.attack*tone.volume/SampleRate;
+                        if (envelope.decay>0)
                         {
-                            if (y >= ch.volume) ch.stage++;
+                            if (y >= tone.volume) tone.stage++;
                         }
                         else
                         {
-                            if (y >= ch.sustain*ch.volume) ch.stage+=2;
+                            if (y >= envelope.sustain*tone.volume) tone.stage+=2;
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-ch.decayrate/SampleRate); // DECAY
-                        if (y <= ch.sustain*ch.volume) ch.stage++;
+                        y *= (1-envelope.decay/SampleRate); // DECAY
+                        if (y <= envelope.sustain*tone.volume) tone.stage++;
                         break;
                 case 3: // SUSTAIN
-                        y += (ch.sustain-y) * ch.release/SampleRate;
+                        y += (envelope.sustain-y) * envelope.release/SampleRate;
                         break;
                 case 4: // RELEASE
-                        y *= (1-ch.release/SampleRate);
+                        y *= (1-envelope.release/SampleRate);
                         break;
             }
-            ch.amplitude = y;
-            ch.clock ++;
+            tone.amplitude = y;
+            tone.clock ++;
 
-
-            if (ch.frequency>0)
+            if (tone.frequency>0)
             {
-                double sinewave = y * ch.volume * mSineWave[((ch.frequency*ch.clock)/cycle)%SineLength];
-                left += (1-ch.stereo) * sinewave;
-                right += ch.stereo * sinewave;
+                double sinewave = y * tone.volume * mSineWave[((tone.frequency*tone.clock)/cycle)%SineLength];
+                left += (1-tone.stereo) * sinewave;
+                right += tone.stereo * sinewave;
             }
             else
             {
-                if (ch.hammer) if (ch.clock < static_cast<int>(mHammerWave.size()/2-1))
+                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
                 {
-                    left += 0.2 * ch.volume* (1-ch.stereo) * mHammerWave[2*ch.clock];
-                    right += 0.2 * ch.volume *  ch.stereo * mHammerWave[2*ch.clock+1];
+                    left += 0.2 * tone.volume* (1-tone.stereo) * mHammerWave[2*tone.clock];
+                    right += 0.2 * tone.volume *  tone.stereo * mHammerWave[2*tone.clock+1];
                 }
 
-                int size = ch.waveform.size();
+                int size = tone.waveform.size();
                 if (size>0)
                 {
-                    left  += y*ch.waveform[(2*ch.clock)%size];
-                    right += y*ch.waveform[(2*ch.clock+1)%size];
+                    left  += y*tone.waveform[(2*tone.clock)%size];
+                    right += y*tone.waveform[(2*tone.clock+1)%size];
                 }
             }
         }
@@ -337,7 +326,7 @@ Synthesizer::Tone* Synthesizer::getSchedulerPointer (int id)
 {
     Tone *snd(nullptr);
     mSchedulerMutex.lock();
-    for (auto &ch : mScheduler) if (ch.id==id) { snd=&ch; break; }
+    for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
     mSchedulerMutex.unlock();
     return snd;
 }
@@ -359,7 +348,7 @@ void Synthesizer::releaseSound (int id)
     //Tone *snd(nullptr);
     bool released=false;
     mSchedulerMutex.lock();
-    for (auto &ch : mScheduler) if (ch.id==id) { ch.stage=4; released=true; }
+    for (auto &ch : mPlayingTones) if (ch.id==id) { ch.stage=4; released=true; }
     mSchedulerMutex.unlock();
     if (not released) LogW("Sound #%d does not exist.",id);
 }
@@ -401,7 +390,7 @@ void Synthesizer::ModifySustainLevel (int id, double level)
 {
     auto snd = getSchedulerPointer(id);
     mSchedulerMutex.lock();
-    if (snd) snd->sustain = level;
+    if (snd) snd->envelope.sustain = level;
     else LogW ("id does not exist");
     mSchedulerMutex.unlock();
 }

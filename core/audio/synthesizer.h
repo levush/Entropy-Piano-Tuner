@@ -67,22 +67,21 @@ public:
     void init ();
     void exit () { stop(); }
 
-    void registerSound (const int id,
-                        const double f1,
-                        const Spectrum &spectrum,
-                        const double stereo,
-                        const double time=1,
-                        const double waitingtime=1);
+    struct Envelope
+    {
+        double attack, decay, sustain, release, hammer;
+        Envelope (double attack=10, double decay=0.5, double sustain=0, double release=10, double hammer=0)
+        { attack=attack; decay=decay; sustain=sustain; release=release; hammer=hammer;}
+    };
 
-    void playSound (const int id,                     // Id of the sound
-                    const double f,                   // fundamental frequency
-                    const double volume=1,            // overall volume
-                    const double stereo=0.5,          // stereo position (0..1)
-                    const double attack=10,           // ADSR attack rate
-                    const double decayrate=0.5,       // ADSR decay rate
-                    const double sustain=0.0,         // ADSR sustain rate
-                    const double releaseSound=10, // ADSR release rate
-                    const bool hammer=false);
+    void playSound (
+            const int id,                   // Id of the sound
+            const double frequency,         // fundamental frequency
+            const Spectrum &spectrum,       // spectrum of partials
+            const double stereo,            // stereo position (0..1)
+            const double volume,            // overall volume
+            const Envelope &envelope);      // envelope characteristics
+
 
     void releaseSound (int id);
 
@@ -108,23 +107,21 @@ private:
     struct Tone
     {
         int id;                             ///< Identification tag
+        Spectrum spectrum;                  ///< the spectrum
+        double amplitude;                   ///< Actual time-dependent amplitude.
+        double volume;                      ///< Volume of the sound.
+        double stereo;                      ///< Stereo position in [0,1].
+        Envelope envelope;                  ///< Envelope data (ADSR)
+
+        int_fast64_t frequency;             ///< converted sine frequency
         int_fast64_t clock;                 ///< Running time in sample cycles.
         int_fast64_t clock_timeout;         ///< Timeout when forced to release
         int stage;                          ///< Stage of envelope:  0=off
                                             ///< 1=attack 2=decay 3=sustain 4=release.
-        double amplitude;                   ///< Actual time-dependent amplitude.
-        double volume;                      ///< Volume of the sound.
-        double stereo;                      ///< Stereo position in [0,1].
-        double attack;                      ///< Attack rate for envelope.
-        double decayrate;                   ///< Decay rate for envelope.
-        double sustain;                     ///< Sustain rate for envelope.
-        double release;                     ///< Release rate for envelope.
-        bool hammer;                        ///< Flag for hammer texture
-        int_fast64_t frequency;             ///< converted sine frequency, 0 for waveform
         WaveForm waveform;                  ///< Computed wave form stored here
     };
 
-    std::vector<Tone> mScheduler;           ///< Chord defined as a collection of tones.
+    std::vector<Tone> mPlayingTones;           ///< Chord defined as a collection of tones.
     std::mutex mSchedulerMutex;             ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 

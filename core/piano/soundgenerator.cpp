@@ -396,7 +396,9 @@ double SoundGenerator::getStereo (int keynumber)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-    mSynthesizer.playSound(keynumber,frequency,volume,getStereo(keynumber),90,5,0.7,10);
+    Synthesizer::Spectrum spectrum {{frequency,1.0}};
+    Synthesizer::Envelope env(90,5,0.7,10);
+    mSynthesizer.playSound(keynumber,frequency,spectrum,getStereo(keynumber),volume,env);
 }
 
 
@@ -457,7 +459,10 @@ void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
                                              const double sustain, const double release,
                                              const bool hammer)
 {
-    mSynthesizer.playSound(id,0,volume, getStereo(id), attack, decay, sustain, release, hammer);
+    double frequency=0.1;
+    Synthesizer::Envelope env(attack, decay, sustain, release, hammer);
+    Synthesizer::Spectrum spectrum;
+    mSynthesizer.playSound(id, frequency, spectrum, getStereo(id), volume, env);
 }
 
 
@@ -465,14 +470,15 @@ void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
 
 void SoundGenerator::updateWaveform (const int keynumber, const double waitingtime)
 {
-    auto getRuntime = [] (double keynumber) { return 5.0 * pow(2.0,-keynumber/12.0); };
-    const Key &key = mPiano->getKey(keynumber);
-    mSynthesizer.registerSound(keynumber,    key.getRecordedFrequency(),key.getPeaks(),
-                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
-    mSynthesizer.registerSound(keynumber+100,
-                               key.getComputedFrequency()/440.0*mPiano->getConcertPitch(),
-                               key.getPeaks(),
-                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
+    if (keynumber) if (waitingtime) {};
+//    auto getRuntime = [] (double keynumber) { return 5.0 * pow(2.0,-keynumber/12.0); };
+//    const Key &key = mPiano->getKey(keynumber);
+//    mSynthesizer.registerSound(keynumber,    key.getRecordedFrequency(),key.getPeaks(),
+//                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
+//    mSynthesizer.registerSound(keynumber+100,
+//                               key.getComputedFrequency()/440.0*mPiano->getConcertPitch(),
+//                               key.getPeaks(),
+//                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
 }
 
 
