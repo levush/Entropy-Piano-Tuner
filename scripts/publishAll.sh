@@ -2,5 +2,5 @@ set -e
 
 ./updateVersion.sh
 ./publishAndroid.sh
-./publishMacOsX.sh
+./mac/publishMacOsX.sh
 ./publishiOS.sh
