@@ -26,6 +26,7 @@ You can also do single steps of the whole progress by using ./macMake.sh (the ac
  -d make the dmg file
  -u upload the files to the server
  -t release translations
+ -v update the version in all files
 
 4. Issues (optional)
 ====================

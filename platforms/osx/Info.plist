@@ -54,7 +54,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleExecutable</key>
-	<string>EntropyTuner</string>
+	<string>entropypianotuner</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.entropytuner</string>
 	<key>CFBundleDisplayName</key>

@@ -16,6 +16,7 @@ DO_BUILD=false
 DO_DMG=false
 DO_UPLOAD=false
 DO_TRANSLATIONS=false
+DO_VERSION_UPDATE=false
 
 echo "Parsing options."
 # parse options
@@ -24,7 +25,8 @@ echo "Parsing options."
 # -d make the dmg file
 # -u upload the files to the server
 # -t release translations
-while getopts ":cbdut" opt; do
+# -v update version code
+while getopts ":cbdutv" opt; do
 	case $opt in
 		c)
 			echo "Clearing build at $BUILD_DIR."
@@ -46,6 +48,10 @@ while getopts ":cbdut" opt; do
 			echo "Releasing translations."
 			DO_TRANSLATIONS=true
 			;;
+		v)
+			echo "Updating version."
+			DO_VERSION_UPDATE=true
+			;;
 		\?)
 			echo "Invalid options: -$OPTARG" >&2
 			exit -1
@@ -54,6 +60,15 @@ while getopts ":cbdut" opt; do
 done
 
 echo "Options parsed."
+
+# Version update
+###########################################################
+if $DO_VERSION_UPDATE ; then
+	echo "Updating version."
+	cd $UNIX_SHARED
+	./updateVersion.sh
+	echo "Done."
+fi
 
 # Clear
 ###########################################################
@@ -100,9 +115,10 @@ fi
 ###########################################################
 if $DO_DMG ; then
 	echo "Creating dmg."
-	cd $BUILD_DIR	
-	macdeployqt $BINARY_FILE_NAME.app -dmg
-	mv $BINARY_FILE_NAME.dmg ${DMG_FILE}
+	cd $BUILD_DIR
+	mv $BINARY_FILE_NAME.app "EntropyPianoTuner.app"
+	macdeployqt "EntropyPianoTuner.app" -dmg
+	mv "EntropyPianoTuner.dmg" ${DMG_FILE}
 	echo "Done."
 fi
 

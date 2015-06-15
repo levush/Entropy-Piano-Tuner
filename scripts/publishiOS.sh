@@ -31,9 +31,7 @@ if [ ! -d "$QT_BIN_DIR" ]; then
 fi
 
 # create the output dir
-if [ ! -d "$PUBLISH_DIR" ]; then
-	mkdir $PUBLISH_DIR
-fi
+mkdir -p $PUBLISH_DIR
 
 rm -rf ${APP_FILE}
 
@@ -42,7 +40,7 @@ cd $TUNER_BASE_DIR/translations
 for f in *.ts; do lrelease $f; done
 
 echo "Creating temporary build directory"
-mkdir $BUILD_DIR
+mkdir -p $BUILD_DIR
 
 cd $BUILD_DIR
 
@@ -51,7 +49,7 @@ rm -rf EntropyTuner.app
 qmake ../entropytuner.pro -r -spec macx-ios-clang CONFIG+=release CONFIG+=iphoneos
 make -j4
 
-mv Release-iphoneos/EntropyTuner.app ${APP_FILE}
+mv Release-iphoneos/entropypianotuner.app ${APP_FILE}
 
 
 echo "Creating ipa file."
