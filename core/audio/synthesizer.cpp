@@ -20,13 +20,11 @@
 
 #include "synthesizer.h"
 
-#include <algorithm>
+//#include <algorithm>
 #include <random>
 
 #include "../system/log.h"
 #include "../math/mathtools.h"
-#include "../system/eptexception.h"
-#include "../system/timer.h"
 
 
 Envelope::Envelope(double attack, double decay, double sustain, double release, double hammer) :
@@ -107,14 +105,17 @@ void Synthesizer::init ()
 
 
 void Synthesizer::registerSound  (const int id,
-                                  const Sound &sound, double waitingtime)
+                                  const Sound &sound,
+                                  const double sampletime,
+                                  const double waitingtime)
 {
     if (sound.mSpectrum.size()==0) return;
     SampledSound &sampledSound = mSoundCollection[id];
     if (sampledSound.differsFrom(sound))
     {
-        sampledSound.init (sound,mAudioPlayer->getSamplingRate(),mSineWave,1,waitingtime);
-        std::cout << "*********** Added snd #  " << id << std::endl;
+        sampledSound.set(sound);
+        sampledSound.startSampling (mAudioPlayer->getSamplingRate(),mSineWave,sampletime,waitingtime);
+        LogI("*********** Added sound #%d  ",id);
     }
 }
 
@@ -140,7 +141,7 @@ void Synthesizer::registerSound  (const int id,
 /// \param envelope : Reference to the envelope structure (ADSR-data).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::playSound (const int id, const Sound &sound, const Envelope &env, const int maxplaytime)
+void Synthesizer::playSound (const int id, const Sound &sound, const Envelope &env, const double sampletime, const int maxplaytime)
 {
     Tone tone;
     tone.id=id;
@@ -155,7 +156,7 @@ void Synthesizer::playSound (const int id, const Sound &sound, const Envelope &e
         {
             SampledSound &sampledSound = mSoundCollection[id];
             if (sampledSound.isReady())tone.waveform = sampledSound.getWaveForm();
-            else registerSound(id,sound,0);
+            else registerSound(id,sound,sampletime,0);
         }
         tone.frequency= 0;
     }
@@ -207,7 +208,6 @@ void Synthesizer::workerFunction (void)
         }
     }
 }
-
 
 
 //-----------------------------------------------------------------------------
@@ -331,9 +331,9 @@ void Synthesizer::generateAudioSignal ()
 /// \param id : Identifier of the sound
 ///////////////////////////////////////////////////////////////////////////////
 
-Tone* Synthesizer::getSchedulerPointer (int id)
+const Tone* Synthesizer::getSchedulerPointer (const int id) const
 {
-    Tone *snd(nullptr);
+    const Tone *snd(nullptr);
     mPlayingMutex.lock();
     for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
     mPlayingMutex.unlock();
@@ -373,10 +373,8 @@ void Synthesizer::releaseSound (const int id)
 /// \return Boolean telling whether the sound is still playing.
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Synthesizer::isPlaying (const int id)
-{
-    return (getSchedulerPointer(id) != nullptr);
-}
+bool Synthesizer::isPlaying (const int id) const
+{ return (getSchedulerPointer(id) != nullptr); }
 
 
 //-----------------------------------------------------------------------------
@@ -394,7 +392,7 @@ bool Synthesizer::isPlaying (const int id)
 /// \param level : New sustain level in (0...1).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::ModifySustainLevel (int id, double level)
+void Synthesizer::ModifySustainLevel (const int id, const double level)
 {
     if (id) if (level) {};
 //    auto snd = getSchedulerPointer(id);

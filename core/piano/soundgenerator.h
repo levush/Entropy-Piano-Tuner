@@ -60,10 +60,11 @@ private:
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const int id, const int keynumber, const double frequency, const Sound::Spectrum &spectrum, const double volume,
-                                 const double attack, const double decay,
-                                 const double sustain, const double release,
-                                 const bool hammer = false);
+    void playOriginalSoundOfKey (const int keynumber, const double volume);
+    void playEchoSound (const int keynumber);
+
+    void preCalculateSoundOfKey (const int keynumber, const double waitingtime);
+
 
     void updateWaveform (const int keynumber, const double waitingtime=0);
     void updateAllWaveforms (const double waitingtime=0);

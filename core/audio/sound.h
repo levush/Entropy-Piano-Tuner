@@ -28,99 +28,110 @@
 class Synthesizer;
 
 //=============================================================================
-//                             Class for a sound
+//                        Class describing a sound
 //=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The Sound class
+///
+/// A sound is a tone with a spectrum containing many higher partials.
+/// By defining a suitable spectrum one can generate different textures of
+/// a sound. In the EPT, sounds are used to mimic the original sound of
+/// the recorded piano key on the basis of the actually measured spectrum.
+///
+/// This class describes the static properties of a sound, in particular its
+/// fundamental frequency, its spectral content, the stereo location and
+/// its overall volume. It does not tell us anything about the dynamics
+/// (duration, envelope). This will be accounted for in the class Synthesizer.
+///
+/// The class is equipped with a hash tag, a long integer which is some kind
+/// of an identifying fingerprint of the spectrum. This allows to quickly
+/// compare whether two sounds are identical.
+///////////////////////////////////////////////////////////////////////////////
 
 class Sound
 {
 public:
-    using Spectrum = std::map<double,double>;
+
+    using Spectrum = std::map<double,double>;   // type of spectrum
 
     Sound();
     ~Sound(){}
 
-    void set (const double frequency, const Spectrum &spectrum,
-              const double stereo, const double volume);
-
     Sound (const double frequency, const Spectrum &spectrum,
            const double stereo, const double volume);
 
-    void set(const Sound &sound);
+    void set (const double frequency, const Spectrum &spectrum,
+              const double stereo, const double volume);
 
-    long getHashTag() const;
+    void set (const Sound &sound);
 
+    long getHashTag () const { return mHashTag; }
+
+    // allow the synthesizer to access the member variables
     friend class Synthesizer;
+
 protected:
+    double mFrequency;          ///< fundamental frequency
+    Spectrum mSpectrum;         ///< spectrum of partials
+    double mStereo;             ///< stereo position in [0,1]
+    double mVolume;             ///< overall volume in [0,1]
+    long mHashTag;              ///< hash tag, binary value
 
-    double mFrequency;         // fundamental frequency
-    Spectrum mSpectrum;       // spectrum of partials
-    double mStereo;            // stereo position (0..1)
-    double mVolume;            // overall volume
-    long mHashTag;    // hash tag
-
-    void computeHashTag();
+    void computeHashTag();      // compute hash tag
 };
 
 
 
 //=============================================================================
-//       Class for a complex sound consisting of various Fourier modes
+//        Class for a sound which automatically produces a waveform
 //=============================================================================
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for a complex sound
+/// \brief Class for a sound that automatically produces a smapled waveform.
 ///
-/// A complex sound is a tone with a spectrum containing many higher partials.
-/// By defining a suitable spectrum one can generate different textures of
-/// the sound. In the EPT, complex sounds are used to mimic the original sound
-/// of the recorded piano key on the basis of the actually measured spectrum.
-///
-/// This class describes the spectral content of a complex sound. It does not
-/// tell us anything about the dynamics (volume, duration envelope). This
-/// will be accounted for in the class Synthesizer.
-///
-/// The playback of complex sounds is computationally expensive. Therefore, the
-/// waveform is computed in advance: Whenever a sound is initialized, an
-/// independent thread is automatically started which computes the waveform
+/// The playback of complex sounds is computationally expensive. This class,
+/// derived from Sound, computes the waveform in advance: Whenever a sound
+/// is initialized by the function init(...), an independent thread is
+/// started automatically which computes the waveform
 /// and stores it locally in the member variable mWaveForm.
 ///////////////////////////////////////////////////////////////////////////////
 
 class SampledSound : public SimpleThreadHandler, public Sound
 {
 public:
-using WaveForm = std::vector<float>;        // stereo waveform
+
+using WaveForm = std::vector<float>;            // type of stereo waveform
 
     SampledSound ();                            // constructor
     ~SampledSound() {}                          // empty destructor
 
-    // Initialize a newly created instance of a complex sound:
-    void init (const Sound &sound,
-               const int samplerate,
-               const WaveForm &sinewave,
-               const double playingtime,
-               const double waitingtime = 0);
+    void startSampling (const int samplerate,   // start calculation
+                        const WaveForm &sinewave,
+                        const double sampletime,
+                        const double waitingtime = 0);
 
-    bool differsFrom (const Sound &sound) const
-    { return (getHashTag() != sound.getHashTag()); }
+    bool differsFrom (const Sound &sound) const; // compare by hash tag
 
-    bool isReady() { return mReady; }
+    bool isReady() { return mReady; }           // calculation complete?
 
     WaveForm getWaveForm();
 
 private:
-    int mSampleRate;                // Sample rate
-    WaveForm mSineWave;             // Copy of the sine wave pcm data
-    double mTime;                   // The required sampling time
-    int64_t mSampleLength;          // Number of stereo sample pairs
-    WaveForm mWaveForm;             // Computed wave form
-    std::mutex mMutex;              // Access mutex
-    std::atomic<bool> mReady;       // Flag that the wave form is ready
-    double mWaitingTime;            // Waiting time before computation
 
-    static std::atomic<int> numberOfThreads;        // Actual number of threads
+    int mSampleRate;                ///< Sample rate
+    WaveForm mSineWave;             ///< Copy of the sine wave pcm data
+    double mTime;                   ///< The required sampling time
+    int64_t mSampleLength;          ///< Number of stereo sample pairs
+    WaveForm mWaveForm;             ///< Computed wave form
+    std::mutex mMutex;              ///< Access mutex
+    std::atomic<bool> mReady;       ///< Flag that the wave form is ready
+    double mWaitingTime;            ///< Waiting time before computation
 
-    void workerFunction () override final;          // Thread worker function
-    void generateWaveform ();                       // PCM waveform generator
+    static std::atomic<int> numberOfThreads;        ///< Actual number of threads
+
+    void workerFunction () override final;          ///< Thread worker function
+    void generateWaveform ();                       ///< PCM waveform generator
 };
 
 #endif // SOUND_H

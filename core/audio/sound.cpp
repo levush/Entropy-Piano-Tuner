@@ -27,19 +27,55 @@
 //                              Class of a  Sound
 //=============================================================================
 
-Sound::Sound() :
-    mFrequency(0), mSpectrum(), mStereo(0), mVolume(0), mHashTag(0)
-{};
+//-----------------------------------------------------------------------------
+//                           Empty constructor
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor: Create an empty sound
+///////////////////////////////////////////////////////////////////////////////
+
+Sound::Sound() :
+    mFrequency(0),
+    mSpectrum(),
+    mStereo(0),
+    mVolume(0),
+    mHashTag(0)
+{}
+
+
+//-----------------------------------------------------------------------------
+//                         Parametrized constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Parametrized constructor for a sound
+/// \param frequency : Fundamental frequency in Hz
+/// \param spectrum : Power spectrum: f -> intensity
+/// \param stereo : Stereo position in [0,1] (0=left, 1=right)
+/// \param volume : Overall volume in [0,1]
+///////////////////////////////////////////////////////////////////////////////
 
 Sound::Sound (const double frequency, const Spectrum &spectrum,
-       const double stereo, const double volume) :
-mFrequency(frequency), mSpectrum(spectrum), mStereo(stereo),
-mVolume(volume), mHashTag(0)
-{
-    computeHashTag();
-};
+              const double stereo, const double volume) :
+    mFrequency(frequency),
+    mSpectrum(spectrum),
+    mStereo(stereo),
+    mVolume(volume)
+{   computeHashTag(); }
 
+
+//-----------------------------------------------------------------------------
+//                        Set parameters individually
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Set parameters of a sound individually
+/// \param frequency : Fundamental frequency in Hz
+/// \param spectrum : Power spectrum: f -> intensity
+/// \param stereo : Stereo position in [0,1] (0=left, 1=right)
+/// \param volume : Overall volume in [0,1]
+///////////////////////////////////////////////////////////////////////////////
 
 void Sound::set(const double frequency, const Spectrum &spectrum,
                 const double stereo, const double volume)
@@ -51,6 +87,16 @@ void Sound::set(const double frequency, const Spectrum &spectrum,
     computeHashTag();
 }
 
+
+//-----------------------------------------------------------------------------
+//                     Copy parameters from another sound
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Sound::set
+/// \param sound
+///////////////////////////////////////////////////////////////////////////////
+
 void Sound::set (const Sound &sound)
 {
     mFrequency = sound.mFrequency;
@@ -60,6 +106,7 @@ void Sound::set (const Sound &sound)
     computeHashTag();
 }
 
+
 //-----------------------------------------------------------------------------
 //                       Compute has tag of the sound
 //-----------------------------------------------------------------------------
@@ -67,16 +114,16 @@ void Sound::set (const Sound &sound)
 //////////////////////////////////////////////////////////////////////////////
 /// \brief Compute hash tag of the sound
 ///
-/// As soon as the frequency of a key changes, the waveform of the ComplexSound
+/// As soon as the frequency of a key changes, the waveform of a sound
 /// has to be computed once again. However, if the spectrum happens to
 /// coincide with the actual spectrum, then there is no need for a renewed
-/// computation. Since the frequency of the spectral lines may change during
+/// computation. To detect changes easily and to avoid unnecessary mutex
+/// blocking, the Sound class provides a hash tag which is some kind of
+/// XOR over the relevant data.
+///
+/// Since the frequency of the spectral lines may change during
 /// tuning, the hash tag is computed exclusively from the fundamental
 /// frequency and the peaks heights.
-///
-/// Since during computation a comparison of the spectrum would be difficult
-/// because of mutex blocking, the class saves a hash tag of the spectrum as
-/// a necessary condition for coincidence.
 ///
 /// \return Corresponding hash tag.
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,12 +131,13 @@ void Sound::set (const Sound &sound)
 void Sound::computeHashTag ()
 {
     mHashTag = std::hash<double>() (mFrequency);
-    for (auto &f : mSpectrum) mHashTag ^= std::hash<double>() (f.second);
+    for (auto &f : mSpectrum)
+        mHashTag ^= std::hash<double>() (f.second); // XOR over all peaks
 }
 
 
 
-long Sound::getHashTag () const { return mHashTag; }
+
 
 //=============================================================================
 //                        Class for a complex sound
@@ -123,27 +171,23 @@ SampledSound::SampledSound() :
 /// parameters which characterize the sound. After initialization, the
 /// computation of the PCM wave form is started in an independent thread.
 ///
-/// \param spectrum : The power spectrum of the sound (frequency - power)
-/// \param stereo : Stereo location in the range 0 (left) to 1 (right)
 /// \param samplerate : Sample rate to be used for generating PCM
 /// \param sinewave : Reference to a pre-calculated sine wave
 /// \param time : Duration of the PCM waveform to be generated in seconds
 /// \param waitingtime : Technical sleep time before compuatation (seconds).
 ///////////////////////////////////////////////////////////////////////////////
 
-void SampledSound::init (const Sound &sound,
-                         const int samplerate,
-                         const WaveForm &sinewave,
-                         const double playingtime,
-                         const double waitingtime)
+void SampledSound::startSampling (const int samplerate,
+                                  const WaveForm &sinewave,
+                                  const double sampletime,
+                                  const double waitingtime)
 {
     stop(); // if necessary interrupt ongoing computation
     std::lock_guard<std::mutex> lock(mMutex);
 
-    set(sound);
     mSampleRate = samplerate;
     mSineWave = sinewave;
-    mSampleLength = MathTools::roundToInteger(mSampleRate * playingtime);
+    mSampleLength = MathTools::roundToInteger(mSampleRate * sampletime);
     mWaitingTime = waitingtime;
 
     mWaveForm.clear();
@@ -158,10 +202,10 @@ void SampledSound::init (const Sound &sound,
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief ComplexSound::workerFunction
+/// \brief Thread function in which the waveform is calculated
 ///
-/// This function executes the thread which is started in the initialization
-/// procedure.
+/// This function executes the thread which is started in the
+/// PCM waveform of the sound is calculated.
 ///
 /// The function does not compute the new waveform immediately, instead it
 /// waits for mWaitingTime (double in seconds) before the computation is
@@ -174,8 +218,6 @@ void SampledSound::init (const Sound &sound,
 /// of threads is allows to be active at the same time. The worker function
 /// manages this thread limitation and calls the function generateWafeform().
 ///////////////////////////////////////////////////////////////////////////////
-
-std::atomic<int> SampledSound::numberOfThreads(0); // static thread counter
 
 void SampledSound::workerFunction()
 {
@@ -192,13 +234,17 @@ void SampledSound::workerFunction()
     numberOfThreads--;
 }
 
+/// \brief Static thread counter counting the number of running threads
+
+std::atomic<int> SampledSound::numberOfThreads(0); // static thread counter
+
 
 //-----------------------------------------------------------------------------
-//                Generate the PCM waveform of a complex sound
+//                Generate the PCM waveform of the sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Generate the PCM waveform of a complex sound.
+/// \brief Generate the PCM waveform of the sound.
 ///
 /// This function generates the PCM waveform according to the specified power
 /// spectrum for the predetermined length. By default a stereo singnal is
@@ -250,17 +296,17 @@ void SampledSound::generateWaveform()
     }
     mReady = true;
     LogI ("Created waveform with %d partials", (int)(mSpectrum.size()));
-
-////    if (id !=0) return;
-////    std::ofstream os("0000-waveform.dat");
-////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i] << std::endl;
-////    os << "&" << std::endl;
-////    for (int64_t i=0; i<SampleLength; ++i)  os << mWaveForms[0][2*i+1] << std::endl;
-////    os.close();
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Find out whether another sound is different from the present one.
+/// \param sound : Sound structure to be compared.
+/// \return True if the sounds are different.
+///////////////////////////////////////////////////////////////////////////////
 
+bool SampledSound::differsFrom (const Sound &sound) const
+{ return (getHashTag() != sound.getHashTag()); }
 
 
 //----------------------------------------------------------------------------
