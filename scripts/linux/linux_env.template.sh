@@ -22,6 +22,9 @@ export QTDIR=
 # arguments for the make command (e.g. -j4)
 export MAKE_ARGS=
 
+# directory for the qt translations (e.g. $QTDIR/translations)
+QTLANGDIR=
+
 
 # minor important settings
 ###########################################################
@@ -50,6 +53,7 @@ BINARY_FILE_NAME="entropypianotuner"
 # Qt bin and lib dir    
 export QT_BIN_DIR=${QTDIR}"/bin"
 export QT_LIB_DIR=${QTDIR}"/lib"
+export QT_PLUGINS_DIR=${QTDIR}"/plugins"
 
 if [ ! -d "$QTDIR" ]; then
     echo "$QTDIR is not a valid Qt installation"
