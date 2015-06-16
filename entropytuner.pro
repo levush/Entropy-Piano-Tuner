@@ -197,7 +197,7 @@ HEADERS  += \
     core/piano/pianodefines.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
-    core/audio/complexsound.h
+    core/audio/sound.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -252,7 +252,7 @@ SOURCES +=  \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
-    core/audio/complexsound.cpp
+    core/audio/sound.cpp
 
 #------------- Message system --------------------
 

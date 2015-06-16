@@ -60,7 +60,7 @@ private:
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const int id, const double volume,
+    void playOriginalSoundOfKey (const int id, const int keynumber, const double frequency, const Sound::Spectrum &spectrum, const double volume,
                                  const double attack, const double decay,
                                  const double sustain, const double release,
                                  const bool hammer = false);

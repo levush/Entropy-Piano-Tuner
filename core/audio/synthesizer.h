@@ -33,8 +33,41 @@
 #include <chrono>
 
 #include "audioplayeradapter.h"
-#include "complexsound.h"
+#include "sound.h"
 #include "../system/simplethreadhandler.h"
+
+
+struct Envelope
+{
+    double attack;
+    double decay;
+    double sustain;
+    double release;
+    double hammer;
+
+    Envelope(double attack=0, double decay=0,
+             double sustain=0, double release=0,
+             double hammer=0);
+};
+
+
+
+struct Tone
+{
+    int id;                             ///< Identification tag
+    Sound sound;                        ///< Sound texture information
+
+    int_fast64_t frequency;             ///< converted sine frequency
+    int_fast64_t clock;                 ///< Running time in sample cycles.
+    int_fast64_t clock_timeout;         ///< Timeout when forced to release
+    int stage;                          ///< Stage of envelope:  0=off
+                                        ///< 1=attack 2=decay 3=sustain 4=release.
+    double amplitude;
+    Envelope envelope;
+    SampledSound::WaveForm waveform;                  ///< Computed wave form stored here
+};
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,31 +95,20 @@ class Synthesizer : public SimpleThreadHandler
 public:
     using Spectrum = std::map<double,double>;
 
+
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
     void exit () { stop(); }
 
-    struct Envelope
-    {
-        double attack, decay, sustain, release, hammer;
-        Envelope (double attack=10, double decay=0.5, double sustain=0, double release=10, double hammer=0)
-        { attack=attack; decay=decay; sustain=sustain; release=release; hammer=hammer;}
-    };
+    void registerSound  (const int id, const Sound &sound, double const waitingtime);
 
-    void playSound (
-            const int id,                   // Id of the sound
-            const double frequency,         // fundamental frequency
-            const Spectrum &spectrum,       // spectrum of partials
-            const double stereo,            // stereo position (0..1)
-            const double volume,            // overall volume
-            const Envelope &envelope);      // envelope characteristics
+    void playSound (const int id, const Sound &sound, const Envelope &env, const int maxplaytime=60);
 
-
-    void releaseSound (int id);
+    void releaseSound (const int id);
 
     // Check whether sound is still playing
-    bool isPlaying (int id);
+    bool isPlaying (const int id);
 
     // Modify the sustain level of a constantly playing sound
     void ModifySustainLevel (int id, double level);
@@ -94,35 +116,18 @@ public:
 
 private:
 
-    using WaveForm = std::vector<float>;
+    using WaveForm = SampledSound::WaveForm;
 
-    std::map<int,ComplexSound> mSoundCollection;
+    std::map <int,SampledSound> mSoundCollection;
+    std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
+    std::mutex mPlayingMutex;               ///< Mutex to protect access to the chord.
 
     const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    std::vector<float> mSineWave;           ///< Sine wave vector.
-    std::vector<float> mHammerWave;         ///< Hammer noise PCM data
+    WaveForm mSineWave;           ///< Sine wave vector.
+    WaveForm mHammerWave;         ///< Hammer noise PCM data
 
-    struct Tone
-    {
-        int id;                             ///< Identification tag
-        Spectrum spectrum;                  ///< the spectrum
-        double amplitude;                   ///< Actual time-dependent amplitude.
-        double volume;                      ///< Volume of the sound.
-        double stereo;                      ///< Stereo position in [0,1].
-        Envelope envelope;                  ///< Envelope data (ADSR)
-
-        int_fast64_t frequency;             ///< converted sine frequency
-        int_fast64_t clock;                 ///< Running time in sample cycles.
-        int_fast64_t clock_timeout;         ///< Timeout when forced to release
-        int stage;                          ///< Stage of envelope:  0=off
-                                            ///< 1=attack 2=decay 3=sustain 4=release.
-        WaveForm waveform;                  ///< Computed wave form stored here
-    };
-
-    std::vector<Tone> mPlayingTones;           ///< Chord defined as a collection of tones.
-    std::mutex mSchedulerMutex;             ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
     Tone* getSchedulerPointer (int id);

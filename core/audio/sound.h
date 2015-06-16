@@ -17,10 +17,6 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//=============================================================================
-//       Class for a complex sound consisting of various Fourier modes
-//=============================================================================
-
 #ifndef SOUND_H
 #define SOUND_H
 
@@ -28,6 +24,48 @@
 #include <vector>
 
 #include "../system/simplethreadhandler.h"
+
+class Synthesizer;
+
+//=============================================================================
+//                             Class for a sound
+//=============================================================================
+
+class Sound
+{
+public:
+    using Spectrum = std::map<double,double>;
+
+    Sound();
+    ~Sound(){}
+
+    void set (const double frequency, const Spectrum &spectrum,
+              const double stereo, const double volume);
+
+    Sound (const double frequency, const Spectrum &spectrum,
+           const double stereo, const double volume);
+
+    void set(const Sound &sound);
+
+    long getHashTag() const;
+
+    friend class Synthesizer;
+protected:
+
+    double mFrequency;         // fundamental frequency
+    Spectrum mSpectrum;       // spectrum of partials
+    double mStereo;            // stereo position (0..1)
+    double mVolume;            // overall volume
+    long mHashTag;    // hash tag
+
+    void computeHashTag();
+};
+
+
+
+//=============================================================================
+//       Class for a complex sound consisting of various Fourier modes
+//=============================================================================
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a complex sound
@@ -47,48 +85,42 @@
 /// and stores it locally in the member variable mWaveForm.
 ///////////////////////////////////////////////////////////////////////////////
 
-class ComplexSound : public SimpleThreadHandler
+class SampledSound : public SimpleThreadHandler, public Sound
 {
 public:
-    using Spectrum = std::map<double,double>;   // frequency-power spectrum
-    using WaveForm = std::vector<float>;        // stereo waveform
+using WaveForm = std::vector<float>;        // stereo waveform
 
-    ComplexSound ();                            // constructor
-    ~ComplexSound() {}                          // empty destructor
+    SampledSound ();                            // constructor
+    ~SampledSound() {}                          // empty destructor
 
     // Initialize a newly created instance of a complex sound:
-    void init (const double frequency,
-               const Spectrum &spectrum,
-               const double stereo,
+    void init (const Sound &sound,
                const int samplerate,
                const WaveForm &sinewave,
                const double playingtime,
                const double waitingtime = 0);
 
-    bool coincidesWith (const double frequency, const Spectrum &spectrum)
-    { return mHash == computeHashTag(frequency,spectrum); }
+    bool differsFrom (const Sound &sound) const
+    { return (getHashTag() != sound.getHashTag()); }
+
+    bool isReady() { return mReady; }
 
     WaveForm getWaveForm();
 
 private:
     int mSampleRate;                // Sample rate
     WaveForm mSineWave;             // Copy of the sine wave pcm data
-    Spectrum mSpectrum;             // The spectrum (true frequencies)
-    double mStereo;                 // Its stereo position (0..1)
     double mTime;                   // The required sampling time
     int64_t mSampleLength;          // Number of stereo sample pairs
     WaveForm mWaveForm;             // Computed wave form
     std::mutex mMutex;              // Access mutex
     std::atomic<bool> mReady;       // Flag that the wave form is ready
-    std::atomic<long> mHash;        // Hash value for comparison
     double mWaitingTime;            // Waiting time before computation
 
     static std::atomic<int> numberOfThreads;        // Actual number of threads
 
     void workerFunction () override final;          // Thread worker function
     void generateWaveform ();                       // PCM waveform generator
-
-    long computeHashTag (const double frequency, const Spectrum &spectrum);
 };
 
 #endif // SOUND_H

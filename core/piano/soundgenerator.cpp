@@ -100,8 +100,8 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
             playReferenceTone(key,keynumber,frequ, 0.5);
             break;
         case SGM_SYNTHESIZE_KEY:
-            playOriginalSoundOfKey(mNumberOfKeys+keynumber,
-                                   0, 50, 50, mResonatingVolume, 20);
+//            playOriginalSoundOfKey(mNumberOfKeys+keynumber,
+//                                   0, 50, 50, mResonatingVolume, 20);
             break;
         default:
             break;
@@ -298,8 +298,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 // replay only if the selected key was recognized:
                 if (id == mSelectedKey)
                 {
-                    updateWaveform(id,0);
-                    playOriginalSoundOfKey(id,0.5,5,5,0,30);   // echo sound
+                    playOriginalSoundOfKey(id,id,mPiano->getKey(id).getRecordedFrequency(), mPiano->getKey(id).getPeaks(),0.5,5,5,0,30);   // echo sound
                 }
             }
         }
@@ -344,15 +343,17 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     case MODE_RECORDING:
     {
         // In this mode play the original sound in the original pitch
-        MessageHandler::send<MessageKeySelectionChanged>(key, &mPiano->getKey(key));
-        playOriginalSoundOfKey(key,0.3*volume,40,0.5,0,30,true);
+        auto &keyref = mPiano->getKey(key);
+        MessageHandler::send<MessageKeySelectionChanged>(key, &keyref);
+        playOriginalSoundOfKey(key,key,keyref.getRecordedFrequency(),keyref.getPeaks(),
+                               0.3*volume,40,0.5,0,30);
     }
     break;
     case MODE_TUNING:
     case MODE_CALCULATION:
     {
         // In these modes play the computed sound in selected concert pitch
-        playOriginalSoundOfKey(key+100,0.3*volume,40,0.5,0,30,true);
+        //playOriginalSoundOfKey(key+100,0.3*volume,40,0.5,0,30);
     }
     break;
     default:
@@ -396,9 +397,9 @@ double SoundGenerator::getStereo (int keynumber)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-    Synthesizer::Spectrum spectrum {{frequency,1.0}};
-    Synthesizer::Envelope env(90,5,0.7,10);
-    mSynthesizer.playSound(keynumber,frequency,spectrum,getStereo(keynumber),volume,env);
+    Sound sound(frequency,Synthesizer::Spectrum(),getStereo(keynumber),volume);
+    Envelope env(90,5,0.7,10);
+    mSynthesizer.playSound(keynumber+200,sound,env);
 }
 
 
@@ -454,15 +455,18 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 /// \param release : Release rate.
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundGenerator::playOriginalSoundOfKey (const int id, const double volume,
+void SoundGenerator::playOriginalSoundOfKey (const int id, const int keynumber,
+                                             const double frequency, const Sound::Spectrum &spectrum,
+                                             const double volume,
                                              const double attack, const double decay,
                                              const double sustain, const double release,
                                              const bool hammer)
 {
-    double frequency=0.1;
-    Synthesizer::Envelope env(attack, decay, sustain, release, hammer);
-    Synthesizer::Spectrum spectrum;
-    mSynthesizer.playSound(id, frequency, spectrum, getStereo(id), volume, env);
+    Sound sound (frequency,spectrum,getStereo(keynumber),volume);
+    Envelope env (attack, decay, sustain, release, hammer);
+    mSynthesizer.playSound(id,sound,env);
+
+    //Synthesizer::Spectrum spectrum;
 }
 
 
