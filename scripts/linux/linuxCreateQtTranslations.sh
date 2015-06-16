@@ -3,7 +3,6 @@ cd ${0%/*}
 # load environment
 . ./linux_env.user.sh
 
-QTLANGDIR=$QTDIR/translations
 translationsdir="$TUNER_BASE_DIR/translations"
 
 function convertLang {

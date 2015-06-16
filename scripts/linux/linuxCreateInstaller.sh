@@ -78,10 +78,10 @@ if $UPDATE_DEPENDENCIES ; then
   copySharedLib icudata
   # copy plugins: platform
   mkdir -p $INSTALLER_PACKAGE_DEPS_DATA_DIR/platforms
-  cp $QTDIR/plugins/platforms/libqxcb.so $INSTALLER_PACKAGE_DEPS_DATA_DIR/platforms
+  cp $QT_PLUGINS_DIR/platforms/libqxcb.so $INSTALLER_PACKAGE_DEPS_DATA_DIR/platforms
   # copy plugins: audio
   mkdir -p $INSTALLER_PACKAGE_DEPS_DATA_DIR/audio
-  cp $QTDIR/plugins/audio/* $INSTALLER_PACKAGE_DEPS_DATA_DIR/audio
+  cp $QT_PLUGINS_DIR/audio/* $INSTALLER_PACKAGE_DEPS_DATA_DIR/audio
 fi
 
 
