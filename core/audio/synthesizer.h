@@ -106,9 +106,9 @@ public:
     void init ();
     void exit () { stop(); }
 
-    void registerSound  (const int id, const Sound &sound, const double sampletime, const double waitingtime);
+    void registerSound  (const int id, const Sound &sound, const double sampletime, const double waitingtime=0);
 
-    void playSound (const int id, const Sound &sound, const Envelope &env, const double sampletime, const int maxplaytime=60);
+    void playSound (const int id, const Sound &sound, const Envelope &env, const int maxplaytime=60);
 
     void releaseSound (const int id);
 

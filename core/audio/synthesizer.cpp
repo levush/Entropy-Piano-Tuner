@@ -111,7 +111,8 @@ void Synthesizer::registerSound  (const int id,
 {
     if (sound.mSpectrum.size()==0) return;
     SampledSound &sampledSound = mSoundCollection[id];
-    if (sampledSound.differsFrom(sound))
+    if (sampledSound.differsFrom(sound) or
+        sampledSound.getSampeTime() < sampletime)
     {
         sampledSound.set(sound);
         sampledSound.startSampling (mAudioPlayer->getSamplingRate(),mSineWave,sampletime,waitingtime);
@@ -141,24 +142,25 @@ void Synthesizer::registerSound  (const int id,
 /// \param envelope : Reference to the envelope structure (ADSR-data).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::playSound (const int id, const Sound &sound, const Envelope &env, const double sampletime, const int maxplaytime)
+void Synthesizer::playSound (const int id,
+                             const Sound &sound,
+                             const Envelope &env,
+                             const int maxplaytime)
 {
     Tone tone;
     tone.id=id;
     tone.sound = sound;
     tone.envelope = env;
 
+    const double quicksampletime = 0.5;
+    const double standardsampletime = 5;
 
-    if (sound.mSpectrum.size()>0)
+    if (sound.mSpectrum.size()>0) // if we have a spectrum of partials
     {
-        // Complex sound
-        if (tone.waveform.size()==0)
-        {
-            SampledSound &sampledSound = mSoundCollection[id];
-            if (sampledSound.isReady())tone.waveform = sampledSound.getWaveForm();
-            else registerSound(id,sound,sampletime,0);
-        }
-        tone.frequency= 0;
+        SampledSound &sampledSound = mSoundCollection[id];
+        if (not sampledSound.isReady()) registerSound(id,sound,quicksampletime);
+        tone.waveform = sampledSound.getWaveForm();
+        tone.frequency = 0;
     }
     else
     {
@@ -172,6 +174,14 @@ void Synthesizer::playSound (const int id, const Sound &sound, const Envelope &e
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
     mPlayingMutex.unlock();
+
+    if (sound.mSpectrum.size()>0)
+    {
+        SampledSound &sampledSound = mSoundCollection[id];
+        if (sampledSound.getSampeTime() < standardsampletime)
+            registerSound(id,sound,standardsampletime);
+    }
+
 }
 
 

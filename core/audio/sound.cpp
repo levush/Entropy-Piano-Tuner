@@ -154,6 +154,7 @@ void Sound::computeHashTag ()
 SampledSound::SampledSound() :
     mSampleRate(0),
     mSineWave(),
+    mSampleTime(0),
     mSampleLength(0),
     mWaveForm(),
     mReady(false)
@@ -187,6 +188,7 @@ void SampledSound::startSampling (const int samplerate,
 
     mSampleRate = samplerate;
     mSineWave = sinewave;
+    mSampleTime = sampletime;
     mSampleLength = MathTools::roundToInteger(mSampleRate * sampletime);
     mWaitingTime = waitingtime;
 
@@ -222,7 +224,7 @@ void SampledSound::startSampling (const int samplerate,
 void SampledSound::workerFunction()
 {
     // First wait and cancel if retriggered
-    for (double t=0; t<1000.0*mWaitingTime and not cancelThread(); t+=0.001) msleep (1);
+    for (double t=0; t<mWaitingTime and not cancelThread(); t+=0.001) msleep (1);
     if (cancelThread()) return;
 
     // Avoid CPU overload by limiting the number of threads

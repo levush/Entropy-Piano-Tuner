@@ -101,19 +101,21 @@ class SampledSound : public SimpleThreadHandler, public Sound
 {
 public:
 
-using WaveForm = std::vector<float>;            // type of stereo waveform
+using WaveForm = std::vector<float>;                // type of stereo waveform
 
-    SampledSound ();                            // constructor
-    ~SampledSound() {}                          // empty destructor
+    SampledSound ();                                // constructor
+    ~SampledSound() {}                              // empty destructor
 
-    void startSampling (const int samplerate,   // start calculation
+    void startSampling (const int samplerate,       // start calculation
                         const WaveForm &sinewave,
                         const double sampletime,
                         const double waitingtime = 0);
 
-    bool differsFrom (const Sound &sound) const; // compare by hash tag
+    bool differsFrom (const Sound &sound) const;    // compare by hash tag
 
-    bool isReady() { return mReady; }           // calculation complete?
+    bool isReady() { return mReady; }               // calculation complete?
+
+    double getSampeTime() { return mSampleTime; }   // get sample time
 
     WaveForm getWaveForm();
 
@@ -121,7 +123,7 @@ private:
 
     int mSampleRate;                ///< Sample rate
     WaveForm mSineWave;             ///< Copy of the sine wave pcm data
-    double mTime;                   ///< The required sampling time
+    double mSampleTime;             ///< The required sampling time
     int64_t mSampleLength;          ///< Number of stereo sample pairs
     WaveForm mWaveForm;             ///< Computed wave form
     std::mutex mMutex;              ///< Access mutex

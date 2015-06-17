@@ -461,10 +461,9 @@ void SoundGenerator::playOriginalSoundOfKey (const int keynumber,
     const double frequency = (recording ? key.getRecordedFrequency() :
                                           key.getComputedFrequency());
     const int id = (recording ? keynumber : keynumber+100);
-    const double sampletime = 1;
     Sound sound (frequency,key.getPeaks(),getStereo(keynumber),volume);
     Envelope envelope (40,0.5,0,30,true);
-    mSynthesizer.playSound(id,sound,envelope,sampletime);
+    mSynthesizer.playSound(id,sound,envelope);
 }
 
 
@@ -474,9 +473,8 @@ void SoundGenerator::playEchoSound (const int keynumber)
 {
     const Key &key =mPiano->getKey(keynumber);
     Sound sound (key.getRecordedFrequency(),key.getPeaks(),getStereo(keynumber),0.5);
-    const double sampletime = 1;
     Envelope envelope (5,5,0,30,false);
-    mSynthesizer.playSound(keynumber+300,sound,envelope,sampletime);
+    mSynthesizer.playSound(keynumber+300,sound,envelope);
 }
 
 
@@ -489,8 +487,7 @@ void SoundGenerator::preCalculateSoundOfKey (const int keynumber, const double w
                                           key.getComputedFrequency());
     const int id = (recording ? keynumber : keynumber+100);
     Sound sound (frequency,key.getPeaks(),getStereo(keynumber),0);
-    const double sampletime = 1;
-    mSynthesizer.registerSound  (id, sound, sampletime, waitingtime);
+    mSynthesizer.registerSound  (id, sound, waitingtime);
 }
 
 //void SoundG
