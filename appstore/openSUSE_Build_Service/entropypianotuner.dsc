@@ -1,10 +1,10 @@
 Format:        1.0
 Source:        entropypianotuner
-Version: 1.0.4
+Version: 1.0.5
 Binary:        entropypianotuner
 Maintainer:    Christoph Wick <info@entropy-tuner.org>
 Architecture:  any
-Standards-Version: 1.0.4
+Standards-Version: 1.0.5
 Build-Depends: debhelper (>= 9), qtbase5-dev, qtbase5-dev-tools, qtmultimedia5-dev, qt5-qmake, fftw3-dev, libasound2-dev, libjack-dev
 Files:
  d57283ebb8157ae919762c58419353c8 133282 entropypianotuner.orig.tar.gz

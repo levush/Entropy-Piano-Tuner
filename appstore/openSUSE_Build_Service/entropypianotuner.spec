@@ -1,14 +1,14 @@
 Summary:        Entropy Piano Tuner
 Name:           entropypianotuner
-Version: 1.0.4
+Version: 1.0.5
 Release:        1%{?dist}
 License:        GPLv3
 Group:          Applications/Productivity
 URL:            http://www.entropy-tuner.org
 
 # Source from gitlab (do the workaroud to get the correct version)
-%global ARCHIVE archive.tar.gz?ref=osbs
-%global OWNER chwick
+%global ARCHIVE archive.tar.gz?ref=master
+%global OWNER entropytuner
 %global PROJECT Entropy-Piano-Tuner
 Source:         https://gitlab.com/%OWNER/%PROJECT/repository/%ARCHIVE #/archive.tar.gz
 

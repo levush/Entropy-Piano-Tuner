@@ -1,6 +1,6 @@
 # Maintainer: Christoph Wick <info@entropy-tuner.org>
 pkgname=entropypianotuner
-pkgver=1.0.4
+pkgver=1.0.5
 pkgrel=1
 pkgdesc="A tuner for your piano"
 url="http://www.entropy-tuner.org"
