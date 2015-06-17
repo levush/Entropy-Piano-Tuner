@@ -72,6 +72,7 @@ struct Envelope
 /// The clock variable counts the number of samples from the beginning of
 /// the tone. The clock_timeout limits the maximal duration of a tone.
 /// The variables 'stage' indicates the dynamical state of the envelope.
+///////////////////////////////////////////////////////////////////////////////
 
 struct Tone
 {
@@ -90,7 +91,7 @@ struct Tone
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for a simple synthesizer.
+/// \brief Synthesizer class
 ///
 /// This is the synthesizer of the EPT. It runs in an independent thread.
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,24 +107,29 @@ public:
     void init ();
     void exit () { stop(); }
 
-    void registerSound  (const int id, const Sound &sound, const double sampletime, const double waitingtime=0);
+    void preCalculateWaveform   (const int id,
+                                 const Sound &sound,
+                                 const double sampletime,
+                                 const double waitingtime=0);
 
-    void playSound (const int id, const Sound &sound, const Envelope &env, const int maxplaytime=60);
+    void playSound              (const int id,
+                                 const Sound &sound,
+                                 const Envelope &env,
+                                 const int maxplaytime=60);
 
-    void releaseSound (const int id);
+    void ModifySustainLevel     (const int id,
+                                 const double level);
 
-    // Check whether sound is still playing
-    bool isPlaying (const int id) const;
+    void releaseSound           (const int id);
 
-    // Modify the sustain level of a constantly playing sound
-    void ModifySustainLevel (const int id, const double level);
+    bool isPlaying              (const int id) const;
 
 
 private:
 
     using WaveForm = SampledSound::WaveForm;
 
-    std::map <int,SampledSound> mSoundCollection;
+    std::map <int,SampledSound> mPreCalculatedSounds;
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.
@@ -131,12 +137,12 @@ private:
     const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    WaveForm mSineWave;                     ///< Sine wave vector.
-    WaveForm mHammerWave;                   ///< Hammer noise PCM data
+    WaveForm mSineWave;                     ///< Sine wave vector, computed in init().
+    WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
-    const Tone* getSchedulerPointer (const int id) const;
+    const Tone* getTonePointer (const int id) const;
     void workerFunction () override final;
     void generateAudioSignal();
 };

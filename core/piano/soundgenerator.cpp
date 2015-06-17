@@ -487,7 +487,7 @@ void SoundGenerator::preCalculateSoundOfKey (const int keynumber, const double w
                                           key.getComputedFrequency());
     const int id = (recording ? keynumber : keynumber+100);
     Sound sound (frequency,key.getPeaks(),getStereo(keynumber),0);
-    mSynthesizer.registerSound  (id, sound, waitingtime);
+    mSynthesizer.preCalculateWaveform  (id, sound, waitingtime);
 }
 
 //void SoundG

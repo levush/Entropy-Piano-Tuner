@@ -223,6 +223,8 @@ void SampledSound::startSampling (const int samplerate,
 
 void SampledSound::workerFunction()
 {
+    setThreadName("Wafeform Creation");
+
     // First wait and cancel if retriggered
     for (double t=0; t<mWaitingTime and not cancelThread(); t+=0.001) msleep (1);
     if (cancelThread()) return;

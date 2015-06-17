@@ -27,24 +27,39 @@
 #include "../math/mathtools.h"
 
 
-Envelope::Envelope(double attack, double decay, double sustain, double release, double hammer) :
-    attack(attack), decay(decay), sustain(sustain), release(release), hammer(hammer) {};
-
-
 //=============================================================================
-//                               SYNTHESIZER
+//                  Structure describing an envelope
 //=============================================================================
 
+//-----------------------------------------------------------------------------
+//	                             Constructor
+//-----------------------------------------------------------------------------
 
-
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Envelope::Envelope
 /// \param attack : Rate of initial volume increase in units of 1/sec.
-/// \param decayrate : Rate of the subsequent volume decrease in units of 1/sec.
+/// \param decay : Rate of the subsequent volume decrease in units of 1/sec.
 ///        If this rate is zero the decay phase is omitted and the volume
 /// increases directly towards the sustain level controlled by the attack rate.
 /// \param sustain : Level at which the volume saturates after decay in (0..1).
-/// \param release : Rate at which the sound disappears after release in units of 1/sec.
+/// \param release : Rate at which the sound disappears after release in
+/// units of 1/sec.
+/// \param hammer : Volume of a hammer-like noise at the beginning
+///////////////////////////////////////////////////////////////////////////////
+
+Envelope::Envelope(double attack, double decay,
+                   double sustain, double release, double hammer) :
+    attack(attack),
+    decay(decay),
+    sustain(sustain),
+    release(release),
+    hammer(hammer)
+{};
 
 
+//=============================================================================
+//                             CLASS SYNTHESIZER
+//=============================================================================
 
 //-----------------------------------------------------------------------------
 //	                             Constructor
@@ -57,7 +72,7 @@ Envelope::Envelope(double attack, double decay, double sustain, double release, 
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
-    mSoundCollection(),
+    mPreCalculatedSounds(),
     mPlayingTones(),
     mPlayingMutex(),
     mSineWave(),
@@ -67,14 +82,15 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
 
 
 //-----------------------------------------------------------------------------
-//	                      Initialize and start thread
+//	                Initialize and start the main thread
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Initialize and start the synthesizer.
 ///
 /// This function initializes the synthesizer in that it pre-calculates a sine
-/// function and starts the main loop of the synthesizer in an indpendent thread.
+/// function as well as the hammer noise and then starts the main loop
+/// of the synthesizer in an indpendent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::init ()
@@ -84,9 +100,9 @@ void Synthesizer::init ()
         // Pre-calculate a sine wave for speedup
         mSineWave.resize(SineLength);
         for (int i=0; i<SineLength; ++i)
-            mSineWave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
+            mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
-        // Pre-calculate the hammer noise (one second)
+        // Pre-calculate the hammer-like noise (one second)
         size_t samplerate = mAudioPlayer->getSamplingRate();
         mHammerWave.resize(samplerate);
         mHammerWave.assign(samplerate,0);
@@ -104,13 +120,41 @@ void Synthesizer::init ()
 }
 
 
-void Synthesizer::registerSound  (const int id,
-                                  const Sound &sound,
-                                  const double sampletime,
-                                  const double waitingtime)
+//-----------------------------------------------------------------------------
+//	                Pre-calculate the PCM waveform of a sound
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Pre-calculate the PCM waveform of a sound
+///
+/// The purpose of this function is mainly to save time and to ensure a
+/// resonable performance of the synthesizer even on small mobile devices.
+/// It pre-calculates the wave forms to be played and stores them in
+/// the map mPreCalculatedSounds. The sounds are identified by an
+/// integer identifier tag (id). The function generates the texture
+/// of the sound for the specified sampletime at constant volume.
+/// Pre-calculation does not involve any aspects of envelopes and
+/// sound dynamics.
+///
+/// The frequency accuracy is limited by the total sampletime. For example,
+/// if we generate a sound with a sampletime of 1 second, then it is expected
+/// to differ up to 1 Hz from the true sound, leading to potential beats of
+/// 1 second. For a quick survey a sampletime of 1 second would be
+/// sufficient, but for longer times 5-10 seconds would be desirable.
+///
+/// \param id : Identification tag (usually keynumber + offset)
+/// \param sound : The sound to be produced (frequency and spectrum)
+/// \param sampletime : The total time of the pcm sample
+/// \param waitingtime : Wait before starting in an idle state.
+///////////////////////////////////////////////////////////////////////////////
+
+void Synthesizer::preCalculateWaveform  (const int id,
+                                         const Sound &sound,
+                                         const double sampletime,
+                                         const double waitingtime)
 {
     if (sound.mSpectrum.size()==0) return;
-    SampledSound &sampledSound = mSoundCollection[id];
+    SampledSound &sampledSound = mPreCalculatedSounds[id];
     if (sampledSound.differsFrom(sound) or
         sampledSound.getSampeTime() < sampletime)
     {
@@ -122,24 +166,27 @@ void Synthesizer::registerSound  (const int id,
 
 
 //-----------------------------------------------------------------------------
-//	                          Play a new sound
+//	                             Play a sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Create a new sound (note).
+/// \brief Function which plays a single note (sound)
 ///
-/// This function creates or new (or recreates an existing) sound.
+/// This function generates a sound according to the sound structure passed
+/// as a parameter. If the sound happens to coincide with a previously
+/// calculated sound marked by the identifier id, then the pre-calculated
+/// wave form is loaded and played immediately with the envelope
+/// specified by the parameter env. If a pre-calculated waveform does not
+/// yet exist a short sample is played and a longer calculation is
+/// scheduled for later.
+///
+/// If the sound contains an empty spectrum, a simple sine wave with the
+/// fundamental frequency is played.
 ///
 /// \param id : Identification tag or the sound (usually the keynumber).
-/// \param frequency : Frequency of lowest partial
-/// \param spectrum : The discrete power spectrum (frequency - power).
-///                   The base frequency of the spectrum is irrelevant.
-///                   If the spectrum is empty a sine wave is produced.
-/// \param stereo : Stereo position ranging from 0 (left) to 1 (right).
-/// \param volume : Overall volume of the sound (intensity of keypress)
-///                 with typical values between 0 and 1.
-/// \param stereo : Stereo position of the sound, ranging from 0 (left) to 1 (right).
-/// \param envelope : Reference to the envelope structure (ADSR-data).
+/// \param sound : Sound structure describing statics (frequency and spectrum)
+/// \param env : Envelope structure describing dynamics (ADSR-curve)
+/// \param maxplaytime : Cutoff playtime in seconds, forcing a release.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::playSound (const int id,
@@ -147,41 +194,39 @@ void Synthesizer::playSound (const int id,
                              const Envelope &env,
                              const int maxplaytime)
 {
+    const double quicksampletime = 0.5;
+    const double standardsampletime = 5;
+
     Tone tone;
     tone.id=id;
     tone.sound = sound;
     tone.envelope = env;
 
-    const double quicksampletime = 0.5;
-    const double standardsampletime = 5;
-
     if (sound.mSpectrum.size()>0) // if we have a spectrum of partials
     {
-        SampledSound &sampledSound = mSoundCollection[id];
-        if (not sampledSound.isReady()) registerSound(id,sound,quicksampletime);
+        SampledSound &sampledSound = mPreCalculatedSounds[id];
+        if (not sampledSound.isReady()) preCalculateWaveform(id,sound,quicksampletime);
         tone.waveform = sampledSound.getWaveForm();
         tone.frequency = 0;
     }
-    else
+    else // if we have a simple sine wave
     {
-        // SineWave
         tone.frequency = static_cast<int_fast64_t>(100.0*sound.mFrequency*SineLength);
     }
     tone.clock=0;
-    tone.clock_timeout = mAudioPlayer->getSamplingRate() * maxplaytime; // max duration 1 minute
+    tone.clock_timeout = mAudioPlayer->getSamplingRate() * maxplaytime;
     tone.stage=1;
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
     mPlayingMutex.unlock();
 
-    if (sound.mSpectrum.size()>0)
+    if (sound.mSpectrum.size()>0) // if sampletime too small request new computation
     {
-        SampledSound &sampledSound = mSoundCollection[id];
+        SampledSound &sampledSound = mPreCalculatedSounds[id];
         if (sampledSound.getSampeTime() < standardsampletime)
-            registerSound(id,sound,standardsampletime);
+            preCalculateWaveform(id,sound,standardsampletime);
     }
-
 }
 
 
@@ -191,9 +236,17 @@ void Synthesizer::playSound (const int id,
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Main thread of the synthesizer
+///
+/// This workerFunction is the main thread of the synthesizer. It is running
+/// in an endless loop until the synthesizer is stopped. It looks whether
+/// there is an audio device and sounds in the mPlayingTones-queue. If not,
+/// the synthesizer waits in an idle state. If there are notes to play,
+/// it checks their volume. The tones below a certain cutoff volume are
+/// removed from the queue. All other notes will be played. The playing
+/// is done in a separate function called generateAudioSignal().
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::workerFunction (void)
+void Synthesizer::workerFunction ()
 {
     setThreadName("Synthesizer");
     while (not cancelThread())
@@ -201,7 +254,7 @@ void Synthesizer::workerFunction (void)
         mPlayingMutex.lock();
         bool active = (mAudioPlayer and mPlayingTones.size()>0);
         mPlayingMutex.unlock();
-        if (not active) msleep(10); // Synthesizer in idle state
+        if (not active) msleep(5); // Synthesizer in idle state
         else
         {
             // first remove all sounds with a volume below cutoff:
@@ -227,12 +280,7 @@ void Synthesizer::workerFunction (void)
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Generate waveform.
 ///
-/// This is the heart of the synthesizer. It fills the circular buffer
-/// until it reaches the maximum size. It consists of two parts.
-/// First the envelope is computed, rendering the actual amplitude of the
-/// sound. Then a loop over all Fourier modes is carried out and a sine
-/// wave with the corresponding frequency is added to the buffer.
-/// \param snd : Reference of the sound to be converted.
+/// This is the heart of the synthesizer.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::generateAudioSignal ()
@@ -252,8 +300,8 @@ void Synthesizer::generateAudioSignal ()
         for (Tone &tone : mPlayingTones)
         {
             if (tone.frequency==0 and tone.waveform.size()==0)
-                if (mSoundCollection[tone.id].isReady())
-                        tone.waveform = mSoundCollection[tone.id].getWaveForm();
+                if (mPreCalculatedSounds[tone.id].isReady())
+                        tone.waveform = mPreCalculatedSounds[tone.id].getWaveForm();
             if (tone.frequency>0 or tone.waveform.size()>0)
             {
                 //============== MANAGE THE ENVELOPE =================
@@ -290,13 +338,13 @@ void Synthesizer::generateAudioSignal ()
                 tone.amplitude = y;
                 tone.clock ++;
 
-                if (tone.frequency>0)
+                if (tone.frequency>0) // if sine wave
                 {
                     double sinewave = y * volume * mSineWave[((tone.frequency*tone.clock)/cycle)%SineLength];
                     left += (1-stereo) * sinewave;
                     right += stereo * sinewave;
                 }
-                else
+                else // if tone with a composite spectrum
                 {
                     if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
                     {
@@ -336,12 +384,10 @@ void Synthesizer::generateAudioSignal ()
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Get a pointer to the sound addressed by a given ID.
 ///
-/// Note that this function has to be mutexed.
-///
 /// \param id : Identifier of the sound
 ///////////////////////////////////////////////////////////////////////////////
 
-const Tone* Synthesizer::getSchedulerPointer (const int id) const
+const Tone* Synthesizer::getTonePointer (const int id) const
 {
     const Tone *snd(nullptr);
     mPlayingMutex.lock();
@@ -368,7 +414,7 @@ void Synthesizer::releaseSound (const int id)
     mPlayingMutex.lock();
     for (auto &ch : mPlayingTones) if (ch.id%100==id%100) { ch.stage=4; released=true; }
     mPlayingMutex.unlock();
-    if (not released) LogW("Sound #%d does not exist.",id);
+    if (not released) LogW("Release: Sound with id=%d does not exist.",id);
 }
 
 
@@ -384,7 +430,7 @@ void Synthesizer::releaseSound (const int id)
 ///////////////////////////////////////////////////////////////////////////////
 
 bool Synthesizer::isPlaying (const int id) const
-{ return (getSchedulerPointer(id) != nullptr); }
+{ return (getTonePointer(id) != nullptr); }
 
 
 //-----------------------------------------------------------------------------
@@ -411,7 +457,3 @@ void Synthesizer::ModifySustainLevel (const int id, const double level)
 //    else LogW ("id does not exist");
 //    mPlayingMutex.unlock();
 }
-
-
-
-
