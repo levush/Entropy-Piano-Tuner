@@ -3,9 +3,9 @@ cd ${0%/*}
 
 # write it to the openSUSE build service files
 echo "Updating openSUSE build service files"
-sed -i.bak "s/pkgver=[[:digit:]\.]*/pkgver=$versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/PKGBUILD
-sed -i.bak "s/Version:[[:space:][:digit:]\.]*/Version: $versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/entropypianotuner.dsc
-sed -i.bak "s/Version:[[:space:][:digit:]\.]*/Version: $versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/entropypianotuner.spec
+sed -i.bak "s/^pkgver=[[:digit:]\.]*/pkgver=$versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/PKGBUILD
+sed -i.bak "s/^Version:[[:space:][:digit:]\.]*/Version: $versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/entropypianotuner.dsc
+sed -i.bak "s/^Version:[[:space:][:digit:]\.]*/Version: $versionString/" $TUNER_BASE_DIR/appstore/openSUSE_Build_Service/entropypianotuner.spec
 
 # write it to AndroidManifest.xml:
 
