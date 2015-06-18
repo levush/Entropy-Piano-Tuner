@@ -28,6 +28,7 @@
 #include "../system/eptexception.h"
 #include "../system/log.h"
 #include "../system/simplethreadhandler.h"
+#include "../messages/messagechangetuningcurve.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagerecorderenergychanged.h"
 #include "../messages/messagepreliminarykey.h"
@@ -46,7 +47,7 @@
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor, intiailizes the member variables
+/// \brief Constructor, intiailizes the member variables.
 /// \param audioadapter : Pointer to the audio output implementation
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -61,8 +62,6 @@ SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioadapter) :
     mResonatingKey(-1),
     mResonatingVolume(0)
 {}
-
-
 
 
 //-----------------------------------------------------------------------------
@@ -83,6 +82,10 @@ void SoundGenerator::handleMessage(MessagePtr m)
 
     switch (m->getType())
     {
+    // REFERENCE SOUND IN TUNING MODE
+    // When the key selection changes, the reference sound is stopped.
+    // In the tuning mode a new reference sound is started.
+    // This is important when the selection changes during tuning.
     case Message::MSG_KEY_SELECTION_CHANGED:
         {
             // keep track of selected key
@@ -91,10 +94,11 @@ void SoundGenerator::handleMessage(MessagePtr m)
             stopResonatingReferenceSound();
             if (mOperationMode == MODE_TUNING)
             {
-                playResonatingReferenceSound (mSelectedKey);
+                playResonatingReferenceSound(mSelectedKey);
             }
         }
-    break;
+        break;
+    // START REFERENCE SOUND AT THE BEGINNING OF RECORDING
     case Message::MSG_RECORDING_STARTED:
         {
             if (mOperationMode==MODE_TUNING)
@@ -104,14 +108,27 @@ void SoundGenerator::handleMessage(MessagePtr m)
             }
         }
         break;
-    case Message::MSG_RECORDING_ENDED:
+    // CHANGE REFERENCE SOUND DURING RECORDING
+    case Message::MSG_PRELIMINARY_KEY:
         {
-            if (mOperationMode == MODE_TUNING)
+            if (mOperationMode==MODE_TUNING and mSelectedKey<0)
             {
-                stopResonatingReferenceSound();
+                auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
+                int recognizedkey = message->getKeyNumber();
+                if (mResonatingKey != recognizedkey)
+                {
+                    playResonatingReferenceSound(recognizedkey);
+                }
             }
         }
         break;
+    // STOP REFERENCE SOUND AT THE END OF RECORDING
+    case Message::MSG_RECORDING_ENDED:
+        {
+                stopResonatingReferenceSound();
+        }
+        break;
+    // REFERENCE SOUND VOLUME ADJUSTMENT
     case Message::MSG_RECORDER_ENERGY_CHANGED:
         {
             if (mOperationMode==MODE_TUNING and mResonatingKey>=0)
@@ -125,32 +142,24 @@ void SoundGenerator::handleMessage(MessagePtr m)
                     }
                     else
                     {
-                        changeVolumeOfResonatingReferenceSound(1);
+                        changeVolumeOfResonatingReferenceSound(1);  // ****************** is that really necessary ?
                     }
                 }
             }
         }
-    break;
-    case Message::MSG_PRELIMINARY_KEY:
-        if (mOperationMode==MODE_TUNING and mSelectedKey<0)
-        {
-            auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
-            int recognizedkey = message->getKeyNumber();
-            if (mResonatingKey != recognizedkey)
-            {
-                playResonatingReferenceSound(recognizedkey);
-            }
-        }
         break;
+    // MODE CHANGES STOP THE REFERENCE SOUND AND TRIGGER RECALCULATION
     case Message::MSG_MODE_CHANGED:
         {
             // Keep track of mode changes
             auto message(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = message->getMode();
             stopResonatingReferenceSound();
-            updateAllWaveforms();
+            preCalculateSoundOfAllKeys();
         }
         break;
+    // IF A NEW FILE IS OPENED OR IF PIANO SETTINGS ARE CHANGED
+    // ALL SOUNDS HAVE TO BE CALCULATED ONCE AGAIN IN THE CORRESPONDING MODE
     case Message::MSG_PROJECT_FILE:
         {
             // Get a pointer to the piano and various of its properties.
@@ -159,12 +168,12 @@ void SoundGenerator::handleMessage(MessagePtr m)
             mConcertPitch = mPiano->getConcertPitch();
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
             mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
-            updateAllWaveforms();
+            preCalculateSoundOfAllKeys();
         }
         break;
+    // HANDLE MIDI KEYPRESSES AND RELATED EVENTS
     case Message::MSG_MIDI_EVENT:
         {
-            // In case of MIDI Keyboard events:
             auto message(std::static_pointer_cast<MessageMidiEvent>(m));
             MidiAdapter::Data data = message->getData();
             switch (data.event)
@@ -198,6 +207,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             }
         }
         break;
+    // PLAY ECHO SOUND IN THE RECORDING MODE
     case Message::MSG_FINAL_KEY:
         {
             // echo sound texture of the recorded key in recording mode.
@@ -207,6 +217,18 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 int keynumber = message->getKeyNumber();
                 // replay only if the selected key was recognized:
                 if (keynumber == mSelectedKey) playEchoSound(keynumber);
+            }
+        }
+        break;
+    // RECALCULTE WAVEFORM DURING CALCULATION MODE WHEN FREUQUENCY CHANGES
+    case Message::MSG_CHANGE_TUNING_CURVE:
+        {
+            if (mOperationMode==MODE_CALCULATION)
+            {
+                auto message(std::static_pointer_cast<MessageChangeTuningCurve>(m));
+                double frequency = message->getFrequency() * mConcertPitch / 440.0;
+                int keynumber = message->getKeyNumber();
+                preCalculateSoundOfKey(keynumber,frequency);
             }
         }
         break;
@@ -236,7 +258,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
 {
     int key = data.byte1-69+mKeyNumberOfA4;
     if (key<0 or key>=mNumberOfKeys) return;
-    double volume = pow(static_cast<double>(data.byte2) / 256, 2);
+    double volume = pow(static_cast<double>(data.byte2) / 128, 2);
 
     switch(mOperationMode)
     {
@@ -244,7 +266,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     {
         // In this mode play sine waves with respect to the selected concert pitch
         double frequency = mPiano->getEqualTempFrequency(key,0,mPiano->getConcertPitch());
-        playSineWave(key,frequency,0.7*volume);
+        playSineWave(key,frequency,0.3*volume);
     }
     break;
     case MODE_RECORDING:
@@ -252,21 +274,20 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
         // In this mode play the original sound in the original pitch
         auto &keyref = mPiano->getKey(key);
         MessageHandler::send<MessageKeySelectionChanged>(key, &keyref);
-        playOriginalSoundOfKey(key,0.3*volume);
+        playOriginalSoundOfKey(key,0.08*volume);
     }
     break;
     case MODE_CALCULATION:
     case MODE_TUNING:
     {
         // In these modes play the computed sound in selected concert pitch
-        playOriginalSoundOfKey(key,0.3*volume);
+        playOriginalSoundOfKey(key,0.08*volume);
     }
     break;
     default:
     break;
     }
 }
-
 
 
 //-----------------------------------------------------------------------------
@@ -293,7 +314,7 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
     if (mResonatingKey >= 0 and keynumber != mResonatingKey)
         stopResonatingReferenceSound();
     if (keynumber < 0 or keynumber >= mNumberOfKeys) return;
-    if (mSynthesizer.isPlaying(mNumberOfKeys+keynumber)) return;
+    if (mSynthesizer.isPlaying(keynumber)) return;
     auto &key = mPiano->getKey(keynumber);
     double frequ = key.getComputedFrequency()*mPiano->getConcertPitch()/440.0;
     if (frequ>0)
@@ -306,8 +327,7 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
             playReferenceTone(key,keynumber,frequ, 0.5);
             break;
         case SGM_SYNTHESIZE_KEY:
-//            playOriginalSoundOfKey(mNumberOfKeys+keynumber,
-//                                   0, 50, 50, mResonatingVolume, 20);
+            playOriginalSoundOfKey(keynumber,mResonatingVolume,mResonatingVolume);
             break;
         default:
             break;
@@ -327,10 +347,9 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
 
 void SoundGenerator::stopResonatingReferenceSound ()
 {
-//    if (mSynthesizer.isPlaying(mNumberOfKeys+mResonatingKey))
-//        mSynthesizer.releaseSound(mNumberOfKeys+mResonatingKey);
-//    mResonatingKey = -1;
-//    mResonatingVolume = 0;
+    mSynthesizer.releaseSound(mResonatingKey);
+    mResonatingKey = -1;
+    mResonatingVolume = 0;
 }
 
 
@@ -351,13 +370,13 @@ void SoundGenerator::stopResonatingReferenceSound ()
 
 void SoundGenerator::changeVolumeOfResonatingReferenceSound (double level)
 {
-    if (not mSynthesizer.isPlaying(mNumberOfKeys+mResonatingKey))
-        { mResonatingKey=-1; return; }
+//    if (not mSynthesizer.isPlaying(mResonatingKey))
+//        { mResonatingKey=-1; return; }
     double truncatedlevel = std::min(0.8,level);
     double volume = 0.2*pow(truncatedlevel,2.0);
     if (volume > mResonatingVolume) mResonatingVolume = volume;
     else mResonatingVolume *= 0.87;
-    mSynthesizer.ModifySustainLevel(mNumberOfKeys+mResonatingKey,mResonatingVolume);
+    mSynthesizer.ModifySustainLevel(mResonatingKey,mResonatingVolume);
 }
 
 
@@ -396,8 +415,8 @@ void SoundGenerator::playSineWave(int keynumber, double frequency, double volume
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
     Sound sound(frequency,Synthesizer::Spectrum(),getStereo(keynumber),volume);
-    Envelope env(90,5,0.7,10);
-    mSynthesizer.playSound(keynumber+200,sound,env,0);
+    Envelope env(40,5,0.6,10);
+    mSynthesizer.playSound(keynumber+200,sound,env);
 }
 
 
@@ -425,7 +444,7 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
     if (keynumber < mKeyNumberOfA4-36) it++;
     //double f = it->first/2*factor; // half frequency
     double f = it->first*factor;
-    int id = mNumberOfKeys + keynumber;
+    int id = mNumberOfKeys + keynumber; //********************** Achtung
 
     if(f){}; if (id){};
 //    mSynthesizer.createSound(id,1,0.5,30,5,1,30);
@@ -435,7 +454,7 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 
 
 //-----------------------------------------------------------------------------
-//			        Play sould of a key according to spectrum
+//			        Play sound of a key according to spectrum
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -454,60 +473,61 @@ void SoundGenerator::playReferenceTone (const Key &key, int keynumber, double fr
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundGenerator::playOriginalSoundOfKey (const int keynumber,
-                                             const double volume)
+                                             const double volume,
+                                             const double resonatingvolume)
 {
+    if (keynumber < 0 or keynumber >= mNumberOfKeys) return;
     const Key &key =mPiano->getKey(keynumber);
     const bool recording = (mOperationMode==MODE_RECORDING);
     const double frequency = (recording ? key.getRecordedFrequency() :
-                                          key.getComputedFrequency());
+                 key.getComputedFrequency() * mConcertPitch / 440.0);
     const int id = (recording ? keynumber : keynumber+100);
     Sound sound (frequency,key.getPeaks(),getStereo(keynumber),volume);
-    Envelope envelope (40,0.5,0,30,true);
-    mSynthesizer.playSound(id,sound,envelope);
+    if (resonatingvolume>0)
+         mSynthesizer.playSound(id,sound,Envelope(50,50,resonatingvolume,50,false));
+    else mSynthesizer.playSound(id,sound,Envelope(40,0.5,0,30,true));
 }
 
 
+//-----------------------------------------------------------------------------
+//			     Play an echo sound after successful recording
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Play an echo sound after successful recording
+/// \param keynumber : number of the key
+///////////////////////////////////////////////////////////////////////////////
 
 void SoundGenerator::playEchoSound (const int keynumber)
 {
     const Key &key =mPiano->getKey(keynumber);
     Sound sound (key.getRecordedFrequency(),key.getPeaks(),getStereo(keynumber),0.5);
     Envelope envelope (5,5,0,30,false);
-    mSynthesizer.playSound(keynumber+300,sound,envelope);
+    mSynthesizer.playSound(keynumber,sound,envelope);
 }
 
 
 
-void SoundGenerator::preCalculateSoundOfKey (const int keynumber, const double waitingtime)
+void SoundGenerator::preCalculateSoundOfKey (const int keynumber, const double frequency)
 {
-    const Key &key =mPiano->getKey(keynumber);
+    const int id = (mOperationMode==MODE_RECORDING ? keynumber : keynumber+100);
+    Sound sound (frequency,mPiano->getKey(keynumber).getPeaks(),getStereo(keynumber),0);
+    mSynthesizer.preCalculateWaveform  (id, sound, 1); // Waiting time one second
+}
+
+void SoundGenerator::preCalculateSoundOfAllKeys ()
+{
     const bool recording = (mOperationMode==MODE_RECORDING);
-    const double frequency = (recording ? key.getRecordedFrequency() :
-                                          key.getComputedFrequency());
-    const int id = (recording ? keynumber : keynumber+100);
-    Sound sound (frequency,key.getPeaks(),getStereo(keynumber),0);
-    mSynthesizer.preCalculateWaveform  (id, sound, waitingtime);
-}
-
-//void SoundG
-
-void SoundGenerator::updateWaveform (const int keynumber, const double waitingtime)
-{
-    if (keynumber) if (waitingtime) {};
-//    auto getRuntime = [] (double keynumber) { return 5.0 * pow(2.0,-keynumber/12.0); };
-//    const Key &key = mPiano->getKey(keynumber);
-//    mSynthesizer.registerSound(keynumber,    key.getRecordedFrequency(),key.getPeaks(),
-//                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
-//    mSynthesizer.registerSound(keynumber+100,
-//                               key.getComputedFrequency()/440.0*mPiano->getConcertPitch(),
-//                               key.getPeaks(),
-//                               getStereo(keynumber), getRuntime(keynumber), waitingtime);
+    for (int keynumber = 0; keynumber < mNumberOfKeys; keynumber++)
+    {
+        if (recording)
+            preCalculateSoundOfKey(keynumber,
+                                   mPiano->getKey(keynumber).getRecordedFrequency());
+        else
+            preCalculateSoundOfKey(keynumber,
+                                   mPiano->getKey(keynumber).getComputedFrequency()
+                                   * mConcertPitch / 440.0);
+    }
 }
 
 
-
-void SoundGenerator::updateAllWaveforms(const double waitingtime)
-{
-    for (int i=0; i<mNumberOfKeys; i++) updateWaveform(i,waitingtime);
-}

@@ -275,17 +275,19 @@ void SampledSound::generateWaveform()
     for (auto &s : mSpectrum) norm += s.second;
     if (norm<=0) return;
 
+    const double frequencyshift = mFrequency / mSpectrum.begin()->first;
+
     const int64_t SineLength = mSineWave.size();
     for (auto &mode : mSpectrum)
     {
-        const double f = mode.first;
+        const double f = mode.first * frequencyshift;
         const double volume = sqrt(mode.second/norm);
 
-        if (f>24 and f<10000 and volume>0.001)
+        if (f>24 and f<10000 and volume>0.0005)
         {
             const int64_t periods = round((mSampleLength * f) / mSampleRate);
-            const int64_t phasediff = round(periods * mSampleRate *
-                                            (0.5-mStereo) / 500);
+            const int64_t phasediff = round(mSampleRate *
+                                            (0.5-mStereo) / 200);
             const int64_t leftphase  = flatDistribution(generator);;
             const int64_t rightphase = leftphase + phasediff;
             for (int64_t i=0; i<mSampleLength; ++i)

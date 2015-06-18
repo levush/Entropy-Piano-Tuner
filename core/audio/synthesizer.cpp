@@ -186,13 +186,11 @@ void Synthesizer::preCalculateWaveform  (const int id,
 /// \param id : Identification tag or the sound (usually the keynumber).
 /// \param sound : Sound structure describing statics (frequency and spectrum)
 /// \param env : Envelope structure describing dynamics (ADSR-curve)
-/// \param maxplaytime : Cutoff playtime in seconds, forcing a release.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::playSound (const int id,
                              const Sound &sound,
-                             const Envelope &env,
-                             const int maxplaytime)
+                             const Envelope &env)
 {
     const double quicksampletime = 0.5;
     const double standardsampletime = 5;
@@ -214,8 +212,9 @@ void Synthesizer::playSound (const int id,
         tone.frequency = static_cast<int_fast64_t>(100.0*sound.mFrequency*SineLength);
     }
     tone.clock=0;
-    tone.clock_timeout = mAudioPlayer->getSamplingRate() * maxplaytime;
+    tone.clock_timeout = mAudioPlayer->getSamplingRate() * 60; // 60 seconds cutoff time
     tone.stage=1;
+    tone.amplitude=0;
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
@@ -328,7 +327,7 @@ void Synthesizer::generateAudioSignal ()
                             if (y <= envelope.sustain*volume) tone.stage++;
                             break;
                     case 3: // SUSTAIN
-                            y += (envelope.sustain-y) * envelope.release/SampleRate;
+                            y += (envelope.sustain*volume-y) * envelope.release/SampleRate;
                             if (tone.clock > tone.clock_timeout) tone.stage=4;
                             break;
                     case 4: // RELEASE
@@ -378,18 +377,27 @@ void Synthesizer::generateAudioSignal ()
 
 
 //-----------------------------------------------------------------------------
-// 	                      Get sound (private)
+// 	                      Get tone pointer (private)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Get a pointer to the sound addressed by a given ID.
+/// \brief Get a pointer to the sound according to the given ID.
 ///
-/// \param id : Identifier of the sound
+/// \param id : Identifier of the sound, nullptr if not found
 ///////////////////////////////////////////////////////////////////////////////
 
-const Tone* Synthesizer::getTonePointer (const int id) const
+const Tone* Synthesizer::getSoundPointer (const int id) const
 {
     const Tone *snd(nullptr);
+    mPlayingMutex.lock();
+    for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
+    mPlayingMutex.unlock();
+    return snd;
+}
+
+Tone* Synthesizer::getSoundPointer (const int id)
+{
+    Tone *snd(nullptr);
     mPlayingMutex.lock();
     for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
     mPlayingMutex.unlock();
@@ -430,7 +438,7 @@ void Synthesizer::releaseSound (const int id)
 ///////////////////////////////////////////////////////////////////////////////
 
 bool Synthesizer::isPlaying (const int id) const
-{ return (getTonePointer(id) != nullptr); }
+{ return (getSoundPointer(id) != nullptr); }
 
 
 //-----------------------------------------------------------------------------
@@ -450,10 +458,12 @@ bool Synthesizer::isPlaying (const int id) const
 
 void Synthesizer::ModifySustainLevel (const int id, const double level)
 {
-    if (id) if (level) {};
-//    auto snd = getSchedulerPointer(id);
-//    mPlayingMutex.lock();
-//    if (snd) snd->envelope.sustain = level;
-//    else LogW ("id does not exist");
-//    mPlayingMutex.unlock();
+    Tone* snd = getSoundPointer(id);
+    if (snd)
+    {
+        mPlayingMutex.lock();
+        snd->envelope.sustain = level;
+        mPlayingMutex.unlock();
+    }
+    else LogW ("id does not exist");
 }

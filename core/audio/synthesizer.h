@@ -114,8 +114,7 @@ public:
 
     void playSound              (const int id,
                                  const Sound &sound,
-                                 const Envelope &env,
-                                 const int maxplaytime=60);
+                                 const Envelope &env);
 
     void ModifySustainLevel     (const int id,
                                  const double level);
@@ -142,7 +141,8 @@ private:
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
-    const Tone* getTonePointer (const int id) const;
+    const Tone* getSoundPointer (const int id) const;
+    Tone* getSoundPointer (const int id);
     void workerFunction () override final;
     void generateAudioSignal();
 };

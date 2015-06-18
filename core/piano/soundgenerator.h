@@ -60,14 +60,11 @@ private:
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const int keynumber, const double volume);
+    void playOriginalSoundOfKey (const int keynumber, const double volume, const double resonatingvolume=0);
     void playEchoSound (const int keynumber);
 
-    void preCalculateSoundOfKey (const int keynumber, const double waitingtime);
-
-
-    void updateWaveform (const int keynumber, const double waitingtime=0);
-    void updateAllWaveforms (const double waitingtime=0);
+    void preCalculateSoundOfKey (const int keynumber, const double frequency);
+    void preCalculateSoundOfAllKeys ();
 
 private:
     Synthesizer mSynthesizer;           ///< Instance of the synthesizer.
