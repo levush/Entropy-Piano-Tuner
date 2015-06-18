@@ -1,33 +1,31 @@
 ###########################################################
 # This file contains information about your platform that
-# is needed for building on mac
+# is needed for building a iOS ipk file under mac
 #
 # This file is a template for an user file that will be
 # used by the actual script.
 #
 # Copy this file to mac_env.user.sh and adjust the path
-# settings (QTIFWDIR and QTDIR)
+# settings (QTDIR, ...)
 ###########################################################
-
 
 # important paths (change these!)
 ###########################################################
 
-# path to the qt base directory (e.g. "/Library/Qt/5.4/clang_64")
-export QTDIR="/Library/Qt/5.4/clang_64"
+# path to the qt base directory (e.g. "/Library/Qt/5.4/ios")
+export QTDIR="/Library/Qt/5.4/ios"
 
 # arguments for the make command (e.g. -j4)
 export MAKE_ARGS=-j4
 
+# path to the probisoning profile relative to the base directory (where entropytuner.pro lies)
+export PROVISONING_PROFILE="EntropyTuner.mobileprovision"
 
 # minor important settings
 ###########################################################
 
 # build directory name
-BUILD_SUB_DIR="publish_macosx"
-
-# Post fix for the program
-CONFIG="x86_64"
+BUILD_SUB_DIR="publish_ios"
 
 # publish directory name (where to store the output file)
 PUBLISH_SUB_DIR="publish"
@@ -38,7 +36,16 @@ PUBLISH_SUB_DIR="publish"
 BINARY_FILE_NAME="entropypianotuner"
 
 # The file name of the resulting dmg file
-DMG_FILE_NAME="EntropyPianoTuner_MacOsX_$CONFIG"
+APP_FILE_NAME="EntropyPianoTuner_iOS"
+
+# The name of the developer
+DEVELOPER_NAME="iPhone Distribution"
+
+# path to the ResourceRules.plis file of the iPhoneOS.sdk (e.g.: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/ResourceRules.plist)
+RESOURCE_RULES_PLIST="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/ResourceRules.plist"
+
+# path to xcrun (e.g. /usr/bin/xcrun)
+XCRUN=/usr/bin/xcrun
 
 
 # validate paths
@@ -76,9 +83,11 @@ fi
 export UNIX_SHARED=${TUNER_BASE_DIR}/scripts/unix_shared
 export SCRIPT_DIR=${TUNER_BASE_DIR}/scripts/mac
 export PUBLISH_DIR=${TUNER_BASE_DIR}/${PUBLISH_SUB_DIR}
-export DMG_FILE=${PUBLISH_DIR}/${DMG_FILE_NAME}.dmg
 export BUILD_DIR=${TUNER_BASE_DIR}/${BUILD_SUB_DIR}
 export INSTALLER_DIR=$TUNER_BASE_DIR/appstore/installer
+
+export APP_FILE=${PUBLISH_DIR}/${APP_FILE_NAME}.app
+export IPA_FILE=${PUBLISH_DIR}/${APP_FILE_NAME}.ipa
 
 # set path
 export PATH=$QT_BIN_DIR:/usr/bin:$PATH
