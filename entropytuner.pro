@@ -196,7 +196,8 @@ HEADERS  += \
     Qt/keyboard/graphicskeyitem.h \
     core/piano/pianodefines.h \
     Qt/aboutdialog.h \
-    Qt/versioncheck.h
+    Qt/versioncheck.h \
+    Qt/runguard.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -250,7 +251,8 @@ SOURCES +=  \
     Qt/algorithmdialog.cpp \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
-    Qt/versioncheck.cpp
+    Qt/versioncheck.cpp \
+    Qt/runguard.cpp
 
 #------------- Message system --------------------
 

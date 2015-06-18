@@ -40,9 +40,18 @@
 #include "../core/system/eptexception.h"
 #include "settingsforqt.h"
 #include "platformtools.h"
+#include "runguard.h"
 
 int main(int argc, char *argv[])
 {
+    RunGuard guard("entropypianotuner_runguard");
+    if ( !guard.tryToRun() ) {
+        // a QApplication is required for showing message boxes
+        QApplication q(argc, argv);
+        QMessageBox::warning(nullptr, q.tr("Application can not be started"), q.tr("The Entropy Piano Tuner could not be started because an other instance is already running."));
+        return 0;
+    }
+
     int exitCode = -1;
 
     // basic application properties (needed for settings)
