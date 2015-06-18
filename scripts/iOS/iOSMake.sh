@@ -89,7 +89,7 @@ if $DO_IPA ; then
 	cp $RESOURCE_RULES_PLIST ${APP_FILE}/.
 
 	# create ipa package
-	$XCRUN 	-sdk iphoneos PackageApplication -v "${APP_FILE}" -o "${IPA_FILE}" --sign "${DEVELOPER_NAME}" --embed "${PROVISONING_PROFILE}"
+	$XCRUN 	-sdk iphoneos PackageApplication -v "${APP_FILE}" -o "${IPA_FILE}" --sign "${DEVELOPER_NAME}" --embed "$TUNER_BASE_DIR/$PROVISONING_PROFILE"
 
 
 	echo "Created ${IPA_FILE}. Use the application loader to upload it to the app store."
@@ -101,4 +101,7 @@ if $DO_UPLOAD ; then
 
 	# upload the ipa file into the webpages
 	rsync -vh $IPA_FILE $US_BINARY
+	# create system link
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$APP_FILE_NAME.ipa"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString/$APP_FILE_NAME.ipa $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/"
 fi

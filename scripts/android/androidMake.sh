@@ -97,6 +97,9 @@ if $DO_UPLOAD ; then
 	cd $UNIX_SHARED
 	. ./webpages_env.sh
 
-		# upload the ipa file into the webpages
+	# upload the ipa file into the webpages
 	rsync -vh $APK_FILE $US_BINARY
+	# create system link
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/${APK_FILE_NAME}.apk"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString/$APK_FILE_NAME.apk $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/"
 fi
