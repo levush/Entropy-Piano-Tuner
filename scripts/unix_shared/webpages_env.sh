@@ -15,3 +15,7 @@ export US_REPOSITORY=$SERVER_USERNAME@$SERVER_DOWNLOADS_DIR/Repository
 
 export US_BINARY=$US_DOWNLOADS/$versionString
 export US_DEPENDENCIES=$US_DOWNLOADS/dependencies/$depsVersionString
+
+# create directories if missing
+ssh $SERVER_USERNAME@$SERVER_ADDRESS "mkdir -p $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString"
+ssh $SERVER_USERNAME@$SERVER_ADDRESS "mkdir -p $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/dependencies/$depsVersionString"

@@ -8,28 +8,19 @@ if [ -z "$TUNER_BASE_DIR" ] ; then
 fi
 
 # load the version
-. $UNIX_SHARED/loadVersion.sh
-
-USERNAME=hinrichsen
-SERVER=webpages.physik.uni-wuerzburg.de
-ROOT_DIR=public_html/ept
-DOWNLOADS_DIR=Resources/Public/Downloads
-
-SERVER_DOWNLOADS=$SERVER:$ROOT_DIR/$DOWNLOADS_DIR
-
+cd $UNIX_SHARED
+. ./webpages_env.sh
 
 # upload fles
 
 echo "Uploading files to $versionString"
-# create directory if missing
-ssh $USERNAME@$SERVER "mkdir -p $ROOT_DIR/$DOWNLOADS_DIR/$versionString"
 #upload dmg
-rsync -vh $DMG_FILE $USERNAME@$SERVER_DOWNLOADS/$versionString
+rsync -vh $DMG_FILE $US_BINARY
 # create system link
-ssh $USERNAME@$SERVER "rm -f $ROOT_DIR/$DOWNLOADS_DIR/$DMG_FILE_NAME.dmg"
-ssh $USERNAME@$SERVER "ln $ROOT_DIR/$DOWNLOADS_DIR/$versionString/$DMG_FILE_NAME.dmg $ROOT_DIR/$DOWNLOADS_DIR/"
+ssh $USERNAME@$SERVER "rm -f $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$DMG_FILE_NAME.dmg"
+ssh $USERNAME@$SERVER "ln $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString/$DMG_FILE_NAME.dmg $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/"
 # upload version
-rsync -vh "$INSTALLER_DIR/version.xml" $USERNAME@$SERVER_DOWNLOADS
+rsync -vh "$INSTALLER_DIR/version.xml" $US_DOWNLOADS
 
 
 echo "Uploading finished successfully"
