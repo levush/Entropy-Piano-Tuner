@@ -47,10 +47,12 @@
 #endif
 
 // update check
-#if defined Q_OS_DESKTOP
-#   define CONFIG_ENABLE_UPDATE_TOOL     1
-#else
+#ifndef CONFIG_ENABLE_UPDATE_TOOL
 #   define CONFIG_ENABLE_UPDATE_TOOL     0
+#else
+// set update tool to 1
+#   undef CONFIG_ENABLE_UPDATE_TOOL
+#   define CONFIG_ENABLE_UPDATE_TOOL     1
 #endif
 
 #endif // QTCONFIG_H
