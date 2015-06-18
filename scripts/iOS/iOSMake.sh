@@ -74,7 +74,7 @@ if $DO_BUILD ; then
 	rm -rf $BINARY_FILE_NAME.app
 
 	# make app file
-	qmake ../entropytuner.pro -r -spec macx-ios-clang CONFIG+=release CONFIG+=iphoneos
+	qmake ../entropytuner.pro -r -spec macx-ios-clang CONFIG+=release CONFIG+=iphoneos QMAKE_IOS_TARGETED_DEVICE_FAMILY=$QMAKE_IOS_TARGETED_DEVICE_FAMILY
 	make -j4
 
 	# move it to the  desired output location

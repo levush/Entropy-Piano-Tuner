@@ -19,7 +19,7 @@ export QTDIR="/Library/Qt/5.4/ios"
 export MAKE_ARGS=-j4
 
 # path to the probisoning profile relative to the base directory (where entropytuner.pro lies)
-export PROVISONING_PROFILE="EntropyTuner.mobileprovision"
+export PROVISONING_PROFILE="EntropyTuner_AppStore.mobileprovision"
 
 # minor important settings
 ###########################################################
@@ -46,6 +46,9 @@ RESOURCE_RULES_PLIST="/Applications/Xcode.app/Contents/Developer/Platforms/iPhon
 
 # path to xcrun (e.g. /usr/bin/xcrun)
 XCRUN=/usr/bin/xcrun
+
+# You MAY specify a target device family (1: iphone, 2: ipad, 1,2: both)
+QMAKE_IOS_TARGETED_DEVICE_FAMILY=2
 
 
 # validate paths
