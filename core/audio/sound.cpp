@@ -238,7 +238,9 @@ void SampledSound::workerFunction()
     numberOfThreads--;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Static thread counter counting the number of running threads
+///////////////////////////////////////////////////////////////////////////////
 
 std::atomic<int> SampledSound::numberOfThreads(0); // static thread counter
 

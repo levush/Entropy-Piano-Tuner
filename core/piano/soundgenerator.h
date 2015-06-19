@@ -55,15 +55,15 @@ private:
     void handleMidiKeypress(MidiAdapter::Data &data);
     double getStereo (int keynumber);
     void playSineWave(int keynumber, double frequency, double volume);
-    void playReferenceTone (const Key &key, int keynumber, double frequency, double volume);
+    void playReferenceSineWave (const Key &key, int keynumber, double frequency, double volume);
     void playResonatingReferenceSound (int keynumber);
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const int keynumber, const double volume, const double resonatingvolume=0);
+    void playOriginalSoundOfKey (const int keynumber, const double volume);
     void playEchoSound (const int keynumber);
 
-    void preCalculateSoundOfKey (const int keynumber, const double frequency);
+    void preCalculateSoundOfKey (const int keynumber, const OperationMode operationmode, const double frequency);
     void preCalculateSoundOfAllKeys ();
 
 private:

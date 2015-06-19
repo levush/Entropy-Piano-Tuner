@@ -102,19 +102,18 @@ void Synthesizer::init ()
         for (int i=0; i<SineLength; ++i)
             mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
-        // Pre-calculate the hammer-like noise (one second)
+        // Pre-calculate a hammer-like noise (one second), could be improved
         size_t samplerate = mAudioPlayer->getSamplingRate();
         mHammerWave.resize(samplerate);
         mHammerWave.assign(samplerate,0);
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::normal_distribution<> d(-1,1);
-        double f=2*3.14159/samplerate;
         for (size_t i=0; i<samplerate; i++)
-            {
-                mHammerWave[i] = 2*d(gen);
-                mHammerWave[i] *= exp(-f*0.5*i);;
-            }
+            mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/samplerate)/pow(2,i*5.0/samplerate);
+        for (size_t i=0; i<samplerate; i++)
+            mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/samplerate)/pow(2,i*5.0/samplerate);
+        std::default_random_engine generator;
+        std::normal_distribution<double> distribution(0,0.1);
+        for (size_t i=0; i<samplerate; i++)
+            mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 }
@@ -200,10 +199,11 @@ void Synthesizer::playSound (const int id,
     tone.sound = sound;
     tone.envelope = env;
 
+    int soundid = id & 0xff;
     if (sound.mSpectrum.size()>0) // if we have a spectrum of partials
     {
-        SampledSound &sampledSound = mPreCalculatedSounds[id];
-        if (not sampledSound.isReady()) preCalculateWaveform(id,sound,quicksampletime);
+        SampledSound &sampledSound = mPreCalculatedSounds[soundid];
+        if (not sampledSound.isReady()) preCalculateWaveform(soundid,sound,quicksampletime);
         tone.waveform = sampledSound.getWaveForm();
         tone.frequency = 0;
     }
@@ -222,9 +222,9 @@ void Synthesizer::playSound (const int id,
 
     if (sound.mSpectrum.size()>0) // if sampletime too small request new computation
     {
-        SampledSound &sampledSound = mPreCalculatedSounds[id];
+        SampledSound &sampledSound = mPreCalculatedSounds[soundid];
         if (sampledSound.getSampeTime() < standardsampletime)
-            preCalculateWaveform(id,sound,standardsampletime);
+            preCalculateWaveform(soundid,sound,standardsampletime);
     }
 }
 
@@ -298,9 +298,10 @@ void Synthesizer::generateAudioSignal ()
         mPlayingMutex.lock();
         for (Tone &tone : mPlayingTones)
         {
+            int soundid = (tone.id) & 0xff;
             if (tone.frequency==0 and tone.waveform.size()==0)
-                if (mPreCalculatedSounds[tone.id].isReady())
-                        tone.waveform = mPreCalculatedSounds[tone.id].getWaveForm();
+                if (mPreCalculatedSounds[soundid].isReady())
+                        tone.waveform = mPreCalculatedSounds[soundid].getWaveForm();
             if (tone.frequency>0 or tone.waveform.size()>0)
             {
                 //============== MANAGE THE ENVELOPE =================
@@ -420,7 +421,7 @@ void Synthesizer::releaseSound (const int id)
 {
     bool released=false;
     mPlayingMutex.lock();
-    for (auto &ch : mPlayingTones) if (ch.id%100==id%100) { ch.stage=4; released=true; }
+    for (auto &ch : mPlayingTones) if ((ch.id & 0x7f)==id) { ch.stage=4; released=true; }
     mPlayingMutex.unlock();
     if (not released) LogW("Release: Sound with id=%d does not exist.",id);
 }
@@ -465,5 +466,5 @@ void Synthesizer::ModifySustainLevel (const int id, const double level)
         snd->envelope.sustain = level;
         mPlayingMutex.unlock();
     }
-    else LogW ("id does not exist");
+    else LogW ("Cannot modify sustain level: id %d does not exist",id);
 }
