@@ -24,7 +24,6 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
-#include <iostream>
 #include <vector>
 #include <map>
 #include <cmath>
@@ -33,88 +32,119 @@
 #include <chrono>
 
 #include "audioplayeradapter.h"
+#include "sound.h"
 #include "../system/simplethreadhandler.h"
 
+
+//=============================================================================
+//                  Structure describing an envelope
+//=============================================================================
+
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for a simple synthesizer based on Fourier modes.
+/// \brief Structure describing the envelope (dynamics) of a sound
+///////////////////////////////////////////////////////////////////////////////
+
+struct Envelope
+{
+    double attack;      ///< Initial attack rate
+    double decay;       ///< Subsequent decay rate
+    double sustain;     ///< Sustain level
+    double release;     ///< Release rate
+    double hammer;      ///< Intensity of hammer noise
+
+    Envelope(double attack=0, double decay=0,
+             double sustain=0, double release=0,
+             double hammer=0);
+};
+
+
+//=============================================================================
+//                          Structure of a tone
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Structure of a single tone.
 ///
-/// This is a simple software synthesizer that can reproduce any
-/// frequency spectrum.
+/// This structure contains all data elements which characterize a single
+/// tone. Each tone carries an ID for housekeeping. The tone is characterized
+/// mainly by the sound (static properties) and the envelope (dynamics).
 ///
-/// A sound is produced in three steps. At first the sound has to be created
-/// by calling the function CreateSound. Secondly one has to add one or several
-/// Fourier modes with a given frequency and amplitude. This allows one to
-/// create any sound texture. Finally, by calling the function PlaySound,
-/// the waveform is calculated and sent to the actual audio implementation.
+/// The clock variable counts the number of samples from the beginning of
+/// the tone. The clock_timeout limits the maximal duration of a tone.
+/// The variables 'stage' indicates the dynamical state of the envelope.
+///////////////////////////////////////////////////////////////////////////////
+
+struct Tone
+{
+    int id;                             ///< Identification tag
+    Sound sound;                        ///< Static properties of the tone
+    Envelope envelope;                  ///< Dynamic properties of the tone
+
+    int_fast64_t frequency;             ///< converted sine frequency
+    int_fast64_t clock;                 ///< Running time in sample cycles.
+    int_fast64_t clock_timeout;         ///< Timeout when forced to release
+    int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
+    double amplitude;                   ///< current envelope amplitude
+    SampledSound::WaveForm waveform;    ///< Copy of precalculated waveform
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Synthesizer class
 ///
-/// Each sound is identified by an ID, usually the number of the piano key.
-///
-/// The synthesizer supports basic ADSR-envelopes (attack-decay-sustain-release)
-/// which are known from traditional synthesizers. The ADSR-envelope of each sound
-/// (note) can be chosen individually. The release phase is triggered by calling
-/// the function ReleaseSound.
+/// This is the synthesizer of the EPT. It runs in an independent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
 class Synthesizer : public SimpleThreadHandler
 {
 public:
+    using Spectrum = Sound::Spectrum;
+
+
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
-    void exit ();
+    void exit () { stop(); }
 
-    // Create a new sound (note)
-    void createSound (int id,               // Id of the sound
-                      double volume=1,      // overall volume
-                      double stereo=0.5,    // stereo position (0..1)
-                      double attack=10,     // ADSR attack rate
-                      double decayrate=0.5, // ADSR decay rate
-                      double sustain=0.0,   // ADSR sustain rate
-                      double release=10);   // ADSR release rate
+    void preCalculateWaveform   (const int id,
+                                 const Sound &sound,
+                                 const double sampletime,
+                                 const double waitingtime=0);
 
-    // Add a Fourier component
-    void addFourierComponent (int id, double f, double amplitude);
+    void playSound              (const int id,
+                                 const Sound &sound,
+                                 const Envelope &env);
 
-    // Start playing
-    void playSound (int id);
+    void ModifySustainLevel     (const int id,
+                                 const double level);
 
-    // Stop playing
-    void releaseSound (int id);
+    void releaseSound           (const int id);
 
-    // Check whether sound is still playing
-    bool isPlaying (int id);
+    bool isPlaying              (const int id) const;
 
-    // Modify the sustain level of a constantly playing sound
-    void ModifySustainLevel (int id, double level);
 
-private:    
-    const int SineLength = 16384;           ///< sine value buffer length.
+private:
+
+    using WaveForm = SampledSound::WaveForm;
+
+    std::map <int,SampledSound> mPreCalculatedSounds;
+
+    std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
+    mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.
+
+    const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    AudioBase::PacketType mSineWave;        ///< Sine wave vector.
+    WaveForm mSineWave;                     ///< Sine wave vector, computed in init().
+    WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
 
-    struct Sound
-    {
-        int clock;                          ///< Running time in sample cycles.
-        int stage;                          ///< Stage of envelope:  0=off
-                                            ///< 1=attack 2=decay 3=sustain 4=release.
-        double amplitude;                   ///< Actual time-dependent amplitude.
-        double volume;                      ///< Volume of the sound.
-        double stereo;                      ///< Stereo position in [0,1].
-        double attack;                      ///< Attack rate for envelope.
-        double decayrate;                   ///< Decay rate for envelope.
-        double sustain;                     ///< Sustain rate for envelope.
-        double release;                     ///< Release rate for envelope.
-        std::map<double,double> fouriermodes;
-    };
-
-    std::map<int,Sound> mChord;             ///< Chord defined as a collection of sounds.
-    std::mutex mChordMutex;                 ///< Mutex to protect access to the chord.
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
-    Sound* getSoundPtr (int id);
+    const Tone* getSoundPointer (const int id) const;
+    Tone* getSoundPointer (const int id);
     void workerFunction () override final;
-    void generateWaveform();
+    void generateAudioSignal();
 };
 
 #endif // SYNTHESIZER_H
