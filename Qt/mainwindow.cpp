@@ -59,16 +59,39 @@
 #include "donotshowagainmessagebox.h"
 #include "autoclosingmessagebox.h"
 #include "aboutdialog.h"
+#include "tuninggroupbox.h"
+#include "displaysize.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     mIconPostfix((QApplication::primaryScreen()->devicePixelRatio() > 1.5) ? "@2x" : ""),
     mCore(nullptr),
-    ui(new Ui::MainWindow),
-    mSmallScreen(false)
+    ui(new Ui::MainWindow)
 {
+    // this is in mm
+    //qreal maxDisplaySize = std::max(QGuiApplication::primaryScreen()->physicalSize().width(),
+    //                                QGuiApplication::primaryScreen()->physicalSize().height());
+    //new DisplaySizeDefines(maxDisplaySize * 0.0393701);  // convert mm to inch
+    new DisplaySizeDefines(DS_XSMALL);
+
     ui->setupUi(this);
 
+    mVolumeControlGroup = new VolumeControlGroupBox(this);
+    ui->controlLayout->addWidget(mVolumeControlGroup, 1000);
+    QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mVolumeControlGroup, SLOT(onModeChanged(OperationMode)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(refreshInputLevels()), this, SLOT(onResetNoiseLevel()));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteToggled(bool)), this, SLOT(onToggleMute(bool)));
+
+    mSignalAnalyzerGroup = new SignalAnalyzerGroupBox(this);
+    ui->controlLayout->addWidget(mSignalAnalyzerGroup, 1);
+    QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mSignalAnalyzerGroup, SLOT(onModeChanged(OperationMode)));
+
+    TuningGroupBox *tuningGroupBox = new TuningGroupBox(this);
+    ui->controlLayout->addWidget(tuningGroupBox, 1);
+    QObject::connect(this, SIGNAL(modeChanged(OperationMode)), tuningGroupBox, SLOT(onModeChanged(OperationMode)));
+
+
+    // Tool bars
     int iconSize = ui->modeToolBar->fontMetrics().height();
     QSize modeIconSize = QSize(iconSize, iconSize) * 2;
     ui->modeToolBar->setObjectName("modeToolBar");
@@ -217,7 +240,6 @@ MainWindow::MainWindow(QWidget *parent) :
     new QShortcut(QKeySequence(Qt::Key_F11), this, SLOT(onToggleFullscreen()));
     new QShortcut(QKeySequence(Qt::Key_F), this, SLOT(onToggleFullscreen()));
     new QShortcut(QKeySequence::FullScreen, this, SLOT(onToggleFullscreen()));
-    new QShortcut(QKeySequence(Qt::Key_M), ui->muteButton, SLOT(toggle()));
     ui->action_New->setShortcut(QKeySequence::New);
     ui->actionOpen->setShortcut(QKeySequence::Open);
     ui->actionSave->setShortcut(QKeySequence::Save);
@@ -230,8 +252,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fourierSpectrumGraphics->setKeyboard(ui->keyboardGraphicsView);
     ui->tuningCurveGraphicsView->setKeyboard(ui->keyboardGraphicsView);
 
-    ui->resetNoiseLevelButton->setIconSize(QSize(iconSize, iconSize) * 1.5);
-    ui->muteButton->setIconSize(QSize(iconSize, iconSize) * 1.5);
 #if CONFIG_DIALOG_SIZE == 1
     // reset old settings (windows size/position and splitter)
     QSettings settings;
@@ -261,18 +281,19 @@ void MainWindow::init(Core *core) {
 
 
     qDebug() << "Display size: " << QGuiApplication::primaryScreen()->physicalSize();
-    if (std::max(QGuiApplication::primaryScreen()->physicalSize().width(),
-                 QGuiApplication::primaryScreen()->physicalSize().height()) < 150) {
-        // smaller than 15 cm, use text abbrevs and hide some elements
-        initForSmallScreen();
-    }
 
     mCore->getProjectManager()->setCallback(this);
 
-    // just for testing small screens on normal screen resolution
-    // initForSmallScreen();
+    // hide some elements
+    if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
+        ui->fourierSpectrumGraphics->setVisible(false);          // only visible during recording
+        ui->keyboardGraphicsView->setMode(KeyboardGraphicsView::MODE_CLICK_RAISES_FULLSCREEN);
 
-    ui->controlLayout->addWidget(mCalculationProgressGroup = new CalculationProgressGroup(mCore, mSmallScreen, this));
+        // hide status bar
+        statusBar()->setHidden(true);
+    }
+
+    ui->controlLayout->addWidget(mCalculationProgressGroup = new CalculationProgressGroup(mCore, this));
 }
 
 void MainWindow::start() {
@@ -339,41 +360,25 @@ void MainWindow::handleMessage(MessagePtr m) {
         // check the correct tool button
         mModeToolButtons[mmc->getMode()]->setChecked(true);
 
+        emit modeChanged(mmc->getMode());
+
         // hide all groups first and enable if required
-        ui->tuningGroupBox->setVisible(false);
         mCalculationProgressGroup->setVisible(false);
-        ui->volumeGroupBox->setVisible(false);
-        ui->signalAnalyzerGroupBox->setVisible(false);
-
-        if (mmc->getMode() == MODE_IDLE) {
-            ui->volumeGroupBox->setVisible(true);
-            ui->signalAnalyzerGroupBox->setVisible(true);
-        }
-
-        if (mmc->getMode() == MODE_RECORDING) {
-            ui->volumeGroupBox->setVisible(true);
-            ui->signalAnalyzerGroupBox->setVisible(true);
-        }
-        else {
-        }
 
         if (mmc->getMode() == MODE_CALCULATION) {
             // hide first for correct sizing
             mCalculationProgressGroup->setVisible(true);
-            if (!mSmallScreen) {
+            if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
                 ui->fourierSpectrumGraphics->setVisible(false);
             }
         } else {
             // hide first for correct sizing
-            if (!mSmallScreen) {
+            if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
                 ui->fourierSpectrumGraphics->setVisible(true);
             }
         }
 
         if (mmc->getMode() == MODE_TUNING) {
-            ui->tuningGroupBox->setVisible(true);
-            ui->volumeGroupBox->setVisible(true);
-            ui->signalAnalyzerGroupBox->setVisible(true);
 
             // perform a small check if tuning is possible
             int missingKeyRecordings = 0;
@@ -407,18 +412,18 @@ void MainWindow::handleMessage(MessagePtr m) {
     }
     case Message::MSG_RECORDING_STARTED:
         statusBar()->showMessage(tr("Recording keystroke"));
-        if (mSmallScreen) {
+        if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
             ui->tuningCurveGraphicsView->setVisible(false);
             ui->fourierSpectrumGraphics->setVisible(true);
         }
-        ui->frequencyValueLabel->setText("-");
+        mSignalAnalyzerGroup->setFrequency("-");
         break;
     case Message::MSG_SIGNAL_ANALYSIS_STARTED:
         statusBar()->showMessage(tr("Signal analysis started"));
         break;
     case Message::MSG_SIGNAL_ANALYSIS_ENDED:
         statusBar()->showMessage(tr("Signal analysis ended"));
-        if (mSmallScreen) {
+        if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
             ui->fourierSpectrumGraphics->setVisible(false);
             ui->tuningCurveGraphicsView->setVisible(true);
         }
@@ -468,35 +473,23 @@ void MainWindow::changesInFileUpdated(bool) {
     updateWindowTitle();
 }
 
-void MainWindow::initForSmallScreen() {
-    mSmallScreen = true;
-
-    // hide some elements
-    ui->fourierSpectrumGraphics->setVisible(false);          // only visible during recording
-
-    ui->keyboardGraphicsView->setMode(KeyboardGraphicsView::MODE_CLICK_RAISES_FULLSCREEN);
-
-    // hide status bar
-    statusBar()->setHidden(true);
-}
-
 void MainWindow::updateNoteName(int key) {
     QString text(QString::fromStdString(mCore->getPianoManager()->getPiano().getKeyboard().getNoteName(key)));
     // add super script to #
     text.replace("#", "<sup>#</sup>");
     //text.replace(QRegExp("([0-9])"), "<sub>\\1</sub>");
-    ui->recordingCurrentKeyLabel->setText(text);
+    mSignalAnalyzerGroup->setKey(text);
 }
 
 void MainWindow::updateFrequency(const Key *key) {
     if (!key) {
-        ui->frequencyValueLabel->setText(QString("-"));
+        mSignalAnalyzerGroup->setFrequency(QString("-"));
     } else {
         double frequency = key->getRecordedFrequency();
         if (mCurrentMode == MODE_TUNING) {
             frequency = key->getTunedFrequency();
         }
-        ui->frequencyValueLabel->setText(QString("%1").arg(frequency, 0, 'f', 1));
+        mSignalAnalyzerGroup->setFrequency(QString("%1").arg(frequency, 0, 'f', 1));
     }
 }
 
@@ -505,19 +498,7 @@ void MainWindow::updateWindowTitle() {
 }
 
 void MainWindow::updateVolumeBar() {
-    int max = 10000;
-    int pos0 = mCore->getAudioRecorder()->getStopLevel() * max;
-    int pos1 = AudioRecorderAdapter::LEVEL_TRIGGER * max;
-
-    ui->volumeControlLabelsLayout->setStretch(0, pos0);
-    ui->volumeControlLabelsLayout->setStretch(1, pos1 - pos0);
-    ui->volumeControlLabelsLayout->setStretch(2, max - pos1);
-
-    ui->volumeControlLinesLayout->setStretch(0, pos0);
-    ui->volumeControlLinesLayout->setStretch(1, 0);
-    ui->volumeControlLinesLayout->setStretch(2, pos1 - pos0);
-    ui->volumeControlLinesLayout->setStretch(3, 0);
-    ui->volumeControlLinesLayout->setStretch(4, max - pos1);
+    mVolumeControlGroup->updateLevels(mCore->getAudioRecorder()->getStopLevel(), AudioRecorderAdapter::LEVEL_TRIGGER);
 }
 
 void MainWindow::onOpenSoundControl() {

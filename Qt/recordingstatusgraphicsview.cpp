@@ -28,6 +28,7 @@ RecordingStatusGraphicsView::RecordingStatusGraphicsView(QWidget *parent)
     : QGraphicsView(parent),
       mScene(SCENE_RECT)
 {
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     // no background, and no border!
     setStyleSheet("background: transparent; border: none");
 

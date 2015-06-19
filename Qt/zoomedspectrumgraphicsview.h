@@ -44,6 +44,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~ZoomedSpectrumGraphicsView();
+
+    virtual QSize sizeHint() const override final {return QSize(0, 0);}
 };
 
 #endif // ZOOMEDSPECTRUMGRAPHICSVIEW_H

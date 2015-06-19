@@ -22,6 +22,7 @@
 ZoomedSpectrumGraphicsView::ZoomedSpectrumGraphicsView(QWidget *parent)
     : GraphicsViewAdapterForQt(parent, this, QRect(0, 0, 200, 200)),
       ZoomedSpectrumDrawer(this) {
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 ZoomedSpectrumGraphicsView::~ZoomedSpectrumGraphicsView()

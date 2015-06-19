@@ -28,6 +28,7 @@
 #include <QMap>
 #include "../core/messages/messagelistener.h"
 #include "../core/adapters/calculationadapter.h"
+#include "displaysizedependinggroupbox.h"
 
 class AlgorithmInformation;
 
@@ -36,8 +37,11 @@ class AlgorithmInformation;
 ///
 /// This group box will have the progress bar and a button to start and stop
 /// the calculation.
+///
+/// Not that on small devices there will be no group box, just a widget!
+/// Therefore this class does not inherit QGroupBox, a member variable will!
 ///////////////////////////////////////////////////////////////////////////////
-class CalculationProgressGroup : public QGroupBox, public MessageListener, public CalculationAdapter
+class CalculationProgressGroup : public DisplaySizeDependingGroupBox, public MessageListener, public CalculationAdapter
 {
     Q_OBJECT
 public:
@@ -47,7 +51,7 @@ public:
     /// \param parent : Paren widget
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CalculationProgressGroup(Core *core, bool smallDevice, QWidget *parent = nullptr);
+    CalculationProgressGroup(Core *core, QWidget *parent = nullptr);
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Destructor.

@@ -199,7 +199,12 @@ HEADERS  += \
     core/piano/pianodefines.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
-    Qt/runguard.h
+    Qt/runguard.h \
+    Qt/displaysize.h \
+    Qt/tuninggroupbox.h \
+    Qt/displaysizedependinggroupbox.h \
+    Qt/signalanalyzergroupbox.h \
+    Qt/volumecontrolgroupbox.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -254,7 +259,12 @@ SOURCES +=  \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
-    Qt/runguard.cpp
+    Qt/runguard.cpp \
+    Qt/displaysize.cpp \
+    Qt/tuninggroupbox.cpp \
+    Qt/displaysizedependinggroupbox.cpp \
+    Qt/signalanalyzergroupbox.cpp \
+    Qt/volumecontrolgroupbox.cpp
 
 #------------- Message system --------------------
 
