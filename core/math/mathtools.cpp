@@ -76,7 +76,7 @@ double MathTools::computeRenyiEntropy (const std::vector<double> &v, const doubl
 
 
 //-----------------------------------------------------------------------------
-//	                        Normalize a distribution
+//	                           Compute the norm
 //-----------------------------------------------------------------------------
 
 double MathTools::computeNorm (std::vector<double> &vec)

@@ -129,7 +129,7 @@ linux-g++*:!android {
     QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -WerrorG
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -Werror
 }
 # android libs
 android {
