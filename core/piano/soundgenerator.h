@@ -25,6 +25,7 @@
 #define SOUNDGENERATOR_H
 
 #include "soundgeneratormode.h"
+
 #include "../audio/synthesizer.h"
 #include "../midi/midiadapter.h"
 #include "../piano/piano.h"
@@ -43,26 +44,27 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioadapter);
     ~SoundGenerator(){}
 
-    void init ();
-    void exit ();
+    void init () {mSynthesizer.init();}
+    void exit () {mSynthesizer.exit();}
 
-    void start();
-    void stop();
+    void start() {mSynthesizer.start();}
+    void stop()  {mSynthesizer.stop();}
 
 private:
     void handleMessage(MessagePtr m) override final;
     void handleMidiKeypress(MidiAdapter::Data &data);
     double getStereo (int keynumber);
     void playSineWave(int keynumber, double frequency, double volume);
-    void playReferenceTone (const Key &key, int keynumber, double frequency, double volume);
+    void playReferenceSineWave (const Key &key, int keynumber, double frequency, double volume);
     void playResonatingReferenceSound (int keynumber);
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
 
-    void playOriginalSoundOfKey (const Key &key, int id,
-                                 double frequency, double volume,
-                                 double attack=30, double decay=0.5,
-                                 double sustain=0, double release=30);
+    void playOriginalSoundOfKey (const int keynumber, const double volume);
+    void playEchoSound (const int keynumber);
+
+    void preCalculateSoundOfKey (const int keynumber, const OperationMode operationmode, const double frequency);
+    void preCalculateSoundOfAllKeys ();
 
 private:
     Synthesizer mSynthesizer;           ///< Instance of the synthesizer.
