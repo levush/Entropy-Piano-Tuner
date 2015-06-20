@@ -187,10 +187,6 @@ HEADERS  += \
     Qt/keyboard/graphicskeyitem.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
-<<<<<<< HEAD
-    core/audio/sound.h
-=======
->>>>>>> 9bc0ddc2414c5c47c44f3eafdfa3d097327cab07
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -236,10 +232,6 @@ SOURCES +=  \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
-<<<<<<< HEAD
-    core/audio/sound.cpp
-=======
->>>>>>> 9bc0ddc2414c5c47c44f3eafdfa3d097327cab07
 
 #------------- Message system --------------------
 

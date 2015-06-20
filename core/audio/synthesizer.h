@@ -24,15 +24,8 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
-#include <vector>
-#include <map>
-#include <cmath>
-#include <thread>
-#include <mutex>
-#include <chrono>
-
-#include "audioplayeradapter.h"
 #include "sound.h"
+#include "audioplayeradapter.h"
 #include "../system/simplethreadhandler.h"
 
 
@@ -85,7 +78,7 @@ struct Tone
     int_fast64_t clock_timeout;         ///< Timeout when forced to release
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
-    SampledSound::WaveForm waveform;    ///< Copy of precalculated waveform
+    Sound::WaveForm waveform;           ///< Copy of precalculated waveform
 };
 
 
@@ -99,18 +92,14 @@ struct Tone
 class Synthesizer : public SimpleThreadHandler
 {
 public:
-    using Spectrum = Sound::Spectrum;
-
-
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
-    void exit () { stop(); }
+    void exit () { mSoundLibrary.stop(); stop(); }
 
     void preCalculateWaveform   (const int id,
                                  const Sound &sound,
-                                 const double sampletime,
-                                 const double waitingtime=0);
+                                 const double sampletime);
 
     void playSound              (const int id,
                                  const Sound &sound,
@@ -126,9 +115,7 @@ public:
 
 private:
 
-    using WaveForm = SampledSound::WaveForm;
-
-    std::map <int,SampledSound> mPreCalculatedSounds;
+    using WaveForm = Sound::WaveForm;
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.
@@ -140,6 +127,8 @@ private:
     WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
+
+    SoundLibrary mSoundLibrary;
 
     const Tone* getSoundPointer (const int id) const;
     Tone* getSoundPointer (const int id);

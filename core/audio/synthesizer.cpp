@@ -20,9 +20,6 @@
 
 #include "synthesizer.h"
 
-//#include <algorithm>
-#include <random>
-
 #include "../system/log.h"
 #include "../math/mathtools.h"
 
@@ -72,12 +69,12 @@ Envelope::Envelope(double attack, double decay,
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
-    mPreCalculatedSounds(),
     mPlayingTones(),
     mPlayingMutex(),
     mSineWave(),
     mHammerWave(),
-    mAudioPlayer(audioadapter)
+    mAudioPlayer(audioadapter),
+    mSoundLibrary()
 {}
 
 
@@ -102,7 +99,7 @@ void Synthesizer::init ()
         for (int i=0; i<SineLength; ++i)
             mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
-        // Pre-calculate a hammer-like noise (one second), could be improved
+        // Pre-calculate a piano-hammer-like noise (one second), could be improved
         size_t samplerate = mAudioPlayer->getSamplingRate();
         mHammerWave.resize(samplerate);
         mHammerWave.assign(samplerate,0);
@@ -116,6 +113,8 @@ void Synthesizer::init ()
             mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
+
+    mSoundLibrary.start();
 }
 
 
@@ -129,7 +128,7 @@ void Synthesizer::init ()
 /// The purpose of this function is mainly to save time and to ensure a
 /// resonable performance of the synthesizer even on small mobile devices.
 /// It pre-calculates the wave forms to be played and stores them in
-/// the map mPreCalculatedSounds. The sounds are identified by an
+/// the map SoundLibrary. The sounds are identified by an
 /// integer identifier tag (id). The function generates the texture
 /// of the sound for the specified sampletime at constant volume.
 /// Pre-calculation does not involve any aspects of envelopes and
@@ -144,23 +143,14 @@ void Synthesizer::init ()
 /// \param id : Identification tag (usually keynumber + offset)
 /// \param sound : The sound to be produced (frequency and spectrum)
 /// \param sampletime : The total time of the pcm sample
-/// \param waitingtime : Wait before starting in an idle state.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::preCalculateWaveform  (const int id,
                                          const Sound &sound,
-                                         const double sampletime,
-                                         const double waitingtime)
+                                         const double sampletime)
 {
-    if (sound.mSpectrum.size()==0) return;
-    SampledSound &sampledSound = mPreCalculatedSounds[id];
-    if (sampledSound.differsFrom(sound) or
-        sampledSound.getSampeTime() < sampletime)
-    {
-        sampledSound.set(sound);
-        sampledSound.startSampling (mAudioPlayer->getSamplingRate(),mSineWave,sampletime,waitingtime);
-        LogI("*********** Added sound #%d  ",id);
-    }
+    int samplerate = mAudioPlayer->getSamplingRate();
+    mSoundLibrary.addSound(id,sound,samplerate,sampletime);
 }
 
 
@@ -191,25 +181,21 @@ void Synthesizer::playSound (const int id,
                              const Sound &sound,
                              const Envelope &env)
 {
-    const double quicksampletime = 0.5;
-    const double standardsampletime = 5;
-
     Tone tone;
     tone.id=id;
     tone.sound = sound;
     tone.envelope = env;
 
     int soundid = id & 0xff;
-    if (sound.mSpectrum.size()>0) // if we have a spectrum of partials
+    if (sound.mPartials.size()>0) // if we have a complex spectrum
     {
-        SampledSound &sampledSound = mPreCalculatedSounds[soundid];
-        if (not sampledSound.isReady()) preCalculateWaveform(soundid,sound,quicksampletime);
-        tone.waveform = sampledSound.getWaveForm();
+        tone.waveform = mSoundLibrary.getWaveForm(soundid);
         tone.frequency = 0;
     }
     else // if we have a simple sine wave
     {
-        tone.frequency = static_cast<int_fast64_t>(100.0*sound.mFrequency*SineLength);
+        tone.waveform.clear();
+        tone.frequency = static_cast<int64_t>(100.0*sound.mFrequency*SineLength);
     }
     tone.clock=0;
     tone.clock_timeout = mAudioPlayer->getSamplingRate() * 60; // 60 seconds cutoff time
@@ -219,13 +205,6 @@ void Synthesizer::playSound (const int id,
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
     mPlayingMutex.unlock();
-
-    if (sound.mSpectrum.size()>0) // if sampletime too small request new computation
-    {
-        SampledSound &sampledSound = mPreCalculatedSounds[soundid];
-        if (sampledSound.getSampeTime() < standardsampletime)
-            preCalculateWaveform(soundid,sound,standardsampletime);
-    }
 }
 
 
@@ -279,7 +258,8 @@ void Synthesizer::workerFunction ()
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Generate waveform.
 ///
-/// This is the heart of the synthesizer.
+/// This is the heart of the synthesizer which composes the pre-calculated
+/// waveforms.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::generateAudioSignal ()
@@ -298,43 +278,39 @@ void Synthesizer::generateAudioSignal ()
         mPlayingMutex.lock();
         for (Tone &tone : mPlayingTones)
         {
-            int soundid = (tone.id) & 0xff;
-            if (tone.frequency==0 and tone.waveform.size()==0)
-                if (mPreCalculatedSounds[soundid].isReady())
-                        tone.waveform = mPreCalculatedSounds[soundid].getWaveForm();
             if (tone.frequency>0 or tone.waveform.size()>0)
             {
                 //============== MANAGE THE ENVELOPE =================
                 double y = tone.amplitude;          // get last amplitude
                 Envelope &envelope = tone.envelope; // get ADSR
                 //Sound &sound = tone.sound;
-                double volume = tone.sound.mVolume;
                 double stereo = tone.sound.mStereo;
                 switch (tone.stage)                 // Manage ADSR
                 {
                     case 1: // ATTACK
-                            y += envelope.attack*volume/SampleRate;
+                            y += envelope.attack/SampleRate;
                             if (envelope.decay>0)
                             {
-                                if (y >= volume) tone.stage++;
+                                if (y >= 1) tone.stage++;
                             }
                             else
                             {
-                                if (y >= envelope.sustain*volume) tone.stage+=2;
+                                if (y >= envelope.sustain) tone.stage+=2;
                             }
                             break;
                     case 2: // DECAY
                             y *= (1-envelope.decay/SampleRate); // DECAY
-                            if (y <= envelope.sustain*volume) tone.stage++;
+                            if (y <= envelope.sustain) tone.stage++;
                             break;
                     case 3: // SUSTAIN
-                            y += (envelope.sustain*volume-y) * envelope.release/SampleRate;
+                            y += (envelope.sustain-y) * envelope.release / SampleRate;
                             if (tone.clock > tone.clock_timeout) tone.stage=4;
                             break;
                     case 4: // RELEASE
                             y *= (1-envelope.release/SampleRate);
                             break;
                 }
+                double volume = tone.sound.mVolume;
                 tone.amplitude = y;
                 tone.clock ++;
 
@@ -355,8 +331,8 @@ void Synthesizer::generateAudioSignal ()
                     int size = tone.waveform.size();
                     if (size>0)
                     {
-                        left  += y*tone.waveform[(2*tone.clock)%size];
-                        right += y*tone.waveform[(2*tone.clock+1)%size];
+                        left  += y*volume*tone.waveform[(2*tone.clock)%size];
+                        right += y*volume*tone.waveform[(2*tone.clock+1)%size];
                     }
                 }
             }

@@ -19,6 +19,8 @@
 
 #include "sound.h"
 
+#include <iostream>
+
 #include "../math/mathtools.h"
 #include "../system/log.h"
 
@@ -37,11 +39,50 @@
 
 Sound::Sound() :
     mFrequency(0),
-    mSpectrum(),
+    mFrequencyRatio(0),
+    mPartials(),
+    mPointer(),
     mStereo(0),
     mVolume(0),
-    mHashTag(0)
-{}
+    mHashTag(0),
+    mSampleRate(0),
+    mSampleSize(0),
+    mWaveForm()
+{
+    init();
+}
+
+
+//-----------------------------------------------------------------------------
+//                              Initialization
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Initialization of a sound
+///////////////////////////////////////////////////////////////////////////////
+
+void Sound::init()
+{
+    computeHashTag();
+    mPointer = mPartials.begin();
+    mLeftVolume  = mVolume * sqrt(0.9-0.8*mStereo);
+    mRightVolume = mVolume * sqrt(0.1+0.8*mStereo);
+    mPhaseDifference = round(mSampleRate * (0.5-mStereo) / 200);
+}
+
+//-----------------------------------------------------------------------------
+//                  Converter from spectrum to partial list
+//-----------------------------------------------------------------------------
+
+void Sound::setPartials (const Spectrum &spectrum)
+{
+    mPartials.clear();
+    double norm = 0;
+    for (auto &entry : spectrum) norm += entry.second;
+    if (norm<=0) return;
+    mFrequencyRatio = mFrequency / spectrum.begin()->first;
+    for (auto entry : spectrum) mPartials[-entry.second/norm]=entry.first;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -57,12 +98,21 @@ Sound::Sound() :
 ///////////////////////////////////////////////////////////////////////////////
 
 Sound::Sound (const double frequency, const Spectrum &spectrum,
-              const double stereo, const double volume) :
+              const double stereo, const double volume,
+              const int samplerate, const double sampletime) :
     mFrequency(frequency),
-    mSpectrum(spectrum),
+    mFrequencyRatio(0),
+    mPartials(),
+    mPointer(),
     mStereo(stereo),
-    mVolume(volume)
-{   computeHashTag(); }
+    mVolume(volume),
+    mSampleRate(samplerate),
+    mSampleSize(static_cast<int>(samplerate*sampletime)),
+    mWaveForm(2*mSampleSize,0)
+{
+    setPartials (spectrum);
+    init();
+}
 
 
 //-----------------------------------------------------------------------------
@@ -77,14 +127,19 @@ Sound::Sound (const double frequency, const Spectrum &spectrum,
 /// \param volume : Overall volume in [0,1]
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sound::set(const double frequency, const Spectrum &spectrum,
-                const double stereo, const double volume)
+void Sound::set(const double frequency, const Partials &spectrum,
+                const double stereo, const double volume,
+                const int samplerate, const double sampletime)
 {
     mFrequency = frequency;
-    mSpectrum = spectrum;
     mStereo = stereo;
     mVolume = volume;
-    computeHashTag();
+    mSampleRate = samplerate;
+    mSampleSize = static_cast<int>(samplerate*sampletime);
+    mWaveForm.resize(2*mSampleSize);
+    mWaveForm.assign(2*mSampleSize,0);
+    setPartials(spectrum);
+    init();
 }
 
 
@@ -97,13 +152,19 @@ void Sound::set(const double frequency, const Spectrum &spectrum,
 /// \param sound
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sound::set (const Sound &sound)
+void Sound::set (const Sound &sound, const int samplerate, const double sampletime)
 {
     mFrequency = sound.mFrequency;
-    mSpectrum = sound.mSpectrum;
+    mFrequencyRatio = sound.mFrequencyRatio;
+    mPartials = sound.mPartials;
+    mPointer = mPartials.begin();
     mStereo = sound.mStereo;
     mVolume = sound.mVolume;
-    computeHashTag();
+    mSampleRate = samplerate;
+    mSampleSize = static_cast<int>(samplerate*sampletime);
+    mWaveForm.resize(2*mSampleSize);
+    mWaveForm.assign(2*mSampleSize,0);
+    init();
 }
 
 
@@ -131,209 +192,137 @@ void Sound::set (const Sound &sound)
 void Sound::computeHashTag ()
 {
     mHashTag = std::hash<double>() (mFrequency);
-    for (auto &f : mSpectrum)
+    mHashTag ^= std::hash<int>() (mSampleRate);
+    mHashTag ^= std::hash<int>() (mSampleSize);
+    for (auto &f : mPartials)
         mHashTag ^= std::hash<double>() (f.second); // XOR over all peaks
 }
 
 
+bool Sound::computeNextFourierMode (WaveForm &sinewave, int rnd=0)
+{
+    if (mPointer==mPartials.end()) return false;
+    double volume = sqrt(-(mPointer->first));
+    const double f = mPointer->second * mFrequencyRatio;
+//    std::lock_guard<std::mutex> lock(mMutex);
+    if (f>24 and f<10000 and volume>0.0005)
+    {
+        const int64_t periods = round((mSampleSize * f) / mSampleRate);
+        const int64_t leftphase  = rnd;
+        const int64_t rightphase = leftphase + mPhaseDifference;
+        const int64_t SineLength = sinewave.size();
+        for (int64_t i=0; i<mSampleSize; ++i)
+        {
+            mWaveForm[2*i] += mLeftVolume * volume *
+                sinewave[((i*periods*SineLength)/mSampleSize+leftphase)%SineLength];
+            mWaveForm[2*i+1] += mRightVolume * volume *
+                sinewave[((i*periods*SineLength)/mSampleSize+rightphase)%SineLength];
+        }
+    }
+    mPointer++;
+    return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 //=============================================================================
-//                        Class for a complex sound
+//                        Class for a sound library
 //=============================================================================
 
-//-----------------------------------------------------------------------------
-//                               Constructor
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor, initializes the member variables
-///////////////////////////////////////////////////////////////////////////////
-
-SampledSound::SampledSound() :
-    mSampleRate(0),
-    mSineWave(),
-    mSampleTime(0),
-    mSampleLength(0),
-    mWaveForm(),
-    mReady(false)
+SoundLibrary::SoundLibrary() :
+    mSoundLibrary(),
+    mSineLength(65536),
+    mSineWave(mSineLength,0)
 {}
 
 
+
 //-----------------------------------------------------------------------------
-//                         Initialize a new ComplexSound
+//	                Pre-calculate the PCM waveform of a sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Initialize a new complex sound
+/// \brief Pre-calculate the PCM waveform of a sound
 ///
-/// This function initializes a newly created complex sound, depending on the
-/// parameters which characterize the sound. After initialization, the
-/// computation of the PCM wave form is started in an independent thread.
+/// The purpose of this function is mainly to save time and to ensure a
+/// resonable performance of the synthesizer even on small mobile devices.
+/// It pre-calculates the wave forms to be played and stores them in
+/// the map mPreCalculatedSounds. The sounds are identified by an
+/// integer identifier tag (id). The function generates the texture
+/// of the sound for the specified sampletime at constant volume.
+/// Pre-calculation does not involve any aspects of envelopes and
+/// sound dynamics.
 ///
-/// \param samplerate : Sample rate to be used for generating PCM
-/// \param sinewave : Reference to a pre-calculated sine wave
-/// \param time : Duration of the PCM waveform to be generated in seconds
-/// \param waitingtime : Technical sleep time before compuatation (seconds).
+/// The frequency accuracy is limited by the total sampletime. For example,
+/// if we generate a sound with a sampletime of 1 second, then it is expected
+/// to differ up to 1 Hz from the true sound, leading to potential beats of
+/// 1 second. For a quick survey a sampletime of 1 second would be
+/// sufficient, but for longer times 5-10 seconds would be desirable.
+///
+/// \param id : Identification tag (usually keynumber + offset)
+/// \param sound : The sound to be produced (frequency and spectrum)
+/// \param sampletime : The total time of the pcm sample
+/// \param waitingtime : Wait before starting in an idle state.
 ///////////////////////////////////////////////////////////////////////////////
 
-void SampledSound::startSampling (const int samplerate,
-                                  const WaveForm &sinewave,
-                                  const double sampletime,
-                                  const double waitingtime)
+void SoundLibrary::addSound (const int id, const Sound &sound, int samplerate, double sampletime)
 {
-    stop(); // if necessary interrupt ongoing computation
-    std::lock_guard<std::mutex> lock(mMutex);
 
-    mSampleRate = samplerate;
-    mSineWave = sinewave;
-    mSampleTime = sampletime;
-    mSampleLength = MathTools::roundToInteger(mSampleRate * sampletime);
-    mWaitingTime = waitingtime;
-
-    mWaveForm.clear();
-    mReady = false;
-    start();                        // start the thread (workerFunction)
-}
-
-
-
-//-----------------------------------------------------------------------------
-//           Worker function executing the thread for PCM generation
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Thread function in which the waveform is calculated
-///
-/// This function executes the thread which is started in the
-/// PCM waveform of the sound is calculated.
-///
-/// The function does not compute the new waveform immediately, instead it
-/// waits for mWaitingTime (double in seconds) before the computation is
-/// started. Whenever the the same thread is started once again during the
-/// waiting period, the current thread is cancelled. This ensures that only
-/// the newest thread survives. On the other hand, a high CPU load in
-/// situations with many changes (during tuning) is avoided.
-///
-/// To further avoid an overload of the CPU, only a certain maximal number
-/// of threads is allows to be active at the same time. The worker function
-/// manages this thread limitation and calls the function generateWafeform().
-///////////////////////////////////////////////////////////////////////////////
-
-void SampledSound::workerFunction()
-{
-    setThreadName("Wafeform Creation");
-
-    // First wait and cancel if retriggered
-    for (double t=0; t<mWaitingTime and not cancelThread(); t+=0.001) msleep (1);
-    if (cancelThread()) return;
-
-    // Avoid CPU overload by limiting the number of threads
-    const int maxNumberOfThreads = 8;
-    while (numberOfThreads >= maxNumberOfThreads) msleep(1);
-    if (cancelThread()) return;
-    numberOfThreads++;
-    generateWaveform();
-    numberOfThreads--;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Static thread counter counting the number of running threads
-///////////////////////////////////////////////////////////////////////////////
-
-std::atomic<int> SampledSound::numberOfThreads(0); // static thread counter
-
-
-//-----------------------------------------------------------------------------
-//                Generate the PCM waveform of the sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Generate the PCM waveform of the sound.
-///
-/// This function generates the PCM waveform according to the specified power
-/// spectrum for the predetermined length. By default a stereo singnal is
-/// generated (format LRLR...).
-///
-/// The wave consists of a superposition of sine functions. In order to avoid
-/// an initial "klick" all sine waves are randomly phase-shifted. Moreover,
-/// the phase between the two stereo channels is phase-shifted to mimic the
-/// phase delay in the real world. This leads to a more stereo-like sound.
-///////////////////////////////////////////////////////////////////////////////
-
-void SampledSound::generateWaveform()
-{
-    std::lock_guard<std::mutex> lock(mMutex);
-    const double leftvol  = sqrt(0.9-0.8*mStereo);
-    const double rightvol = sqrt(0.1+0.8*mStereo);
-    mWaveForm.resize(2*mSampleLength);
-    mWaveForm.assign(2*mSampleLength,0);
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> flatDistribution(0,mSampleLength);
-
-
-    double norm = 0;
-    for (auto &s : mSpectrum) norm += s.second;
-    if (norm<=0) return;
-
-    const double frequencyshift = mFrequency / mSpectrum.begin()->first;
-
-    const int64_t SineLength = mSineWave.size();
-    for (auto &mode : mSpectrum)
+    if (sound.getNumberOfPartials()==0) return;
+    Sound &existingSound = mSoundLibrary[id];
+    if (existingSound.getHashTag() != sound.getHashTag())
     {
-        const double f = mode.first * frequencyshift;
-        const double volume = sqrt(mode.second/norm);
-
-        if (f>24 and f<10000 and volume>0.0005)
-        {
-            const int64_t periods = round((mSampleLength * f) / mSampleRate);
-            const int64_t phasediff = round(mSampleRate *
-                                            (0.5-mStereo) / 200);
-            const int64_t leftphase  = flatDistribution(generator);;
-            const int64_t rightphase = leftphase + phasediff;
-            for (int64_t i=0; i<mSampleLength; ++i)
-            {
-                mWaveForm[2*i] += volume * leftvol *
-                    mSineWave[((i*periods*SineLength)/mSampleLength+leftphase)%SineLength];
-                mWaveForm[2*i+1] += volume * rightvol *
-                    mSineWave[((i*periods*SineLength)/mSampleLength+rightphase)%SineLength];
-            }
-        }
-        if (cancelThread()) return;
+        existingSound.set(sound,samplerate,sampletime);
+//        sampledSound.startSampling (mAudioPlayer->getSamplingRate(),mSineWave,samplesize,waitingtime);
+        LogI("*********** Added sound #%d  ",id);
     }
-    mReady = true;
-    LogI ("Created waveform with %d partials", (int)(mSpectrum.size()));
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Find out whether another sound is different from the present one.
-/// \param sound : Sound structure to be compared.
-/// \return True if the sounds are different.
-///////////////////////////////////////////////////////////////////////////////
 
-bool SampledSound::differsFrom (const Sound &sound) const
-{ return (getHashTag() != sound.getHashTag()); }
-
-
-//----------------------------------------------------------------------------
-//     Return the PCM waveform of the complex sound (constant volume)
-//----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Get the current PCM waveform of the complex sound
-/// \return PCM vector in stereo (LRLRLR...), zero size if not yet computed
-///////////////////////////////////////////////////////////////////////////////
-
-SampledSound::WaveForm SampledSound::getWaveForm()
+void SoundLibrary::workerFunction()
 {
-    std::lock_guard<std::mutex> lock(mMutex);
-    if (not mReady) return WaveForm();
-    else return mWaveForm;
+    setThreadName("WaveFormer");
+
+    // Pre-calculate a sine wave for speedup
+    mSineWave.resize(mSineLength);
+    for (int i=0; i<mSineLength; ++i)
+        mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / mSineLength));
+
+
+    while (not cancelThread())
+    {
+        bool idle = true;
+        for (auto &libentry : mSoundLibrary)
+        {
+            Sound &sound = libentry.second;
+            int rnd=0;
+            bool newModeGenerated = sound.computeNextFourierMode (mSineWave,rnd);
+            if (newModeGenerated) idle=false;
+        }
+        if (idle) msleep(20);
+    }
 }
 
 
 
 
-
+const Sound::WaveForm SoundLibrary::getWaveForm(const int id)
+{
+    return mSoundLibrary[id].getWaveForm();
+}

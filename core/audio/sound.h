@@ -54,86 +54,86 @@ class Sound
 public:
 
     using Spectrum = std::map<double,double>;   // type of spectrum
+    using Partials = std::map<double,double>;   // type of partials list
+    using WaveForm = std::vector<float>;        // type of stereo waveform
 
     Sound();
     ~Sound(){}
 
     Sound (const double frequency, const Spectrum &spectrum,
-           const double stereo, const double volume);
+           const double stereo, const double volume,
+           const int samplerate, const double sampletime);
 
-    void set (const double frequency, const Spectrum &spectrum,
-              const double stereo, const double volume);
+    void set (const double frequency, const Partials &spectrum,
+              const double stereo, const double volume,
+              const int samplerate, const double sampletime);
 
-    void set (const Sound &sound);
+    void set (const Sound &sound,
+              const int samplerate, const double sampletime);
+
+    void init ();
 
     long getHashTag () const { return mHashTag; }
+
+    bool computeNextFourierMode (WaveForm &sinewave, int rnd);
+
+    int getNumberOfPartials() const { return mPartials.size(); }
+    int getSampleSize() const { return mSampleSize; }
+    void setSampleSize(const int size) { mSampleSize = size; }
+    const Partials &getPartials() const { return mPartials; }
+    const WaveForm &getWaveForm() const { return mWaveForm; }
 
     // allow the synthesizer to access the member variables
     friend class Synthesizer;
 
 protected:
     double mFrequency;          ///< fundamental frequency
-    Spectrum mSpectrum;         ///< spectrum of partials
+    double mFrequencyRatio;     ///< frequency ratio
+    Partials mPartials;         ///< spectrum of partials
+    Partials::iterator mPointer;///< pointer to partials
     double mStereo;             ///< stereo position in [0,1]
     double mVolume;             ///< overall volume in [0,1]
+    double mLeftVolume;         ///< left volume (stereo)
+    double mRightVolume;        ///< right volume (stereo)
+    int64_t mPhaseDifference;   ///< stereo phase difference
+
     long mHashTag;              ///< hash tag, binary value
 
+    int mSampleRate;            ///< Sample rate
+    int64_t mSampleSize;          ///< Number of stereo sample pairs
+    WaveForm mWaveForm;             ///< Computed wave form
+
     void computeHashTag();      // compute hash tag
+    void setPartials(const Spectrum &spectrum);        // flip spectrum
 };
 
 
 
+
 //=============================================================================
-//        Class for a sound which automatically produces a waveform
+//                          Class for a sound library
 //=============================================================================
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for a sound that automatically produces a smapled waveform.
-///
-/// The playback of complex sounds is computationally expensive. This class,
-/// derived from Sound, computes the waveform in advance: Whenever a sound
-/// is initialized by the function init(...), an independent thread is
-/// started automatically which computes the waveform
-/// and stores it locally in the member variable mWaveForm.
-///////////////////////////////////////////////////////////////////////////////
-
-class SampledSound : public SimpleThreadHandler, public Sound
+class SoundLibrary : public SimpleThreadHandler
 {
 public:
+    SoundLibrary();
+    ~SoundLibrary(){}
 
-using WaveForm = std::vector<float>;                // type of stereo waveform
+    void init() { start(); }
+    void exit() { stop(); }
 
-    SampledSound ();                                // constructor
-    ~SampledSound() {}                              // empty destructor
+    void addSound  (const int id, const Sound &sound, int samplerate, double sampletime);
 
-    void startSampling (const int samplerate,       // start calculation
-                        const WaveForm &sinewave,
-                        const double sampletime,
-                        const double waitingtime = 0);
-
-    bool differsFrom (const Sound &sound) const;    // compare by hash tag
-
-    bool isReady() { return mReady; }               // calculation complete?
-
-    double getSampeTime() { return mSampleTime; }   // get sample time
-
-    WaveForm getWaveForm();
+    const Sound::WaveForm getWaveForm(const int id);
 
 private:
+    std::map <int,Sound> mSoundLibrary;
+    const int64_t mSineLength;
+    Sound::WaveForm mSineWave;
 
-    int mSampleRate;                ///< Sample rate
-    WaveForm mSineWave;             ///< Copy of the sine wave pcm data
-    double mSampleTime;             ///< The required sampling time
-    int64_t mSampleLength;          ///< Number of stereo sample pairs
-    WaveForm mWaveForm;             ///< Computed wave form
-    std::mutex mMutex;              ///< Access mutex
-    std::atomic<bool> mReady;       ///< Flag that the wave form is ready
-    double mWaitingTime;            ///< Waiting time before computation
+    void workerFunction();
 
-    static std::atomic<int> numberOfThreads;        ///< Actual number of threads
-
-    void workerFunction () override final;          ///< Thread worker function
-    void generateWaveform ();                       ///< PCM waveform generator
 };
 
 #endif // SOUND_H

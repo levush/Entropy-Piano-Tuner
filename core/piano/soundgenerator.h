@@ -67,15 +67,16 @@ private:
     void preCalculateSoundOfAllKeys ();
 
 private:
-    Synthesizer mSynthesizer;           ///< Instance of the synthesizer.
-    const Piano *mPiano;                ///< Pointer to the piano.
-    OperationMode mOperationMode;       ///< Copy of the operation mode.
-    double mConcertPitch;               ///< Copy of the concert pitch.
-    int mNumberOfKeys;                  ///< Copy of the number of keys.
-    int mKeyNumberOfA4;                 ///< Copy of A-key position.
-    int mSelectedKey;                   ///< Copy of selected key.
-    int mResonatingKey;                 ///< Key of the resonating sound
-    double mResonatingVolume;           ///< Volume of the resonating sound
+    Synthesizer mSynthesizer;               ///< Instance of the synthesizer.
+    const AudioPlayerAdapter *mAudioAdapter;///< Pointer to the audio device
+    const Piano *mPiano;                    ///< Pointer to the piano.
+    OperationMode mOperationMode;           ///< Copy of the operation mode.
+    double mConcertPitch;                   ///< Copy of the concert pitch.
+    int mNumberOfKeys;                      ///< Copy of the number of keys.
+    int mKeyNumberOfA4;                     ///< Copy of A-key position.
+    int mSelectedKey;                       ///< Copy of selected key.
+    int mResonatingKey;                     ///< Key of the resonating sound
+    double mResonatingVolume;               ///< Volume of the resonating sound
 };
 
 #endif // SOUNDGENERATOR_H
