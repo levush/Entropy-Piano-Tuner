@@ -47,7 +47,7 @@ RecordingQualityBar::RecordingQualityBar(QWidget *parent) :
     setOrientation(Qt::Vertical);
     setTextDirection(BottomToTop);
 
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     updateValue(0);
 }
 

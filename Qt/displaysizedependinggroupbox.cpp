@@ -5,6 +5,8 @@ DisplaySizeDependingGroupBox::DisplaySizeDependingGroupBox(QWidget *parent, QLay
     QWidget(parent),
     mOperationModeFlags(operationModeFlags)
 {
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+
     mMainWidgetContainer = this;
 
     if (DisplaySizeDefines::getSingleton()->getMainGroupBoxDisplayStyle() == MGBDS_NORMAL) {

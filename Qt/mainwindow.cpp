@@ -68,27 +68,31 @@ MainWindow::MainWindow(QWidget *parent) :
     mCore(nullptr),
     ui(new Ui::MainWindow)
 {
-    // this is in mm
-    //qreal maxDisplaySize = std::max(QGuiApplication::primaryScreen()->physicalSize().width(),
-    //                                QGuiApplication::primaryScreen()->physicalSize().height());
-    //new DisplaySizeDefines(maxDisplaySize * 0.0393701);  // convert mm to inch
-    new DisplaySizeDefines(DS_XSMALL);
-
     ui->setupUi(this);
 
+    // this is in mm
+    qreal maxDisplaySize = std::max(QGuiApplication::primaryScreen()->physicalSize().width(),
+                                    QGuiApplication::primaryScreen()->physicalSize().height());
+    new DisplaySizeDefines(maxDisplaySize * 0.0393701, ui->modeToolBar->fontMetrics().height());  // convert mm to inch
+    // switch for testing a display size
+    // new DisplaySizeDefines(DS_XSMALL);
+
     mVolumeControlGroup = new VolumeControlGroupBox(this);
-    ui->controlLayout->addWidget(mVolumeControlGroup, 1000);
+    ui->controlLayout->addWidget(mVolumeControlGroup, 1);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mVolumeControlGroup, SLOT(onModeChanged(OperationMode)));
     QObject::connect(mVolumeControlGroup, SIGNAL(refreshInputLevels()), this, SLOT(onResetNoiseLevel()));
     QObject::connect(mVolumeControlGroup, SIGNAL(muteToggled(bool)), this, SLOT(onToggleMute(bool)));
 
     mSignalAnalyzerGroup = new SignalAnalyzerGroupBox(this);
-    ui->controlLayout->addWidget(mSignalAnalyzerGroup, 1);
+    ui->controlLayout->addWidget(mSignalAnalyzerGroup, 0);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mSignalAnalyzerGroup, SLOT(onModeChanged(OperationMode)));
 
     TuningGroupBox *tuningGroupBox = new TuningGroupBox(this);
     ui->controlLayout->addWidget(tuningGroupBox, 1);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), tuningGroupBox, SLOT(onModeChanged(OperationMode)));
+
+    mKeyboardGraphicsView = new KeyboardGraphicsView(this);
+    qobject_cast<QBoxLayout*>(ui->centralWidget->layout())->addWidget(mKeyboardGraphicsView);
 
 
     // Tool bars
@@ -249,8 +253,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionTutorial->setShortcut(QKeySequence::HelpContents);
     ui->actionEdit_piano_data_sheet->setShortcut(QKeySequence(Qt::Key_F9));
 
-    ui->fourierSpectrumGraphics->setKeyboard(ui->keyboardGraphicsView);
-    ui->tuningCurveGraphicsView->setKeyboard(ui->keyboardGraphicsView);
+    ui->fourierSpectrumGraphics->setKeyboard(mKeyboardGraphicsView);
+    ui->tuningCurveGraphicsView->setKeyboard(mKeyboardGraphicsView);
+
+
+    QBoxLayout *mainLayout = qobject_cast<QBoxLayout*>(centralWidget()->layout());
+    mainLayout->setStretch(0, 0);
+    mainLayout->setStretch(1, 1);
+    mainLayout->setStretch(3, 1);
 
 #if CONFIG_DIALOG_SIZE == 1
     // reset old settings (windows size/position and splitter)
@@ -287,7 +297,6 @@ void MainWindow::init(Core *core) {
     // hide some elements
     if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
         ui->fourierSpectrumGraphics->setVisible(false);          // only visible during recording
-        ui->keyboardGraphicsView->setMode(KeyboardGraphicsView::MODE_CLICK_RAISES_FULLSCREEN);
 
         // hide status bar
         statusBar()->setHidden(true);
@@ -373,7 +382,7 @@ void MainWindow::handleMessage(MessagePtr m) {
             }
         } else {
             // hide first for correct sizing
-            if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
+            if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() != GDM_ONE_VISIBLE) {
                 ui->fourierSpectrumGraphics->setVisible(true);
             }
         }
@@ -407,7 +416,7 @@ void MainWindow::handleMessage(MessagePtr m) {
         } else  {
         }
 
-        updateFrequency(ui->keyboardGraphicsView->getSelectedKey());
+        updateFrequency(mKeyboardGraphicsView->getSelectedKey());
         break;
     }
     case Message::MSG_RECORDING_STARTED:

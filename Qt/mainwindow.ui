@@ -18,9 +18,9 @@
     <normaloff>:/media/images/icon_256x256.png</normaloff>:/media/images/icon_256x256.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="controlLayout" stretch=""/>
+     <layout class="QHBoxLayout" name="controlLayout"/>
     </item>
     <item>
      <widget class="QSplitter" name="graphSplitter">
@@ -60,16 +60,6 @@
       </widget>
      </widget>
     </item>
-    <item>
-     <widget class="KeyboardGraphicsView" name="keyboardGraphicsView">
-      <property name="whatsThis">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="renderHints">
-       <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -78,7 +68,7 @@
      <x>0</x>
      <y>0</y>
      <width>1111</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -214,11 +204,6 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
-  <customwidget>
-   <class>KeyboardGraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>keyboard/keyboardgraphicsview.h</header>
-  </customwidget>
   <customwidget>
    <class>FourierSpectrumGraph</class>
    <extends>QGraphicsView</extends>

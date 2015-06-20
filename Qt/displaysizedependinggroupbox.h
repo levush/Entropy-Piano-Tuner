@@ -13,6 +13,7 @@ public:
 
     void setTitle(QString title);
 
+
 protected:
     QGroupBox *mGroupBox = nullptr;
 

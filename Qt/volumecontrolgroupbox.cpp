@@ -31,11 +31,10 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     mainLayout->addLayout(linesLayout);
 
     auto createLine = []() {
-        QFont f;
         QFrame *frame = new QFrame;
         frame->setFrameShape(QFrame::VLine);
         frame->setFrameShadow(QFrame::Plain);
-        frame->setFixedSize(1, f.pointSizeF() * 0.75);
+        frame->setFixedSize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8, DisplaySizeDefines::getSingleton()->getSmallIconSize());
         frame->setLineWidth(3);
         return frame;
     };
@@ -55,6 +54,7 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     textLayout->addStretch();
 
     QLabel *offLabel = new QLabel(tr("Off"));
+    offLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     textLayout->addWidget(offLabel);
 
     QHBoxLayout *onLayout = new QHBoxLayout;
@@ -62,6 +62,7 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     textLayout->addLayout(onLayout);
 
     QLabel *onLabel = new QLabel(tr("On"));
+    onLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     onLayout->addWidget(onLabel);
     onLayout->addStretch();
 
@@ -86,6 +87,9 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     //}
 
     mainLayout->addStretch();
+
+    // some rudementary values
+    updateLevels(0.1, 0.5);
 }
 
 void VolumeControlGroupBox::updateLevels(double stopLevel, double onLevel) {

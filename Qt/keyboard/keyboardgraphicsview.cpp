@@ -37,6 +37,7 @@
 #include "autoscaledtokeyboardgraphicsview.h"
 #include "keyboard/graphicskeyitem.h"
 #include "fullscreenkeyboarddialog.h"
+#include "displaysize.h"
 
 using piano::STATE_FORCED;
 using piano::STATE_NORMAL;
@@ -61,9 +62,8 @@ const QColor KeyboardGraphicsView::KEY_SELECTED_UNRECORDED_COLOR(188, 3, 3);
 const qreal KeyboardGraphicsView::KEY_FORCED_FACTOR = 0.5;
 const QColor KeyboardGraphicsView::KEY_PRELIMINARY_AND_SELECTED_COLOR(255, 150, 0);
 
-KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
+KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent)
     : QGraphicsView(parent),
-      mMode(mode),
       mKeyboard(nullptr),
       mKeysGraphicsItems(0),
       mCenterOnKey(-1),
@@ -72,7 +72,7 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
       mPreliminaryKey(-1),
       mKeyNumberOfA(-1) {
     GraphicsKeyItem::initShapes(KEY_WIDTH, KEY_HEIGHT * KEY_BLACK_TO_WHITE_RATIO,
-                                KEY_WHITE_KEY_SIZE, KEY_HEIGHT);
+                                KEY_WHITE_KEY_SIZE, KEY_HEIGHT - 2 * PEN_THIN_LINE);
 
     setScene(&mScene);
 
@@ -85,15 +85,18 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent, KeyboardMode mode)
     new QShortcut(QKeySequence(Qt::Key_Right), this, SLOT(selectNext()));
     new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(deselectKey()));
 
-    QSizePolicy p(sizePolicy());
-    p.setHeightForWidth(true);
-    setSizePolicy(p);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    if (mMode & MODE_SCROLLBAR) {
-        // scroll bar always off, looks nicer, since it is scrollable with the finger
-        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        QScroller::grabGesture(this, QScroller::LeftMouseButtonGesture);
+    if (DisplaySizeDefines::getSingleton()->keepKeyboardRatioFixed()) {
+        QSizePolicy sp(sizePolicy());
+        sp.setHeightForWidth(true);
+        setSizePolicy(sp);
     }
+
+    // scroll bar always off, looks nicer, since it is scrollable with the finger
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QScroller::grabGesture(this, QScroller::LeftMouseButtonGesture);
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
@@ -125,16 +128,38 @@ void KeyboardGraphicsView::showEvent(QShowEvent *event) {
 }
 
 void KeyboardGraphicsView::resizeEvent(QResizeEvent *event) {
+    if (!DisplaySizeDefines::getSingleton()->keepKeyboardRatioFixed()) {
+        if (mResizeBlocked > 0) {
+            --mResizeBlocked;
+        } else {
+            bool wGrH = width() / height() > mScene.width() / mScene.height();
+            QSizePolicy sp(sizePolicy());
+            sp.setHeightForWidth(wGrH);
+            setSizePolicy(sp);
+
+            mResizeBlocked += 2;
+        }
+    }
+
+    QGraphicsView::resizeEvent(event);
     fitAllInView();
     centerOnKey(mCenterOnKey);
-    QGraphicsView::resizeEvent(event);
+}
+
+void KeyboardGraphicsView::scrollContentsBy(int dx, int dy) {
+    QGraphicsView::scrollContentsBy(dx, dy);
+    QRectF visibleRect(getVisibleContentsRect());
+
+    for (AutoScaledToKeyboardGraphicsView *view : mAutoScaledGraphicsViews) {
+        view->fitInView(visibleRect, Qt::IgnoreAspectRatio);
+    }
 }
 
 int KeyboardGraphicsView::heightForWidth( int w ) const {
     if (mScene.sceneRect().width() == 0) {
         return w * TOTAL_HEIGHT / (88 * KEY_WIDTH);
     }
-    return w * mScene.sceneRect().height() / mScene.sceneRect().width();
+    return w * mScene.height() / mScene.width();
 }
 
 void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
@@ -142,40 +167,25 @@ void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
 
     int newSelectedKey = getKeyAtPosition(event->pos());
 
-    if (mMode & MODE_NORMAL) {
-        bool notifyListeners = true;
-        if (mMode & MODE_SCROLLBAR) {
-            // just select locally, dont send yet, this has to be dont by the dialog containing the keyboard itself.
-            notifyListeners = false;
-        }
-        if (newSelectedKey == mSelectedKey) {
-            if (mSelectedKeyState == STATE_FORCED) {
-                deselectKey(notifyListeners);
-            } else {
-                selectKey(newSelectedKey, STATE_FORCED, notifyListeners);
-            }
+    bool notifyListeners = true;
+    if (newSelectedKey == mSelectedKey) {
+        if (mSelectedKeyState == STATE_FORCED) {
+            deselectKey(notifyListeners);
         } else {
-            selectKey(newSelectedKey, STATE_NORMAL, notifyListeners);
+            selectKey(newSelectedKey, STATE_FORCED, notifyListeners);
         }
-    } else if (mMode & MODE_CLICK_RAISES_FULLSCREEN) {
-        FullScreenKeyboardDialog dia(this);
-        dia.getKeyboardView()->centerOnKey(newSelectedKey);
-        dia.exec();
-        this->setFocus();
-        event->setAccepted(false);
+    } else {
+        selectKey(newSelectedKey, STATE_NORMAL, notifyListeners);
     }
 }
 
 void KeyboardGraphicsView::mouseMoveEvent(QMouseEvent *event) {
     QGraphicsView::mouseMoveEvent(event);
 
-    if (mMode & MODE_SCROLLBAR) {
-    } else {
-        if (event->buttons() & Qt::LeftButton) {
-            int newSelectedKey = getKeyAtPosition(event->pos());
-            if (newSelectedKey != mSelectedKey) {
-                selectKey(newSelectedKey, STATE_NORMAL);
-            }
+    if (event->buttons() & Qt::LeftButton) {
+        int newSelectedKey = getKeyAtPosition(event->pos());
+        if (newSelectedKey != mSelectedKey) {
+            selectKey(newSelectedKey, STATE_NORMAL);
         }
     }
 }
@@ -463,6 +473,7 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
 
         // key rects
         QRectF shape(keyShape(i));
+        shape.setHeight(shape.height() - 2 * PEN_THIN_LINE);
         QPointF pos(shape.topLeft());
         shape.setTopLeft(QPointF(0, 0));
         GraphicsKeyItem *item = new GraphicsKeyItem(keyColorType, keyText, textColor);
@@ -477,9 +488,10 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
         if (keyColorType == KC_BLACK) {
             item->setZValue(1);
         }
-   }
+    }
 
-    // redrawAllMarkers();
+
+    setSceneRect(QRectF(0, 0, KeyboardGraphicsView::KEY_WIDTH * keys, KeyboardGraphicsView::TOTAL_HEIGHT));
 
     for (auto *view : mAutoScaledGraphicsViews) {
         view->setSceneRect(QRectF(0, 0, KeyboardGraphicsView::KEY_WIDTH * keys, KeyboardGraphicsView::TOTAL_HEIGHT));
@@ -490,14 +502,10 @@ void KeyboardGraphicsView::changeTotalNumberOfKeys(int keys, int keyA) {
 }
 
 void KeyboardGraphicsView::fitAllInView() {
-    if (mMode & MODE_SCROLLBAR) {
-        fitInView(mScene.sceneRect(), Qt::KeepAspectRatioByExpanding);
-    } else {
-        fitInView(mScene.sceneRect(), Qt::IgnoreAspectRatio);
-        for (AutoScaledToKeyboardGraphicsView *view : mAutoScaledGraphicsViews) {
-            view->fitInView(mScene.sceneRect(), Qt::IgnoreAspectRatio);
-        }
-    }
+    Qt::AspectRatioMode arm = Qt::KeepAspectRatioByExpanding;
+    fitInView(mScene.sceneRect(), arm);
+
+    scrollContentsBy(0, 0);
 }
 
 int KeyboardGraphicsView::getKeyAtPosition(const QPoint &pos) {
@@ -536,4 +544,13 @@ void KeyboardGraphicsView::selectPrevious() {
 void KeyboardGraphicsView::deselectKey(bool notifyListeners) {
     setFocus();
     selectKey(-1, STATE_NORMAL, notifyListeners);
+}
+
+QRectF KeyboardGraphicsView::getVisibleContentsRect() const {
+    QPointF topLeft = mapToScene(0, 0);
+    topLeft.setY(0);
+    QPointF bottomRight = mapToScene(width(), height());
+    bottomRight.setY(TOTAL_HEIGHT);
+
+    return QRectF(topLeft, bottomRight);
 }

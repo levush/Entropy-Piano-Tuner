@@ -52,6 +52,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~TuningCurveGraph();
 protected:
+    virtual QSize sizeHint() const override final {return QSize(0, 400);}
+    virtual QSize minimumSizeHint() const override final {return QSize(0, 100);}
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Mouse press event to select the manually edit the tuning curve.

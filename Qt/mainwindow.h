@@ -35,6 +35,8 @@
 #include "volumecontrolgroupbox.h"
 #include "versioncheck.h"
 
+class KeyboardGraphicsView;
+
 namespace Ui {
 class MainWindow;
 }
@@ -156,6 +158,8 @@ private:
 
     /// Pointer to the VolumeControlGroupBox
     VolumeControlGroupBox *mVolumeControlGroup;
+
+    KeyboardGraphicsView *mKeyboardGraphicsView;
 
     QToolBar *mFileToolBar;
 

@@ -30,10 +30,10 @@ class DisplaySizeDefines {
 private:
     static std::unique_ptr<DisplaySizeDefines> mSingleton;
     const DisplaySize mDisplaySize;
+    const double mFontPointSize;
 
 public:
-    DisplaySizeDefines(DisplaySize size);
-    DisplaySizeDefines(double displaySizeInInch);
+    DisplaySizeDefines(double displaySizeInInch, double fontPointSize);
 
     static DisplaySize inchToDisplaySize(double inch);
     static const std::unique_ptr<DisplaySizeDefines> &getSingleton();
@@ -42,6 +42,7 @@ public:
     double getMediumIconSize();
     double getLargeIconSize();
 
+    bool keepKeyboardRatioFixed() const;
     GraphDisplayMode getGraphDisplayMode() const;
     KeyboardDisplayMode getKeyboardDisplayMode() const;
     MainGroupBoxDisplayStyle getMainGroupBoxDisplayStyle() const;

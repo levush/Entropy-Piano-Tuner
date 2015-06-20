@@ -1,5 +1,7 @@
 #include "displaysize.h"
+#include <QGuiApplication>
 #include <QFont>
+#include <QFontDatabase>
 
 #include "core/system/eptexception.h"
 
@@ -10,14 +12,9 @@ const std::unique_ptr<DisplaySizeDefines> &DisplaySizeDefines::getSingleton() {
     return mSingleton;
 }
 
-DisplaySizeDefines::DisplaySizeDefines(DisplaySize size) :
-    mDisplaySize(size) {
-    EptAssert(!mSingleton, "Singleton may only be created once!");
-    mSingleton.reset(this);
-}
-
-DisplaySizeDefines::DisplaySizeDefines(double displaySizeInInch) :
-    mDisplaySize(inchToDisplaySize(displaySizeInInch)) {
+DisplaySizeDefines::DisplaySizeDefines(double displaySizeInInch, double fontPointSize) :
+    mDisplaySize(inchToDisplaySize(displaySizeInInch)),
+    mFontPointSize(fontPointSize) {
     EptAssert(!mSingleton, "Singleton may only be created once!");
     mSingleton.reset(this);
 }
@@ -35,8 +32,7 @@ DisplaySize DisplaySizeDefines::inchToDisplaySize(double inch) {
 }
 
 double DisplaySizeDefines::getSmallIconSize() {
-    QFont f;
-    return f.pointSizeF();
+    return mFontPointSize;
 }
 
 double DisplaySizeDefines::getMediumIconSize() {
@@ -45,6 +41,10 @@ double DisplaySizeDefines::getMediumIconSize() {
 
 double DisplaySizeDefines::getLargeIconSize() {
     return getSmallIconSize() * 2;
+}
+
+bool DisplaySizeDefines::keepKeyboardRatioFixed() const {
+    return mDisplaySize >= DS_MEDIUM;
 }
 
 GraphDisplayMode DisplaySizeDefines::getGraphDisplayMode() const {
@@ -64,7 +64,7 @@ KeyboardDisplayMode DisplaySizeDefines::getKeyboardDisplayMode() const {
 }
 
 MainGroupBoxDisplayStyle DisplaySizeDefines::getMainGroupBoxDisplayStyle() const {
-    if (mDisplaySize <= DS_XSMALL) {
+    if (mDisplaySize <= DS_SMALL) {
         return MGBDS_WIDGETS;
     } else {
         return MGBDS_NORMAL;
