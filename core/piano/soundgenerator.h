@@ -53,9 +53,9 @@ public:
 private:
     void handleMessage(MessagePtr m) override final;
     void handleMidiKeypress(MidiAdapter::Data &data);
-    double getStereo (int keynumber);
+    double getStereoPosition (int keynumber);
     void playSineWave(int keynumber, double frequency, double volume);
-    void playReferenceSineWave (const Key &key, int keynumber, double frequency, double volume);
+    void playResonatingSineWave (int keynumber, double frequency, double volume);
     void playResonatingReferenceSound (int keynumber);
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
