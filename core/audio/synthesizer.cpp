@@ -187,7 +187,7 @@ void Synthesizer::playSound (const int id,
     tone.envelope = env;
 
     int soundid = id & 0xff;
-    if (sound.mPartials.size()>0) // if we have a complex spectrum
+    if (sound.getPartials().size()>0) // if we have a complex spectrum
     {
         tone.waveform = mSoundLibrary.getWaveForm(soundid);
         tone.frequency = 0;
@@ -195,7 +195,7 @@ void Synthesizer::playSound (const int id,
     else // if we have a simple sine wave
     {
         tone.waveform.clear();
-        tone.frequency = static_cast<int64_t>(100.0*sound.mFrequency*SineLength);
+        tone.frequency = static_cast<int64_t>(100.0*sound.getFrequency()*SineLength);
     }
     tone.clock=0;
     tone.clock_timeout = mAudioPlayer->getSamplingRate() * 60; // 60 seconds cutoff time
@@ -284,7 +284,7 @@ void Synthesizer::generateAudioSignal ()
                 double y = tone.amplitude;          // get last amplitude
                 Envelope &envelope = tone.envelope; // get ADSR
                 //Sound &sound = tone.sound;
-                double stereo = tone.sound.mStereo;
+                double stereo = tone.sound.getStereoLocation();
                 switch (tone.stage)                 // Manage ADSR
                 {
                     case 1: // ATTACK
@@ -310,7 +310,7 @@ void Synthesizer::generateAudioSignal ()
                             y *= (1-envelope.release/SampleRate);
                             break;
                 }
-                double volume = tone.sound.mVolume;
+                double volume = tone.sound.getVolume();
                 tone.amplitude = y;
                 tone.clock ++;
 

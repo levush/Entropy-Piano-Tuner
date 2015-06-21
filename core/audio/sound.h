@@ -75,18 +75,19 @@ public:
 
     long getHashTag () const { return mHashTag; }
 
-    bool computeNextFourierMode (WaveForm &sinewave, int rnd);
+    bool computeNextFourierMode (const WaveForm &sinewave, const int phase);
 
     int getNumberOfPartials() const { return mPartials.size(); }
     int getSampleSize() const { return mSampleSize; }
     void setSampleSize(const int size) { mSampleSize = size; }
+    double getFrequency() const { return mFrequency; }
+    double getStereoLocation() const { return mStereo; }
+    double getVolume() const { return mVolume; }
     const Partials &getPartials() const { return mPartials; }
     const WaveForm &getWaveForm() const { return mWaveForm; }
 
-    // allow the synthesizer to access the member variables
-    friend class Synthesizer;
 
-protected:
+private:
     double mFrequency;          ///< fundamental frequency
     double mFrequencyRatio;     ///< frequency ratio
     Partials mPartials;         ///< spectrum of partials
@@ -100,11 +101,11 @@ protected:
     long mHashTag;              ///< hash tag, binary value
 
     int mSampleRate;            ///< Sample rate
-    int64_t mSampleSize;          ///< Number of stereo sample pairs
-    WaveForm mWaveForm;             ///< Computed wave form
+    int64_t mSampleSize;        ///< Number of stereo sample pairs
+    WaveForm mWaveForm;         ///< Computed wave form
 
-    void computeHashTag();      // compute hash tag
-    void setPartials(const Spectrum &spectrum);        // flip spectrum
+    void computeHashTag();                      // compute hash tag
+    void setPartials(const Spectrum &spectrum); // flip spectrum
 };
 
 
@@ -125,15 +126,15 @@ public:
 
     void addSound  (const int id, const Sound &sound, int samplerate, double sampletime);
 
-    const Sound::WaveForm getWaveForm(const int id);
+    const Sound::WaveForm getWaveForm (const int id);
 
 private:
     std::map <int,Sound> mSoundLibrary;
+    std::mutex mSoundLibraryMutex;
     const int64_t mSineLength;
     Sound::WaveForm mSineWave;
 
     void workerFunction();
-
 };
 
 #endif // SOUND_H

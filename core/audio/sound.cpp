@@ -20,6 +20,7 @@
 #include "sound.h"
 
 #include <iostream>
+#include <mutex>
 
 #include "../math/mathtools.h"
 #include "../system/log.h"
@@ -74,6 +75,18 @@ void Sound::init()
 //                  Converter from spectrum to partial list
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Convert the spectrum into a list of partials sorted by intensity
+///
+/// The calculation of the wave forms takes time. Therefore, the generation
+/// starts with the most important Fourier modes. To this end, the spectrum
+/// (list of peaks), which is usually organized as a map from frequency ->
+/// intensity is flipped, mapping -intensity -> frequency. In this way
+/// the most intense partials are in front of the map.
+///
+/// \param spectrum : List of peaks (frequency -> intensity)
+///////////////////////////////////////////////////////////////////////////////
+
 void Sound::setPartials (const Spectrum &spectrum)
 {
     mPartials.clear();
@@ -95,6 +108,8 @@ void Sound::setPartials (const Spectrum &spectrum)
 /// \param spectrum : Power spectrum: f -> intensity
 /// \param stereo : Stereo position in [0,1] (0=left, 1=right)
 /// \param volume : Overall volume in [0,1]
+/// \param samplerate : Sampling rate
+/// \param sampletime : Time of the generated sample in seconds.
 ///////////////////////////////////////////////////////////////////////////////
 
 Sound::Sound (const double frequency, const Spectrum &spectrum,
@@ -125,6 +140,8 @@ Sound::Sound (const double frequency, const Spectrum &spectrum,
 /// \param spectrum : Power spectrum: f -> intensity
 /// \param stereo : Stereo position in [0,1] (0=left, 1=right)
 /// \param volume : Overall volume in [0,1]
+/// \param samplerate : Sampling rate
+/// \param sampletime : Time of the generated sample in seconds.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Sound::set(const double frequency, const Partials &spectrum,
@@ -150,6 +167,8 @@ void Sound::set(const double frequency, const Partials &spectrum,
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Sound::set
 /// \param sound
+/// \param samplerate : Sampling rate
+/// \param sampletime : Time of the generated sample in seconds.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Sound::set (const Sound &sound, const int samplerate, const double sampletime)
@@ -199,16 +218,26 @@ void Sound::computeHashTag ()
 }
 
 
-bool Sound::computeNextFourierMode (WaveForm &sinewave, int rnd=0)
+//-----------------------------------------------------------------------------
+//                    Calculate the next Fourier mode
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Calculate the next Fourier mode
+/// \param sinewave : Reference to a pre-calculated sine wave for acceleration
+/// \param phase : total phase shift of the Fourier component (should be random)
+/// \return true if a mode was constructed, false if nothing to do
+///////////////////////////////////////////////////////////////////////////////
+
+bool Sound::computeNextFourierMode (const WaveForm &sinewave, const int phase=0)
 {
     if (mPointer==mPartials.end()) return false;
     double volume = sqrt(-(mPointer->first));
     const double f = mPointer->second * mFrequencyRatio;
-//    std::lock_guard<std::mutex> lock(mMutex);
     if (f>24 and f<10000 and volume>0.0005)
     {
         const int64_t periods = round((mSampleSize * f) / mSampleRate);
-        const int64_t leftphase  = rnd;
+        const int64_t leftphase  = phase;
         const int64_t rightphase = leftphase + mPhaseDifference;
         const int64_t SineLength = sinewave.size();
         for (int64_t i=0; i<mSampleSize; ++i)
@@ -226,23 +255,17 @@ bool Sound::computeNextFourierMode (WaveForm &sinewave, int rnd=0)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //=============================================================================
 //                        Class for a sound library
 //=============================================================================
+
+//-----------------------------------------------------------------------------
+//	                            Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor
+///////////////////////////////////////////////////////////////////////////////
 
 SoundLibrary::SoundLibrary() :
     mSoundLibrary(),
@@ -276,45 +299,50 @@ SoundLibrary::SoundLibrary() :
 ///
 /// \param id : Identification tag (usually keynumber + offset)
 /// \param sound : The sound to be produced (frequency and spectrum)
-/// \param sampletime : The total time of the pcm sample
-/// \param waitingtime : Wait before starting in an idle state.
+/// \param samplerate : The sampling rate
+/// \param sampletime : The total time of the pcm sample in seconds
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundLibrary::addSound (const int id, const Sound &sound, int samplerate, double sampletime)
+void SoundLibrary::addSound (const int id, const Sound &sound,
+                             int samplerate, double sampletime)
 {
-
     if (sound.getNumberOfPartials()==0) return;
+    std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
     Sound &existingSound = mSoundLibrary[id];
     if (existingSound.getHashTag() != sound.getHashTag())
-    {
         existingSound.set(sound,samplerate,sampletime);
-//        sampledSound.startSampling (mAudioPlayer->getSamplingRate(),mSineWave,samplesize,waitingtime);
-        LogI("*********** Added sound #%d  ",id);
-    }
 }
 
+//-----------------------------------------------------------------------------
+//	                Worker function for sound creation
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Main worker function for the sound library
+///////////////////////////////////////////////////////////////////////////////
 
 void SoundLibrary::workerFunction()
 {
     setThreadName("WaveFormer");
 
-    // Pre-calculate a sine wave for speedup
+    // Before starting, pre-calculate a sine wave for speedup
     mSineWave.resize(mSineLength);
     for (int i=0; i<mSineLength; ++i)
         mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / mSineLength));
 
-
-    while (not cancelThread())
+    while (not cancelThread())  // main loop for sound creation
     {
         bool idle = true;
+        mSoundLibraryMutex.lock();
         for (auto &libentry : mSoundLibrary)
         {
+            if (cancelThread()) break;
             Sound &sound = libentry.second;
-            int rnd=0;
+            int rnd=0;  //******************************************************************************
             bool newModeGenerated = sound.computeNextFourierMode (mSineWave,rnd);
             if (newModeGenerated) idle=false;
         }
+        mSoundLibraryMutex.unlock();
         if (idle) msleep(20);
     }
 }
@@ -322,7 +350,19 @@ void SoundLibrary::workerFunction()
 
 
 
+
+//-----------------------------------------------------------------------------
+//	            Function for getting the precalculated waveform
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function for getting the precalculated waveform
+/// \param id : Identity tag of the waveform
+/// \return Copy of the waveform
+///////////////////////////////////////////////////////////////////////////////
+
 const Sound::WaveForm SoundLibrary::getWaveForm(const int id)
 {
+    std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
     return mSoundLibrary[id].getWaveForm();
 }
