@@ -269,9 +269,12 @@ bool Sound::computeNextFourierMode (const WaveForm &sinewave, const int phase=0)
 
 SoundLibrary::SoundLibrary() :
     mSoundLibrary(),
+    mSoundLibraryMutex(),
+    mMutexUnlockingRequest(false),
     mSineLength(65536),
     mSineWave(mSineLength,0),
-    mPriorityId(-1)
+    rnd(),
+    uniform(0,mSineLength-1)
 {}
 
 
@@ -305,15 +308,15 @@ SoundLibrary::SoundLibrary() :
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundLibrary::addSound (const int id, const Sound &sound,
-                             int samplerate, double sampletime,
-                             bool priorityhandling)
+                             int samplerate, double sampletime)
 {
     if (sound.getNumberOfPartials()==0) return;
+    mMutexUnlockingRequest = true;
     std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
     Sound &existingSound = mSoundLibrary[id];
-    if (priorityhandling) mPriorityId = id;
     if (existingSound.getHashTag() != sound.getHashTag())
         existingSound.set(sound,samplerate,sampletime);
+    mMutexUnlockingRequest = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -337,21 +340,15 @@ void SoundLibrary::workerFunction()
     {
         bool idle = true;
         mSoundLibraryMutex.lock();
-        if (mPriorityId>=0)
-        {
-            int numberOfPartials = 0;
-            int rnd=0;  //******************************************************************************
-            while (mSoundLibrary[mPriorityId].computeNextFourierMode (mSineWave,rnd)
-                   and numberOfPartials < 10) numberOfPartials++;
-            mPriorityId=-1;
-            if (numberOfPartials >= 0) idle=false;
-        }
         for (auto &libentry : mSoundLibrary)
         {
-            if (cancelThread() or mPriorityId>=0) break;
+            if (cancelThread() or mMutexUnlockingRequest)
+            {
+                mMutexUnlockingRequest = false;
+                break;
+            }
             Sound &sound = libentry.second;
-            int rnd=0;  //******************************************************************************
-            bool newModeGenerated = sound.computeNextFourierMode (mSineWave,rnd);
+            bool newModeGenerated = sound.computeNextFourierMode (mSineWave,uniform(rnd));
             if (newModeGenerated) idle = false;
         }
         mSoundLibraryMutex.unlock();
@@ -376,7 +373,6 @@ void SoundLibrary::workerFunction()
 const Sound::WaveForm SoundLibrary::getWaveForm(const int id, const bool priorityhandling)
 {
     std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
-    int rnd=0;  //******************************************************************************
-    if (priorityhandling) while (not mSoundLibrary[id].computeNextFourierMode (mSineWave,rnd));
+    if (priorityhandling) while (mSoundLibrary[id].computeNextFourierMode (mSineWave,uniform(rnd)));
     return mSoundLibrary[id].getWaveForm();
 }

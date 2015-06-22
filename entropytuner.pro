@@ -189,15 +189,12 @@ HEADERS  += \
     Qt/keyboard/graphicskeyitem.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
-<<<<<<< HEAD
-=======
     Qt/runguard.h \
     Qt/displaysize.h \
     Qt/tuninggroupbox.h \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h
->>>>>>> bae33a28619ac7036038e2da8c5c680006707e5b
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -243,15 +240,12 @@ SOURCES +=  \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
-<<<<<<< HEAD
-=======
     Qt/runguard.cpp \
     Qt/displaysize.cpp \
     Qt/tuninggroupbox.cpp \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp
->>>>>>> bae33a28619ac7036038e2da8c5c680006707e5b
 
 #------------- Message system --------------------
 

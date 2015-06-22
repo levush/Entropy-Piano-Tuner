@@ -534,11 +534,11 @@ void SoundGenerator::preCalculateSoundOfKey (const int keynumber,
 {
     int samplerate = mAudioAdapter->getSamplingRate();
     Sound sound (frequency,mPiano->getKey(keynumber).getPeaks(),getStereoPosition(keynumber),1,samplerate,1);
-    const double waitingtime = 1;
+    const double sampletime = 2;
     if (operationmode==MODE_RECORDING)
-        mSynthesizer.preCalculateWaveform((keynumber & 0xff), sound, waitingtime);
+        mSynthesizer.preCalculateWaveform((keynumber & 0xff), sound, sampletime);
     else if (operationmode==MODE_CALCULATION)
-        mSynthesizer.preCalculateWaveform((keynumber & 0xff) + 0x80, sound, waitingtime);
+        mSynthesizer.preCalculateWaveform((keynumber & 0xff) + 0x80, sound, sampletime);
 }
 
 

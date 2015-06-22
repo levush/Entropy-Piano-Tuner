@@ -186,7 +186,6 @@ void Synthesizer::playSound (const int id,
     tone.id=id;
     tone.sound = sound;
     tone.envelope = env;
-//    tone.priorityhandling = priorityhandling;
 
     int soundid = id & 0xff;
     if (sound.getPartials().size()>0) // if we have a complex spectrum
