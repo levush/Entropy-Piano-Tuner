@@ -2,6 +2,7 @@
 #define DISPLAYSIZE
 
 #include <memory>
+#include <qnamespace.h>
 
 enum DisplaySize {
     DS_XSMALL  = 1,          //< Normal smartphones up to 4.5'
@@ -42,6 +43,7 @@ public:
     double getMediumIconSize();
     double getLargeIconSize();
 
+    Qt::ToolButtonStyle optionsDialogToolButtonStyle() const;
     bool showVolumeGroupBoxInTuningMode() const;
     bool keepKeyboardRatioFixed() const;
     GraphDisplayMode getGraphDisplayMode() const;

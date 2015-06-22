@@ -43,6 +43,14 @@ double DisplaySizeDefines::getLargeIconSize() {
     return getSmallIconSize() * 2;
 }
 
+Qt::ToolButtonStyle DisplaySizeDefines::optionsDialogToolButtonStyle() const {
+    if (mDisplaySize >= DS_LARGE) {
+        return Qt::ToolButtonTextBesideIcon;
+    } else {
+        return Qt::ToolButtonTextUnderIcon;
+    }
+}
+
 bool DisplaySizeDefines::showVolumeGroupBoxInTuningMode() const {
     return mDisplaySize >= DS_SMALL;
 }

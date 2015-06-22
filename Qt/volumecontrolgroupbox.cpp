@@ -32,15 +32,27 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     mLinesLayout = linesLayout;
     mainLayout->addLayout(linesLayout);
 
+    class Line : public QFrame {
+    public:
+        Line() {
+            setFrameShape(QFrame::VLine);
+            setFrameShadow(QFrame::Plain);
+            setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            setLineWidth(3);
+        }
+    private:
+        virtual QSize minimumSizeHint() const override final {
+            return QSize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8,
+                         DisplaySizeDefines::getSingleton()->getSmallIconSize() / 4);
+        }
+        virtual QSize sizeHint() const override final {
+            return QSize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8,
+                         DisplaySizeDefines::getSingleton()->getSmallIconSize());
+        }
+    };
+
     auto createLine = []() {
-        QFrame *frame = new QFrame;
-        frame->setFrameShape(QFrame::VLine);
-        frame->setFrameShadow(QFrame::Plain);
-        frame->resize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8, DisplaySizeDefines::getSingleton()->getSmallIconSize());
-        frame->setMinimumHeight(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 4);
-        frame->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
-        frame->setLineWidth(3);
-        return frame;
+        return new Line;
     };
 
     linesLayout->addStretch();
