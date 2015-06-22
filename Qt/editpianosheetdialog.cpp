@@ -51,6 +51,7 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->numberOfKeysSpinBox->setValue(piano.getKeyboard().getNumberOfKeys());
     ui->keyNumberOfASpinBox->setValue(piano.getKeyboard().getKeyNumberOfA4());
 
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
 
     SHOW_DIALOG(this);
