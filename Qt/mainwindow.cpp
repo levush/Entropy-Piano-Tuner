@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->graphSplitter->setSizes(QList<int>() << 200 << 200);
 
     // this is in mm
     qreal maxDisplaySize = std::max(QGuiApplication::primaryScreen()->physicalSize().width(),

@@ -42,6 +42,7 @@ public:
     double getMediumIconSize();
     double getLargeIconSize();
 
+    bool showVolumeGroupBoxInTuningMode() const;
     bool keepKeyboardRatioFixed() const;
     GraphDisplayMode getGraphDisplayMode() const;
     KeyboardDisplayMode getKeyboardDisplayMode() const;

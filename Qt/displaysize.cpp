@@ -43,6 +43,10 @@ double DisplaySizeDefines::getLargeIconSize() {
     return getSmallIconSize() * 2;
 }
 
+bool DisplaySizeDefines::showVolumeGroupBoxInTuningMode() const {
+    return mDisplaySize >= DS_SMALL;
+}
+
 bool DisplaySizeDefines::keepKeyboardRatioFixed() const {
     return mDisplaySize >= DS_MEDIUM;
 }

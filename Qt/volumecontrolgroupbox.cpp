@@ -11,7 +11,9 @@
 #include "displaysize.h"
 
 VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
-    DisplaySizeDependingGroupBox(parent, new QVBoxLayout, toFlag(MODE_IDLE) | toFlag(MODE_RECORDING))
+    DisplaySizeDependingGroupBox(parent, new QVBoxLayout,
+                                 toFlag(MODE_IDLE) | toFlag(MODE_RECORDING)
+                                 | ((DisplaySizeDefines::getSingleton()->showVolumeGroupBoxInTuningMode()) ? toFlag(MODE_TUNING) : 0))
 {
     setTitle(tr("Volume control"));
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
@@ -34,7 +36,9 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
         QFrame *frame = new QFrame;
         frame->setFrameShape(QFrame::VLine);
         frame->setFrameShadow(QFrame::Plain);
-        frame->setFixedSize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8, DisplaySizeDefines::getSingleton()->getSmallIconSize());
+        frame->resize(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 8, DisplaySizeDefines::getSingleton()->getSmallIconSize());
+        frame->setMinimumHeight(DisplaySizeDefines::getSingleton()->getSmallIconSize() / 4);
+        frame->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
         frame->setLineWidth(3);
         return frame;
     };
