@@ -79,6 +79,8 @@ struct Tone
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
     Sound::WaveForm waveform;           ///< Copy of precalculated waveform
+
+//    bool priorityhandling;              ///< Generate completely before playing
 };
 
 
@@ -103,7 +105,8 @@ public:
 
     void playSound              (const int id,
                                  const Sound &sound,
-                                 const Envelope &env);
+                                 const Envelope &env,
+                                 const bool priorityhandling = false);
 
     void ModifySustainLevel     (const int id,
                                  const double level);

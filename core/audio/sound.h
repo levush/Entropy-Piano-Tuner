@@ -124,15 +124,17 @@ public:
     void init() { start(); }
     void exit() { stop(); }
 
-    void addSound  (const int id, const Sound &sound, int samplerate, double sampletime);
+    void addSound  (const int id, const Sound &sound, int samplerate, double sampletime, bool priorityhandling = false);
 
-    const Sound::WaveForm getWaveForm (const int id);
+    const Sound::WaveForm getWaveForm (const int id, const bool priorityhandling);
 
 private:
     std::map <int,Sound> mSoundLibrary;
     std::mutex mSoundLibraryMutex;
     const int64_t mSineLength;
     Sound::WaveForm mSineWave;
+
+    std::atomic<int> mPriorityId;  ///< if set compute this sound immediately
 
     void workerFunction();
 };

@@ -384,7 +384,8 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
             const double volume = 0.2;
             int samplerate = mAudioAdapter->getSamplingRate();
             Sound sound (frequency,key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
-            mSynthesizer.playSound(id,sound,Envelope(30,50,mResonatingVolume,2,false));
+            Envelope env(30,50,mResonatingVolume,2,false);
+            mSynthesizer.playSound(id,sound,env);
         }
         break;
         default:
@@ -512,7 +513,7 @@ void SoundGenerator::playEchoSound (const int keynumber)
     int samplerate = mAudioAdapter->getSamplingRate();
     Sound sound (key.getRecordedFrequency(),key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
     Envelope envelope (5,5,0,30,false);
-    mSynthesizer.playSound(keynumber,sound,envelope);
+    mSynthesizer.playSound(keynumber,sound,envelope,true);
 }
 
 

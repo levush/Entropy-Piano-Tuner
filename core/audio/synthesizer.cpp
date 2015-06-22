@@ -179,17 +179,19 @@ void Synthesizer::preCalculateWaveform  (const int id,
 
 void Synthesizer::playSound (const int id,
                              const Sound &sound,
-                             const Envelope &env)
+                             const Envelope &env,
+                             const bool priorityhandling)
 {
     Tone tone;
     tone.id=id;
     tone.sound = sound;
     tone.envelope = env;
+//    tone.priorityhandling = priorityhandling;
 
     int soundid = id & 0xff;
     if (sound.getPartials().size()>0) // if we have a complex spectrum
     {
-        tone.waveform = mSoundLibrary.getWaveForm(soundid);
+        tone.waveform = mSoundLibrary.getWaveForm(soundid,priorityhandling);
         tone.frequency = 0;
     }
     else // if we have a simple sine wave

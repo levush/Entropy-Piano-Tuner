@@ -112,8 +112,10 @@ void MathTools::normalize (std::vector<double> &vec)
 ///
 /// \param X : Given vector of floating point values (probabilities)
 /// \param Y : Target vector of a given size.
-/// \param x : Floating point function for the indices y -> x=f(y)
+/// \param f : Function used for coarse-graining
+/// \param exponent : exponent used for the mapping
 ///////////////////////////////////////////////////////////////////////////////
+
 
 void MathTools::coarseGrainSpectrum (const std::vector<double> &X,
                                      std::vector<double> &Y,
