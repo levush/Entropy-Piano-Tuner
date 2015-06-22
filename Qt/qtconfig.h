@@ -23,6 +23,8 @@
 #include "core/config.h"
 
 #include <QtGlobal>
+#include <QGuiApplication>
+#include <QScreen>
 
 // define mobile/desktop version defines
 #if defined Q_OS_BLACKBERRY || defined Q_OS_ANDROID || defined Q_OS_IOS || defined Q_OS_WP
@@ -32,9 +34,9 @@
 #endif
 
 #if CONFIG_DIALOG_SIZE == 2
-#   define SHOW_DIALOG(d) {(d)->showMaximized();}
+#   define SHOW_DIALOG(d) {(d)->showMaximized(); (d)->setFixedSize(QGuiApplication::primaryScreen()->size());}
 #elif CONFIG_DIALOG_SIZE == 3
-#   define SHOW_DIALOG(d) {(d)->showFullscreen();}
+#   define SHOW_DIALOG(d) {(d)->showFullscreen(); (d)->setFixedSize(QGuiApplication::primaryScreen()->size());}
 #else
 #   define SHOW_DIALOG(d) {(d)->showNormal();}
 #endif
@@ -47,10 +49,12 @@
 #endif
 
 // update check
-#if defined Q_OS_DESKTOP
-#   define CONFIG_ENABLE_UPDATE_TOOL     1
-#else
+#ifndef CONFIG_ENABLE_UPDATE_TOOL
 #   define CONFIG_ENABLE_UPDATE_TOOL     0
+#else
+// set update tool to 1
+#   undef CONFIG_ENABLE_UPDATE_TOOL
+#   define CONFIG_ENABLE_UPDATE_TOOL     1
 #endif
 
 #endif // QTCONFIG_H

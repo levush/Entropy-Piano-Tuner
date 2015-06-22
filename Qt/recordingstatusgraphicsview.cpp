@@ -20,6 +20,7 @@
 #include "recordingstatusgraphicsview.h"
 #include "../core/messages/messagenewfftcalculated.h"
 #include "../core/messages/messagemodechanged.h"
+#include <QBoxLayout>
 #include <QDebug>
 
 const QRectF RecordingStatusGraphicsView::SCENE_RECT(-50, -50, 100, 100);
@@ -28,6 +29,8 @@ RecordingStatusGraphicsView::RecordingStatusGraphicsView(QWidget *parent)
     : QGraphicsView(parent),
       mScene(SCENE_RECT)
 {
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
+
     // no background, and no border!
     setStyleSheet("background: transparent; border: none");
 
@@ -74,6 +77,10 @@ RecordingStatusGraphicsView::~RecordingStatusGraphicsView()
 
 }
 
+QSize RecordingStatusGraphicsView::sizeHint() const {
+    double h = height();
+    return QSize(h, h);
+}
 
 void RecordingStatusGraphicsView::showEvent(QShowEvent *event) {
     fitInView(SCENE_RECT, Qt::KeepAspectRatio);
@@ -82,6 +89,7 @@ void RecordingStatusGraphicsView::showEvent(QShowEvent *event) {
 
 void RecordingStatusGraphicsView::resizeEvent(QResizeEvent *event) {
     fitInView(SCENE_RECT, Qt::KeepAspectRatio);
+    updateGeometry();
     QGraphicsView::resizeEvent(event);
 }
 

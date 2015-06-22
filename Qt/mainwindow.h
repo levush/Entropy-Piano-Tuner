@@ -31,7 +31,11 @@
 #include "../core/adapters/modeselectoradapter.h"
 #include "projectmanagerforqt.h"
 #include "calculationprogressgroup.h"
+#include "signalanalyzergroupbox.h"
+#include "volumecontrolgroupbox.h"
 #include "versioncheck.h"
+
+class KeyboardGraphicsView;
 
 namespace Ui {
 class MainWindow;
@@ -109,14 +113,6 @@ protected:
 
 private:
     ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Initializes the MainWindow for small screens.
-    ///
-    /// This will hide some components, set mSmallScreen and abbreviate some
-    /// labels.
-    ///////////////////////////////////////////////////////////////////////////////
-    void initForSmallScreen();
-
-    ///////////////////////////////////////////////////////////////////////////////
     /// \brief Update the note name.
     /// \param key : The key index.
     ///
@@ -157,13 +153,21 @@ private:
     /// Pointer to the CalculationProgressGroup.
     CalculationProgressGroup *mCalculationProgressGroup;
 
-    QToolBar *mFileToolBar;
+    /// Pointer to the SignalAnalyzerGroupBox
+    SignalAnalyzerGroupBox *mSignalAnalyzerGroup;
 
-    /// Hold if the display is a small screen (e.g. Smartphones)
-    bool mSmallScreen;
+    /// Pointer to the VolumeControlGroupBox
+    VolumeControlGroupBox *mVolumeControlGroup;
+
+    KeyboardGraphicsView *mKeyboardGraphicsView;
+
+    QToolBar *mFileToolBar;
 
     /// Tool buttons for all modes.
     QToolButton *mModeToolButtons[OperationMode::MODE_COUNT];
+
+signals:
+    void modeChanged(OperationMode mode);
 
 public slots:
     ///////////////////////////////////////////////////////////////////////////////

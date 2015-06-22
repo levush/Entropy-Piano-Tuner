@@ -66,7 +66,9 @@ ios {
     QMAKE_BUNDLE_DATA += launch_screen
 
     # Set "Devices" (1=iPhone, 2=iPad, 1,2=Universal)
-    QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
+    isEmpty(QMAKE_IOS_TARGETED_DEVICE_FAMILY) {
+        QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
+    }
 }
 
 win32 {
@@ -187,6 +189,15 @@ HEADERS  += \
     Qt/keyboard/graphicskeyitem.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
+<<<<<<< HEAD
+=======
+    Qt/runguard.h \
+    Qt/displaysize.h \
+    Qt/tuninggroupbox.h \
+    Qt/displaysizedependinggroupbox.h \
+    Qt/signalanalyzergroupbox.h \
+    Qt/volumecontrolgroupbox.h
+>>>>>>> bae33a28619ac7036038e2da8c5c680006707e5b
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -232,6 +243,15 @@ SOURCES +=  \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
+<<<<<<< HEAD
+=======
+    Qt/runguard.cpp \
+    Qt/displaysize.cpp \
+    Qt/tuninggroupbox.cpp \
+    Qt/displaysizedependinggroupbox.cpp \
+    Qt/signalanalyzergroupbox.cpp \
+    Qt/volumecontrolgroupbox.cpp
+>>>>>>> bae33a28619ac7036038e2da8c5c680006707e5b
 
 #------------- Message system --------------------
 

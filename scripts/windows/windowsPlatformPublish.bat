@@ -85,7 +85,7 @@ if %build%==1 (
 	cd %builddir%
 	
 	:: qmake + jom
-	qmake %tunerdir%\entropytuner.pro -r -spec %msvc_spec%
+	qmake %tunerdir%\entropytuner.pro -r -spec %msvc_spec% DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
 	:: silent + other options
 	"%QtCreatorPath%\jom.exe" -S %jomargs% || exit /b
 	

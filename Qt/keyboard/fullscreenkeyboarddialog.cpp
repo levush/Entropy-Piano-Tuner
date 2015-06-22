@@ -32,7 +32,7 @@ FullScreenKeyboardDialog::FullScreenKeyboardDialog(KeyboardGraphicsView *parent)
     setLayout(layout);
 
     // create a new KeyboardGraphicsView in fullscreen mode
-    KeyboardGraphicsView *keyboardView = new KeyboardGraphicsView(this, KeyboardGraphicsView::MODE_FULLSCREEN);
+    KeyboardGraphicsView *keyboardView = new KeyboardGraphicsView(this);
     keyboardView->setKeyboard(parent->getKeyboard());
     layout->addWidget(keyboardView);
 

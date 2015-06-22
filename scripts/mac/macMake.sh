@@ -101,7 +101,7 @@ if $DO_BUILD ; then
 	mkdir -p $BUILD_DIR
 	cd $BUILD_DIR
 	rm -rf $BINARY_FILE_NAME.app
-	qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec macx-clang CONFIG+=$CONFIG
+	qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec macx-clang CONFIG+=$CONFIG DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
 	make $MAKE_ARGS
 
 	# copy info.plist and icns files on our own. there is a bug in qt

@@ -49,7 +49,7 @@ cd $BUILD_DIR
 
 # Build
 ###########################################################
-qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec linux-g++
+qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec linux-g++ DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
 make $MAKE_ARGS
 
 echo "Build finished"

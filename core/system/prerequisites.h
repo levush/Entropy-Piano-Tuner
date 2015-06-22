@@ -73,5 +73,10 @@ enum OperationMode      ///  Operation mode of the tuner
     MODE_COUNT,         ///< The count of modes
 };
 
+inline int toFlag(OperationMode mode)
+{
+    return 1 << mode;
+}
+
 #endif // PREREQUISITES
 

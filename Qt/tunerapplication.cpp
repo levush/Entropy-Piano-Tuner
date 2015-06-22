@@ -103,6 +103,10 @@ void TunerApplication::init() {
 
     // open the main window with the startup file
     mMainWindow.reset(new MainWindow());
+#ifdef Q_OS_MOBILE
+    // fix fullscreen size on mobile devices
+    mMainWindow->setFixedSize(primaryScreen()->size());
+#endif
 
     auto log = new LogForQt();
     // writeout args to log
