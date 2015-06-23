@@ -44,6 +44,9 @@ public:
 public:
     static PlatformTools *getSingleton();
 
+    /// \brief Initialise native components (e.g. midi on android/iOS)
+    virtual void init() {}
+
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Load a startup file from the given arguments.
     /// \param args : The startup arguments

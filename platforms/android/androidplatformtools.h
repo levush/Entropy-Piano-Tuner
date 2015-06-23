@@ -9,7 +9,8 @@
 
 class AndroidPlatformTools : public PlatformToolsImplementation<AndroidPlatformTools> {
 private:
-    bool loadStartupFile(const QStringList args);
+    virtual void init() override;
+    bool loadStartupFile(const QStringList args) override;
 };
 
 #endif

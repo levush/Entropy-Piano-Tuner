@@ -128,8 +128,12 @@ void TunerApplication::init() {
     // init the window
     mMainWindow->init(mCore.get());
 
+    // init platform components
+    PlatformTools::getSingleton()->init();
+
     // then init the core
     initCore();
+
 }
 
 void TunerApplication::exit() {

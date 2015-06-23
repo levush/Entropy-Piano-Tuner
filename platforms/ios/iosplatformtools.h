@@ -5,6 +5,7 @@
 
 class IOsPlatformTools : PlatformToolsImplementation<IOsPlatformTools> {
 private:
+    virtual void init() override;
     virtual void disableScreensaver() override;
     virtual void enableScreensaver() override;
 };

@@ -4,6 +4,8 @@
 #include "Qt/platformtools.h"
 
 #import <UIKit/UIKit.h>
+#import "PGMidi.h"
+#import "iOSVersionDetection.h"
 
 void iosDisableScreensaver() {
     [UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -14,6 +16,7 @@ void iosReleaseScreensaverLock() {
 }
 
 // Application extensions
+PGMidi                    *pgMidiInterface;
 
 // Make QIOSApplicationDelegate known
 @interface QIOSApplicationDelegate
@@ -41,6 +44,20 @@ void iosReleaseScreensaverLock() {
         // Handle custom URL scheme
     }
 return TRUE;
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    IF_IOS_HAS_COREMIDI
+    (
+        // We only create a MidiInput object on iOS versions that support CoreMIDI
+        pgMidiInterface                            = [[PGMidi alloc] init];
+        pgMidiInterface.networkEnabled             = YES;
+        pgMidiInterface.virtualDestinationEnabled  = YES;
+        pgMidiInterface.virtualSourceEnabled       = YES;
+    )
+
+    return YES;
 }
 
 @end

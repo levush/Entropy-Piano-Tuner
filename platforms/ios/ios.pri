@@ -7,3 +7,6 @@ OBJECTIVE_SOURCES += \
 
 SOURCES += \
     $$PWD/iosplatformtools.cpp
+
+# include pgmidi
+include($$PWD/../../thirdparty/PGMidi/pgmidi.pri)
