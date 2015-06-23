@@ -6,6 +6,7 @@ std::unique_ptr<IOsPlatformTools> PlatformToolsImplementation<IOsPlatformTools>:
 
 void IOsPlatformTools::init() {
     // init midi components
+    iosInit();
 }
 
 void IOsPlatformTools::disableScreensaver() {

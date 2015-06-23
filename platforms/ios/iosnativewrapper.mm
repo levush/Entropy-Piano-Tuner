@@ -7,6 +7,28 @@
 #import "PGMidi.h"
 #import "iOSVersionDetection.h"
 
+
+// midi interface declaration
+@interface MidiMonitorViewController : NSObject
+{
+
+}
+@end
+
+// variables
+PGMidi                    *pgMidiInterface;
+MidiMonitorViewController *pgMidiController;
+
+void iosInit() {
+    LogI("Initializing PGMidi");
+    pgMidiController = [MidiMonitorViewController alloc];
+    pgMidiInterface.delegate = (id<PGMidiDelegate>)pgMidiController;
+    for (PGMidiSource *source in pgMidiInterface.sources)
+    {
+        [source addDelegate:(id<PGMidiSourceDelegate>)pgMidiController];
+    }
+}
+
 void iosDisableScreensaver() {
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 }
@@ -16,7 +38,6 @@ void iosReleaseScreensaverLock() {
 }
 
 // Application extensions
-PGMidi                    *pgMidiInterface;
 
 // Make QIOSApplicationDelegate known
 @interface QIOSApplicationDelegate
@@ -60,4 +81,46 @@ return TRUE;
     return YES;
 }
 
+@end
+
+
+
+// midi implementation
+
+@interface MidiMonitorViewController () <PGMidiDelegate, PGMidiSourceDelegate>
+@end
+
+@implementation MidiMonitorViewController
+- (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
+{
+    [source addDelegate:self];
+    LogI("Source added.");
+}
+
+- (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
+{
+    LogI("Source removed");
+}
+
+- (void) midi:(PGMidi*)midi destinationAdded:(PGMidiDestination *)destination
+{
+}
+
+- (void) midi:(PGMidi*)midi destinationRemoved:(PGMidiDestination *)destination
+{
+}
+
+- (void) midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
+{
+    LogI("Midi packget received");
+    [self performSelectorOnMainThread:@selector(addString:)
+                           withObject:@"MIDI received:"
+                        waitUntilDone:NO];
+
+    const MIDIPacket *packet = &packetList->packet[0];
+    for (int i = 0; i < packetList->numPackets; ++i)
+    {
+        packet = MIDIPacketNext(packet);
+    }
+}
 @end

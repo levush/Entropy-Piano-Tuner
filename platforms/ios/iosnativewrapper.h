@@ -12,6 +12,7 @@
 #   error "This file may only be include on ios platforms"
 #endif
 
+void iosInit();
 void iosDisableScreensaver();
 void iosReleaseScreensaverLock();
 
