@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
         exitCode = EXIT_FAILURE;
     }
 
-    platformtools::enableScreensaver();
+    PlatformTools::getSingleton()->enableScreensaver();
 
     return exitCode;
 }
