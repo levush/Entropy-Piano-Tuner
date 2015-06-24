@@ -23,38 +23,31 @@
 #include <QStandardPaths>
 #include <QDebug>
 
-#if __ANDROID__
-#include <QAndroidJniObject>
-#include <QAndroidJniEnvironment>
-#include "androidnativewrapper.h"
-#elif __linux__
-#include <stdlib.h>
-#elif __APPLE__
-#include "applenativewrapper.h"
-#elif _WIN32
-#include <Windows.h>
-#endif
-
 #include "tunerapplication.h"
 
-namespace platformtools {
+PlatformTools DEFAULT_PLATFORM_TOOLS;
 
-bool loadStartupFile(const QStringList args) {
-#ifdef __ANDROID__
-    // java will handle the file opening
-    callAndroidVoidTunerApplicationFunction("mainWindowInitialized");
-#elif defined(WINAPI_PARTITION_PC_APP)
-    // windows pc app, open from args (default)
-#elif defined(WINAPI_PARTITION_PHONE_APP)
-    // windows phone app
-#else
-    // something else, e.g. linux, use default
-#endif
+PlatformTools* PlatformTools::mSingletonPtr(nullptr);
 
+PlatformTools::PlatformTools(PlatformTools *instance) {
+    EptAssert(!mSingletonPtr, "There is already a platform tools class registered.");
+    mSingletonPtr = instance;
+}
+
+PlatformTools *PlatformTools::getSingleton() {
+    if (!mSingletonPtr) {
+        // use default set
+        return &DEFAULT_PLATFORM_TOOLS;
+    }
+
+    return mSingletonPtr;
+}
+
+bool PlatformTools::loadStartupFile(const QStringList args) {
     return openFileFromArgs(args);
 }
 
-bool openFileFromArgs(const QStringList &args) {
+bool PlatformTools::openFileFromArgs(const QStringList &args) {
     QString startupFile;
     bool cached = false;
 
@@ -81,7 +74,7 @@ bool openFileFromArgs(const QStringList &args) {
     return TunerApplication::getSingleton().openFile(startupFile, cached);
 }
 
-void openFile(const char *file, bool cached) {
+void PlatformTools::openFile(const char *file, bool cached) {
     QString fileName(file);
     LogI("Opening external file %s", file);
     QMetaObject::invokeMethod(TunerApplication::getSingletonPtr(),
@@ -91,38 +84,3 @@ void openFile(const char *file, bool cached) {
                               Q_ARG(QString, fileName),
                               Q_ARG(bool, cached));
 }
-
-void disableScreensaver() {
-#if __ANDROID__
-    // done in activity
-#elif __linux__
-    // system("setterm -blank 0 -powerdown 0");  // does not work
-#elif __APPLE__
-#   if TARGET_OS_MAC
-    macUtil.disableScreensaver();
-#   endif
-#elif _WIN32
-#   if WINAPI_PARTITION_APP
-#   elif WINAPI_PARTITION_DESKTOP
-        SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
-#   endif
-#endif
-}
-
-void enableScreensaver() {
-#if __ANDROID__
-    // done in activity
-#elif __linux__
-#elif __APPLE__
-#   if TARGET_OS_MAC
-    macUtil.releaseScreensaverLock();
-#   endif
-#elif _WIN32
-#   if WINAPI_PARTITION_APP
-#   elif WINAPI_PARTITION_DESKTOP
-        SetThreadExecutionState(ES_CONTINUOUS);
-#   endif
-#endif
-}
-
-}  // namespace platformtools
