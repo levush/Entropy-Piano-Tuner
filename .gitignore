@@ -33,3 +33,6 @@ publish
 
 # archies
 *.tar.gz
+/docs/*
+/platforms/android/gradle.properties
+/platforms/android/local.properties
