@@ -47,7 +47,7 @@ WaveformCalculator::WaveformCalculator (int numberOfKeys) :
 void WaveformCalculator::workerFunction()
 {
     std::cout << "Now we optimize the plan" << std::endl;
-    mFFT.optimize(mIn);
+    //mFFT.optimize(mIn);
     std::cout << "Plan optimization finished" << std::endl;
     Sound sound;
     std::default_random_engine generator;
@@ -65,7 +65,6 @@ void WaveformCalculator::workerFunction()
         }
         mQueueMutex.unlock();
 
-        const double df = time/size;
         if (keynumber >= 0 and keynumber<=mNumberOfKeys)
         {
             const Sound::Partials &partials = sound.getPartials();
@@ -78,7 +77,7 @@ void WaveformCalculator::workerFunction()
                 {
                     const double frequency = partial.first;
                     const double intensity = partial.second / norm;
-                    int k = MathTools::roundToInteger(frequency/df);
+                    int k = MathTools::roundToInteger(frequency*time);
                     if (k>0 and k<size)
                     {
                         std::complex<double> phase(distribution(generator));
@@ -91,12 +90,6 @@ void WaveformCalculator::workerFunction()
                 for (int i=0; i<size; i++) mLibrary[keynumber][i]=mOut[i];
                 mLibraryMutex[keynumber].unlock();
                 std::cout << "finished " << std::endl;
-                if (keynumber==48)
-                {
-                    std::ofstream os("000-wave.dat");
-                    for (auto s : mLibrary[48]) os << s << std::endl;
-                    os.close();
-                }
             }
         }
         else msleep(20);
@@ -109,6 +102,13 @@ void WaveformCalculator::preCalculate(int keynumber, const Sound &sound)
     mQueueMutex.lock();
     mQueue[keynumber] = sound;
     mQueueMutex.unlock();
+}
+
+double WaveformCalculator::getInterpolation (const WaveForm &W, const double t)
+{
+    double realindex = t*size/time;
+    int index = static_cast<int> (realindex);
+    return W[index%size] + (realindex-index)*(W[(index+1)%size]-W[index%size]);
 }
 
 //=============================================================================
@@ -234,12 +234,8 @@ void Synthesizer::init ()
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::preCalculateWaveform  (const int id,
-                                         const Sound &sound,
-                                         const double sampletime)
+                                         const Sound &sound)
 {
-    int samplerate = mAudioPlayer->getSamplingRate();
-    mSoundLibrary.addSound(id,sound,samplerate,sampletime);
-
     if (id>=0 and id<88) mCalculator.preCalculate(id, sound);
 }
 

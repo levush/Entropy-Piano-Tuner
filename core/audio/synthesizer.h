@@ -30,10 +30,11 @@
 #include "../math/fftimplementation.h"
 
 
-
 class WaveformCalculator : public SimpleThreadHandler
 {
 public:
+
+    using WaveForm = std::vector<float>;
 
     WaveformCalculator(int numberOfKeys = 88);
 
@@ -41,10 +42,11 @@ public:
 
     void preCalculate (int keynumber, const Sound &sound);
 
+    double getInterpolation (const WaveForm &W, const double t);
+
 private:
-    const int size = 65536;
-    const double time = 2.972;
-    using WaveForm = std::vector<float>;
+    const int size = 65536*2;
+    const double time = 2*2.972;
     int mNumberOfKeys;
     std::vector<WaveForm> mLibrary;
     std::vector<std::mutex> mLibraryMutex;
@@ -127,8 +129,7 @@ public:
     void exit () { mSoundLibrary.stop(); stop(); }
 
     void preCalculateWaveform   (const int id,
-                                 const Sound &sound,
-                                 const double sampletime);
+                                 const Sound &sound);
 
     void playSound              (const int id,
                                  const Sound &sound,
