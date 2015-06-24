@@ -27,6 +27,33 @@
 #include "sound.h"
 #include "audioplayeradapter.h"
 #include "../system/simplethreadhandler.h"
+#include "../math/fftimplementation.h"
+
+
+
+class WaveformCalculator : public SimpleThreadHandler
+{
+public:
+
+    WaveformCalculator(int numberOfKeys = 88);
+
+    void workerFunction();
+
+    void preCalculate (int keynumber, const Sound &sound);
+
+private:
+    const int size = 65536;
+    const double time = 2.972;
+    using WaveForm = std::vector<float>;
+    int mNumberOfKeys;
+    std::vector<WaveForm> mLibrary;
+    std::vector<std::mutex> mLibraryMutex;
+    FFTComplexVector mIn;
+    FFTRealVector mOut;
+    FFT_Implementation mFFT;
+    std::map<int,Sound> mQueue;
+    std::mutex mQueueMutex;
+};
 
 
 //=============================================================================
@@ -117,6 +144,8 @@ public:
 
 
 private:
+
+    WaveformCalculator mCalculator;
 
     using WaveForm = Sound::WaveForm;
 

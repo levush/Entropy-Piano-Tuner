@@ -23,6 +23,93 @@
 #include "../system/log.h"
 #include "../math/mathtools.h"
 
+#include <iostream>
+
+
+WaveformCalculator::WaveformCalculator (int numberOfKeys) :
+    mNumberOfKeys(numberOfKeys),
+    mLibrary(numberOfKeys),
+    mLibraryMutex(numberOfKeys),
+    mIn(size/2+1),
+    mOut(size),
+    mFFT(),
+    mQueue()
+{
+    for (auto &wave : mLibrary)
+    {
+        wave.resize(size);
+        wave.assign(size,0);
+    }
+}
+
+
+
+void WaveformCalculator::workerFunction()
+{
+    std::cout << "Now we optimize the plan" << std::endl;
+    mFFT.optimize(mIn);
+    std::cout << "Plan optimization finished" << std::endl;
+    Sound sound;
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(0.0,MathTools::PI*2);
+    while (not cancelThread())
+    {
+        int keynumber = -1;
+        mQueueMutex.lock();
+        if(not mQueue.empty())
+        {
+            auto element = mQueue.begin();
+            keynumber = element->first;
+            sound = element->second;
+            mQueue.erase(element);
+        }
+        mQueueMutex.unlock();
+
+        const double df = time/size;
+        if (keynumber >= 0 and keynumber<=mNumberOfKeys)
+        {
+            const Sound::Partials &partials = sound.getPartials();
+            double norm=0;
+            for (auto &partial : partials) norm += partial.second;
+            mIn.assign(size/2+1,0);
+            if (norm>0)
+            {
+                for (auto &partial : partials)
+                {
+                    const double frequency = partial.first;
+                    const double intensity = partial.second / norm;
+                    int k = MathTools::roundToInteger(frequency/df);
+                    if (k>0 and k<size)
+                    {
+                        std::complex<double> phase(distribution(generator));
+                        mIn[k] = exp(phase) * intensity;
+                    }
+                }
+                std::cout << "doing " << keynumber << std::endl;
+                mFFT.calculateFFT(mIn,mOut);
+                mLibraryMutex[keynumber].lock();
+                for (int i=0; i<size; i++) mLibrary[keynumber][i]=mOut[i];
+                mLibraryMutex[keynumber].unlock();
+                std::cout << "finished " << std::endl;
+                if (keynumber==48)
+                {
+                    std::ofstream os("000-wave.dat");
+                    for (auto s : mLibrary[48]) os << s << std::endl;
+                    os.close();
+                }
+            }
+        }
+        else msleep(20);
+    }
+}
+
+
+void WaveformCalculator::preCalculate(int keynumber, const Sound &sound)
+{
+    mQueueMutex.lock();
+    mQueue[keynumber] = sound;
+    mQueueMutex.unlock();
+}
 
 //=============================================================================
 //                  Structure describing an envelope
@@ -115,6 +202,7 @@ void Synthesizer::init ()
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 
     mSoundLibrary.start();
+    mCalculator.start();
 }
 
 
@@ -151,6 +239,8 @@ void Synthesizer::preCalculateWaveform  (const int id,
 {
     int samplerate = mAudioPlayer->getSamplingRate();
     mSoundLibrary.addSound(id,sound,samplerate,sampletime);
+
+    if (id>=0 and id<88) mCalculator.preCalculate(id, sound);
 }
 
 

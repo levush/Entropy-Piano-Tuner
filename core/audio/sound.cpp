@@ -94,7 +94,7 @@ void Sound::setPartials (const Spectrum &spectrum)
     for (auto &entry : spectrum) norm += entry.second;
     if (norm<=0) return;
     mFrequencyRatio = mFrequency / spectrum.begin()->first;
-    for (auto entry : spectrum) mPartials[-entry.second/norm]=entry.first;
+    mPartials = spectrum;
 }
 
 
