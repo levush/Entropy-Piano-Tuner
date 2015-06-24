@@ -43,7 +43,7 @@ static void java_openFile(JNIEnv *env, jobject thiz, jstring string, jboolean ca
     const char *file = env->GetStringUTFChars(string, 0);
 
     // use your string
-    platformtools::openFile(file, (bool)(cached == JNI_TRUE));
+    PlatformTools::getSingleton()->openFile(file, (bool)(cached == JNI_TRUE));
 
     env->ReleaseStringUTFChars(string, file);
 }

@@ -5,6 +5,7 @@
 
 # hidden files
 *.db
+*.DS_Store
 
 # user files
 *.user

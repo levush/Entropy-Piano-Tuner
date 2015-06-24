@@ -75,6 +75,7 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent)
                                 KEY_WHITE_KEY_SIZE, KEY_HEIGHT - 2 * PEN_THIN_LINE);
 
     setScene(&mScene);
+    setWhatsThis(tr("This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key."));
 
     // antialiasing for nice lines
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);

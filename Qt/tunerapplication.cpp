@@ -71,7 +71,7 @@ TunerApplication::~TunerApplication()
     stop();
     exit();
     mCore.reset();
-    platformtools::enableScreensaver();
+    PlatformTools::getSingleton()->enableScreensaver();
 
     mSingleton = nullptr;
 }
@@ -120,7 +120,7 @@ void TunerApplication::init() {
                     &mAudioPlayer,
                     log));
 
-    platformtools::disableScreensaver();
+    PlatformTools::getSingleton()->disableScreensaver();
 
 
     EptAssert(mCore, "Core has to be created before entering init");
@@ -156,7 +156,7 @@ void TunerApplication::start() {
         openFile(mStartupFile, false);
         mStartupFile.clear();
     } else {
-        platformtools::loadStartupFile(arguments());
+        PlatformTools::getSingleton()->loadStartupFile(arguments());
     }
 }
 

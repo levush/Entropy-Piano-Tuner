@@ -30,6 +30,7 @@ RecordingStatusGraphicsView::RecordingStatusGraphicsView(QWidget *parent)
       mScene(SCENE_RECT)
 {
     setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
+    setWhatsThis(tr("This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key."));
 
     // no background, and no border!
     setStyleSheet("background: transparent; border: none");
