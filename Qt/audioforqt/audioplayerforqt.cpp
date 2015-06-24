@@ -302,6 +302,11 @@ void QtAudioManager::workerFunction()
 
     init();
     start();
+    if (!mAudioSink) {
+        // error while creating audio device
+        return;
+    }
+
     mAudioSink->suspend();
 
     while (mThreadRunning)

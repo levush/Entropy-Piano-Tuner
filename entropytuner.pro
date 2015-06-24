@@ -176,7 +176,6 @@ HEADERS  += \
     Qt/donotshowagainmessagebox.h \
     Qt/keyboard/fullscreenkeyboarddialog.h \
     Qt/calculationprogressgroup.h \
-    Qt/androidnativewrapper.h \
     Qt/recordingqualitybar.h \
     Qt/autoclosingmessagebox.h \
     Qt/graphicsitemforqt.h \
@@ -228,7 +227,6 @@ SOURCES +=  \
     Qt/donotshowagainmessagebox.cpp \
     Qt/keyboard/fullscreenkeyboarddialog.cpp \
     Qt/calculationprogressgroup.cpp \
-    Qt/androidnativewrapper.cpp \
     Qt/recordingqualitybar.cpp \
     Qt/autoclosingmessagebox.cpp \
     Qt/graphicsitemforqt.cpp \
@@ -494,10 +492,25 @@ android {
     include($$PWD/platforms/android/android.pri)
 }
 
+# add ios files
+ios {
+    include($$PWD/platforms/ios/ios.pri)
+}
+
+# add macx files
+macx {
+    include($$PWD/platforms/osx/osx.pri)
+}
+
+# add windows files
+win32 {
+    include($$PWD/platforms/windows/windows.pri)
+}
+
 # add applenativewrapper files
 mac {
-    HEADERS += Qt/applenativewrapper.h
-    OBJECTIVE_SOURCES += Qt/applenativewrapper.mm
+    HEADERS +=
+    OBJECTIVE_SOURCES +=
 }
 
 FORMS += \
@@ -556,4 +569,3 @@ application.path = $$PREFIX/share/applications
 application.files += $$PWD/appstore/installer/scripts/entropypianotuner.desktop
 
 INSTALLS += target pixmaps icons mime application
-

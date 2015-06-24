@@ -51,14 +51,13 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
         }
     };
 
-    auto createLine = []() {
-        return new Line;
-    };
+    Line *offLine = new Line;
+    Line *onLine = new Line;
 
     linesLayout->addStretch();
-    linesLayout->addWidget(createLine());
+    linesLayout->addWidget(offLine);
     linesLayout->addStretch();
-    linesLayout->addWidget(createLine());
+    linesLayout->addWidget(onLine);
     linesLayout->addStretch();
 
 
@@ -69,7 +68,7 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     textLayout->setSpacing(0);
     textLayout->addStretch();
 
-    QLabel *offLabel = new QLabel(tr("Off"));
+    QLabel *offLabel = new QLabel("Off");
     offLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     textLayout->addWidget(offLabel);
 
@@ -77,35 +76,43 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     onLayout->setMargin(0);
     textLayout->addLayout(onLayout);
 
-    QLabel *onLabel = new QLabel(tr("On"));
+    QLabel *onLabel = new QLabel("On");
     onLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     onLayout->addWidget(onLabel);
     onLayout->addStretch();
 
-    // add buttons if we have a big enough screen
-    // if (mGroupBox) {
-        QToolButton *refreshButton = new QToolButton;
-        onLayout->addWidget(refreshButton);
-        refreshButton->setIcon(QIcon(":/media/images/refresh.png"));
-        refreshButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
-        QObject::connect(refreshButton, SIGNAL(clicked(bool)), this, SLOT(onRefreshClicked()));
+    QToolButton *refreshButton = new QToolButton;
+    onLayout->addWidget(refreshButton);
+    refreshButton->setIcon(QIcon(":/media/images/refresh.png"));
+    refreshButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
+    QObject::connect(refreshButton, SIGNAL(clicked(bool)), this, SLOT(onRefreshClicked()));
 
-        QToolButton *muteButton = new QToolButton;
-        onLayout->addWidget(muteButton);
-        muteButton->setCheckable(true);
-        QIcon muteIcons;
-        muteIcons.addFile(QStringLiteral(":/media/images/micro_active.png"), QSize(), QIcon::Normal, QIcon::Off);
-        muteIcons.addFile(QStringLiteral(":/media/images/micro_mute.png"), QSize(), QIcon::Normal, QIcon::On);
-        muteButton->setIcon(muteIcons);
-        muteButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
-        QObject::connect(muteButton, SIGNAL(toggled(bool)), this, SLOT(onMuteToggled(bool)));
-        new QShortcut(QKeySequence(Qt::Key_M), muteButton, SLOT(toggle()));
-    //}
+    QToolButton *muteButton = new QToolButton;
+    onLayout->addWidget(muteButton);
+    muteButton->setCheckable(true);
+    QIcon muteIcons;
+    muteIcons.addFile(QStringLiteral(":/media/images/micro_active.png"), QSize(), QIcon::Normal, QIcon::Off);
+    muteIcons.addFile(QStringLiteral(":/media/images/micro_mute.png"), QSize(), QIcon::Normal, QIcon::On);
+    muteButton->setIcon(muteIcons);
+    muteButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
+    QObject::connect(muteButton, SIGNAL(toggled(bool)), this, SLOT(onMuteToggled(bool)));
+    new QShortcut(QKeySequence(Qt::Key_M), muteButton, SLOT(toggle()));
 
     mainLayout->addStretch();
 
     // some rudementary values
     updateLevels(0.1, 0.5);
+
+
+
+    // set what's this textsClick this button to reset the automatic calibration of the input volume.
+    this->setWhatsThis(tr("This widgets provides settings and information about the input level of the input device."));
+    offLabel->setWhatsThis(tr("If the input level drops below this mark the recorder stops and does not process the input signal."));
+    onLabel->setWhatsThis(tr("If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the 'Off' mark."));
+    refreshButton->setWhatsThis(tr("Click this button to reset the automatic calibration of the input volume."));
+    muteButton->setWhatsThis(tr("Click this button to mute the input device."));
+    offLine->setWhatsThis(offLabel->whatsThis());
+    onLine->setWhatsThis(onLabel->whatsThis());
 }
 
 void VolumeControlGroupBox::updateLevels(double stopLevel, double onLevel) {

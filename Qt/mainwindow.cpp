@@ -724,14 +724,19 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
             this->close();
         }
 #else
+#   ifdef QT_NO_PROCESS
+        // no processes allowed on this device, usually mobile devices (e.g. WinRT/WinPhone)
+#   else
         // run maintenace tool in updater mode
         if (QProcess::startDetached("maintenancetool", QStringList() << "--updater") == false) {
             LogW("Maintenace tool could not be started.");
-            QMessageBox::warning(this, tr("Warnung"), tr("The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool automatically."));
+            QMessageBox::warning(this, tr("Warning"), tr("The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually."));
         } else {
             // close the program for the installer
             this->close();
         }
-#endif
+#   endif  // QT_NO_PROCESS
+
+#endif  // Q_OS_MACX
     }
 }
