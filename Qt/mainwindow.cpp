@@ -724,6 +724,9 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
             this->close();
         }
 #else
+#   ifdef QT_NO_PROCESS
+        // no processes allowed on this device, usually mobile devices (e.g. WinRT/WinPhone)
+#   else
         // run maintenace tool in updater mode
         if (QProcess::startDetached("maintenancetool", QStringList() << "--updater") == false) {
             LogW("Maintenace tool could not be started.");
@@ -732,6 +735,8 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
             // close the program for the installer
             this->close();
         }
-#endif
+#   endif  // QT_NO_PROCESS
+
+#endif  // Q_OS_MACX
     }
 }
