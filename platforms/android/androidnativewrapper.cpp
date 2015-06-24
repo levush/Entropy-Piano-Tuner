@@ -17,8 +17,6 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#if __ANDROID__
-
 #include "androidnativewrapper.h"
 #include "platformtools.h"
 #include "core/messages/messagehandler.h"
@@ -99,5 +97,3 @@ jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 
     return JNI_VERSION_1_6;
 }
-
-#endif
