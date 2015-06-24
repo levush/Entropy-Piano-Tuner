@@ -28,7 +28,7 @@ SignalAnalyzerGroupBox::SignalAnalyzerGroupBox(QWidget *parent) :
 
     labelsLayout->addStretch();
 
-    mKeyLabel = new QLabel("A0");
+    mKeyLabel = new QLabel("-");
     mKeyLabel->setAlignment(Qt::AlignCenter);
     QFont keyLabelFont;
     keyLabelFont.setPointSize(26);
@@ -46,12 +46,18 @@ SignalAnalyzerGroupBox::SignalAnalyzerGroupBox(QWidget *parent) :
     mFrequencyLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     frequencyLayout->addWidget(mFrequencyLabel);
 
-    QLabel *hzLabel = new QLabel("Hz");
+    QLabel *hzLabel = new QLabel(tr("Hz"));
     frequencyLayout->addWidget(hzLabel);
     hzLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     hzLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
 
     labelsLayout->addStretch();
+
+
+    // set whats this texts
+    mKeyLabel->setWhatsThis(tr("This label displays the current selected key."));
+    mFrequencyLabel->setWhatsThis(tr("This label shows the ground frequency of the selected key."));
+    hzLabel->setWhatsThis(mFrequencyLabel->whatsThis());
 }
 

@@ -38,6 +38,7 @@ RecordingQualityBar::RecordingQualityBar(QWidget *parent) :
     QProgressBar(parent) {
 
     setFormat(tr("Quality"));
+    setWhatsThis(tr("This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation."));
     setTextVisible(false);
 
     setRange(0, 10000);
