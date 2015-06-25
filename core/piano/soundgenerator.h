@@ -63,7 +63,7 @@ private:
     void playOriginalSoundOfKey (const int keynumber, const double volume);
     void playEchoSound (const int keynumber);
 
-    void preCalculateSoundOfKey (const int keynumber, const OperationMode operationmode, const double frequency);
+    void preCalculateSoundOfKey (const int keynumber);
     void preCalculateSoundOfAllKeys ();
 
 private:

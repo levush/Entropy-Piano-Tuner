@@ -226,9 +226,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             if (mOperationMode==MODE_CALCULATION)
             {
                 auto message(std::static_pointer_cast<MessageChangeTuningCurve>(m));
-                double frequency = message->getFrequency() * mConcertPitch / 440.0;
-                int keynumber = message->getKeyNumber();
-                preCalculateSoundOfKey(keynumber,MODE_CALCULATION,frequency);
+                preCalculateSoundOfKey(message->getKeyNumber());
             }
         }
         break;
@@ -524,20 +522,13 @@ void SoundGenerator::playEchoSound (const int keynumber)
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Calculate the sound of a given key in advance
 /// \param keynumber
-/// \param operationmode
-/// \param frequency
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundGenerator::preCalculateSoundOfKey (const int keynumber,
-                                             const OperationMode operationmode,
-                                             const double frequency)
+void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 {
-    int samplerate = mAudioAdapter->getSamplingRate();
-    Sound sound (frequency,mPiano->getKey(keynumber).getPeaks(),getStereoPosition(keynumber),1,samplerate,1);
-    if (operationmode==MODE_RECORDING)
-        mSynthesizer.preCalculateWaveform((keynumber & 0xff), sound);
-    else if (operationmode==MODE_CALCULATION)
-        mSynthesizer.preCalculateWaveform((keynumber & 0xff) + 0x80, sound);
+    Sound sound (frequency,mPiano->getKey(keynumber).getPeaks(),
+                 getStereoPosition(keynumber),1,11111,1);
+    mSynthesizer.preCalculateWaveform(keynumber, sound);
 }
 
 

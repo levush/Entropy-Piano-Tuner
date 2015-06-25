@@ -45,7 +45,6 @@ Sound::Sound() :
     mPointer(),
     mStereo(0),
     mVolume(0),
-    mHashTag(0),
     mSampleRate(0),
     mSampleSize(0),
     mWaveForm()
@@ -64,7 +63,6 @@ Sound::Sound() :
 
 void Sound::init()
 {
-    computeHashTag();
     mPointer = mPartials.begin();
     mLeftVolume  = mVolume * sqrt(0.9-0.8*mStereo);
     mRightVolume = mVolume * sqrt(0.1+0.8*mStereo);
@@ -188,37 +186,6 @@ void Sound::set (const Sound &sound, const int samplerate, const double sampleti
 
 
 //-----------------------------------------------------------------------------
-//                       Compute has tag of the sound
-//-----------------------------------------------------------------------------
-
-//////////////////////////////////////////////////////////////////////////////
-/// \brief Compute hash tag of the sound
-///
-/// As soon as the frequency of a key changes, the waveform of a sound
-/// has to be computed once again. However, if the spectrum happens to
-/// coincide with the actual spectrum, then there is no need for a renewed
-/// computation. To detect changes easily and to avoid unnecessary mutex
-/// blocking, the Sound class provides a hash tag which is some kind of
-/// XOR over the relevant data.
-///
-/// Since the frequency of the spectral lines may change during
-/// tuning, the hash tag is computed exclusively from the fundamental
-/// frequency and the peaks heights.
-///
-/// \return Corresponding hash tag.
-///////////////////////////////////////////////////////////////////////////////
-
-void Sound::computeHashTag ()
-{
-    mHashTag = std::hash<double>() (mFrequency);
-    mHashTag ^= std::hash<int>() (mSampleRate);
-    mHashTag ^= std::hash<int>() (mSampleSize);
-    for (auto &f : mPartials)
-        mHashTag ^= std::hash<double>() (f.second); // XOR over all peaks
-}
-
-
-//-----------------------------------------------------------------------------
 //                    Calculate the next Fourier mode
 //-----------------------------------------------------------------------------
 
@@ -314,7 +281,6 @@ void SoundLibrary::addSound (const int id, const Sound &sound,
     mMutexUnlockingRequest = true;
     std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
     Sound &existingSound = mSoundLibrary[id];
-    if (existingSound.getHashTag() != sound.getHashTag())
         existingSound.set(sound,samplerate,sampletime);
     mMutexUnlockingRequest = false;
 }

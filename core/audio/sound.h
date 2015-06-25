@@ -45,9 +45,6 @@ class Synthesizer;
 /// its overall volume. It does not tell us anything about the dynamics
 /// (duration, envelope). This will be accounted for in the class Synthesizer.
 ///
-/// The class is equipped with a hash tag, a long integer which is some kind
-/// of an identifying fingerprint of the spectrum. This allows to quickly
-/// compare whether two sounds are identical.
 ///////////////////////////////////////////////////////////////////////////////
 
 class Sound
@@ -74,8 +71,6 @@ public:
 
     void init ();
 
-    long getHashTag () const { return mHashTag; }
-
     bool computeNextFourierMode (const WaveForm &sinewave, const int phase);
 
     int getNumberOfPartials() const { return mPartials.size(); }
@@ -99,13 +94,10 @@ private:
     double mRightVolume;        ///< right volume (stereo)
     int64_t mPhaseDifference;   ///< stereo phase difference
 
-    long mHashTag;              ///< hash tag, binary value
-
     int mSampleRate;            ///< Sample rate
     int64_t mSampleSize;        ///< Number of stereo sample pairs
     WaveForm mWaveForm;         ///< Computed wave form
 
-    void computeHashTag();                      // compute hash tag
     void setPartials(const Spectrum &spectrum); // flip spectrum
 };
 
