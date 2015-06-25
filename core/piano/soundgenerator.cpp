@@ -156,7 +156,6 @@ void SoundGenerator::handleMessage(MessagePtr m)
             auto message(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = message->getMode();
             stopResonatingReferenceSound();
-            preCalculateSoundOfAllKeys();
         }
         break;
     // IF A NEW FILE IS OPENED OR IF PIANO SETTINGS ARE CHANGED
@@ -301,10 +300,10 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-    int samplerate = mAudioAdapter->getSamplingRate();
-    Sound sound(frequency,Sound::Partials(),getStereoPosition(keynumber),volume,samplerate,0.01);
+//    int samplerate = mAudioAdapter->getSamplingRate();
+//    Sound sound(Sound::Partials(),getStereoPosition(keynumber),volume,samplerate,0.01);
     Envelope env(40,5,0.6,10);
-    mSynthesizer.playSound(keynumber+0x180,sound,env);
+    mSynthesizer.playSound(keynumber,frequency,volume,env);
 }
 
 
@@ -332,10 +331,11 @@ void SoundGenerator::playOriginalSoundOfKey (const int keynumber,
     const bool recording = (mOperationMode==MODE_RECORDING);
     const double frequency = (recording ? key.getRecordedFrequency() :
                  key.getComputedFrequency() * mConcertPitch / 440.0);
+    if (frequency) {}; //*******************************************************
     const int id = (recording ? keynumber : keynumber+128);
     int samplerate = mAudioAdapter->getSamplingRate();
-    Sound sound (frequency,key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,0.1);
-    mSynthesizer.playSound(id,sound,Envelope(40,0.5,0,30,true));
+    Sound sound (key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,0.1);
+    mSynthesizer.playSound(id,frequency,volume,Envelope(40,0.5,0,30,true));
 }
 
 //-----------------------------------------------------------------------------
@@ -380,10 +380,11 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
         {
             const int id = keynumber + 0x180;
             const double volume = 0.2;
-            int samplerate = mAudioAdapter->getSamplingRate();
-            Sound sound (frequency,key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
+//            int samplerate = mAudioAdapter->getSamplingRate();
+//            Sound sound (key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
             Envelope env(30,50,mResonatingVolume,2,false);
-            mSynthesizer.playSound(id,sound,env);
+            const double frequency = 550; //*************************************
+            mSynthesizer.playSound(id,frequency,volume,env);
         }
         break;
         default:
@@ -507,11 +508,12 @@ void SoundGenerator::playResonatingSineWave (int keynumber, double frequency, do
 void SoundGenerator::playEchoSound (const int keynumber)
 {
     const double volume = 0.2;
-    const Key &key =mPiano->getKey(keynumber);
-    int samplerate = mAudioAdapter->getSamplingRate();
-    Sound sound (key.getRecordedFrequency(),key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
+    //const Key &key =mPiano->getKey(keynumber);
+    //int samplerate = mAudioAdapter->getSamplingRate();
+    //Sound sound (key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,1);
     Envelope envelope (5,5,0,30,false);
-    mSynthesizer.playSound(keynumber,sound,envelope,true);
+    double frequency = 888; //*****************************************************************
+    mSynthesizer.playSound(keynumber,frequency,volume,envelope);
 }
 
 
@@ -526,7 +528,7 @@ void SoundGenerator::playEchoSound (const int keynumber)
 
 void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 {
-    Sound sound (frequency,mPiano->getKey(keynumber).getPeaks(),
+    Sound sound (mPiano->getKey(keynumber).getPeaks(),
                  getStereoPosition(keynumber),1,11111,1);
     mSynthesizer.preCalculateWaveform(keynumber, sound);
 }
@@ -543,11 +545,5 @@ void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 void SoundGenerator::preCalculateSoundOfAllKeys ()
 {
     for (int keynumber = 0; keynumber < mNumberOfKeys; keynumber++)
-    {
-        preCalculateSoundOfKey(keynumber,MODE_RECORDING,
-                               mPiano->getKey(keynumber).getRecordedFrequency());
-        preCalculateSoundOfKey(keynumber,MODE_CALCULATION,
-                               mPiano->getKey(keynumber).getComputedFrequency()
-                               * mConcertPitch / 440.0);
-    }
+        preCalculateSoundOfKey(keynumber);
 }

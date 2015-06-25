@@ -104,6 +104,14 @@ void WaveformCalculator::preCalculate(int keynumber, const Sound &sound)
     mQueueMutex.unlock();
 }
 
+
+WaveformCalculator::WaveForm WaveformCalculator::getWaveForm (const int keynumber)
+{
+    std::lock_guard<std::mutex> lock(mLibraryMutex[keynumber]);
+    return mLibrary[keynumber];
+}
+
+
 double WaveformCalculator::getInterpolation (const WaveForm &W, const double t)
 {
     double realindex = t*size/time;
@@ -160,8 +168,7 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mPlayingMutex(),
     mSineWave(),
     mHammerWave(),
-    mAudioPlayer(audioadapter),
-    mSoundLibrary()
+    mAudioPlayer(audioadapter)
 {}
 
 
@@ -201,7 +208,6 @@ void Synthesizer::init ()
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 
-    mSoundLibrary.start();
     mCalculator.start();
 }
 
@@ -230,7 +236,6 @@ void Synthesizer::init ()
 ///
 /// \param id : Identification tag (usually keynumber + offset)
 /// \param sound : The sound to be produced (frequency and spectrum)
-/// \param sampletime : The total time of the pcm sample
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::preCalculateWaveform  (const int id,
@@ -264,30 +269,25 @@ void Synthesizer::preCalculateWaveform  (const int id,
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::playSound (const int id,
-                             const Sound &sound,
+                             const double frequency,
+                             const double volume,
                              const Envelope &env,
-                             const bool priorityhandling)
+                             const bool sine)
 {
     Tone tone;
     tone.id=id;
-    tone.sound = sound;
+    tone.frequency = frequency;
+    tone.volume = volume;
     tone.envelope = env;
-
-    int soundid = id & 0xff;
-    if (sound.getPartials().size()>0) // if we have a complex spectrum
-    {
-        tone.waveform = mSoundLibrary.getWaveForm(soundid,priorityhandling);
-        tone.frequency = 0;
-    }
-    else // if we have a simple sine wave
-    {
-        tone.waveform.clear();
-        tone.frequency = static_cast<int64_t>(100.0*sound.getFrequency()*SineLength);
-    }
     tone.clock=0;
     tone.clock_timeout = mAudioPlayer->getSamplingRate() * 60; // 60 seconds cutoff time
     tone.stage=1;
     tone.amplitude=0;
+
+    if (not sine)
+    {
+
+    }
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
@@ -365,13 +365,13 @@ void Synthesizer::generateAudioSignal ()
         mPlayingMutex.lock();
         for (Tone &tone : mPlayingTones)
         {
-            if (tone.frequency>0 or tone.waveform.size()>0)
+            if (tone.integer_frequency>0)
             {
                 //============== MANAGE THE ENVELOPE =================
                 double y = tone.amplitude;          // get last amplitude
                 Envelope &envelope = tone.envelope; // get ADSR
                 //Sound &sound = tone.sound;
-                double stereo = tone.sound.getStereoLocation();
+                //double stereo = tone.sound.getStereoLocation();
                 switch (tone.stage)                 // Manage ADSR
                 {
                     case 1: // ATTACK
@@ -397,13 +397,15 @@ void Synthesizer::generateAudioSignal ()
                             y *= (1-envelope.release/SampleRate);
                             break;
                 }
-                double volume = tone.sound.getVolume();
+                double volume = tone.volume;
                 tone.amplitude = y;
                 tone.clock ++;
 
-                if (tone.frequency>0) // if sine wave
+                double stereo = 0.5; //*****************************************************
+
+                if (tone.integer_frequency>0) // if sine wave
                 {
-                    double sinewave = y * volume * mSineWave[((tone.frequency*tone.clock)/cycle)%SineLength];
+                    double sinewave = y * volume * mSineWave[((tone.integer_frequency*tone.clock)/cycle)%SineLength];
                     left += (1-stereo) * sinewave;
                     right += stereo * sinewave;
                 }
@@ -415,12 +417,12 @@ void Synthesizer::generateAudioSignal ()
                         right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
                     }
 
-                    int size = tone.waveform.size();
-                    if (size>0)
-                    {
-                        left  += y*volume*tone.waveform[(2*tone.clock)%size];
-                        right += y*volume*tone.waveform[(2*tone.clock+1)%size];
-                    }
+//                    int size = tone.waveform.size();
+//                    if (size>0)
+//                    {
+//                        left  += y*volume*tone.waveform[(2*tone.clock)%size];
+//                        right += y*volume*tone.waveform[(2*tone.clock+1)%size];
+//                    }
                 }
             }
         }

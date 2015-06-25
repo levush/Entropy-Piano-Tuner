@@ -26,8 +26,6 @@
 
 #include "../system/simplethreadhandler.h"
 
-class Synthesizer;
-
 //=============================================================================
 //                        Class describing a sound
 //=============================================================================
@@ -58,25 +56,24 @@ public:
     Sound();
     ~Sound(){}
 
-    Sound (const double frequency, const Spectrum &spectrum,
+    Sound (const Spectrum &spectrum,
            const double stereo, const double volume,
            const int samplerate, const double sampletime);
 
-    void set (const double frequency, const Partials &spectrum,
-              const double stereo, const double volume,
-              const int samplerate, const double sampletime);
+//        void set (const Partials &spectrum,
+//                  const double stereo, const double volume,
+//                  const int samplerate, const double sampletime);
 
-    void set (const Sound &sound,
-              const int samplerate, const double sampletime);
+//        void set (const Sound &sound,
+//                  const int samplerate, const double sampletime);
 
     void init ();
 
-    bool computeNextFourierMode (const WaveForm &sinewave, const int phase);
+    //bool computeNextFourierMode (const WaveForm &sinewave, const int phase);
 
     int getNumberOfPartials() const { return mPartials.size(); }
     int getSampleSize() const { return mSampleSize; }
     void setSampleSize(const int size) { mSampleSize = size; }
-    double getFrequency() const { return mFrequency; }
     double getStereoLocation() const { return mStereo; }
     double getVolume() const { return mVolume; }
     const Partials &getPartials() const { return mPartials; }
@@ -84,8 +81,6 @@ public:
 
 
 private:
-    double mFrequency;          ///< fundamental frequency
-    double mFrequencyRatio;     ///< frequency ratio
     Partials mPartials;         ///< spectrum of partials
     Partials::iterator mPointer;///< pointer to partials
     double mStereo;             ///< stereo position in [0,1]
@@ -117,9 +112,7 @@ public:
     void init() { start(); }
     void exit() { stop(); }
 
-    void addSound  (const int id, const Sound &sound, int samplerate, double sampletime);
-
-    const Sound::WaveForm getWaveForm (const int id, const bool priorityhandling);
+    const Sound::WaveForm getWaveForm (const int id);
 
 private:
     std::map <int,Sound> mSoundLibrary;
@@ -128,7 +121,6 @@ private:
     const int64_t mSineLength;
     Sound::WaveForm mSineWave;
 
-    void workerFunction();
 
     std::default_random_engine rnd;
     std::uniform_int_distribution<int> uniform;

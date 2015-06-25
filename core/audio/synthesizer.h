@@ -42,6 +42,8 @@ public:
 
     void preCalculate (int keynumber, const Sound &sound);
 
+    WaveForm getWaveForm (const int keynumber);
+
     double getInterpolation (const WaveForm &W, const double t);
 
 private:
@@ -99,17 +101,16 @@ struct Envelope
 struct Tone
 {
     int id;                             ///< Identification tag
-    Sound sound;                        ///< Static properties of the tone
+    double frequency;                   ///< Fundamental frequency
+    double volume;
+    //Sound sound;                        ///< Static properties of the tone
     Envelope envelope;                  ///< Dynamic properties of the tone
 
-    int_fast64_t frequency;             ///< converted sine frequency
+    int_fast64_t integer_frequency;     ///< converted sine frequency
     int_fast64_t clock;                 ///< Running time in sample cycles.
     int_fast64_t clock_timeout;         ///< Timeout when forced to release
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
-    Sound::WaveForm waveform;           ///< Copy of precalculated waveform
-
-//    bool priorityhandling;              ///< Generate completely before playing
 };
 
 
@@ -126,15 +127,16 @@ public:
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
-    void exit () { mSoundLibrary.stop(); stop(); }
+    void exit () { stop(); }
 
     void preCalculateWaveform   (const int id,
                                  const Sound &sound);
 
     void playSound              (const int id,
-                                 const Sound &sound,
+                                 const double frequency,
+                                 const double volume,
                                  const Envelope &env,
-                                 const bool priorityhandling = false);
+                                 const bool sine = false);
 
     void ModifySustainLevel     (const int id,
                                  const double level);
@@ -160,8 +162,6 @@ private:
     WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
-
-    SoundLibrary mSoundLibrary;
 
     const Tone* getSoundPointer (const int id) const;
     Tone* getSoundPointer (const int id);
