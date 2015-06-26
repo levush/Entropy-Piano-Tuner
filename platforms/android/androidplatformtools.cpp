@@ -9,6 +9,7 @@ void AndroidPlatformTools::init() {
 }
 
 bool AndroidPlatformTools::loadStartupFile(const QStringList args) {
+    Q_UNUSED(args);
     // done from init call
     return false;
 }
