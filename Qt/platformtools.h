@@ -24,6 +24,8 @@
 #include <QString>
 #include <QStringList>
 
+#include "core/system/platformtoolscore.h"
+
 class TunerApplication;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,18 +33,9 @@ class TunerApplication;
 /// tools.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class PlatformTools {
-private:
-    static PlatformTools* mSingletonPtr;
-protected:
-    PlatformTools(PlatformTools *instance);
-
+class PlatformTools : public PlatformToolsCore {
 public:
-    // default implementation
-    PlatformTools() {}
-
-public:
-    static PlatformTools *getSingleton();
+    static PlatformTools *getSingleton() {return dynamic_cast<PlatformTools*>(PlatformToolsCore::getSingleton());}
 
     /// \brief Initialise native components (e.g. midi on android/iOS)
     virtual void init() {}
@@ -92,9 +85,6 @@ class PlatformToolsImplementation : public PlatformTools {
 protected:
     static std::unique_ptr<PT> mSingleton;
 public:
-    PlatformToolsImplementation() :
-        PlatformTools(this) {
-    }
 };
 
 #endif // PLATFORMTOOLS_H

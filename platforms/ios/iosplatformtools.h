@@ -8,6 +8,7 @@ private:
     virtual void init() override;
     virtual void disableScreensaver() override;
     virtual void enableScreensaver() override;
+    virtual std::shared_ptr<MidiAdapter> createMidiAdapter() const override;
 };
 
 

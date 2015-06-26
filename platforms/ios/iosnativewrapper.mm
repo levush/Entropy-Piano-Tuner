@@ -1,5 +1,6 @@
 #include "iosnativewrapper.h"
 #include "core/system/log.h"
+#include "core/system/eptexception.h"
 #include "tunerapplication.h"
 #include "Qt/platformtools.h"
 #include "core/messages/messagehandler.h"
@@ -20,15 +21,9 @@
 // variables
 PGMidi                    *pgMidiInterface;
 MidiMonitorViewController *pgMidiController;
+int                        pgMidiCurrentPort = -1;
 
 void iosInit() {
-    LogI("Initializing PGMidi");
-    pgMidiController = [MidiMonitorViewController alloc];
-    pgMidiInterface.delegate = (id<PGMidiDelegate>)pgMidiController;
-    for (PGMidiSource *source in pgMidiInterface.sources)
-    {
-        [source addDelegate:(id<PGMidiSourceDelegate>)pgMidiController];
-    }
 }
 
 void iosDisableScreensaver() {
@@ -39,7 +34,74 @@ void iosReleaseScreensaverLock() {
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
+// midi functions
+// =================================================================================================
+void iosMidiInit() {
+    LogI("Initializing PGMidi");
+    pgMidiController = [MidiMonitorViewController alloc];
+    pgMidiInterface.delegate = (id<PGMidiDelegate>)pgMidiController;
+}
+
+void iosMidiExit() {
+    LogI("Exiting PGMidi");
+    if (!pgMidiController) {
+        [pgMidiController release];
+    }
+    pgMidiCurrentPort = -1;
+}
+
+int iosMidiGetNumberOfPorts() {
+    if (!pgMidiInterface) {return 0;}
+    return (int)[pgMidiInterface.sources count];
+}
+
+std::string iosMidiGetPortName(int i) {
+    EptAssert(pgMidiInterface, "Midi not initialized");
+    EptAssert(i < iosMidiGetNumberOfPorts(), "Index out of range.");
+    PGMidiSource *source = pgMidiInterface.sources[i];
+    EptAssert(source, "Source not existing");
+    return std::string([source.name UTF8String]);
+}
+
+bool iosMidiOpenPort(int i) {
+    EptAssert(pgMidiInterface, "Midi not initialized");
+    EptAssert(pgMidiController, "Midi controller not initialized");
+    EptAssert(i < iosMidiGetNumberOfPorts(), "Index out of range.");
+    PGMidiSource *source = pgMidiInterface.sources[i];
+    EptAssert(source, "Source not existing");
+
+    [source addDelegate:(id<PGMidiSourceDelegate>)pgMidiController];
+    pgMidiCurrentPort = i;
+    return true;
+}
+
+bool iosMidiOpenPort() {
+    EptAssert(pgMidiInterface, "Midi not initialized");
+    // check if there are ports
+    if ([pgMidiInterface.sources count] == 0) {return false;}
+
+    // select first non network port, first, then network port
+    EptAssert(pgMidiController, "Midi controller not initialized");
+
+    int midiPort = 0;
+    for (int i = 0; i < [pgMidiInterface.sources count]; i++)
+    {
+        PGMidiSource *source = pgMidiInterface.sources[i];
+        if (!source.isNetworkSession) {
+            midiPort = i;
+            break;
+        }
+    }
+
+    return iosMidiOpenPort(midiPort);
+}
+
+int iosMidiGetCurrentPort() {
+    return pgMidiCurrentPort;
+}
+
 // Application extensions
+// =================================================================================================
 
 // Make QIOSApplicationDelegate known
 @interface QIOSApplicationDelegate

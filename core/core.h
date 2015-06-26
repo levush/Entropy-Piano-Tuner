@@ -35,8 +35,7 @@
 #include "adapters/projectmanageradapter.h"
 #include "piano/pianomanager.h"
 
-#include "midi/RtMidiimplementation.h"
-#include "midi/NoMidiimplementation.h"
+#include "midi/midiadapter.h"
 
 ////////////////////////////////////////////////////////////////////////
 /// \brief class for initialising the core
@@ -66,7 +65,7 @@ public:
     AudioRecorderAdapter *getAudioRecorder() {return mRecorderAdapter;}
     AudioPlayerAdapter *getAudioPlayer() {return mPlayerAdapter;}
     //SignalAnalyzer *getSingalAnalyzer() {return &mSignalAnalyzer;}
-    MidiAdapter *getMidiInterface() {return &mMidi;}
+    MidiAdapter *getMidiInterface() {return mMidi.get();}
     PianoManager *getPianoManager() {return &mPianoManager;}
 
 private:
@@ -76,12 +75,7 @@ private:
     AudioPlayerAdapter *mPlayerAdapter;
     SignalAnalyzer mSignalAnalyzer;
     SoundGenerator mSoundGenerator;
-    // create instance of MIDI
-#if CONFIG_ENABLE_RTMIDI
-    RtMidiImplementation mMidi;
-#else
-    NoMidiImplementation mMidi;
-#endif // midi implementation
+    std::shared_ptr<MidiAdapter> mMidi;
 
     PianoManager mPianoManager;
 

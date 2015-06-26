@@ -42,7 +42,6 @@ public:
 
     int GetNumberOfPorts ();                    ///< Get the number of available input devices
     std::string GetPortName   (int i);               ///< Get the name of device i (starting with zero)
-    std::string GetPortNames  ();                    ///< Get a list of all available input devices
     bool OpenPort (int i, std::string AppName="");   ///< Open Midi input device number i
     bool OpenPort (std::string AppName="");          ///< Open Midi device with the highest port number
     int getCurrentPort() const;

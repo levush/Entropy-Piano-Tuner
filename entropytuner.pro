@@ -203,7 +203,8 @@ HEADERS  += \
     Qt/tuninggroupbox.h \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
-    Qt/volumecontrolgroupbox.h
+    Qt/volumecontrolgroupbox.h \
+    core/system/platformtoolscore.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -262,7 +263,8 @@ SOURCES +=  \
     Qt/tuninggroupbox.cpp \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
-    Qt/volumecontrolgroupbox.cpp
+    Qt/volumecontrolgroupbox.cpp \
+    core/system/platformtoolscore.cpp
 
 #------------- Message system --------------------
 

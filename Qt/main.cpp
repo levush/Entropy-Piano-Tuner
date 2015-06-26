@@ -45,6 +45,7 @@
 
 int main(int argc, char *argv[])
 {
+
     // only single instance also on desktop (on mobile platforms this is handled already)
 #ifdef Q_OS_DESKTOP
     RunGuard guard("entropypianotuner_runguard");
@@ -57,6 +58,15 @@ int main(int argc, char *argv[])
 #endif
 
     int exitCode = -1;
+
+    // setup platformtools
+
+    // required if no platform specific platform tools
+    std::unique_ptr<PlatformTools> defaultPlatformTools;
+    if (!PlatformTools::getSingleton()) {
+        defaultPlatformTools.reset(new PlatformTools());
+        // no platform specific platform tools, use default ones
+    }
 
     // basic application properties (needed for settings)
     QCoreApplication::setOrganizationName("tp3");

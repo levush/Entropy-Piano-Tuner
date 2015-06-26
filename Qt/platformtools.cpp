@@ -25,24 +25,6 @@
 
 #include "tunerapplication.h"
 
-PlatformTools DEFAULT_PLATFORM_TOOLS;
-
-PlatformTools* PlatformTools::mSingletonPtr(nullptr);
-
-PlatformTools::PlatformTools(PlatformTools *instance) {
-    EptAssert(!mSingletonPtr, "There is already a platform tools class registered.");
-    mSingletonPtr = instance;
-}
-
-PlatformTools *PlatformTools::getSingleton() {
-    if (!mSingletonPtr) {
-        // use default set
-        return &DEFAULT_PLATFORM_TOOLS;
-    }
-
-    return mSingletonPtr;
-}
-
 bool PlatformTools::loadStartupFile(const QStringList args) {
     return openFileFromArgs(args);
 }

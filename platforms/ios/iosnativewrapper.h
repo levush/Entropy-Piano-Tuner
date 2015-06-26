@@ -6,6 +6,7 @@
 #endif
 
 #include <TargetConditionals.h>
+#include <string>
 
 // includes
 #if !defined(TARGET_IPHONE_SIMULATOR) || !defined(TARGET_OS_IPHONE)
@@ -15,6 +16,17 @@
 void iosInit();
 void iosDisableScreensaver();
 void iosReleaseScreensaverLock();
+
+
+// midi functions
+void iosMidiInit();
+void iosMidiExit();
+int iosMidiGetNumberOfPorts();
+std::string iosMidiGetPortName(int i);
+bool iosMidiOpenPort(int i);
+bool iosMidiOpenPort();
+int iosMidiGetCurrentPort();
+
 
 #endif // IOSNATIVEWRAPPER_H
 

@@ -30,6 +30,28 @@
 #include "../messages/messagehandler.h"
 #include "../messages/messagemidievent.h"
 
+//---------------- Return a list of all available Midi devices ---------
+
+////////////////////////////////////////////////////////////////////////
+/// \return List of all available Midi devices as a single string
+////////////////////////////////////////////////////////////////////////
+
+std::string MidiAdapter::GetPortNames()
+{
+    const int ports = GetNumberOfPorts();
+    std::stringstream s;
+    if (ports > 0) {
+        s << GetPortName(0);
+        for (int i = 1; i < GetNumberOfPorts(); ++i) {
+            s << ", " << GetPortName(i);
+        }
+        return s.str();
+    }
+    else
+    {
+        return "Midi system not available.";
+    }
+}
 
 //-------------------------send MIDI message ---------------------------
 
