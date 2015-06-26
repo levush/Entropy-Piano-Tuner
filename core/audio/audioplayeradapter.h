@@ -30,8 +30,6 @@
 #include <mutex>
 #include <cstdint>
 
-class RawDataWriter;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract adapter class for playing audio signals
 ///
@@ -55,19 +53,11 @@ public:
     AudioPlayerAdapter();
     virtual ~AudioPlayerAdapter() {};
 
-//    void setRawDataWriter(RawDataWriter *writer);
-
     size_t getSize (void);
     size_t getFreeSize (void);
     size_t getMaximalSize (void);
     void   setMaximalSize(size_t s);
     void pushSingleSample (AudioBase::PacketDataType);
-
-//    virtual void start() {};
-//    virtual void stop() {};
-//    virtual void init() {};
-//    virtual void exit() {};
-
 
 public:
 
@@ -77,8 +67,6 @@ private:
 
     CircularBuffer<AudioBase::PacketDataType> mBuffer;
     std::mutex mBufferMutex;
-
-    //RawDataWriter *mWriter;                     ///< Writer of the pcm data
 };
 
 #endif // AUDIOPLAYERADAPTER_H

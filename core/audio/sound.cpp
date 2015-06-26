@@ -38,57 +38,9 @@
 /// \brief Constructor: Create an empty sound
 ///////////////////////////////////////////////////////////////////////////////
 
-Sound::Sound() :
-    mPartials(),
-    mStereo(0),
-    mVolume(0),
-    mSampleRate(0),
-    mSampleSize(0),
-    mWaveForm()
-{
-    init();
-}
-
-
-//-----------------------------------------------------------------------------
-//                              Initialization
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Initialization of a sound
-///////////////////////////////////////////////////////////////////////////////
-
-void Sound::init()
-{
-    mLeftVolume  = mVolume * sqrt(0.9-0.8*mStereo);
-    mRightVolume = mVolume * sqrt(0.1+0.8*mStereo);
-    mPhaseDifference = round(mSampleRate * (0.5-mStereo) / 200);
-}
-
-//-----------------------------------------------------------------------------
-//                  Converter from spectrum to partial list
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Convert the spectrum into a list of partials sorted by intensity
-///
-/// The calculation of the wave forms takes time. Therefore, the generation
-/// starts with the most important Fourier modes. To this end, the spectrum
-/// (list of peaks), which is usually organized as a map from frequency ->
-/// intensity is flipped, mapping -intensity -> frequency. In this way
-/// the most intense partials are in front of the map.
-///
-/// \param spectrum : List of peaks (frequency -> intensity)
-///////////////////////////////////////////////////////////////////////////////
-
-void Sound::setPartials (const Spectrum &spectrum)
-{
-    mPartials.clear();
-    double norm = 0;
-    for (auto &entry : spectrum) norm += entry.second;
-    if (norm<=0) return;
-    mPartials = spectrum;
-}
+Sound::Sound() : mSpectrum(),mVolume(0),mStereo(0),
+                 mLeftVolume(0),mRightVolume(0)
+{}
 
 
 //-----------------------------------------------------------------------------
@@ -106,98 +58,52 @@ void Sound::setPartials (const Spectrum &spectrum)
 ///////////////////////////////////////////////////////////////////////////////
 
 Sound::Sound (const Spectrum &spectrum,
-              const double stereo, const double volume,
-              const int samplerate, const double sampletime) :
-    mPartials(),
-    mStereo(stereo),
+              const double stereo, const double volume) :
+    mSpectrum(spectrum),
     mVolume(volume),
-    mSampleRate(samplerate),
-    mSampleSize(static_cast<int>(samplerate*sampletime)),
-    mWaveForm(2*mSampleSize,0)
+    mStereo(stereo)
 {
-    setPartials (spectrum);
-    init();
+    double norm = 0;
+    for (auto &entry : spectrum) norm += entry.second;
+    if (norm<=0)
+    {
+        LogW("Norm of the power spectrum non-positive: norm=%lf",norm);
+        return;
+    }
+    for (auto &y : mSpectrum) y.second /= norm;
+    mLeftVolume  = mVolume * sqrt(0.9-0.8*mStereo);
+    mRightVolume = mVolume * sqrt(0.1+0.8*mStereo);
 }
 
 
-
-
-////-----------------------------------------------------------------------------
-////                    Calculate the next Fourier mode
-////-----------------------------------------------------------------------------
-
-/////////////////////////////////////////////////////////////////////////////////
-///// \brief Calculate the next Fourier mode
-///// \param sinewave : Reference to a pre-calculated sine wave for acceleration
-///// \param phase : total phase shift of the Fourier component (should be random)
-///// \return true if a mode was constructed, false if nothing to do
-/////////////////////////////////////////////////////////////////////////////////
-
-//bool Sound::computeNextFourierMode (const WaveForm &sinewave, const int phase=0)
-//{
-//    if (mPointer==mPartials.end()) return false;
-//    double volume = sqrt(-(mPointer->first));
-//    const double f = mPointer->second;
-//    if (f>24 and f<10000 and volume>0.0005)
-//    {
-//        const int64_t periods = round((mSampleSize * f) / mSampleRate);
-//        const int64_t leftphase  = phase;
-//        const int64_t rightphase = leftphase + mPhaseDifference;
-//        const int64_t SineLength = sinewave.size();
-//        for (int64_t i=0; i<mSampleSize; ++i)
-//        {
-//            mWaveForm[2*i] += mLeftVolume * volume *
-//                sinewave[((i*periods*SineLength)/mSampleSize+leftphase)%SineLength];
-//            mWaveForm[2*i+1] += mRightVolume * volume *
-//                sinewave[((i*periods*SineLength)/mSampleSize+rightphase)%SineLength];
-//        }
-//    }
-//    mPointer++;
-//    return true;
-//}
-
-
-
-
 //=============================================================================
-//                        Class for a sound library
+//                  Structure describing an envelope
 //=============================================================================
 
 //-----------------------------------------------------------------------------
-//	                            Constructor
+//	                             Constructor
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor
+/// \brief Envelope::Envelope
+/// \param attack : Rate of initial volume increase in units of 1/sec.
+/// \param decay : Rate of the subsequent volume decrease in units of 1/sec.
+///        If this rate is zero the decay phase is omitted and the volume
+/// increases directly towards the sustain level controlled by the attack rate.
+/// \param sustain : Level at which the volume saturates after decay in (0..1).
+/// \param release : Rate at which the sound disappears after release in
+/// units of 1/sec.
+/// \param hammer : Volume of a hammer-like noise at the beginning
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundLibrary::SoundLibrary() :
-    mSoundLibrary(),
-    mSoundLibraryMutex(),
-    mMutexUnlockingRequest(false),
-    mSineLength(65536),
-    mSineWave(mSineLength,0),
-    rnd(),
-    uniform(0,mSineLength-1)
-{}
+Envelope::Envelope(double attack, double decay,
+                   double sustain, double release, double hammer) :
+    attack(attack),
+    decay(decay),
+    sustain(sustain),
+    release(release),
+    hammer(hammer)
+{};
 
 
 
-
-
-
-//-----------------------------------------------------------------------------
-//	            Function for getting the precalculated waveform
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Function for getting the precalculated waveform
-/// \param id : Identity tag of the waveform
-/// \return Copy of the waveform
-///////////////////////////////////////////////////////////////////////////////
-
-const Sound::WaveForm SoundLibrary::getWaveForm(const int id)
-{
-    std::lock_guard<std::mutex> lock(mSoundLibraryMutex);
-    return mSoundLibrary[id].getWaveForm();
-}

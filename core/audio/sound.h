@@ -50,82 +50,47 @@ class Sound
 public:
 
     using Spectrum = std::map<double,double>;   // type of spectrum
-    using Partials = std::map<double,double>;   // type of partials list
-    using WaveForm = std::vector<float>;        // type of stereo waveform
 
     Sound();
+    Sound (const Spectrum &spectrum,
+           const double volume,
+           const double stereo);
     ~Sound(){}
 
-    Sound (const Spectrum &spectrum,
-           const double stereo, const double volume,
-           const int samplerate, const double sampletime);
-
-//        void set (const Partials &spectrum,
-//                  const double stereo, const double volume,
-//                  const int samplerate, const double sampletime);
-
-//        void set (const Sound &sound,
-//                  const int samplerate, const double sampletime);
-
-    void init ();
-
-    //bool computeNextFourierMode (const WaveForm &sinewave, const int phase);
-
-    int getNumberOfPartials() const { return mPartials.size(); }
-    int getSampleSize() const { return mSampleSize; }
-    void setSampleSize(const int size) { mSampleSize = size; }
-    double getStereoLocation() const { return mStereo; }
-    double getVolume() const { return mVolume; }
-    const Partials &getPartials() const { return mPartials; }
-    const WaveForm &getWaveForm() const { return mWaveForm; }
-
+    int getNumberOfPartials()     const { return mSpectrum.size(); }
+    double getVolume()            const { return mVolume; }
+    double getStereoLocation()    const { return mStereo; }
+    const Spectrum &getSpectrum() const { return mSpectrum; }
 
 private:
-    Partials mPartials;         ///< spectrum of partials
-    Partials::iterator mPointer;///< pointer to partials
-    double mStereo;             ///< stereo position in [0,1]
+    Spectrum mSpectrum;         ///< spectrum of partials
     double mVolume;             ///< overall volume in [0,1]
+    double mStereo;             ///< stereo position in [0,1]
+
     double mLeftVolume;         ///< left volume (stereo)
     double mRightVolume;        ///< right volume (stereo)
-    int64_t mPhaseDifference;   ///< stereo phase difference
-
-    int mSampleRate;            ///< Sample rate
-    int64_t mSampleSize;        ///< Number of stereo sample pairs
-    WaveForm mWaveForm;         ///< Computed wave form
-
-    void setPartials(const Spectrum &spectrum); // flip spectrum
 };
 
 
-
-
 //=============================================================================
-//                          Class for a sound library
+//                  Structure describing an envelope
 //=============================================================================
 
-class SoundLibrary : public SimpleThreadHandler
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Structure describing the envelope (dynamics) of a sound
+///////////////////////////////////////////////////////////////////////////////
+
+struct Envelope
 {
-public:
-    SoundLibrary();
-    ~SoundLibrary(){}
+    double attack;      ///< Initial attack rate
+    double decay;       ///< Subsequent decay rate
+    double sustain;     ///< Sustain level
+    double release;     ///< Release rate
+    double hammer;      ///< Intensity of hammer noise
 
-    void init() { start(); }
-    void exit() { stop(); }
-
-    const Sound::WaveForm getWaveForm (const int id);
-
-private:
-    std::map <int,Sound> mSoundLibrary;
-    std::mutex mSoundLibraryMutex;
-    bool mMutexUnlockingRequest;
-    const int64_t mSineLength;
-    Sound::WaveForm mSineWave;
-
-
-    std::default_random_engine rnd;
-    std::uniform_int_distribution<int> uniform;
-
-
+    Envelope(double attack=0, double decay=0,
+             double sustain=0, double release=0,
+             double hammer=0);
 };
 
 #endif // SOUND_H

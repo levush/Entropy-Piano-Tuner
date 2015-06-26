@@ -26,129 +26,6 @@
 #include <iostream>
 
 
-WaveformCalculator::WaveformCalculator (int numberOfKeys) :
-    mNumberOfKeys(numberOfKeys),
-    mLibrary(numberOfKeys),
-    mLibraryMutex(numberOfKeys),
-    mIn(size/2+1),
-    mOut(size),
-    mFFT(),
-    mQueue()
-{
-    for (auto &wave : mLibrary)
-    {
-        wave.resize(size);
-        wave.assign(size,0);
-    }
-}
-
-
-
-void WaveformCalculator::workerFunction()
-{
-    std::cout << "Now we optimize the plan" << std::endl;
-    //mFFT.optimize(mIn);
-    std::cout << "Plan optimization finished" << std::endl;
-    Sound sound;
-    std::default_random_engine generator;
-    std::uniform_real_distribution<double> distribution(0.0,MathTools::PI*2);
-    while (not cancelThread())
-    {
-        int keynumber = -1;
-        mQueueMutex.lock();
-        if(not mQueue.empty())
-        {
-            auto element = mQueue.begin();
-            keynumber = element->first;
-            sound = element->second;
-            mQueue.erase(element);
-        }
-        mQueueMutex.unlock();
-
-        if (keynumber >= 0 and keynumber<=mNumberOfKeys)
-        {
-            const Sound::Partials &partials = sound.getPartials();
-            double norm=0;
-            for (auto &partial : partials) norm += partial.second;
-            mIn.assign(size/2+1,0);
-            if (norm>0)
-            {
-                for (auto &partial : partials)
-                {
-                    const double frequency = partial.first;
-                    const double intensity = partial.second / norm;
-                    int k = MathTools::roundToInteger(frequency*time);
-                    if (k>0 and k<size)
-                    {
-                        std::complex<double> phase(distribution(generator));
-                        mIn[k] = exp(phase) * intensity;
-                    }
-                }
-                std::cout << "doing " << keynumber << std::endl;
-                mFFT.calculateFFT(mIn,mOut);
-                mLibraryMutex[keynumber].lock();
-                for (int i=0; i<size; i++) mLibrary[keynumber][i]=mOut[i];
-                mLibraryMutex[keynumber].unlock();
-                std::cout << "finished " << std::endl;
-            }
-        }
-        else msleep(20);
-    }
-}
-
-
-void WaveformCalculator::preCalculate(int keynumber, const Sound &sound)
-{
-    mQueueMutex.lock();
-    mQueue[keynumber] = sound;
-    mQueueMutex.unlock();
-}
-
-
-WaveformCalculator::WaveForm WaveformCalculator::getWaveForm (const int keynumber)
-{
-    std::lock_guard<std::mutex> lock(mLibraryMutex[keynumber]);
-    return mLibrary[keynumber];
-}
-
-
-double WaveformCalculator::getInterpolation (const WaveForm &W, const double t)
-{
-    double realindex = t*size/time;
-    int index = static_cast<int> (realindex);
-    return W[index%size] + (realindex-index)*(W[(index+1)%size]-W[index%size]);
-}
-
-//=============================================================================
-//                  Structure describing an envelope
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-//	                             Constructor
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Envelope::Envelope
-/// \param attack : Rate of initial volume increase in units of 1/sec.
-/// \param decay : Rate of the subsequent volume decrease in units of 1/sec.
-///        If this rate is zero the decay phase is omitted and the volume
-/// increases directly towards the sustain level controlled by the attack rate.
-/// \param sustain : Level at which the volume saturates after decay in (0..1).
-/// \param release : Rate at which the sound disappears after release in
-/// units of 1/sec.
-/// \param hammer : Volume of a hammer-like noise at the beginning
-///////////////////////////////////////////////////////////////////////////////
-
-Envelope::Envelope(double attack, double decay,
-                   double sustain, double release, double hammer) :
-    attack(attack),
-    decay(decay),
-    sustain(sustain),
-    release(release),
-    hammer(hammer)
-{};
-
-
 //=============================================================================
 //                             CLASS SYNTHESIZER
 //=============================================================================
@@ -208,7 +85,8 @@ void Synthesizer::init ()
     }
     else LogW("Could not start synthesizer: AudioPlayer not connected.");
 
-    mCalculator.start();
+    mWaveformGenerator.init(88); //*****************************************
+    mWaveformGenerator.start();
 }
 
 
@@ -241,7 +119,7 @@ void Synthesizer::init ()
 void Synthesizer::preCalculateWaveform  (const int id,
                                          const Sound &sound)
 {
-    if (id>=0 and id<88) mCalculator.preCalculate(id, sound);
+    if (id>=0 and id<88) mWaveformGenerator.preCalculate(id, sound);
 }
 
 
@@ -271,23 +149,19 @@ void Synthesizer::preCalculateWaveform  (const int id,
 void Synthesizer::playSound (const int id,
                              const double frequency,
                              const double volume,
-                             const Envelope &env,
-                             const bool sine)
+                             const Envelope &env)
 {
+    if (frequency <= 0 or volume <= 0) return;
     Tone tone;
     tone.id=id;
     tone.frequency = frequency;
     tone.volume = volume;
     tone.envelope = env;
     tone.clock=0;
-    tone.clock_timeout = mAudioPlayer->getSamplingRate() * 60; // 60 seconds cutoff time
     tone.stage=1;
     tone.amplitude=0;
 
-    if (not sine)
-    {
-
-    }
+    tone.waveform = mWaveformGenerator.getWaveForm(id);
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
@@ -351,8 +225,9 @@ void Synthesizer::workerFunction ()
 
 void Synthesizer::generateAudioSignal ()
 {
-    int_fast64_t SampleRate = mAudioPlayer->getSamplingRate();
-    int_fast64_t cycle = 100L * SampleRate;
+    int64_t samplerate = mAudioPlayer->getSamplingRate();
+    int64_t clock_timeout = 60*samplerate; // one minute timeout
+
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
 
@@ -361,69 +236,63 @@ void Synthesizer::generateAudioSignal ()
     while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
     {
         ++writtenSamples;
-        double left=0, right=0;
+        double left=0, right=0; // PCM
         mPlayingMutex.lock();
         for (Tone &tone : mPlayingTones)
         {
-            if (tone.integer_frequency>0)
+            //============== MANAGE THE ENVELOPE =================
+            double y = tone.amplitude;          // get last amplitude
+            Envelope &envelope = tone.envelope; // get ADSR
+            switch (tone.stage)                 // Manage ADSR
             {
-                //============== MANAGE THE ENVELOPE =================
-                double y = tone.amplitude;          // get last amplitude
-                Envelope &envelope = tone.envelope; // get ADSR
-                //Sound &sound = tone.sound;
-                //double stereo = tone.sound.getStereoLocation();
-                switch (tone.stage)                 // Manage ADSR
-                {
-                    case 1: // ATTACK
-                            y += envelope.attack/SampleRate;
-                            if (envelope.decay>0)
-                            {
-                                if (y >= 1) tone.stage++;
-                            }
-                            else
-                            {
-                                if (y >= envelope.sustain) tone.stage+=2;
-                            }
-                            break;
-                    case 2: // DECAY
-                            y *= (1-envelope.decay/SampleRate); // DECAY
-                            if (y <= envelope.sustain) tone.stage++;
-                            break;
-                    case 3: // SUSTAIN
-                            y += (envelope.sustain-y) * envelope.release / SampleRate;
-                            if (tone.clock > tone.clock_timeout) tone.stage=4;
-                            break;
-                    case 4: // RELEASE
-                            y *= (1-envelope.release/SampleRate);
-                            break;
-                }
-                double volume = tone.volume;
-                tone.amplitude = y;
-                tone.clock ++;
+                case 1: // ATTACK
+                        y += envelope.attack/samplerate;
+                        if (envelope.decay>0)
+                        {
+                            if (y >= 1) tone.stage++;
+                        }
+                        else
+                        {
+                            if (y >= envelope.sustain) tone.stage+=2;
+                        }
+                        break;
+                case 2: // DECAY
+                        y *= (1-envelope.decay/samplerate); // DECAY
+                        if (y <= envelope.sustain) tone.stage++;
+                        break;
+                case 3: // SUSTAIN
+                        y += (envelope.sustain-y) * envelope.release / samplerate;
+                        if (tone.clock > clock_timeout) tone.stage=4;
+                        break;
+                case 4: // RELEASE
+                        y *= (1-envelope.release/samplerate);
+                        break;
+            }
+            tone.amplitude = y;
+            tone.clock ++;
 
-                double stereo = 0.5; //*****************************************************
+            //================ CREATE THE PCM WAVEFORM ==============
+            if (tone.id >= 256) // if sine
+            {
+                double stereo = (tone.id - 244)/112.0;
+                int i = static_cast<int>((SineLength*tone.frequency*tone.clock)/samplerate);
+                double sinewave = y * tone.volume * 0.3 * mSineWave[i%SineLength];
+                left += (1-stereo) * sinewave;
+                right += stereo * sinewave;
+            }
+            else // if complex sound
+            {
+//                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
+//                {
+//                    left += 0.2 * volume* (1-stereo) * mHammerWave[2*tone.clock];
+//                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
+//                }
 
-                if (tone.integer_frequency>0) // if sine wave
-                {
-                    double sinewave = y * volume * mSineWave[((tone.integer_frequency*tone.clock)/cycle)%SineLength];
-                    left += (1-stereo) * sinewave;
-                    right += stereo * sinewave;
-                }
-                else // if tone with a composite spectrum
-                {
-                    if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
-                    {
-                        left += 0.2 * volume* (1-stereo) * mHammerWave[2*tone.clock];
-                        right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
-                    }
-
-//                    int size = tone.waveform.size();
-//                    if (size>0)
-//                    {
-//                        left  += y*volume*tone.waveform[(2*tone.clock)%size];
-//                        right += y*volume*tone.waveform[(2*tone.clock+1)%size];
-//                    }
-                }
+                double stereo = (tone.id - 244)/112.0;
+                double t = tone.clock*1.0/samplerate;
+                double wave = y * tone.volume * 0.3 * mWaveformGenerator.getInterpolation(tone.waveform,t);
+                left += (1-stereo) * wave;
+                right += stereo * wave;
             }
         }
 
@@ -486,7 +355,7 @@ void Synthesizer::releaseSound (const int id)
 {
     bool released=false;
     mPlayingMutex.lock();
-    for (auto &ch : mPlayingTones) if ((ch.id & 0x7f)==id) { ch.stage=4; released=true; }
+    for (auto &ch : mPlayingTones) if ((ch.id & 0xff)==id) { ch.stage=4; released=true; }
     mPlayingMutex.unlock();
     if (not released) LogW("Release: Sound with id=%d does not exist.",id);
 }

@@ -24,62 +24,9 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
-#include "sound.h"
 #include "audioplayeradapter.h"
+#include "waveformgenerator.h"
 #include "../system/simplethreadhandler.h"
-#include "../math/fftimplementation.h"
-
-
-class WaveformCalculator : public SimpleThreadHandler
-{
-public:
-
-    using WaveForm = std::vector<float>;
-
-    WaveformCalculator(int numberOfKeys = 88);
-
-    void workerFunction();
-
-    void preCalculate (int keynumber, const Sound &sound);
-
-    WaveForm getWaveForm (const int keynumber);
-
-    double getInterpolation (const WaveForm &W, const double t);
-
-private:
-    const int size = 65536*2;
-    const double time = 2*2.972;
-    int mNumberOfKeys;
-    std::vector<WaveForm> mLibrary;
-    std::vector<std::mutex> mLibraryMutex;
-    FFTComplexVector mIn;
-    FFTRealVector mOut;
-    FFT_Implementation mFFT;
-    std::map<int,Sound> mQueue;
-    std::mutex mQueueMutex;
-};
-
-
-//=============================================================================
-//                  Structure describing an envelope
-//=============================================================================
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Structure describing the envelope (dynamics) of a sound
-///////////////////////////////////////////////////////////////////////////////
-
-struct Envelope
-{
-    double attack;      ///< Initial attack rate
-    double decay;       ///< Subsequent decay rate
-    double sustain;     ///< Sustain level
-    double release;     ///< Release rate
-    double hammer;      ///< Intensity of hammer noise
-
-    Envelope(double attack=0, double decay=0,
-             double sustain=0, double release=0,
-             double hammer=0);
-};
 
 
 //=============================================================================
@@ -100,17 +47,16 @@ struct Envelope
 
 struct Tone
 {
-    int id;                             ///< Identification tag
+    int id;                             ///< Identification tag (negativ=sine)
     double frequency;                   ///< Fundamental frequency
     double volume;
-    //Sound sound;                        ///< Static properties of the tone
     Envelope envelope;                  ///< Dynamic properties of the tone
 
-    int_fast64_t integer_frequency;     ///< converted sine frequency
     int_fast64_t clock;                 ///< Running time in sample cycles.
-    int_fast64_t clock_timeout;         ///< Timeout when forced to release
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
+
+    WaveformGenerator::Waveform waveform;
 };
 
 
@@ -135,8 +81,7 @@ public:
     void playSound              (const int id,
                                  const double frequency,
                                  const double volume,
-                                 const Envelope &env,
-                                 const bool sine = false);
+                                 const Envelope &env);
 
     void ModifySustainLevel     (const int id,
                                  const double level);
@@ -148,9 +93,9 @@ public:
 
 private:
 
-    WaveformCalculator mCalculator;
+    WaveformGenerator mWaveformGenerator;
 
-    using WaveForm = Sound::WaveForm;
+    using Waveform = WaveformGenerator::Waveform;
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.
@@ -158,8 +103,8 @@ private:
     const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    WaveForm mSineWave;                     ///< Sine wave vector, computed in init().
-    WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
+    Waveform mSineWave;                     ///< Sine wave vector, computed in init().
+    Waveform mHammerWave;                   ///< Hammer noise, computed in init().
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 

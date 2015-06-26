@@ -300,10 +300,8 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
 void SoundGenerator::playSineWave(int keynumber, double frequency, double volume)
 {
     EptAssert (keynumber >=0 and keynumber < mNumberOfKeys,"range of key");
-//    int samplerate = mAudioAdapter->getSamplingRate();
-//    Sound sound(Sound::Partials(),getStereoPosition(keynumber),volume,samplerate,0.01);
     Envelope env(40,5,0.6,10);
-    mSynthesizer.playSound(keynumber,frequency,volume,env);
+    mSynthesizer.playSound(keynumber+256,frequency,volume,env);
 }
 
 
@@ -333,8 +331,8 @@ void SoundGenerator::playOriginalSoundOfKey (const int keynumber,
                  key.getComputedFrequency() * mConcertPitch / 440.0);
     if (frequency) {}; //*******************************************************
     const int id = (recording ? keynumber : keynumber+128);
-    int samplerate = mAudioAdapter->getSamplingRate();
-    Sound sound (key.getPeaks(),getStereoPosition(keynumber),volume,samplerate,0.1);
+    //int samplerate = mAudioAdapter->getSamplingRate();
+    Sound sound (key.getPeaks(),getStereoPosition(keynumber),volume);
     mSynthesizer.playSound(id,frequency,volume,Envelope(40,0.5,0,30,true));
 }
 
@@ -529,7 +527,7 @@ void SoundGenerator::playEchoSound (const int keynumber)
 void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 {
     Sound sound (mPiano->getKey(keynumber).getPeaks(),
-                 getStereoPosition(keynumber),1,11111,1);
+                 1,getStereoPosition(keynumber));
     mSynthesizer.preCalculateWaveform(keynumber, sound);
 }
 
