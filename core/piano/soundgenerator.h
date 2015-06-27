@@ -44,11 +44,11 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioadapter);
     ~SoundGenerator(){}
 
-    void init () {mSynthesizer.init();}
-    void exit () {mSynthesizer.exit();}
+    void init () { mSynthesizer.init(mNumberOfKeys); }
+    void exit () { mSynthesizer.exit(); }
 
-    void start() {mSynthesizer.start();}
-    void stop()  {mSynthesizer.stop();}
+    void start() { mSynthesizer.start(); }
+    void stop()  { mSynthesizer.stop(); }
 
 private:
     void handleMessage(MessagePtr m) override final;

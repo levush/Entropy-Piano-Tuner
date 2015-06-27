@@ -47,9 +47,11 @@
 
 struct Tone
 {
-    int id;                             ///< Identification tag (negativ=sine)
+    int keynumber;                             ///< Identification tag (negativ=sine)
     double frequency;                   ///< Fundamental frequency
-    double volume;
+    double leftvolume;                  ///< Left stereo volume
+    double rightvolume;                 ///< Right stereo volume
+    double phaseshift;                  ///< Stereo phase shift
     Envelope envelope;                  ///< Dynamic properties of the tone
 
     int_fast64_t clock;                 ///< Running time in sample cycles.
@@ -72,7 +74,7 @@ class Synthesizer : public SimpleThreadHandler
 public:
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
-    void init ();
+    void init (int numberofkeys);
     void exit () { stop(); }
 
     void preCalculateWaveform   (const int id,
@@ -93,9 +95,11 @@ public:
 
 private:
 
+    using Waveform = WaveformGenerator::Waveform;
+
     WaveformGenerator mWaveformGenerator;
 
-    using Waveform = WaveformGenerator::Waveform;
+    int mNumberOfKeys;                      ///< Number of keys, passed in init()
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.

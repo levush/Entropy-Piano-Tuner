@@ -17,7 +17,6 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-
 #include "synthesizer.h"
 
 #include "../system/log.h"
@@ -61,31 +60,33 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
 /// of the synthesizer in an indpendent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::init ()
+void Synthesizer::init (int numberofkeys)
 {
-    if (mAudioPlayer)
-    {
-        // Pre-calculate a sine wave for speedup
-        mSineWave.resize(SineLength);
-        for (int i=0; i<SineLength; ++i)
-            mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
+    mNumberOfKeys = numberofkeys;
+    if (mNumberOfKeys < 0 or mNumberOfKeys > 256)
+    { LogW("Called init with an invalid number of keys = %d",mNumberOfKeys); return; }
+    else if (not mAudioPlayer)
+    { LogW("Could not start synthesizer: AudioPlayer not connected."); return; }
 
-        // Pre-calculate a piano-hammer-like noise (one second), could be improved
-        size_t samplerate = mAudioPlayer->getSamplingRate();
-        mHammerWave.resize(samplerate);
-        mHammerWave.assign(samplerate,0);
-        for (size_t i=0; i<samplerate; i++)
-            mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/samplerate)/pow(2,i*5.0/samplerate);
-        for (size_t i=0; i<samplerate; i++)
-            mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/samplerate)/pow(2,i*5.0/samplerate);
-        std::default_random_engine generator;
-        std::normal_distribution<double> distribution(0,0.1);
-        for (size_t i=0; i<samplerate; i++)
-            mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
-    }
-    else LogW("Could not start synthesizer: AudioPlayer not connected.");
+    // Pre-calculate a sine wave for speedup
+    mSineWave.resize(SineLength);
+    for (int i=0; i<SineLength; ++i)
+        mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
-    mWaveformGenerator.init(88); //*****************************************
+    // Pre-calculate a piano-hammer-like noise (one second), could be improved
+    size_t samplerate = mAudioPlayer->getSamplingRate();
+    mHammerWave.resize(samplerate);
+    mHammerWave.assign(samplerate,0);
+    for (size_t i=0; i<samplerate; i++)
+        mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/samplerate)/pow(2,i*5.0/samplerate);
+    for (size_t i=0; i<samplerate; i++)
+        mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/samplerate)/pow(2,i*5.0/samplerate);
+    std::default_random_engine generator;
+    std::normal_distribution<double> distribution(0,0.1);
+    for (size_t i=0; i<samplerate; i++)
+        mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
+
+    mWaveformGenerator.init (numberofkeys);
     mWaveformGenerator.start();
 }
 
@@ -146,22 +147,24 @@ void Synthesizer::preCalculateWaveform  (const int id,
 /// \param env : Envelope structure describing dynamics (ADSR-curve)
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::playSound (const int id,
+void Synthesizer::playSound (const int keynumber,
                              const double frequency,
                              const double volume,
                              const Envelope &env)
 {
-    if (frequency <= 0 or volume <= 0) return;
+    if (frequency <= 0 or volume <= 0 or mNumberOfKeys == 0) return;
     Tone tone;
-    tone.id=id;
+    tone.keynumber = keynumber;
     tone.frequency = frequency;
-    tone.volume = volume;
+    double stereo = keynumber * 1.0 / (mNumberOfKeys);
+    tone.leftvolume = (1-stereo)*volume;
+    tone.rightvolume = stereo*volume;
     tone.envelope = env;
     tone.clock=0;
     tone.stage=1;
     tone.amplitude=0;
 
-    tone.waveform = mWaveformGenerator.getWaveForm(id);
+    tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
@@ -272,13 +275,12 @@ void Synthesizer::generateAudioSignal ()
             tone.clock ++;
 
             //================ CREATE THE PCM WAVEFORM ==============
-            if (tone.id >= 256) // if sine
+            if (tone.keynumber >= 256) // if sine wave
             {
-                double stereo = (tone.id - 244)/112.0;
                 int i = static_cast<int>((SineLength*tone.frequency*tone.clock)/samplerate);
-                double sinewave = y * tone.volume * 0.3 * mSineWave[i%SineLength];
-                left += (1-stereo) * sinewave;
-                right += stereo * sinewave;
+                double sinewave = y * 0.3 * mSineWave[i%SineLength];
+                left += tone.leftvolume * sinewave;
+                right += tone.rightvolume * sinewave;
             }
             else // if complex sound
             {
@@ -288,11 +290,10 @@ void Synthesizer::generateAudioSignal ()
 //                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
 //                }
 
-                double stereo = (tone.id - 244)/112.0;
                 double t = tone.clock*1.0/samplerate;
-                double wave = y * tone.volume * 0.3 * mWaveformGenerator.getInterpolation(tone.waveform,t);
-                left += (1-stereo) * wave;
-                right += stereo * wave;
+                double wave = y * 0.3 * mWaveformGenerator.getInterpolation(tone.waveform,t);
+                left += tone.leftvolume * wave;
+                right += tone.rightvolume * wave;
             }
         }
 
@@ -325,7 +326,7 @@ const Tone* Synthesizer::getSoundPointer (const int id) const
 {
     const Tone *snd(nullptr);
     mPlayingMutex.lock();
-    for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
+    for (auto &ch : mPlayingTones) if (ch.keynumber==id) { snd=&ch; break; }
     mPlayingMutex.unlock();
     return snd;
 }
@@ -334,7 +335,7 @@ Tone* Synthesizer::getSoundPointer (const int id)
 {
     Tone *snd(nullptr);
     mPlayingMutex.lock();
-    for (auto &ch : mPlayingTones) if (ch.id==id) { snd=&ch; break; }
+    for (auto &ch : mPlayingTones) if (ch.keynumber==id) { snd=&ch; break; }
     mPlayingMutex.unlock();
     return snd;
 }
@@ -355,7 +356,7 @@ void Synthesizer::releaseSound (const int id)
 {
     bool released=false;
     mPlayingMutex.lock();
-    for (auto &ch : mPlayingTones) if ((ch.id & 0xff)==id) { ch.stage=4; released=true; }
+    for (auto &ch : mPlayingTones) if ((ch.keynumber & 0xff)==id) { ch.stage=4; released=true; }
     mPlayingMutex.unlock();
     if (not released) LogW("Release: Sound with id=%d does not exist.",id);
 }
