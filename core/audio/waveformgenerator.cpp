@@ -31,6 +31,7 @@ WaveformGenerator::WaveformGenerator () :
     mNumberOfKeys(),
     mLibrary(),
     mLibraryMutex(256),
+    mComputing(),
     mIn(size/2+1),
     mOut(size),
     mFFT(),
@@ -54,6 +55,8 @@ void WaveformGenerator::init (int numberOfKeys)
         wave.resize(size);
         wave.assign(size,0);
     }
+    mComputing.resize(mNumberOfKeys);
+    mComputing.assign(mNumberOfKeys,false);
 }
 
 
@@ -61,10 +64,11 @@ void WaveformGenerator::init (int numberOfKeys)
 //                           pre-calculate waveform
 //-----------------------------------------------------------------------------
 
-void WaveformGenerator::preCalculate(int keynumber, const Sound &sound)
+void WaveformGenerator::preCalculate(int keynumber, const Spectrum &spectrum)
 {
     mQueueMutex.lock();
-    mQueue[keynumber] = sound;
+    mQueue[keynumber] = spectrum;
+    mComputing[keynumber] = true;
     mQueueMutex.unlock();
 }
 
@@ -94,6 +98,16 @@ double WaveformGenerator::getInterpolation (const Waveform &W, const double t)
 
 
 //-----------------------------------------------------------------------------
+//                        Check if computation is ready
+//-----------------------------------------------------------------------------
+
+bool WaveformGenerator::isComputing (const int keynumber)
+{
+    std::lock_guard<std::mutex> lock(mQueueMutex);
+    return mComputing[keynumber];
+}
+
+//-----------------------------------------------------------------------------
 //                             Main thread function
 //-----------------------------------------------------------------------------
 
@@ -102,7 +116,7 @@ void WaveformGenerator::workerFunction()
     std::cout << "Now we optimize the plan" << std::endl;
     //mFFT.optimize(mIn);
     std::cout << "Plan optimization finished" << std::endl;
-    Sound sound;
+    Spectrum spectrum;
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution(0.0,MathTools::PI*2);
     while (not cancelThread())
@@ -113,20 +127,19 @@ void WaveformGenerator::workerFunction()
         {
             auto element = mQueue.begin();
             keynumber = element->first;
-            sound = element->second;
+            spectrum = element->second;
             mQueue.erase(element);
         }
         mQueueMutex.unlock();
 
         if (keynumber >= 0 and keynumber<=mNumberOfKeys)
         {
-            const Sound::Spectrum &partials = sound.getSpectrum();
             double norm=0;
-            for (auto &partial : partials) norm += partial.second;
+            for (auto &partial : spectrum) norm += partial.second;
             mIn.assign(size/2+1,0);
             if (norm>0)
             {
-                for (auto &partial : partials)
+                for (auto &partial : spectrum)
                 {
                     const double frequency = partial.first;
                     const double intensity = sqrt(partial.second / norm);
@@ -142,6 +155,9 @@ void WaveformGenerator::workerFunction()
                 mLibraryMutex[keynumber].lock();
                 for (int i=0; i<size; i++) mLibrary[keynumber][i]=mOut[i];
                 mLibraryMutex[keynumber].unlock();
+                mQueueMutex.lock();
+                mComputing[keynumber] = false;
+                mQueueMutex.unlock();
                 std::cout << "finished " << std::endl;
             }
         }

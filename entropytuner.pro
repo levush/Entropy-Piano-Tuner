@@ -329,14 +329,12 @@ CORE_AUDIO_HEADERS = \
     core/audio/audioplayeradapter.h \
     core/audio/synthesizer.h \
     core/audio/circularbuffer.h \
-    core/audio/sound.h
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
     core/audio/audiobase.cpp \
     core/audio/audioplayeradapter.cpp \
     core/audio/synthesizer.cpp \
-    core/audio/sound.cpp
 
 #----------------- Midi ------------------
 

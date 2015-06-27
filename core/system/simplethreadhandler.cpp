@@ -128,7 +128,7 @@ void SimpleThreadHandler::msleep(double milliseconds)
 /// \return Boolean telling whether the thread is running
 ///////////////////////////////////////////////////////////////////////////////
 
-bool SimpleThreadHandler::isThreadRunnding() const
+bool SimpleThreadHandler::isThreadRunning() const
 {
     return mRunning;
 }

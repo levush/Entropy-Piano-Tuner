@@ -30,6 +30,27 @@
 
 
 //=============================================================================
+//                  Structure describing an envelope
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Structure describing the envelope (dynamics) of a sound
+///////////////////////////////////////////////////////////////////////////////
+
+struct Envelope
+{
+    double attack;      ///< Initial attack rate
+    double decay;       ///< Subsequent decay rate
+    double sustain;     ///< Sustain level
+    double release;     ///< Release rate
+    double hammer;      ///< Intensity of hammer noise
+
+    Envelope(double attack=0, double decay=0,
+             double sustain=0, double release=0,
+             double hammer=0);
+};
+
+//=============================================================================
 //                          Structure of a tone
 //=============================================================================
 
@@ -49,8 +70,8 @@ struct Tone
 {
     int keynumber;                             ///< Identification tag (negativ=sine)
     double frequency;                   ///< Fundamental frequency
-    double leftvolume;                  ///< Left stereo volume
-    double rightvolume;                 ///< Right stereo volume
+    double leftamplitude;                  ///< Left stereo volume
+    double rightamplitude;                 ///< Right stereo volume
     double phaseshift;                  ///< Stereo phase shift
     Envelope envelope;                  ///< Dynamic properties of the tone
 
@@ -72,18 +93,24 @@ struct Tone
 class Synthesizer : public SimpleThreadHandler
 {
 public:
+
+    using Spectrum = std::map<double,double>;   // type of spectrum
+
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
-    void init (int numberofkeys);
+    void init ();
     void exit () { stop(); }
 
+    void setNumberOfKeys (int numberOfKeys);
+
     void preCalculateWaveform   (const int id,
-                                 const Sound &sound);
+                                 const Spectrum &spectrum);
 
     void playSound              (const int id,
                                  const double frequency,
                                  const double volume,
-                                 const Envelope &env);
+                                 const Envelope &env,
+                                 const bool waitforcomputation = false);
 
     void ModifySustainLevel     (const int id,
                                  const double level);

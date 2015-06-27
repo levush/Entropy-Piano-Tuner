@@ -26,6 +26,36 @@
 
 
 //=============================================================================
+//                  Structure describing an envelope
+//=============================================================================
+
+//-----------------------------------------------------------------------------
+//	                             Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Envelope::Envelope
+/// \param attack : Rate of initial volume increase in units of 1/sec.
+/// \param decay : Rate of the subsequent volume decrease in units of 1/sec.
+///        If this rate is zero the decay phase is omitted and the volume
+/// increases directly towards the sustain level controlled by the attack rate.
+/// \param sustain : Level at which the volume saturates after decay in (0..1).
+/// \param release : Rate at which the sound disappears after release in
+/// units of 1/sec.
+/// \param hammer : Volume of a hammer-like noise at the beginning
+///////////////////////////////////////////////////////////////////////////////
+
+Envelope::Envelope(double attack, double decay,
+                   double sustain, double release, double hammer) :
+    attack(attack),
+    decay(decay),
+    sustain(sustain),
+    release(release),
+    hammer(hammer)
+{};
+
+
+//=============================================================================
 //                             CLASS SYNTHESIZER
 //=============================================================================
 
@@ -40,6 +70,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
+    mNumberOfKeys(88),
     mPlayingTones(),
     mPlayingMutex(),
     mSineWave(),
@@ -60,9 +91,8 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
 /// of the synthesizer in an indpendent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::init (int numberofkeys)
+void Synthesizer::init ()
 {
-    mNumberOfKeys = numberofkeys;
     if (mNumberOfKeys < 0 or mNumberOfKeys > 256)
     { LogW("Called init with an invalid number of keys = %d",mNumberOfKeys); return; }
     else if (not mAudioPlayer)
@@ -86,10 +116,28 @@ void Synthesizer::init (int numberofkeys)
     for (size_t i=0; i<samplerate; i++)
         mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
 
-    mWaveformGenerator.init (numberofkeys);
+    mWaveformGenerator.init(mNumberOfKeys);
     mWaveformGenerator.start();
 }
 
+
+//-----------------------------------------------------------------------------
+//                          Set number of keys
+//-----------------------------------------------------------------------------
+
+void Synthesizer::setNumberOfKeys (int numberOfKeys)
+{
+    if (numberOfKeys < 0 or numberOfKeys > 255)
+    {
+        LogW("Unreasonable number of keys = %d.",numberOfKeys);
+        return;
+    }
+    else if (numberOfKeys != mNumberOfKeys)
+    {
+        mNumberOfKeys = numberOfKeys;
+        init ();
+    }
+}
 
 //-----------------------------------------------------------------------------
 //	                Pre-calculate the PCM waveform of a sound
@@ -118,9 +166,9 @@ void Synthesizer::init (int numberofkeys)
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::preCalculateWaveform  (const int id,
-                                         const Sound &sound)
+                                         const Spectrum &spectrum)
 {
-    if (id>=0 and id<88) mWaveformGenerator.preCalculate(id, sound);
+    if (id>=0 and id<88) mWaveformGenerator.preCalculate(id, spectrum);
 }
 
 
@@ -150,21 +198,29 @@ void Synthesizer::preCalculateWaveform  (const int id,
 void Synthesizer::playSound (const int keynumber,
                              const double frequency,
                              const double volume,
-                             const Envelope &env)
+                             const Envelope &env,
+                             const bool waitforcomputation)
 {
     if (frequency <= 0 or volume <= 0 or mNumberOfKeys == 0) return;
     Tone tone;
     tone.keynumber = keynumber;
     tone.frequency = frequency;
-    double stereo = keynumber * 1.0 / (mNumberOfKeys);
-    tone.leftvolume = (1-stereo)*volume;
-    tone.rightvolume = stereo*volume;
+    double stereo = (keynumber&0xff) * 1.0 / (mNumberOfKeys);
+    tone.leftamplitude = sqrt((1-stereo)*volume);
+    tone.rightamplitude = sqrt(stereo*volume);
+    tone.phaseshift = (stereo-0.5)/500;
     tone.envelope = env;
     tone.clock=0;
     tone.stage=1;
     tone.amplitude=0;
 
-    tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
+    if (frequency>0 and frequency<10)
+    {
+        if (waitforcomputation and mWaveformGenerator.isComputing(keynumber)) msleep(1);
+        tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
+    }
+    else
+        tone.waveform.clear();
 
     mPlayingMutex.lock();
     mPlayingTones.push_back(tone);
@@ -244,6 +300,7 @@ void Synthesizer::generateAudioSignal ()
         for (Tone &tone : mPlayingTones)
         {
             //============== MANAGE THE ENVELOPE =================
+
             double y = tone.amplitude;          // get last amplitude
             Envelope &envelope = tone.envelope; // get ADSR
             switch (tone.stage)                 // Manage ADSR
@@ -260,7 +317,7 @@ void Synthesizer::generateAudioSignal ()
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-envelope.decay/samplerate); // DECAY
+                        y *= (1-(1+y)*envelope.decay/samplerate); // DECAY
                         if (y <= envelope.sustain) tone.stage++;
                         break;
                 case 3: // SUSTAIN
@@ -275,12 +332,14 @@ void Synthesizer::generateAudioSignal ()
             tone.clock ++;
 
             //================ CREATE THE PCM WAVEFORM ==============
-            if (tone.keynumber >= 256) // if sine wave
+
+            if (tone.frequency > 10) // if sine wave
             {
-                int i = static_cast<int>((SineLength*tone.frequency*tone.clock)/samplerate);
-                double sinewave = y * 0.3 * mSineWave[i%SineLength];
-                left += tone.leftvolume * sinewave;
-                right += tone.rightvolume * sinewave;
+                double t = 1+tone.clock*1.0/samplerate;
+                int i = static_cast<int64_t>(SineLength*tone.frequency*t);
+                int j = static_cast<int64_t>(SineLength*tone.frequency*(t+tone.phaseshift));
+                left  += tone.leftamplitude  * y * 0.2 * mSineWave[i%SineLength];;
+                right += tone.rightamplitude * y * 0.2 * mSineWave[j%SineLength];;
             }
             else // if complex sound
             {
@@ -290,10 +349,11 @@ void Synthesizer::generateAudioSignal ()
 //                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
 //                }
 
-                double t = tone.clock*1.0/samplerate;
-                double wave = y * 0.3 * mWaveformGenerator.getInterpolation(tone.waveform,t);
-                left += tone.leftvolume * wave;
-                right += tone.rightvolume * wave;
+                double t = (1+tone.clock*1.0/samplerate)*tone.frequency;
+                left += tone.leftamplitude * y * 0.3 *
+                        mWaveformGenerator.getInterpolation(tone.waveform,t);
+                right += tone.rightamplitude * y * 0.3 *
+                        mWaveformGenerator.getInterpolation(tone.waveform,t+tone.phaseshift);
             }
         }
 
