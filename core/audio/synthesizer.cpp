@@ -205,7 +205,7 @@ void Synthesizer::playSound (const int keynumber,
     Tone tone;
     tone.keynumber = keynumber;
     tone.frequency = frequency;
-    double stereo = (keynumber&0xff) * 1.0 / (mNumberOfKeys);
+    double stereo = (10+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+20);
     tone.leftamplitude = sqrt((1-stereo)*volume);
     tone.rightamplitude = sqrt(stereo*volume);
     tone.phaseshift = (stereo-0.5)/500;
