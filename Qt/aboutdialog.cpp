@@ -22,6 +22,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     QDialog(parent, Qt::Window)
 {
     EptAssert(parent, "Parent required for size");
+    setModal(true);
 
     QRect r(parent->geometry());
     setGeometry(r.left() + r.width() / 4, r.top() + r.height() / 4, r.width() / 2, r.height() / 2);

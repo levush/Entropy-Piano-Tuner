@@ -32,6 +32,7 @@ LogViewer::LogViewer(QWidget *parent) :
     ui(new Ui::LogViewer)
 {
     ui->setupUi(this);
+    setModal(true);
 
     if (parent) {
         QRect p(parent->geometry());
