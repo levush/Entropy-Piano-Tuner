@@ -34,6 +34,7 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui(new Ui::EditPianoSheetDialog)
 {
     ui->setupUi(this);
+    setModal(true);
 
     ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());

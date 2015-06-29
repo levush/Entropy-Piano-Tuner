@@ -40,6 +40,8 @@ SimpleFileDialog::SimpleFileDialog(Mode mode, QDir dir) :
     mMode(mode),
     mDir(dir)
 {
+    setModal(true);
+
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 

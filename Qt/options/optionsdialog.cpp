@@ -45,6 +45,7 @@ OptionsDialog::OptionsDialog(MainWindow *mainWindow)
       mCentralWidget(0),
       mChangesMade(false) {
     setWindowTitle(tr("Options"));
+    setModal(true);
 
     mMainLayout = new QGridLayout(this);
 
