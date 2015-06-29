@@ -25,7 +25,7 @@
         <x>0</x>
         <y>0</y>
         <width>512</width>
-        <height>462</height>
+        <height>463</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -166,7 +166,7 @@
           <item row="3" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Manifaction year</string>
+             <string>Manufaction year</string>
             </property>
            </widget>
           </item>

@@ -240,10 +240,6 @@
         <translation>Número de série</translation>
     </message>
     <message>
-        <source>Manifaction year</source>
-        <translation>Ano de fabricação</translation>
-    </message>
-    <message>
         <source>Production location</source>
         <translation>Local de fabricação</translation>
     </message>
@@ -266,6 +262,10 @@
     <message>
         <source>Upright</source>
         <translation>De armário</translation>
+    </message>
+    <message>
+        <source>Manufaction year</source>
+        <translation>Ano de fabricação</translation>
     </message>
 </context>
 <context>
@@ -678,7 +678,7 @@
 <context>
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
-        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuing several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
+        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

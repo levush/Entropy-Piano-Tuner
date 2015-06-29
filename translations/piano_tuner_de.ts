@@ -4,52 +4,52 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="28"/>
+        <location filename="../Qt/aboutdialog.cpp" line="29"/>
         <source>About</source>
         <translation>Über den EPT</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="37"/>
+        <location filename="../Qt/aboutdialog.cpp" line="38"/>
         <source>Entropy Piano Tuner</source>
         <translation>Entropie Piano Tuner</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="52"/>
+        <location filename="../Qt/aboutdialog.cpp" line="53"/>
         <source>Built on %1</source>
         <translation>Erstellt am %1</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="53"/>
+        <location filename="../Qt/aboutdialog.cpp" line="54"/>
         <source>by %1 and %2</source>
         <translation>von %1 und %2</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="55"/>
+        <location filename="../Qt/aboutdialog.cpp" line="56"/>
         <source>Based on</source>
         <translation>Basierend auf</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="63"/>
+        <location filename="../Qt/aboutdialog.cpp" line="67"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
         <translation>Copyright 2015 Lehrstuhl. für Theor. Phys. III, Universität Würzburg. Alle Rechte vorbehalten.</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="64"/>
+        <location filename="../Qt/aboutdialog.cpp" line="68"/>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translation>Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="68"/>
+        <location filename="../Qt/aboutdialog.cpp" line="72"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
         <translation>Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. </translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="70"/>
+        <location filename="../Qt/aboutdialog.cpp" line="74"/>
         <source>We thank all those who have contributed to the project:</source>
         <translation>Wir danken allen jenen, die zu diesem Projekt beigetragen haben:</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="94"/>
+        <location filename="../Qt/aboutdialog.cpp" line="98"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="169"/>
-        <source>Manifaction year</source>
+        <source>Manufaction year</source>
         <translation>Fertigungsjahr</translation>
     </message>
     <message>
@@ -619,7 +619,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="540"/>
-        <location filename="../Qt/mainwindow.cpp" line="730"/>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -649,7 +649,7 @@
         <translation>Die Onlineversion der App ist %1. Wollen Sie dieses Update installieren?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="730"/>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>Das Wartungswerkzeug konnte nicht automatisch gestartet werden. Um das Programm zu aktualisieren, müssen Sie das Wartungswerkzeug manuell starten.</translation>
     </message>
@@ -761,17 +761,17 @@
 <context>
     <name>SimpleFileDialog</name>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="90"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="92"/>
         <source>Name:</source>
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="155"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Remove file</source>
         <translation>Datei löschen</translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="156"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="158"/>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
         <translation>Sind sie wirklich sicher, dass sie die Datei &quot;%1&quot; löschen wollen?</translation>
     </message>
@@ -781,7 +781,7 @@
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
         <source>Crash handler</source>
-        <translation>Absturzbehandlung</translation>
+        <translation>Fehlerbehandlung</translation>
     </message>
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
@@ -847,7 +847,7 @@
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
         <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
-        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuing several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
+        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
         <translation>Dies ist das Stimmgerät. Sie sollten den Peak und den Indikator für eine optimale Stimmung in die Mitte des Fensters schieben. Falls Sie mehrere Saiten gleichzeitig stimmen, können mehrere Peaks auftreten. Alle dieser Peaks müssen dann in die Mitte gebracht werden.</translation>
     </message>
 </context>
@@ -859,12 +859,12 @@
         <translation>Optionen</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="68"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
         <source>Environment</source>
         <translation>Umgebung</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
