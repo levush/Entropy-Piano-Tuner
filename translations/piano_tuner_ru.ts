@@ -4,52 +4,52 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="28"/>
+        <location filename="../Qt/aboutdialog.cpp" line="29"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="37"/>
+        <location filename="../Qt/aboutdialog.cpp" line="38"/>
         <source>Entropy Piano Tuner</source>
         <translation>Энтропийный Тюнер для Фортепиано</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="52"/>
+        <location filename="../Qt/aboutdialog.cpp" line="53"/>
         <source>Built on %1</source>
         <translation>Созданно %1</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="53"/>
+        <location filename="../Qt/aboutdialog.cpp" line="54"/>
         <source>by %1 and %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="55"/>
+        <location filename="../Qt/aboutdialog.cpp" line="56"/>
         <source>Based on</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="63"/>
+        <location filename="../Qt/aboutdialog.cpp" line="67"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="64"/>
+        <location filename="../Qt/aboutdialog.cpp" line="68"/>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="68"/>
+        <location filename="../Qt/aboutdialog.cpp" line="72"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="70"/>
+        <location filename="../Qt/aboutdialog.cpp" line="74"/>
         <source>We thank all those who have contributed to the project:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="94"/>
+        <location filename="../Qt/aboutdialog.cpp" line="98"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="169"/>
-        <source>Manifaction year</source>
+        <source>Manufaction year</source>
         <translation>Год выпуска</translation>
     </message>
     <message>
@@ -619,7 +619,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="540"/>
-        <location filename="../Qt/mainwindow.cpp" line="730"/>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
@@ -649,7 +649,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="730"/>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -761,17 +761,17 @@
 <context>
     <name>SimpleFileDialog</name>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="90"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="92"/>
         <source>Name:</source>
         <translation type="unfinished">Имя:</translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="155"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Remove file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="156"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="158"/>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -847,7 +847,7 @@
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
         <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
-        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuing several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
+        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -859,12 +859,12 @@
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="68"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
         <source>Environment</source>
         <translation>Окружение</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
         <source>Audio</source>
         <translation>Аудио</translation>
     </message>
