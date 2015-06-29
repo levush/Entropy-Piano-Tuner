@@ -80,6 +80,7 @@ public class UsbMidiDriverAdapter {
 
             @Override
             public void onMidiControlChange(final MidiInputDevice sender, int cable, int channel, int function, int value) {
+                TunerApplication.java_sendMidiMessage(3, function, value, 0);
             }
 
             @Override

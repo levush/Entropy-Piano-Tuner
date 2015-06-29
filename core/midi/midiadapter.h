@@ -86,6 +86,9 @@ public:
         double deltatime;   ///< Time elapsed since the last MIDI event.
         };
 
+    /// \brief converts midi byte event to event enum
+    static Event byteToEvent(int byte);
+
 protected:
 
     void send (Data &data); ///< Send new MIDI data to the messaging system

@@ -30,6 +30,18 @@
 #include "../messages/messagehandler.h"
 #include "../messages/messagemidievent.h"
 
+MidiAdapter::Event MidiAdapter::byteToEvent(int byte)
+{
+    switch (byte & 0xF0)
+    {
+        case 0x80:  return MIDI_KEY_RELEASE;
+        case 0x90:  return MIDI_KEY_PRESS;
+        case 0xB0:  return MIDI_CONTROL_CHANGE;
+    }
+
+    return MIDI_UNDEFINED;
+}
+
 //---------------- Return a list of all available Midi devices ---------
 
 ////////////////////////////////////////////////////////////////////////

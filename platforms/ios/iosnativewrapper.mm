@@ -44,8 +44,9 @@ void iosMidiInit() {
 
 void iosMidiExit() {
     LogI("Exiting PGMidi");
-    if (!pgMidiController) {
+    if (pgMidiController != nil) {
         [pgMidiController release];
+        pgMidiController = nil;
     }
     pgMidiCurrentPort = -1;
 }
@@ -157,8 +158,14 @@ return TRUE;
 @implementation MidiMonitorViewController
 - (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
 {
-    [source addDelegate:self];
     LogI("Source added.");
+    for (int i = 0; i < [pgMidiInterface.sources count]; i++)
+    {
+        if (pgMidiInterface.sources[i] == source) {
+            iosMidiOpenPort(i);
+            break;
+        }
+    }
 }
 
 - (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
@@ -176,30 +183,24 @@ return TRUE;
 
 - (void) midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
 {
-    LogI("Midi packget received");
-    [self performSelectorOnMainThread:@selector(addString:)
-                           withObject:@"MIDI received:"
-                        waitUntilDone:NO];
-
     const MIDIPacket *packet = &packetList->packet[0];
     for (int i = 0; i < packetList->numPackets; ++i)
     {
-        packet = MIDIPacketNext(packet);
         // handle the packet:
         // only handle packets of length 3, because keypress/release have length 3
-        if (packet->length != 3) {
-            continue;
+        if (packet->length == 3) {
+            // read bytes
+            int byte0 = packet->data[0];
+            int byte1 = packet->data[1];
+            int byte2 = packet->data[2];
+            double deltaTime = 0;  // unused
+
+            // send message
+            MidiAdapter::Data data = {MidiAdapter::byteToEvent(byte0), byte1, byte2, deltaTime};
+            MessageHandler::send<MessageMidiEvent>(data);
         }
 
-        // read bytes
-        int event = packet->data[0];
-        int byte1 = packet->data[1];
-        int byte2 = packet->data[2];
-        double deltaTime = 0;  // unused
-
-        // send message
-        MidiAdapter::Data data = {static_cast<MidiAdapter::Event>(event), byte1, byte2, deltaTime};
-        MessageHandler::send<MessageMidiEvent>(data);
+        packet = MIDIPacketNext(packet);
     }
 }
 @end
