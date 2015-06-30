@@ -61,6 +61,7 @@
 #include "aboutdialog.h"
 #include "tuninggroupbox.h"
 #include "displaysize.h"
+#include "plotsdialog/plotsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -186,6 +187,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addAction(iconFromTheme("document-save-as"), tr("Save as"), this, SLOT(onFileSaveAs()));
     mFileToolBar->addAction(iconFromTheme("document-properties"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
+    mFileToolBar->addAction(QIcon(":/media/icons/mathematical_plot.png"), tr("Plots"), this, SLOT(onOpenPlots()));
 
     QToolBar *helpToolBar = new QToolBar(tr("Help"));
     helpToolBar->setObjectName("helpToolBar");
@@ -598,6 +600,11 @@ void MainWindow::onResetRecording() {
 void MainWindow::onOptions() {
     options::OptionsDialog options(this);
     options.exec();
+}
+
+void MainWindow::onOpenPlots() {
+    PlotsDialog pd(mCore->getPianoManager()->getPiano(), this);
+    pd.exec();
 }
 
 void MainWindow::onTutorial() {
