@@ -153,6 +153,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
             mPiano = &(mpf->getPiano());
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
+            mSynthesizer.setNumberOfKeys(mNumberOfKeys);
             mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
             stopResonatingReferenceSound();
             preCalculateSoundOfAllKeys();
@@ -247,7 +248,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     if (key<0 or key>=mNumberOfKeys) return;
     double volume = pow(static_cast<double>(data.byte2) / 128, 2); // keystroke volume
     // The following formula mimics the decay time of a piano string
-    const double decay = 0.2 * pow(2,1.0/24.0*key);
+    const double decay = (key <= 12 ? 1.0/6 : 1.0/210*pow(key,1.43));
     const double release = (key - mKeyNumberOfA4 >= 22 ? decay : 30);
     Envelope envelope (40,decay,0,release,true);
 
