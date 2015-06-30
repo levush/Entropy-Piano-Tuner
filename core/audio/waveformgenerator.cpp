@@ -32,8 +32,8 @@ WaveformGenerator::WaveformGenerator () :
     mLibrary(),
     mLibraryMutex(256),
     mComputing(),
-    mIn(size/2+1),
-    mOut(size),
+    mIn(mWaveformSize/2+1),
+    mOut(mWaveformSize),
     mFFT(),
     mQueue()
 {
@@ -44,16 +44,21 @@ WaveformGenerator::WaveformGenerator () :
 //                                  Init
 //-----------------------------------------------------------------------------
 
-void WaveformGenerator::init (int numberOfKeys)
+void WaveformGenerator::init (int numberOfKeys, int samplerate)
 {
     EptAssert(numberOfKeys > 0 and numberOfKeys < 256,
               "Number of keys out of range");
     mNumberOfKeys = numberOfKeys;
     mLibrary.resize(mNumberOfKeys);
+    mSampleRate = samplerate;
+    mWaveformSize = mWaveformTime * mSampleRate;
+    mIn.resize(mWaveformSize/2+1);
+    mOut.resize(mWaveformSize);
+
     for (auto &wave : mLibrary)
     {
-        wave.resize(size);
-        wave.assign(size,0);
+        wave.resize(mWaveformSize);
+        wave.assign(mWaveformSize,0);
     }
     mComputing.resize(mNumberOfKeys);
     mComputing.assign(mNumberOfKeys,false);
@@ -91,9 +96,9 @@ WaveformGenerator::Waveform WaveformGenerator::getWaveForm (const int keynumber)
 
 double WaveformGenerator::getInterpolation (const Waveform &W, const double t)
 {
-    double realindex = t*size/time;
+    double realindex = t*mWaveformSize/mWaveformTime;
     int index = static_cast<int> (realindex);
-    return W[index%size] + (realindex-index)*(W[(index+1)%size]-W[index%size]);
+    return W[index%mWaveformSize] + (realindex-index)*(W[(index+1)%mWaveformSize]-W[index%mWaveformSize]);
 }
 
 
@@ -136,15 +141,15 @@ void WaveformGenerator::workerFunction()
         {
             double norm=0;
             for (auto &partial : spectrum) norm += partial.second;
-            mIn.assign(size/2+1,0);
+            mIn.assign(mWaveformSize/2+1,0);
             if (norm>0)
             {
                 for (auto &partial : spectrum)
                 {
                     const double frequency = partial.first;
                     const double intensity = sqrt(partial.second / norm);
-                    int k = MathTools::roundToInteger(frequency*time);
-                    if (k>0 and k<size)
+                    int k = MathTools::roundToInteger(frequency*mWaveformTime);
+                    if (k>0 and k<mWaveformSize)
                     {
                         std::complex<double> phase(0,distribution(generator));
                         mIn[k] = exp(phase) * intensity;
@@ -153,7 +158,7 @@ void WaveformGenerator::workerFunction()
                 std::cout << "doing " << keynumber << std::endl;
                 mFFT.calculateFFT(mIn,mOut);
                 mLibraryMutex[keynumber].lock();
-                for (int i=0; i<size; i++) mLibrary[keynumber][i]=mOut[i];
+                for (int i=0; i<mWaveformSize; i++) mLibrary[keynumber][i]=mOut[i];
                 mLibraryMutex[keynumber].unlock();
                 mQueueMutex.lock();
                 mComputing[keynumber] = false;

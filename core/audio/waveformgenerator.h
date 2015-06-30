@@ -31,11 +31,9 @@ class WaveformGenerator : public SimpleThreadHandler
 {
 private:
 #ifdef __ANDROID__
-    const int size = 65536;
-    const double time = 4;
+    const double mWaveformTime = 4;
 #else
-    const int size = 65536*4;
-    const double time = 10;
+    const double mWaveformTime = 4;
 #endif
 
 public:
@@ -44,13 +42,15 @@ public:
     using Spectrum = std::map<double,double>;   // type of spectrum
 
     WaveformGenerator();
-    void init (int numberOfKeys = 88);
+    void init (int numberOfKeys, int samplerate);
     void preCalculate (int keynumber, const Spectrum &spectrum);
     Waveform getWaveForm (const int keynumber);
     double getInterpolation (const Waveform &W, const double t);
     bool isComputing (const int keynumber);
 
 private:
+    int mSampleRate;
+    int mWaveformSize;
     int mNumberOfKeys;
     std::vector<Waveform> mLibrary;
     std::vector<std::mutex> mLibraryMutex;

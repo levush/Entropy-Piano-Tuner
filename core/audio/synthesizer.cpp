@@ -104,19 +104,19 @@ void Synthesizer::init ()
         mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
     // Pre-calculate a piano-hammer-like noise (one second), could be improved
-    size_t samplerate = mAudioPlayer->getSamplingRate();
-    mHammerWave.resize(samplerate);
-    mHammerWave.assign(samplerate,0);
-    for (size_t i=0; i<samplerate; i++)
-        mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/samplerate)/pow(2,i*5.0/samplerate);
-    for (size_t i=0; i<samplerate; i++)
-        mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/samplerate)/pow(2,i*5.0/samplerate);
+    mSampleRate = mAudioPlayer->getSamplingRate();
+    mHammerWave.resize(mSampleRate);
+    mHammerWave.assign(mSampleRate,0);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
     std::default_random_engine generator;
     std::normal_distribution<double> distribution(0,0.1);
-    for (size_t i=0; i<samplerate; i++)
-        mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/samplerate);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/mSampleRate);
 
-    mWaveformGenerator.init(mNumberOfKeys);
+    mWaveformGenerator.init(mNumberOfKeys,mSampleRate);
     mWaveformGenerator.start();
 }
 
@@ -284,8 +284,8 @@ void Synthesizer::workerFunction ()
 
 void Synthesizer::generateAudioSignal ()
 {
-    int64_t samplerate = mAudioPlayer->getSamplingRate();
-    int64_t clock_timeout = 60*samplerate; // one minute timeout
+    int64_t mSampleRate = mAudioPlayer->getSamplingRate();
+    int64_t clock_timeout = 60*mSampleRate; // one minute timeout
 
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
@@ -306,7 +306,7 @@ void Synthesizer::generateAudioSignal ()
             switch (tone.stage)                 // Manage ADSR
             {
                 case 1: // ATTACK
-                        y += envelope.attack/samplerate;
+                        y += envelope.attack/mSampleRate;
                         if (envelope.decay>0)
                         {
                             if (y >= 1) tone.stage++;
@@ -317,15 +317,15 @@ void Synthesizer::generateAudioSignal ()
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-(1+y)*envelope.decay/samplerate); // DECAY
+                        y *= (1-(1+y)*envelope.decay/mSampleRate); // DECAY
                         if (y <= envelope.sustain) tone.stage++;
                         break;
                 case 3: // SUSTAIN
-                        y += (envelope.sustain-y) * envelope.release / samplerate;
+                        y += (envelope.sustain-y) * envelope.release / mSampleRate;
                         if (tone.clock > clock_timeout) tone.stage=4;
                         break;
                 case 4: // RELEASE
-                        y *= (1-envelope.release/samplerate);
+                        y *= (1-envelope.release/mSampleRate);
                         break;
             }
             tone.amplitude = y;
@@ -335,7 +335,7 @@ void Synthesizer::generateAudioSignal ()
 
             if (tone.frequency > 10) // if sine wave
             {
-                double t = 1+tone.clock*1.0/samplerate;
+                double t = 1+tone.clock*1.0/mSampleRate;
                 int i = static_cast<int64_t>(SineLength*tone.frequency*t);
                 int j = static_cast<int64_t>(SineLength*tone.frequency*(t+tone.phaseshift));
                 left  += tone.leftamplitude  * y * 0.2 * mSineWave[i%SineLength];;
@@ -349,7 +349,7 @@ void Synthesizer::generateAudioSignal ()
 //                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
 //                }
 
-                double t = (1+tone.clock*1.0/samplerate)*tone.frequency;
+                double t = (1+tone.clock*1.0/mSampleRate)*tone.frequency;
                 left += tone.leftamplitude * y * 0.3 *
                         mWaveformGenerator.getInterpolation(tone.waveform,t);
                 right += tone.rightamplitude * y * 0.3 *

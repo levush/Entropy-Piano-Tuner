@@ -93,12 +93,10 @@ void SoundGenerator::handleMessage(MessagePtr m)
             mSelectedKey = message->getKeyNumber();
             stopResonatingReferenceSound();
             if (mOperationMode == MODE_TUNING)
-            {
                 playResonatingReferenceSound(mSelectedKey);
-            }
         }
         break;
-    // START REFERENCE SOUND AT THE BEGINNING OF RECORDING
+    // START REFERENCE SOUND IN TUNING MODE AT THE BEGINNING OF RECORDING
     case Message::MSG_RECORDING_STARTED:
         {
             if (mOperationMode==MODE_TUNING)
@@ -108,17 +106,15 @@ void SoundGenerator::handleMessage(MessagePtr m)
             }
         }
         break;
-    // CHANGE REFERENCE SOUND DURING RECORDING
+    // CHANGE REFERENCE SOUND IN TUNING MODE WHEN KEY SELECTION CHANGES
     case Message::MSG_PRELIMINARY_KEY:
         {
             if (mOperationMode==MODE_TUNING and mSelectedKey<0)
             {
                 auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
                 int recognizedkey = message->getKeyNumber();
-                if (mResonatingKey != recognizedkey)
-                {
+                if (mResonatingKey != recognizedkey and recognizedkey >= 0)
                     playResonatingReferenceSound(recognizedkey);
-                }
             }
         }
         break;
@@ -128,23 +124,15 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 stopResonatingReferenceSound();
         }
         break;
-    // REFERENCE SOUND VOLUME ADJUSTMENT
+    // REFERENCE SOUND VOLUME ADJUSTMENT IN TUNING MODE
     case Message::MSG_RECORDER_ENERGY_CHANGED:
         {
             if (mOperationMode==MODE_TUNING and mResonatingKey>=0)
             {
                 auto message(std::static_pointer_cast<MessageRecorderEnergyChanged>(m));
                 if (message->getLevelType()==MessageRecorderEnergyChanged::LevelType::LEVEL_INPUT)
-                {
                     if (Settings::getSingleton().isSoundGeneratorVolumeDynamic())
-                    {
                         changeVolumeOfResonatingReferenceSound(message->getLevel());
-                    }
-                    else
-                    {
-                        changeVolumeOfResonatingReferenceSound(1);  // ****************** is that really necessary ?
-                    }
-                }
             }
         }
         break;
@@ -166,6 +154,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
             mPiano = &(mpf->getPiano());
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
             mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
+            stopResonatingReferenceSound();
             preCalculateSoundOfAllKeys();
         }
         break;
@@ -189,14 +178,14 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 }
             case MidiAdapter::MIDI_CONTROL_CHANGE:
                 {
-                    // private setting to allow MIDI switch
-                    // between the operating modes
+                    // Funny feature that allows you to switch
+                    // between the operating modes by MIDI pedal
                     // If it is not a pedal break (damper=67):
                     if (data.byte1 < 64 or data.byte1 > 67) break;
                     // If pedal pressed go to recording mode.
                     if (data.byte2 > 0)
                         MessageHandler::send<MessageModeChanged>(MODE_RECORDING);
-                    else
+                    else // else go back to calculation mode
                         MessageHandler::send<MessageModeChanged>(MODE_CALCULATION);
                 }
                 default:
@@ -257,6 +246,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     int key = data.byte1-69+mKeyNumberOfA4; // extract key number starting with 0
     if (key<0 or key>=mNumberOfKeys) return;
     double volume = pow(static_cast<double>(data.byte2) / 128, 2); // keystroke volume
+    // The following formula mimics the decay time of a piano string
     const double decay = 0.2 * pow(2,1.0/24.0*key);
     const double release = (key - mKeyNumberOfA4 >= 22 ? decay : 30);
     Envelope envelope (40,decay,0,release,true);
@@ -275,7 +265,7 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
         // In this mode select key and play the original sound in the original pitch
         MessageHandler::send<MessageKeySelectionChanged>(key, &(mPiano->getKey(key)));
         mSynthesizer.playSound(key,1,0.1*volume,envelope);
-            }
+    }
     break;
     case MODE_CALCULATION:
     {
@@ -283,9 +273,9 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
         MessageHandler::send<MessageKeySelectionChanged>(key, &(mPiano->getKey(key)));
         double frequencyshift = mPiano->getKey(key).getComputedFrequency() *
                                 mPiano->getConcertPitch()  /
-                           440.0 / mPiano->getKey(key).getRecordedFrequency();
+                                440.0 / mPiano->getKey(key).getRecordedFrequency();
         mSynthesizer.playSound(key,frequencyshift,0.1*volume,envelope,true);
-            }
+    }
     break;
     case MODE_TUNING:
     {
@@ -337,16 +327,16 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
         {
         case SGM_REFERENCE_TONE:
         {
-            //playResonatingSineWave(keynumber,frequency, 0.5);
+            playResonatingSineWave(keynumber,frequency, 0.5);
         }
         break;
         case SGM_SYNTHESIZE_KEY:
         {
-            const int id = keynumber + 0x180;
             const double volume = 0.2;
-            Envelope env(30,50,mResonatingVolume,2,false);
-            const double frequency = 550; //*************************************
-            mSynthesizer.playSound(id,frequency,volume,env);
+            Envelope env(30,50,mResonatingVolume,20,false);
+            double frequencyshift = frequency /
+                    mPiano->getKey(keynumber).getRecordedFrequency();
+            mSynthesizer.playSound(keynumber,frequencyshift,volume,env);
         }
         break;
         default:
@@ -394,32 +384,12 @@ void SoundGenerator::stopResonatingReferenceSound ()
 void SoundGenerator::changeVolumeOfResonatingReferenceSound (double level)
 {
     if (mResonatingKey < 0 or mResonatingKey >= mNumberOfKeys) return;
-    const int id = mResonatingKey + 0x180;
-    if (not mSynthesizer.isPlaying(id)) { mResonatingKey=-1; return; }
+    if (not mSynthesizer.isPlaying(mResonatingKey)) { mResonatingKey=-1; return; }
     double truncatedlevel = std::min(0.8,level);
     double volume = pow(truncatedlevel,2.0);
     if (volume > mResonatingVolume) mResonatingVolume = volume;
     else mResonatingVolume *= 0.87;
-    mSynthesizer.ModifySustainLevel(id,mResonatingVolume);
-}
-
-
-//-----------------------------------------------------------------------------
-//			               Stereo location of a key
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Compute a stereo location depending on the key number.
-///
-/// \param keynumber : Number of the key
-/// \return : Stereo location between 0 (left) and 1 (right)
-///////////////////////////////////////////////////////////////////////////////
-
-double SoundGenerator::getStereoPosition (int keynumber)
-{
-    if (keynumber >=0 and keynumber < mNumberOfKeys)
-        return static_cast<double>(keynumber+1) / (mNumberOfKeys+2);
-    else return 0.5;
+    mSynthesizer.ModifySustainLevel(mResonatingKey,mResonatingVolume);
 }
 
 
@@ -446,14 +416,8 @@ void SoundGenerator::playResonatingSineWave (int keynumber, double frequency, do
     if (keynumber < mKeyNumberOfA4-24) it++;
     if (keynumber < mKeyNumberOfA4-30) it++;
     if (keynumber < mKeyNumberOfA4-36) it++;
-    //double f = it->first/2*factor; // half frequency
-    double f = it->first*factor;
-    int id = mNumberOfKeys + keynumber; //********************** Achtung
-
-    if(f){}; if (id){};
-//    mSynthesizer.createSound(id,1,0.5,30,5,1,30);
-//    mSynthesizer.addFourierComponent(id,f,0.5);
-//    mSynthesizer.playSound(id);
+    double frequ = it->first*factor;
+    mSynthesizer.playSound(keynumber,frequ,0.5,Envelope(30,5,1,30));
 }
 
 

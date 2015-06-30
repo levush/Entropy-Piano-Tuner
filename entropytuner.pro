@@ -329,12 +329,15 @@ CORE_AUDIO_HEADERS = \
     core/audio/audioplayeradapter.h \
     core/audio/synthesizer.h \
     core/audio/circularbuffer.h \
+    core/audio/soundgenerator.h \
+    core/audio/soundgeneratormode.h \
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
     core/audio/audiobase.cpp \
     core/audio/audioplayeradapter.cpp \
     core/audio/synthesizer.cpp \
+    core/audio/soundgenerator.cpp \
 
 #----------------- Midi ------------------
 
@@ -399,8 +402,6 @@ CORE_PIANO_HEADERS = \
     core/piano/key.h \
     core/piano/pianomanager.h \
     core/piano/keyboard.h \
-    core/piano/soundgenerator.h \
-    core/piano/soundgeneratormode.h \
     core/piano/pianodefines.h \
 
 CORE_PIANO_SOURCES = \
@@ -409,7 +410,6 @@ CORE_PIANO_SOURCES = \
     core/piano/key.cpp \
     core/piano/pianomanager.cpp \
     core/piano/keyboard.cpp \
-    core/piano/soundgenerator.cpp \
 
 #--------------- Calculation ---------------
 

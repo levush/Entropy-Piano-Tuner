@@ -35,6 +35,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Structure describing the envelope (dynamics) of a sound
+///
+/// The envelope of synthesizer sounds follows the conventional ADSR scheme.
+/// A first attack phase and a subsequent decay is followed by a sustain
+/// period of constant volume while the key is pressed. Finally, when the
+/// key is released, the envelope enters the release phase.
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Envelope
@@ -58,7 +63,7 @@ struct Envelope
 /// \brief Structure of a single tone.
 ///
 /// This structure contains all data elements which characterize a single
-/// tone. Each tone carries an ID for housekeeping. The tone is characterized
+/// tone. Each tone carries an identifying keynumber. The tone is characterized
 /// mainly by the sound (static properties) and the envelope (dynamics).
 ///
 /// The clock variable counts the number of samples from the beginning of
@@ -68,10 +73,10 @@ struct Envelope
 
 struct Tone
 {
-    int keynumber;                             ///< Identification tag (negativ=sine)
+    int keynumber;                      ///< Identification tag (negativ=sine)
     double frequency;                   ///< Fundamental frequency
-    double leftamplitude;                  ///< Left stereo volume
-    double rightamplitude;                 ///< Right stereo volume
+    double leftamplitude;               ///< Left stereo volume
+    double rightamplitude;              ///< Right stereo volume
     double phaseshift;                  ///< Stereo phase shift
     Envelope envelope;                  ///< Dynamic properties of the tone
 
@@ -88,6 +93,13 @@ struct Tone
 /// \brief Synthesizer class
 ///
 /// This is the synthesizer of the EPT. It runs in an independent thread.
+/// The acoustic system of the EPT is driven by messages. The SoundGenerator
+/// listens to these messages and tells the Synthesizer which notes have to
+/// be played. The Synthesizer in turn calls the WaveformGenerator to
+/// pre-calculate PCM data for sound generation. The main task of the
+/// synthesizer class is to create a real-time superposition of these
+/// pre-calculated PCM waveforms. Moreover, it creates appropriate volume
+/// differences and phase shifts between the two stereo channels.
 ///////////////////////////////////////////////////////////////////////////////
 
 class Synthesizer : public SimpleThreadHandler
@@ -123,6 +135,8 @@ public:
 private:
 
     using Waveform = WaveformGenerator::Waveform;
+
+    int mSampleRate;
 
     WaveformGenerator mWaveformGenerator;
 
