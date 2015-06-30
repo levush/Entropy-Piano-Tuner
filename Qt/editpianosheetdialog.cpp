@@ -34,6 +34,7 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui(new Ui::EditPianoSheetDialog)
 {
     ui->setupUi(this);
+    setModal(true);
 
     ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());
@@ -49,8 +50,9 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
 
     ui->concertPitchSpinBox->setValue(piano.getConcertPitch());
     ui->numberOfKeysSpinBox->setValue(piano.getKeyboard().getNumberOfKeys());
-    ui->keyNumberOfASpinBox->setValue(piano.getKeyboard().getKeyNumberOfA4());
+    ui->keyNumberOfASpinBox->setValue(piano.getKeyboard().getKeyNumberOfA4() + 1);  // counting starts at 1 (not at 0)
 
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
 
     SHOW_DIALOG(this);
@@ -75,7 +77,7 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
     piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
     piano->getKeyboard().setNumberOfKeys(ui->numberOfKeysSpinBox->value(),
-                                         ui->keyNumberOfASpinBox->value());
+                                         ui->keyNumberOfASpinBox->value() - 1);  // counting start from 1 to 0
 }
 
 void EditPianoSheetDialog::keyPressEvent(QKeyEvent *event) {
@@ -109,5 +111,5 @@ void EditPianoSheetDialog::onDefaultNumberOfKeys() {
 }
 
 void EditPianoSheetDialog::onDefaultKeyNumberOfA() {
-    ui->keyNumberOfASpinBox->setValue(Piano::DEFAULT_KEY_NUMBER_OF_A);
+    ui->keyNumberOfASpinBox->setValue(Piano::DEFAULT_KEY_NUMBER_OF_A + 1);
 }

@@ -1,11 +1,11 @@
 ###########################################################
 # This file contains information about your platform that
-# is needed for building on linux
+# is needed for building on mac
 #
 # This file is a template for an user file that will be
 # used by the actual script.
 #
-# Copy this file to linux_env.user.sh and adjust the path
+# Copy this file to mac_env.user.sh and adjust the path
 # settings (QTIFWDIR and QTDIR)
 ###########################################################
 

@@ -71,7 +71,7 @@ TunerApplication::~TunerApplication()
     stop();
     exit();
     mCore.reset();
-    platformtools::enableScreensaver();
+    PlatformTools::getSingleton()->enableScreensaver();
 
     mSingleton = nullptr;
 }
@@ -103,6 +103,10 @@ void TunerApplication::init() {
 
     // open the main window with the startup file
     mMainWindow.reset(new MainWindow());
+#ifdef Q_OS_MOBILE
+    // fix fullscreen size on mobile devices
+    mMainWindow->setFixedSize(primaryScreen()->size());
+#endif
 
     auto log = new LogForQt();
     // writeout args to log
@@ -116,7 +120,7 @@ void TunerApplication::init() {
                     &mAudioPlayer,
                     log));
 
-    platformtools::disableScreensaver();
+    PlatformTools::getSingleton()->disableScreensaver();
 
 
     EptAssert(mCore, "Core has to be created before entering init");
@@ -124,8 +128,12 @@ void TunerApplication::init() {
     // init the window
     mMainWindow->init(mCore.get());
 
+    // init platform components
+    PlatformTools::getSingleton()->init();
+
     // then init the core
     initCore();
+
 }
 
 void TunerApplication::exit() {
@@ -152,7 +160,7 @@ void TunerApplication::start() {
         openFile(mStartupFile, false);
         mStartupFile.clear();
     } else {
-        platformtools::loadStartupFile(arguments());
+        PlatformTools::getSingleton()->loadStartupFile(arguments());
     }
 }
 

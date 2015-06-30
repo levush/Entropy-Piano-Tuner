@@ -2,44 +2,97 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="29"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="38"/>
+        <source>Entropy Piano Tuner</source>
+        <translation>Энтропийный Тюнер для Фортепиано</translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="53"/>
+        <source>Built on %1</source>
+        <translation>Созданно %1</translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="54"/>
+        <source>by %1 and %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="56"/>
+        <source>Based on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="67"/>
+        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="68"/>
+        <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="72"/>
+        <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="74"/>
+        <source>We thank all those who have contributed to the project:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="98"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>AlgorithmDialog</name>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="73"/>
         <source>Algorithm:</source>
-        <translation type="unfinished">Алгоритм:</translation>
+        <translation>Алгоритм:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="151"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="150"/>
         <source>Info of algorithm: %1</source>
-        <translation type="unfinished">Информация алгоритма: %1</translation>
+        <translation>Информация алгоритма: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="159"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="158"/>
         <source>Info</source>
-        <translation type="unfinished">Информация</translation>
+        <translation>Информация</translation>
+    </message>
+    <message>
+        <location filename="../Qt/algorithmdialog.cpp" line="164"/>
+        <source>Name:</source>
+        <translation>Имя:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="165"/>
-        <source>Name:</source>
-        <translation type="unfinished">Имя:</translation>
+        <source>Author:</source>
+        <translation>Автор:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="166"/>
-        <source>Author:</source>
-        <translation type="unfinished">Автор:</translation>
-    </message>
-    <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="167"/>
         <source>Year:</source>
-        <translation type="unfinished">Год:</translation>
+        <translation>Год:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="172"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
         <source>Description:</source>
-        <translation type="unfinished">Описание:</translation>
+        <translation>Описание:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="177"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
         <source>Parameters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -47,88 +100,88 @@
 <context>
     <name>CalculationProgressGroup</name>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="42"/>
-        <source>Calculation</source>
-        <translation>Расчёт</translation>
-    </message>
-    <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="50"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="47"/>
         <source>Status:</source>
         <translation>Статус:</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="62"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="59"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="97"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="99"/>
         <source>An unknown error occured during the calculation.</source>
         <translation>В процессе вычисления произошла неизвестная ошибка.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="100"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="102"/>
         <source>No data available.</source>
         <translation>Данные недоступны.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="103"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="105"/>
         <source>Not all keys recorded</source>
         <translation>Не все клавиши записаны</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="106"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="108"/>
         <source>Key data inconsistent.</source>
         <translation>Данные противоречивы.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="110"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="112"/>
         <source>Calculation error</source>
         <translation>Ошибка в вычислениях</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="110"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="112"/>
         <source>Error code</source>
         <translation>Код ошибки</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="118"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="120"/>
         <source>Calculation started</source>
         <translation>Вычисления начаты</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="119"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="121"/>
         <source>Stop calculation</source>
         <translation>Остоновить вычисления</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="124"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="126"/>
         <source>Calculation finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="124"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="126"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="131"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="133"/>
         <source>Minimizing the entropy</source>
         <translation>Поиск минимума энтропии</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="148"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="146"/>
+        <source>Calculation with: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="157"/>
         <source>Calculation canceled</source>
         <translation>Расчёт отменён</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="160"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="159"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="169"/>
         <source>Start calculation</source>
         <translation>Начать вычисления</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="158"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="167"/>
         <source>Press the button to start the calculation</source>
         <translation>Нажмите кнопку для начала вычислений</translation>
     </message>
@@ -247,7 +300,7 @@
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="169"/>
-        <source>Manifaction year</source>
+        <source>Manufaction year</source>
         <translation>Год выпуска</translation>
     </message>
     <message>
@@ -318,6 +371,14 @@
     </message>
 </context>
 <context>
+    <name>KeyboardGraphicsView</name>
+    <message>
+        <location filename="../Qt/keyboard/keyboardgraphicsview.cpp" line="78"/>
+        <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LogViewer</name>
     <message>
         <location filename="../Qt/logviewer.ui" line="20"/>
@@ -330,387 +391,267 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="498"/>
+        <location filename="../Qt/mainwindow.cpp" line="507"/>
         <source>Entropy piano tuner</source>
         <translation>Энтропийный Тюнер для Фортепиано</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="33"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This widgets provides settings and information about the input level of the input device.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Это виджеты показывает настройки и информацию о уровне входного сигнала входного устройства.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="36"/>
-        <source>Volume control</source>
-        <translation>Громкость</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="45"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This bar displays the current input level. Use the buttons on the right hand side to increase or decrease this level to match the input level thresholds indicated by the lines below.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Данная панель отображает текущий уровень входного сигнала. Используйте кнопки на правой стороне, чтобы увеличить или уменьшить этот уровень, чтобы порог уровня входного сигнала соответствовал указанной ниже линии.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="149"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If the input level drops below this mark the recorder stops and does not process the input signal.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если уровень входного сигнала падает ниже этой отметки, устройство остановливается и не обрабатывает входящий сигнал.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="152"/>
-        <source>Off</source>
-        <translation>Выкл.</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="167"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если уровень входного сигнала достигает этого порога устройство начинает анализировать входящий сигнал и анализирует до тех пор, пока уровень сигнала не опустится ниже отметки в &quot;Выкл.&quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="170"/>
-        <source>On</source>
-        <translation>Вкл.</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="199"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click this button to reset the automatic calibration of the input volume.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Нажмите на эту кнопку для сброса автоматической калибрации входящего звука.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="225"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click this button to mute the input device.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Нажмите на эту кнопку чтобы заглушить входящее устройство.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="278"/>
-        <source>Signal analyzer</source>
-        <translation>Анализатор сигнала</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="284"/>
-        <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
-        <translation>Эта панель отображает качество записи. Все записанные клавиши должны иметь примерно одинаковый уровень качества перед началом вычислений.</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="303"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="336"/>
-        <source>&lt;html&gt;&lt;body&gt;&lt;p&gt;This label displays the current selected key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="360"/>
-        <source>This label shows the ground frequency of the selected key.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="474"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="379"/>
-        <source>Hz</source>
-        <translation>Гц</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="412"/>
-        <source>Tuning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="424"/>
-        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuing several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.ui" line="455"/>
+        <location filename="../Qt/mainwindow.ui" line="47"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This windows displays the tuning curve.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Это окно показывает кривую настройки.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="466"/>
+        <location filename="../Qt/mainwindow.ui" line="58"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the recorded spectrum of a single note. Bars will indicate the peaks that were found during the analysis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Это окно показывает записанный спектр единичных тонов. Балки показывают пики, которые были найдины во время анализа.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="494"/>
+        <location filename="../Qt/mainwindow.ui" line="76"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="507"/>
+        <location filename="../Qt/mainwindow.ui" line="89"/>
         <source>&amp;Tools</source>
         <translation>&amp;Инструменты</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="516"/>
+        <location filename="../Qt/mainwindow.ui" line="98"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="546"/>
+        <location filename="../Qt/mainwindow.ui" line="128"/>
         <source>&amp;Open</source>
         <translation>&amp;Открыть</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="551"/>
+        <location filename="../Qt/mainwindow.ui" line="133"/>
         <source>&amp;Save</source>
         <translation>&amp;Сохранить</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="556"/>
+        <location filename="../Qt/mainwindow.ui" line="138"/>
         <source>E&amp;xit</source>
         <translation>Вы&amp;ход</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="561"/>
-        <location filename="../Qt/mainwindow.cpp" line="175"/>
-        <location filename="../Qt/mainwindow.cpp" line="666"/>
+        <location filename="../Qt/mainwindow.ui" line="143"/>
+        <location filename="../Qt/mainwindow.cpp" line="205"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="566"/>
+        <location filename="../Qt/mainwindow.ui" line="148"/>
         <source>Open sound control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="571"/>
+        <location filename="../Qt/mainwindow.ui" line="153"/>
         <source>Save &amp;As</source>
         <translation>Сохранить &amp;как</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="576"/>
+        <location filename="../Qt/mainwindow.ui" line="158"/>
         <source>&amp;New</source>
         <translation>&amp;Создать</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="581"/>
+        <location filename="../Qt/mainwindow.ui" line="163"/>
         <source>&amp;Edit piano data sheet</source>
         <translation>Изменить &amp;паспорт фортепиано</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="591"/>
+        <location filename="../Qt/mainwindow.ui" line="173"/>
         <source>Share</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="599"/>
+        <location filename="../Qt/mainwindow.ui" line="181"/>
         <source>View log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="604"/>
+        <location filename="../Qt/mainwindow.ui" line="186"/>
         <source>&amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="609"/>
+        <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Reset recoding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="614"/>
+        <location filename="../Qt/mainwindow.ui" line="196"/>
         <source>Manual</source>
         <translation>Руководство</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="619"/>
-        <location filename="../Qt/mainwindow.cpp" line="173"/>
+        <location filename="../Qt/mainwindow.ui" line="201"/>
+        <location filename="../Qt/mainwindow.cpp" line="203"/>
         <source>Tutorial</source>
         <translation>Обучение</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="111"/>
+        <location filename="../Qt/mainwindow.cpp" line="141"/>
         <source>Idle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="113"/>
+        <location filename="../Qt/mainwindow.cpp" line="143"/>
         <source>Press this button to switch to the idle mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="117"/>
+        <location filename="../Qt/mainwindow.cpp" line="147"/>
         <source>Record</source>
         <translation>Запись</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="119"/>
+        <location filename="../Qt/mainwindow.cpp" line="149"/>
         <source>Press this button to switch to the recording mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="123"/>
+        <location filename="../Qt/mainwindow.cpp" line="153"/>
         <source>Calculate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="125"/>
+        <location filename="../Qt/mainwindow.cpp" line="155"/>
         <source>Press this button to switch to the calculation mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="129"/>
+        <location filename="../Qt/mainwindow.cpp" line="159"/>
         <source>Tune</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="131"/>
+        <location filename="../Qt/mainwindow.cpp" line="161"/>
         <source>Press this button to switch to the tuning mode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="147"/>
+        <location filename="../Qt/mainwindow.cpp" line="177"/>
         <source>Documents and tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="153"/>
+        <location filename="../Qt/mainwindow.cpp" line="183"/>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Создать</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="156"/>
+        <location filename="../Qt/mainwindow.cpp" line="186"/>
         <source>Save as</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить как</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="157"/>
+        <location filename="../Qt/mainwindow.cpp" line="187"/>
         <source>Edit piano data sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить паспорт фортепиано</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="158"/>
+        <location filename="../Qt/mainwindow.cpp" line="188"/>
         <source>Options</source>
-        <translation type="unfinished">Опции</translation>
+        <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="160"/>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="174"/>
+        <location filename="../Qt/mainwindow.cpp" line="204"/>
         <source>Log</source>
-        <translation type="unfinished">Журнал</translation>
+        <translation>Журнал</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="312"/>
+        <location filename="../Qt/mainwindow.cpp" line="349"/>
         <source>File created</source>
         <translation>Файл создан</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="315"/>
+        <location filename="../Qt/mainwindow.cpp" line="352"/>
         <source>File edited</source>
         <translation>Файл изменён</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="318"/>
+        <location filename="../Qt/mainwindow.cpp" line="355"/>
         <source>File opened</source>
         <translation>Файл открыт</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="321"/>
+        <location filename="../Qt/mainwindow.cpp" line="358"/>
         <source>File saved</source>
         <translation>Файл сохранён</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="403"/>
+        <location filename="../Qt/mainwindow.cpp" line="424"/>
         <source>Recording keystroke</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="411"/>
+        <location filename="../Qt/mainwindow.cpp" line="432"/>
         <source>Signal analysis started</source>
         <translation>Анализ сигнала начат</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="414"/>
+        <location filename="../Qt/mainwindow.cpp" line="435"/>
         <source>Signal analysis ended</source>
         <translation>Анализ сигнала закончен</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="443"/>
+        <location filename="../Qt/mainwindow.cpp" line="464"/>
         <source>Calculation failed</source>
         <translation>Вычисления не удались</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="446"/>
+        <location filename="../Qt/mainwindow.cpp" line="467"/>
         <source>Calculation ended</source>
         <translation>Вычисления  закончены</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="449"/>
+        <location filename="../Qt/mainwindow.cpp" line="470"/>
         <source>Calculation started</source>
         <translation>Вычисления  закончены</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="543"/>
+        <location filename="../Qt/mainwindow.cpp" line="540"/>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="543"/>
+        <location filename="../Qt/mainwindow.cpp" line="540"/>
         <source>Unable to find a supported sound conrol.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="587"/>
+        <location filename="../Qt/mainwindow.cpp" line="584"/>
         <source>Canceled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="587"/>
+        <location filename="../Qt/mainwindow.cpp" line="584"/>
         <source>You need to save the file before you can share it.</source>
         <translation>Вам необходимо сохранить файл перед тем, как Вы сможете им поделиться.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="671"/>
-        <source>Entropy Piano Tuner</source>
-        <translation>Энтропийный Тюнер для Фортепиано</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="681"/>
-        <source>Built on %1</source>
-        <translation>Созданно %1</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="682"/>
-        <source>by %1 and %2</source>
+        <location filename="../Qt/mainwindow.cpp" line="714"/>
+        <source>A new update is available!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="684"/>
-        <source>Based on</source>
+        <location filename="../Qt/mainwindow.cpp" line="715"/>
+        <source>The online app version is %1. Do you want to install this update?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="696"/>
-        <source>We thank all those who have contributed to the project:</source>
+        <location filename="../Qt/mainwindow.cpp" line="733"/>
+        <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="689"/>
-        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="690"/>
-        <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="694"/>
-        <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="720"/>
-        <source>Ok</source>
-        <translation>Ok</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="66"/>
@@ -723,7 +664,7 @@
         <translation>Вы хотите сохранить изменения?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="155"/>
+        <location filename="../Qt/mainwindow.cpp" line="185"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="85"/>
         <source>Save</source>
         <translation>Сохранить</translation>
@@ -735,7 +676,7 @@
         <translation>Энтропийный Тюнер для Фортепиано (*.ept);; Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="154"/>
+        <location filename="../Qt/mainwindow.cpp" line="184"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="105"/>
         <source>Open</source>
         <translation>Открыть</translation>
@@ -780,39 +721,150 @@
         <source>Quality</source>
         <translation>Качество</translation>
     </message>
+    <message>
+        <location filename="../Qt/recordingqualitybar.cpp" line="41"/>
+        <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
+        <translation>Эта панель отображает качество записи. Все записанные клавиши должны иметь примерно одинаковый уровень качества перед началом вычислений.</translation>
+    </message>
+</context>
+<context>
+    <name>RecordingStatusGraphicsView</name>
+    <message>
+        <location filename="../Qt/recordingstatusgraphicsview.cpp" line="33"/>
+        <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SignalAnalyzerGroupBox</name>
+    <message>
+        <location filename="../Qt/signalanalyzergroupbox.cpp" line="12"/>
+        <source>Signal analyzer</source>
+        <translation>Анализатор сигнала</translation>
+    </message>
+    <message>
+        <location filename="../Qt/signalanalyzergroupbox.cpp" line="49"/>
+        <source>Hz</source>
+        <translation>Гц</translation>
+    </message>
+    <message>
+        <location filename="../Qt/signalanalyzergroupbox.cpp" line="59"/>
+        <source>This label displays the current selected key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/signalanalyzergroupbox.cpp" line="60"/>
+        <source>This label shows the ground frequency of the selected key.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SimpleFileDialog</name>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="90"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="92"/>
         <source>Name:</source>
         <translation type="unfinished">Имя:</translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="155"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Remove file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/simplefiledialog.cpp" line="156"/>
+        <location filename="../Qt/simplefiledialog.cpp" line="158"/>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TunerApplication</name>
+    <message>
+        <location filename="../Qt/tunerapplication.cpp" line="97"/>
+        <source>Crash handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/tunerapplication.cpp" line="97"/>
+        <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TuningGroupBox</name>
+    <message>
+        <location filename="../Qt/tuninggroupbox.cpp" line="9"/>
+        <source>Tuning</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>VolumeControlGroupBox</name>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="18"/>
+        <source>Volume control</source>
+        <translation>Громкость</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="27"/>
+        <source>Volume</source>
+        <translation>Громкость</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="109"/>
+        <source>This widgets provides settings and information about the input level of the input device.</source>
+        <translation>Это виджеты показывает настройки и информацию о уровне входного сигнала входного устройства.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="110"/>
+        <source>If the input level drops below this mark the recorder stops and does not process the input signal.</source>
+        <translation>Если уровень входного сигнала падает ниже этой отметки, устройство остановливается и не обрабатывает входящий сигнал.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="111"/>
+        <source>If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.</source>
+        <translation>Если уровень входного сигнала достигает этого порога устройство начинает анализировать входящий сигнал и анализирует до тех пор, пока уровень сигнала не опустится ниже отметки в &quot;Выкл.&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="112"/>
+        <source>Click this button to reset the automatic calibration of the input volume.</source>
+        <translation>Нажмите на эту кнопку для сброса автоматической калибрации входящего звука.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="113"/>
+        <source>Click this button to mute the input device.</source>
+        <translation>Нажмите на эту кнопку чтобы заглушить входящее устройство.</translation>
+    </message>
+</context>
+<context>
+    <name>VolumeControlLevel</name>
+    <message>
+        <location filename="../Qt/volumecontrollevel.cpp" line="32"/>
+        <source>This bar displays the current input level.</source>
+        <translation>Данная панель отображает текущий уровень входного сигнала.</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomedSpectrumGraphicsView</name>
+    <message>
+        <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
+        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>options::OptionsDialog</name>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="46"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="47"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="67"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
         <source>Environment</source>
         <translation>Окружение</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="68"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
         <source>Audio</source>
         <translation>Аудио</translation>
     </message>

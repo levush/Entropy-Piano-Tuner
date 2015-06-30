@@ -29,6 +29,7 @@ VolumeControlLevel::VolumeControlLevel(QWidget *parent)
     QObject::connect(&mUpdateTimer, SIGNAL(timeout()), this, SLOT(updateValue()));
     mUpdateTimer.start(1000 / 24);  // 24 fps
     setMaximum(100000);
+    setWhatsThis(tr("This bar displays the current input level."));
 }
 
 VolumeControlLevel::~VolumeControlLevel()

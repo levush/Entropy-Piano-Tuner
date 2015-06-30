@@ -51,7 +51,7 @@ public:
 
     virtual int GetNumberOfPorts () = 0;                        ///< Get the number of available input devices
     virtual std::string GetPortName   (int i) = 0;              ///< Get the name of device i (starting with zero)
-    virtual std::string GetPortNames  () = 0;                   ///< Get a list of all available input devices
+    virtual std::string GetPortNames  ();                       ///< Get a list of all available input devices
     virtual bool OpenPort (int i, std::string AppName="")=0;    ///< Open Midi input device number i
     virtual bool OpenPort (std::string AppName="") = 0;         ///< Open Midi device with the highest port number
 
@@ -85,6 +85,9 @@ public:
         int byte2;          ///< Data byte, usually representing the keystroke intensity.
         double deltatime;   ///< Time elapsed since the last MIDI event.
         };
+
+    /// \brief converts midi byte event to event enum
+    static Event byteToEvent(int byte);
 
 protected:
 

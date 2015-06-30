@@ -38,6 +38,7 @@ RecordingQualityBar::RecordingQualityBar(QWidget *parent) :
     QProgressBar(parent) {
 
     setFormat(tr("Quality"));
+    setWhatsThis(tr("This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation."));
     setTextVisible(false);
 
     setRange(0, 10000);
@@ -47,7 +48,7 @@ RecordingQualityBar::RecordingQualityBar(QWidget *parent) :
     setOrientation(Qt::Vertical);
     setTextDirection(BottomToTop);
 
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     updateValue(0);
 }
 
@@ -148,7 +149,11 @@ void RecordingQualityBar::paintEvent(QPaintEvent * event) {
 
     painter.save();
     painter.translate(contentsRect().center());
-    painter.rotate(-90);
-    painter.drawText(QRect(-cr.height() / 2, -cr.width() / 2, cr.height(), cr.width()), Qt::AlignHCenter | Qt::AlignVCenter, text());
+    if (orientation() == Qt::Vertical) {
+        painter.rotate(-90);
+        painter.drawText(QRect(-cr.height() / 2, -cr.width() / 2, cr.height(), cr.width()), Qt::AlignHCenter | Qt::AlignVCenter, text());
+    } else {
+        painter.drawText(QRect(-cr.width() / 2, -cr.height() / 2, cr.width(), cr.height()), Qt::AlignCenter, text());
+    }
     painter.restore();
 }

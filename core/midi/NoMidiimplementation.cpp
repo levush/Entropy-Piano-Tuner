@@ -45,19 +45,6 @@ std::string NoMidiImplementation::GetPortName (int i)
     return "Midi system not available.";
 }
 
-
-//---------------- Return a list of all available Midi devices ---------
-
-////////////////////////////////////////////////////////////////////////
-/// \return Returns a string saying that no devices are available
-////////////////////////////////////////////////////////////////////////
-
-std::string NoMidiImplementation::GetPortNames()
-{
-    return "Midi system not available.";
-}
-
-
 //------------------------ Open a particular port -----------------------
 
 ////////////////////////////////////////////////////////////////////////

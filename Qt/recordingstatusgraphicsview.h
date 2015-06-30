@@ -55,7 +55,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~RecordingStatusGraphicsView();
 
+    virtual QSize minimumSizeHint() const override final {return QSize(20, 20);}
+
 protected:
+    virtual QSize sizeHint() const override final;
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Reimplemented show event that will fit the SCENE_RECT into the view.
     /// \param event : The QShowEvent

@@ -20,8 +20,11 @@
 #ifndef PLATFORMTOOLS_H
 #define PLATFORMTOOLS_H
 
+#include <memory>
 #include <QString>
 #include <QStringList>
+
+#include "core/system/platformtoolscore.h"
 
 class TunerApplication;
 
@@ -30,49 +33,58 @@ class TunerApplication;
 /// tools.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-namespace platformtools {
+class PlatformTools : public PlatformToolsCore {
+public:
+    static PlatformTools *getSingleton() {return dynamic_cast<PlatformTools*>(PlatformToolsCore::getSingleton());}
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Load a startup file from the given arguments.
-/// \param args : The startup arguments
-/// \return Loading success.
-///
-///////////////////////////////////////////////////////////////////////////////
-bool loadStartupFile(const QStringList args);
+    /// \brief Initialise native components (e.g. midi on android/iOS)
+    virtual void init() {}
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief open the startup file from the arguments
-/// \param args : The program arguments
-/// \return true on success
-///
-///////////////////////////////////////////////////////////////////////////////
-bool openFileFromArgs(const QStringList &args);
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Load a startup file from the given arguments.
+    /// \param args : The startup arguments
+    /// \return Loading success.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    virtual bool loadStartupFile(const QStringList args);
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Function called from the implementations to open a file.
-/// \param file : Absolute file path to open.
-/// \param cached : Is the file cached?
-///
-/// This function will use the singleton class TunerApplication to open the
-/// file.
-///////////////////////////////////////////////////////////////////////////////
-void openFile(const char *file, bool cached);
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief open the startup file from the arguments
+    /// \param args : The program arguments
+    /// \return true on success
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    virtual bool openFileFromArgs(const QStringList &args);
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Function to disable the screen saver.
+    ///
+    /// Working on android, Mac Os X, iOS, Windows.
+    ///////////////////////////////////////////////////////////////////////////////
+    virtual void disableScreensaver() {}
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Function to disable the screen saver.
-///
-/// Working on android, Mac Os X, iOS, Windows.
-///////////////////////////////////////////////////////////////////////////////
-void disableScreensaver();
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Function to enable the screen saver.
+    ///
+    /// Working on android, Mac Os X, iOS, Windows.
+    ///////////////////////////////////////////////////////////////////////////////
+    virtual void enableScreensaver() {}
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Function to enable the screen saver.
-///
-/// Working on android, Mac Os X, iOS, Windows.
-///////////////////////////////////////////////////////////////////////////////
-void enableScreensaver();
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Function called from the implementations to open a file.
+    /// \param file : Absolute file path to open.
+    /// \param cached : Is the file cached?
+    ///
+    /// This function will use the singleton class TunerApplication to open the
+    /// file.
+    ///////////////////////////////////////////////////////////////////////////////
+    void openFile(const char *file, bool cached);
+};
 
-
-}  // namespace platformtools
+template <typename PT>
+class PlatformToolsImplementation : public PlatformTools {
+protected:
+    static std::unique_ptr<PT> mSingleton;
+public:
+};
 
 #endif // PLATFORMTOOLS_H

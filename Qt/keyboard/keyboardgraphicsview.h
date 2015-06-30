@@ -70,18 +70,6 @@ public:
     static const int NO_KEY = -1;                               ///< No key selection constant
 
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief The KeyboardMode enum
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    enum KeyboardMode {
-        MODE_NORMAL = 1,                      ///< this is a normal keyboard
-        MODE_CLICK_RAISES_FULLSCREEN = 2,     ///< a click on keyboard will open a new fullscreen keyboard
-        MODE_SCROLLBAR = 4,                   ///< will have a scrollbar
-
-        MODE_FULLSCREEN = MODE_NORMAL | MODE_SCROLLBAR,
-    };
-
 private:
     using KeyState = piano::KeyState;
     using KeyColor = piano::KeyColor;
@@ -93,15 +81,8 @@ public:
     /// \param mode : The KeyboadMode
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    KeyboardGraphicsView(QWidget *parent, KeyboardMode mode = MODE_NORMAL);
+    KeyboardGraphicsView(QWidget *parent);
     ~KeyboardGraphicsView();
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter for mMode.
-    /// \param mode : The KeyboardMode
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setMode(KeyboardMode mode) {mMode = mode;}
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Getter for mScene.
@@ -182,7 +163,11 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void selectKey(int8_t key0, KeyState keyState, bool notifyMessageListeners = true);
 
+    QRectF getVisibleContentsRect() const;
+
 protected:
+    virtual QSize sizeHint() const override final {return QSize(0, 200);}
+    virtual QSize minimumSizeHint() const override final {return QSize(0, 100);}
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Reimplemented to keep the complete scene rect in the view.
     /// \param event : The show event
@@ -196,6 +181,8 @@ protected:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void resizeEvent(QResizeEvent *event) override;
+
+    virtual void scrollContentsBy(int dx, int dy) override final;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief The mouse press will select the klicked key.
@@ -351,9 +338,7 @@ private slots:
     void deselectKey(bool notifyListeners = true);
 
 private:
-    /// The mode of the keyboard view.
-    KeyboardMode mMode;
-
+    int mResizeBlocked = 0;
     /// Pointer to the keyboard that is displayed.
     const Keyboard *mKeyboard;
 

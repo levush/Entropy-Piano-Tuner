@@ -27,6 +27,7 @@
 #include "messages/messagekeyselectionchanged.h"
 #include "messages/messagemidievent.h"
 #include "messages/messagemodechanged.h"
+#include "system/platformtoolscore.h"
 #include <assert.h>
 
 Core::Core(ProjectManagerAdapter *projectManager,
@@ -40,6 +41,7 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mSignalAnalyzer(recorderAdapter),
       mSoundGenerator (playerAdapter)
 {
+    mMidi = PlatformToolsCore::getSingleton()->createMidiAdapter();
     EptAssert(log, "A log has to be specified during creation of the core");
     LogI("Core created");
 }
@@ -74,12 +76,12 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
     mSoundGenerator.init();
 
     initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_MIDI, 75);
-    mMidi.init();
+    mMidi->init();
 
     std::stringstream ss;
-    ss << "We have " << mMidi.GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi.GetPortNames();
+    ss << "We have " << mMidi->GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi->GetPortNames();
     LogI("%s", ss.str().c_str());
-    mMidi.OpenPort(); // Open default midi port
+    mMidi->OpenPort(); // Open default midi port
 
     initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_END, 100);
 
@@ -100,7 +102,7 @@ void Core::exit() {
 
     stop();
 
-    mMidi.exit();
+    mMidi->exit();
 
     mSoundGenerator.exit();
     mPlayerAdapter->exit();

@@ -22,6 +22,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     QDialog(parent, Qt::Window)
 {
     EptAssert(parent, "Parent required for size");
+    setModal(true);
 
     QRect r(parent->geometry());
     setGeometry(r.left() + r.width() / 4, r.top() + r.height() / 4, r.width() / 2, r.height() / 2);
@@ -55,9 +56,12 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     QString dependenciesText = tr("Based on");
     dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
     dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
-    dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
-#ifdef __ANDROID__
+#if defined(Q_OS_IOS)
+    dependenciesText.append(", <a href=\"https://github.com/petegoodliffe/PGMidi\">PgMidi</a>");
+#elif defined(Q_OS_ANDROID)
     dependenciesText.append(", <a href=\"https://github.com/kshoji/USB-MIDI-Driver\">USB-Midi-Driver</a>");
+#else
+    dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
 #endif
 
     const QString copyrightText = tr("Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");

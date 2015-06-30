@@ -2,34 +2,77 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt_BR">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <source>About</source>
+        <translation>Sobre</translation>
+    </message>
+    <message>
+        <source>Entropy Piano Tuner</source>
+        <translation>Afinador de Piano por Entropia</translation>
+    </message>
+    <message>
+        <source>Built on %1</source>
+        <translation>Feito em %1</translation>
+    </message>
+    <message>
+        <source>by %1 and %2</source>
+        <translation>por %1 e %2</translation>
+    </message>
+    <message>
+        <source>Based on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
+        <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
+    </message>
+    <message>
+        <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
+        <translation>O programa é fornecido COMO ESTÁ, sem QUALQUER GARANTIA, INCLUINDO A GARANTIA DE DESIGN, GARANTIA DE COMERCIALIZAÇÃO OU ADEQUABILIDADE A UM OBJETIVO PARTICULAR.</translation>
+    </message>
+    <message>
+        <source>We thank all those who have contributed to the project:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>AlgorithmDialog</name>
     <message>
         <source>Algorithm:</source>
-        <translation type="unfinished">Algoritmo:</translation>
+        <translation>Algoritmo:</translation>
     </message>
     <message>
         <source>Info of algorithm: %1</source>
-        <translation type="unfinished">Informação do algoritmo: %1</translation>
+        <translation>Informação do algoritmo: %1</translation>
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished">Informação</translation>
+        <translation>Informação</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished">Nome:</translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Author:</source>
-        <translation type="unfinished">Autor:</translation>
+        <translation>Autor:</translation>
     </message>
     <message>
         <source>Year:</source>
-        <translation type="unfinished">Ano:</translation>
+        <translation>Ano:</translation>
     </message>
     <message>
         <source>Description:</source>
-        <translation type="unfinished">Descrição:</translation>
+        <translation>Descrição:</translation>
     </message>
     <message>
         <source>Parameters</source>
@@ -38,10 +81,6 @@
 </context>
 <context>
     <name>CalculationProgressGroup</name>
-    <message>
-        <source>Calculation</source>
-        <translation>Cálculo</translation>
-    </message>
     <message>
         <source>Status:</source>
         <translation>Status:</translation>
@@ -104,6 +143,10 @@
     </message>
     <message>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculation with: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -197,10 +240,6 @@
         <translation>Número de série</translation>
     </message>
     <message>
-        <source>Manifaction year</source>
-        <translation>Ano de fabricação</translation>
-    </message>
-    <message>
         <source>Production location</source>
         <translation>Local de fabricação</translation>
     </message>
@@ -223,6 +262,10 @@
     <message>
         <source>Upright</source>
         <translation>De armário</translation>
+    </message>
+    <message>
+        <source>Manufaction year</source>
+        <translation>Ano de fabricação</translation>
     </message>
 </context>
 <context>
@@ -256,6 +299,13 @@
     </message>
 </context>
 <context>
+    <name>KeyboardGraphicsView</name>
+    <message>
+        <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LogViewer</name>
     <message>
         <source>Log</source>
@@ -267,46 +317,6 @@
     <message>
         <source>Entropy piano tuner</source>
         <translation>Afinador de piano por entropia</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This widgets provides settings and information about the input level of the input device.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Este widget fornece os settings e informação acerca do nível de entrada no dispositivo de leitura.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Volume control</source>
-        <translation>Controle de volume</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This bar displays the current input level. Use the buttons on the right hand side to increase or decrease this level to match the input level thresholds indicated by the lines below.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Esta barra mostra o nível atual de entrada. Use os botões do lado direito para aumentar ou diminuir este nível, a fim de fazer com que este coincida com os níveis limites de entradas indicados pelas linhas abaixo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If the input level drops below this mark the recorder stops and does not process the input signal.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Se o nível de entrada cair abaixo deste marco, o gravador para e não processa o sinal de entrada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <translation>Desligado</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Se o nível de entrada chegar neste nível limite, o gravador começa a analisar o sinal do aparelho de leitura até que o nível caia para baixo do marco &quot;desligado&quot;. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>On</source>
-        <translation>Ligado</translation>
-    </message>
-    <message>
-        <source>Signal analyzer</source>
-        <translation>Analisador de sinais</translation>
-    </message>
-    <message>
-        <source>Hz</source>
-        <translation>Hz</translation>
-    </message>
-    <message>
-        <source>Tuning</source>
-        <translation>Afinação</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This windows displays the tuning curve.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -473,30 +483,6 @@
         <translation>Você precisa salvar o arquivo antes de compartilhá-lo.</translation>
     </message>
     <message>
-        <source>Entropy Piano Tuner</source>
-        <translation>Afinador de Piano por Entropia</translation>
-    </message>
-    <message>
-        <source>Built on %1</source>
-        <translation>Feito em %1</translation>
-    </message>
-    <message>
-        <source>by %1 and %2</source>
-        <translation>por %1 e %2</translation>
-    </message>
-    <message>
-        <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
-    </message>
-    <message>
-        <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
-        <translation>O programa é fornecido COMO ESTÁ, sem QUALQUER GARANTIA, INCLUINDO A GARANTIA DE DESIGN, GARANTIA DE COMERCIALIZAÇÃO OU ADEQUABILIDADE A UM OBJETIVO PARTICULAR.</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
         <source>The document has been modified.</source>
         <translation>O documento foi modificado.</translation>
     </message>
@@ -541,75 +527,43 @@
         <translation>Não foi possível salvar o arquivo.</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click this button to reset the automatic calibration of the input volume.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click this button to mute the input device.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;body&gt;&lt;p&gt;This label displays the current selected key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This label shows the ground frequency of the selected key.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuing several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Documents and tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Novo</translation>
     </message>
     <message>
         <source>Save as</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar como</translation>
     </message>
     <message>
         <source>Edit piano data sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Edite planilha de dados do piano</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opções</translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuda</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished">Log</translation>
+        <translation>Log</translation>
     </message>
     <message>
-        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <source>A new update is available!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Based on</source>
+        <source>The online app version is %1. Do you want to install this update?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>We thank all those who have contributed to the project:</source>
+        <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -618,6 +572,36 @@
     <message>
         <source>Quality</source>
         <translation>Qualidade</translation>
+    </message>
+    <message>
+        <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RecordingStatusGraphicsView</name>
+    <message>
+        <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SignalAnalyzerGroupBox</name>
+    <message>
+        <source>Signal analyzer</source>
+        <translation>Analisador de sinais</translation>
+    </message>
+    <message>
+        <source>Hz</source>
+        <translation>Hz</translation>
+    </message>
+    <message>
+        <source>This label displays the current selected key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This label shows the ground frequency of the selected key.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -632,6 +616,69 @@
     </message>
     <message>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TunerApplication</name>
+    <message>
+        <source>Crash handler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TuningGroupBox</name>
+    <message>
+        <source>Tuning</source>
+        <translation>Afinação</translation>
+    </message>
+</context>
+<context>
+    <name>VolumeControlGroupBox</name>
+    <message>
+        <source>Volume control</source>
+        <translation>Controle de volume</translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation>Volume</translation>
+    </message>
+    <message>
+        <source>This widgets provides settings and information about the input level of the input device.</source>
+        <translation>Este widget fornece os settings e informação acerca do nível de entrada no dispositivo de leitura.</translation>
+    </message>
+    <message>
+        <source>If the input level drops below this mark the recorder stops and does not process the input signal.</source>
+        <translation>Se o nível de entrada cair abaixo deste marco, o gravador para e não processa o sinal de entrada.</translation>
+    </message>
+    <message>
+        <source>If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.</source>
+        <translation>Se o nível de entrada chegar neste nível limite, o gravador começa a analisar o sinal do aparelho de leitura até que o nível caia para baixo do marco &quot;desligado&quot;.</translation>
+    </message>
+    <message>
+        <source>Click this button to reset the automatic calibration of the input volume.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click this button to mute the input device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>VolumeControlLevel</name>
+    <message>
+        <source>This bar displays the current input level.</source>
+        <translation>Esta barra mostra o nível atual de entrada.</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomedSpectrumGraphicsView</name>
+    <message>
+        <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

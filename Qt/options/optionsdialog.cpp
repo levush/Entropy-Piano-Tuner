@@ -34,6 +34,7 @@
 #include "environment/optionspageenvironment.h"
 #include "../settingsforqt.h"
 #include "qtconfig.h"
+#include "displaysize.h"
 
 namespace options {
 
@@ -44,6 +45,7 @@ OptionsDialog::OptionsDialog(MainWindow *mainWindow)
       mCentralWidget(0),
       mChangesMade(false) {
     setWindowTitle(tr("Options"));
+    setModal(true);
 
     mMainLayout = new QGridLayout(this);
 
@@ -169,7 +171,7 @@ void OptionsDialog::addPageButton(QIcon icon, QString text, QButtonGroup *group,
     button->setCheckable(true);
     button->setChecked(false);
     button->setStyleSheet("text-align: left");
-    button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    button->setToolButtonStyle(DisplaySizeDefines::getSingleton()->optionsDialogToolButtonStyle());
     button->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
     button->setIconSize(tb->iconSize());
     group->addButton(button, page);

@@ -248,13 +248,10 @@ void RtMidiImplementation::StaticCallback (double deltatime, std::vector< unsign
         data.event = MIDI_UNDEFINED;
         data.byte1 = (*message)[1];
         data.byte2 = (*message)[2];
-        switch (byte0 & 0xF0)
+        data.event = byteToEvent(byte0);
+        if (data.event == MIDI_KEY_PRESS && data.byte2 == 0)
         {
-            case 0x80:  data.event = MIDI_KEY_RELEASE; break;
-            case 0x90:  data.event = MIDI_KEY_PRESS;
-                        if (data.byte2==0) data.event = MIDI_KEY_RELEASE;
-                        break;
-            case 0xB0:  data.event = MIDI_CONTROL_CHANGE; break;
+            data.event = MIDI_KEY_RELEASE;
         }
 
         data.deltatime = deltatime;

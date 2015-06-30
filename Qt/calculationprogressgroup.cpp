@@ -33,16 +33,13 @@
 #include "settingsforqt.h"
 #include "algorithmdialog.h"
 
-CalculationProgressGroup::CalculationProgressGroup(Core *core, bool smallDevice, QWidget *parent)
-    : QGroupBox(parent),
+CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
+    : DisplaySizeDependingGroupBox(parent, new QVBoxLayout, toFlag(MODE_CALCULATION)),
       MessageListener(false),
       CalculationAdapter(core),
       mCalculationInProgress(false)
 {
-    Q_UNUSED(smallDevice);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout*>(mMainWidgetContainer->layout());
 
     QHBoxLayout *statusTextLayout = new QHBoxLayout;
     mainLayout->addLayout(statusTextLayout);
@@ -145,7 +142,9 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
 
 void CalculationProgressGroup::updateTitle() {
     EptAssert(mAlgorithmSelection, "Algorithm has to be selected");
-    setTitle(tr("Calculation with: %1").arg(QString::fromStdString(mAlgorithmSelection->getName())));
+    if (mGroupBox) {
+        mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdString(mAlgorithmSelection->getName())));
+    }
 }
 
 void CalculationProgressGroup::onStartCalculation() {

@@ -60,13 +60,13 @@ void AutoScaledToKeyboardGraphicsView::highlightKey(int key) {
 }
 
 void AutoScaledToKeyboardGraphicsView::showEvent(QShowEvent *event) {
-    EptAssert(mKeyboardGraphicsView, "Call setKeyboard first to set the mKeyboardGraphicsView");
-    fitInView(mKeyboardGraphicsView->getScene().sceneRect(), Qt::IgnoreAspectRatio);
+    fitInView(mKeyboardGraphicsView->getVisibleContentsRect(), Qt::IgnoreAspectRatio);
+
     QGraphicsView::showEvent(event);
 }
 
 void AutoScaledToKeyboardGraphicsView::resizeEvent(QResizeEvent *event) {
-    EptAssert(mKeyboardGraphicsView, "Call setKeyboard first to set the mKeyboardGraphicsView");
-    fitInView(mKeyboardGraphicsView->sceneRect(), Qt::IgnoreAspectRatio);
+    fitInView(mKeyboardGraphicsView->getVisibleContentsRect(), Qt::IgnoreAspectRatio);
+
     QGraphicsView::resizeEvent(event);
 }

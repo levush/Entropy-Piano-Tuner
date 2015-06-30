@@ -37,13 +37,36 @@
 #include "tunerapplication.h"
 #include "qdebug.h"
 #include "../core/config.h"
+#include "qtconfig.h"
 #include "../core/system/eptexception.h"
 #include "settingsforqt.h"
 #include "platformtools.h"
+#include "runguard.h"
 
 int main(int argc, char *argv[])
 {
+
+    // only single instance also on desktop (on mobile platforms this is handled already)
+#ifdef Q_OS_DESKTOP
+    RunGuard guard("entropypianotuner_runguard");
+    if ( !guard.tryToRun() ) {
+        // a QApplication is required for showing message boxes
+        QApplication q(argc, argv);
+        QMessageBox::warning(nullptr, q.tr("Application can not be started"), q.tr("The Entropy Piano Tuner could not be started because an other instance is already running."));
+        return 0;
+    }
+#endif
+
     int exitCode = -1;
+
+    // setup platformtools
+
+    // required if no platform specific platform tools
+    std::unique_ptr<PlatformTools> defaultPlatformTools;
+    if (!PlatformTools::getSingleton()) {
+        defaultPlatformTools.reset(new PlatformTools());
+        // no platform specific platform tools, use default ones
+    }
 
     // basic application properties (needed for settings)
     QCoreApplication::setOrganizationName("tp3");
@@ -106,7 +129,7 @@ int main(int argc, char *argv[])
         exitCode = EXIT_FAILURE;
     }
 
-    platformtools::enableScreensaver();
+    PlatformTools::getSingleton()->enableScreensaver();
 
     return exitCode;
 }
