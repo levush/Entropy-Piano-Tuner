@@ -374,12 +374,14 @@ CORE_SYSTEM_HEADERS = \
     core/system/prerequisites.h \
     core/system/timer.h \
     core/system/version.h \
+    core/system/platformtoolscore.h \
 
 CORE_SYSTEM_SOURCES = \
     core/system/log.cpp \
     core/system/simplethreadhandler.cpp \
     core/system/eptexception.cpp \
     core/system/timer.cpp \
+    core/system/platformtoolscore.cpp \
 
 #--------------- Analyzers -----------------
 

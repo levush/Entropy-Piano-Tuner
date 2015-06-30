@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "optionspageenvironmenttuningpage.h"
-#include "core/piano/soundgeneratormode.h"
+#include "core/audio/soundgeneratormode.h"
 #include "../../settingsforqt.h"
 #include <QGridLayout>
 
