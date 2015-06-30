@@ -87,7 +87,7 @@ protected:
     void setCancelThread(bool b);           ///< Cancel-flag setter method, thread-safe
     bool cancelThread() const;              ///< Cancel-flag getter method, thread-safe
     void msleep(double milliseconds);       ///< Sleep function for staying idle
-    bool isThreadRunnding() const;          ///< Flag to check if the thread is running
+    bool isThreadRunning() const;          ///< Flag to check if the thread is running
 
 private:
     void simpleWorkerFunction();            ///< Private helper function

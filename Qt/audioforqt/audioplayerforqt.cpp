@@ -205,6 +205,9 @@ void QtAudioManager::init()
         return;
     }
 
+    // set volume
+    mAudioSink->setVolume(1);
+
 
     // Specify the size of the Qt-internal buffer
     const size_t BufferSize = mAudioSource->getChannelCount() *

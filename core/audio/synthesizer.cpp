@@ -17,18 +17,47 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//=============================================================================
-//                       A simple sine wave synthesizer
-//=============================================================================
-
 #include "synthesizer.h"
-
-#include <algorithm>
 
 #include "../system/log.h"
 #include "../math/mathtools.h"
-#include "../system/eptexception.h"
-#include "../system/timer.h"
+
+#include <iostream>
+
+
+//=============================================================================
+//                  Structure describing an envelope
+//=============================================================================
+
+//-----------------------------------------------------------------------------
+//	                             Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Envelope::Envelope
+/// \param attack : Rate of initial volume increase in units of 1/sec.
+/// \param decay : Rate of the subsequent volume decrease in units of 1/sec.
+///        If this rate is zero the decay phase is omitted and the volume
+/// increases directly towards the sustain level controlled by the attack rate.
+/// \param sustain : Level at which the volume saturates after decay in (0..1).
+/// \param release : Rate at which the sound disappears after release in
+/// units of 1/sec.
+/// \param hammer : Volume of a hammer-like noise at the beginning
+///////////////////////////////////////////////////////////////////////////////
+
+Envelope::Envelope(double attack, double decay,
+                   double sustain, double release, double hammer) :
+    attack(attack),
+    decay(decay),
+    sustain(sustain),
+    release(release),
+    hammer(hammer)
+{};
+
+
+//=============================================================================
+//                             CLASS SYNTHESIZER
+//=============================================================================
 
 //-----------------------------------------------------------------------------
 //	                             Constructor
@@ -41,125 +70,206 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
-    mSineWave(SineLength),
-    mChord(),
-    mChordMutex(),
+    mNumberOfKeys(88),
+    mPlayingTones(),
+    mPlayingMutex(),
+    mSineWave(),
+    mHammerWave(),
     mAudioPlayer(audioadapter)
-{
-}
+{}
 
 
 //-----------------------------------------------------------------------------
-//	                      Initialize and start thread
+//	                Initialize and start the main thread
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Initialize and start the synthesizer.
 ///
 /// This function initializes the synthesizer in that it pre-calculates a sine
-/// function and starts the main loop of the synthesizer in an indpendent thread.
+/// function as well as the hammer noise and then starts the main loop
+/// of the synthesizer in an indpendent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::init ()
 {
-    if (mAudioPlayer)
-    {
-        // Pre-calculate a sine wave for speedup
-        mSineWave.resize(SineLength);
-        for (int i=0; i<SineLength; ++i)
-            mSineWave[i]=(float)(sin(MathTools::TWO_PI * i / SineLength));
+    if (mNumberOfKeys < 0 or mNumberOfKeys > 256)
+    { LogW("Called init with an invalid number of keys = %d",mNumberOfKeys); return; }
+    else if (not mAudioPlayer)
+    { LogW("Could not start synthesizer: AudioPlayer not connected."); return; }
 
-    }
-    else LogW("Could not start synthesizer: AudioPlayer not connected.");
+    // Pre-calculate a sine wave for speedup
+    mSineWave.resize(SineLength);
+    for (int i=0; i<SineLength; ++i)
+        mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
+
+    // Pre-calculate a piano-hammer-like noise (one second), could be improved
+    mSampleRate = mAudioPlayer->getSamplingRate();
+    mHammerWave.resize(mSampleRate);
+    mHammerWave.assign(mSampleRate,0);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
+    std::default_random_engine generator;
+    std::normal_distribution<double> distribution(0,0.1);
+    for (int i=0; i<mSampleRate; i++)
+        mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/mSampleRate);
+
+    mWaveformGenerator.init(mNumberOfKeys,mSampleRate);
+    mWaveformGenerator.start();
 }
 
 
 //-----------------------------------------------------------------------------
-//	                             Shut down
+//                          Set number of keys
 //-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Stop the synthesizer, request its execution thread to terminate.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::exit ()
+void Synthesizer::setNumberOfKeys (int numberOfKeys)
 {
-    stop();
+    if (numberOfKeys < 0 or numberOfKeys > 255)
+    {
+        LogW("Unreasonable number of keys = %d.",numberOfKeys);
+        return;
+    }
+    else if (numberOfKeys != mNumberOfKeys)
+    {
+        mNumberOfKeys = numberOfKeys;
+        init ();
+    }
+}
+
+//-----------------------------------------------------------------------------
+//	                Pre-calculate the PCM waveform of a sound
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Pre-calculate the PCM waveform of a sound
+///
+/// The purpose of this function is mainly to save time and to ensure a
+/// resonable performance of the synthesizer even on small mobile devices.
+/// It pre-calculates the wave forms to be played and stores them in
+/// the map SoundLibrary. The sounds are identified by an
+/// integer identifier tag (id). The function generates the texture
+/// of the sound for the specified sampletime at constant volume.
+/// Pre-calculation does not involve any aspects of envelopes and
+/// sound dynamics.
+///
+/// The frequency accuracy is limited by the total sampletime. For example,
+/// if we generate a sound with a sampletime of 1 second, then it is expected
+/// to differ up to 1 Hz from the true sound, leading to potential beats of
+/// 1 second. For a quick survey a sampletime of 1 second would be
+/// sufficient, but for longer times 5-10 seconds would be desirable.
+///
+/// \param id : Identification tag (usually keynumber + offset)
+/// \param sound : The sound to be produced (frequency and spectrum)
+///////////////////////////////////////////////////////////////////////////////
+
+void Synthesizer::preCalculateWaveform  (const int id,
+                                         const Spectrum &spectrum)
+{
+    if (id>=0 and id<88) mWaveformGenerator.preCalculate(id, spectrum);
 }
 
 
 //-----------------------------------------------------------------------------
-//	                    Main Loop (worker function)
+//	                             Play a sound
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Main loop of the synthesizer running in an independent thread.
+/// \brief Function which plays a single note (sound)
+///
+/// This function generates a sound according to the sound structure passed
+/// as a parameter. If the sound happens to coincide with a previously
+/// calculated sound marked by the identifier id, then the pre-calculated
+/// wave form is loaded and played immediately with the envelope
+/// specified by the parameter env. If a pre-calculated waveform does not
+/// yet exist a short sample is played and a longer calculation is
+/// scheduled for later.
+///
+/// If the sound contains an empty spectrum, a simple sine wave with the
+/// fundamental frequency is played.
+///
+/// \param id : Identification tag or the sound (usually the keynumber).
+/// \param sound : Sound structure describing statics (frequency and spectrum)
+/// \param env : Envelope structure describing dynamics (ADSR-curve)
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::workerFunction (void)
+void Synthesizer::playSound (const int keynumber,
+                             const double frequency,
+                             const double volume,
+                             const Envelope &env,
+                             const bool waitforcomputation)
+{
+    if (frequency <= 0 or volume <= 0 or mNumberOfKeys == 0) return;
+    Tone tone;
+    tone.keynumber = keynumber;
+    tone.frequency = frequency;
+    double stereo = (10+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+20);
+    tone.leftamplitude = sqrt((1-stereo)*volume);
+    tone.rightamplitude = sqrt(stereo*volume);
+    tone.phaseshift = (stereo-0.5)/500;
+    tone.envelope = env;
+    tone.clock=0;
+    tone.stage=1;
+    tone.amplitude=0;
+
+    if (frequency>0 and frequency<10)
+    {
+        if (waitforcomputation and mWaveformGenerator.isComputing(keynumber)) msleep(1);
+        tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
+    }
+    else
+        tone.waveform.clear();
+
+    mPlayingMutex.lock();
+    mPlayingTones.push_back(tone);
+    mPlayingMutex.unlock();
+}
+
+
+//-----------------------------------------------------------------------------
+//	                    Main thread (worker function)
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Main thread of the synthesizer
+///
+/// This workerFunction is the main thread of the synthesizer. It is running
+/// in an endless loop until the synthesizer is stopped. It looks whether
+/// there is an audio device and sounds in the mPlayingTones-queue. If not,
+/// the synthesizer waits in an idle state. If there are notes to play,
+/// it checks their volume. The tones below a certain cutoff volume are
+/// removed from the queue. All other notes will be played. The playing
+/// is done in a separate function called generateAudioSignal().
+///////////////////////////////////////////////////////////////////////////////
+
+void Synthesizer::workerFunction ()
 {
     setThreadName("Synthesizer");
     while (not cancelThread())
     {
-        mChordMutex.lock();
-        bool active = (mAudioPlayer and not mChord.empty());
-        mChordMutex.unlock();
-        if (active)
-        {
-            // first remove all sounds with an amplitude below the cutoff:
-            mChordMutex.lock();
-            for (auto it = mChord.begin(); it != mChord.end(); )
-                if (it->second.stage>=2 and it->second.amplitude<CutoffVolume)
-                { mChord.erase(it++); }
-                else ++it;
-            mChordMutex.unlock();
-
-            generateWaveform();
-        }
+        mPlayingMutex.lock();
+        bool active = (mAudioPlayer and mPlayingTones.size()>0);
+        mPlayingMutex.unlock();
+        if (not active) msleep(5); // Synthesizer in idle state
         else
         {
-            msleep(10);
+            // first remove all sounds with a volume below cutoff:
+            mPlayingMutex.lock();
+            for (auto it = mPlayingTones.begin(); it != mPlayingTones.end(); /* no inc */)
+                if (it->stage>=2 and it->amplitude<CutoffVolume)
+                    it=mPlayingTones.erase(it);
+                else ++it;
+            size_t N = mPlayingTones.size();
+            mPlayingMutex.unlock();
+
+            // then generate the audio signal:
+            if (N>0) generateAudioSignal();
         }
     }
 }
 
-
-//-----------------------------------------------------------------------------
-//	                     Create a new sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Create a new sound (note).
-///
-/// This function creates or new (or recreates an existing) sound.
-/// \param id : Identifier of the sound (usually the piano key number)
-/// \param volume : Overall volume of the sound (intensity of keypress)
-/// with typical values between 0 and 1.
-/// \param stereo : Stereo position of the sound, ranging from 0 (left) to 1 (right).
-/// \param attack : Rate of initial volume increase in units of 1/sec.
-/// \param decayrate : Rate of the subsequent volume decrease in units of 1/sec.
-/// If this rate is zero the decay phase is omitted and the volume
-/// increases directly towards the sustain level controlled by the attack rate.
-/// \param sustain : Level at which the volume saturates after decay in (0..1).
-/// \param release : Rate at which the sound disappears after release in units of 1/sec.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::createSound (int id, double volume, double stereo,
-        double attack, double decayrate, double sustain, double release)
-{
-    mChordMutex.lock();
-    mChord[id].amplitude=0;
-    mChord[id].clock=0;
-    mChord[id].fouriermodes.clear();
-    mChord[id].stage=0;
-    mChord[id].volume=volume;
-    mChord[id].stereo=stereo;
-    mChord[id].attack=attack;
-    mChord[id].decayrate=decayrate;
-    mChord[id].sustain=sustain;
-    mChord[id].release=release;
-    mChordMutex.unlock();
-}
 
 //-----------------------------------------------------------------------------
 //	                        Generate the waveform
@@ -168,162 +278,126 @@ void Synthesizer::createSound (int id, double volume, double stereo,
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Generate waveform.
 ///
-/// This is the heart of the synthesizer. It fills the circular buffer
-/// until it reaches the maximum size. It consists of two parts.
-/// First the envelope is computed, rendering the actual amplitude of the
-/// sound. Then a loop over all Fourier modes is carried out and a sine
-/// wave with the corresponding frequency is added to the buffer.
-/// \param snd : Reference of the sound to be converted.
+/// This is the heart of the synthesizer which composes the pre-calculated
+/// waveforms.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::generateWaveform ()
+void Synthesizer::generateAudioSignal ()
 {
-    // If there is nothing to play return
-    if (mChord.size()==0) return;
+    int64_t mSampleRate = mAudioPlayer->getSamplingRate();
+    int64_t clock_timeout = 60*mSampleRate; // one minute timeout
 
-    int SampleRate = mAudioPlayer->getSamplingRate();
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
-
-    int64_t c = static_cast<int64_t>(100*SampleRate);
-    int64_t d = static_cast<int64_t>(SineLength);
 
     int writtenSamples = 0;
 
     while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
     {
         ++writtenSamples;
-        mChordMutex.lock();
-        double left=0, right=0, mono=0;
-        for (auto &ch : mChord)
+        double left=0, right=0; // PCM
+        mPlayingMutex.lock();
+        for (Tone &tone : mPlayingTones)
         {
-            Sound &snd = ch.second;         // get sound of the key
-            double y = snd.amplitude;       // get last amplitude
-            switch (snd.stage)          // Manage ADSR
+            //============== MANAGE THE ENVELOPE =================
+
+            double y = tone.amplitude;          // get last amplitude
+            Envelope &envelope = tone.envelope; // get ADSR
+            switch (tone.stage)                 // Manage ADSR
             {
                 case 1: // ATTACK
-                        y += snd.attack*snd.volume/SampleRate;
-                        if (snd.decayrate>0)
+                        y += envelope.attack/mSampleRate;
+                        if (envelope.decay>0)
                         {
-                            if (y >= snd.volume) snd.stage++;
+                            if (y >= 1) tone.stage++;
                         }
                         else
                         {
-                            if (y >= snd.sustain*snd.volume) snd.stage+=2;
+                            if (y >= envelope.sustain) tone.stage+=2;
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-snd.decayrate/SampleRate); // DECAY
-                        if (y <= snd.sustain*snd.volume) snd.stage++;
+                        y *= (1-(1+y)*envelope.decay/mSampleRate); // DECAY
+                        if (y <= envelope.sustain) tone.stage++;
                         break;
                 case 3: // SUSTAIN
-                        y += (snd.sustain-y) * snd.release/SampleRate;
+                        y += (envelope.sustain-y) * envelope.release / mSampleRate;
+                        if (tone.clock > clock_timeout) tone.stage=4;
                         break;
                 case 4: // RELEASE
-                        y *= (1-snd.release/SampleRate);
+                        y *= (1-envelope.release/mSampleRate);
                         break;
             }
-            snd.amplitude = y;
-            snd.clock ++;
+            tone.amplitude = y;
+            tone.clock ++;
 
+            //================ CREATE THE PCM WAVEFORM ==============
 
-            // compute stereo amplitude factors
-            double leftvol=sqrt(0.7-0.4*snd.stereo);
-            double rightvol=sqrt(0.3+0.4*snd.stereo);
-            int64_t phase = static_cast<int64_t>((snd.stereo-0.5)*SampleRate)/800;
-
-            // time-critical loop
-            for (auto &mode : snd.fouriermodes)
+            if (tone.frequency > 10) // if sine wave
             {
-                int64_t a = static_cast<int64_t>(100.0*mode.first*d);
-                int64_t b = static_cast<int64_t>(100.0*(mode.first*snd.clock+100)*d) + 100*d*c;
-                int64_t p = b + a*phase;
-                if (channels==1) mono += mode.second*y*mSineWave[static_cast<size_t>((b/c)%d)];
-                else // if stereo
-                {
-                    left  += mode.second*leftvol *y*mSineWave[static_cast<size_t>((b/c)%d)];
-                    right += mode.second*rightvol*y*mSineWave[static_cast<size_t>((p/c)%d)];
-                }
+                double t = 1+tone.clock*1.0/mSampleRate;
+                int i = static_cast<int64_t>(SineLength*tone.frequency*t);
+                int j = static_cast<int64_t>(SineLength*tone.frequency*(t+tone.phaseshift));
+                left  += tone.leftamplitude  * y * 0.2 * mSineWave[i%SineLength];;
+                right += tone.rightamplitude * y * 0.2 * mSineWave[j%SineLength];;
+            }
+            else // if complex sound
+            {
+//                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
+//                {
+//                    left += 0.2 * volume* (1-stereo) * mHammerWave[2*tone.clock];
+//                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
+//                }
+
+                double t = (1+tone.clock*1.0/mSampleRate)*tone.frequency;
+                left += tone.leftamplitude * y * 0.3 *
+                        mWaveformGenerator.getInterpolation(tone.waveform,t);
+                right += tone.rightamplitude * y * 0.3 *
+                        mWaveformGenerator.getInterpolation(tone.waveform,t+tone.phaseshift);
             }
         }
-        mChordMutex.unlock();
-        if (channels==1) mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(mono));
+
+        mPlayingMutex.unlock();
+        if (channels==1)
+        {
+            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>((left+right)/2));
+        }
         else // if stereo
         {
             mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(left));
             mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(right));
         }
+
     }
 }
 
 
 //-----------------------------------------------------------------------------
-// 	                      Get sound (private)
+// 	                      Get tone pointer (private)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Get a pointer to the sound addressed by a given ID.
+/// \brief Get a pointer to the sound according to the given ID.
 ///
-/// Note that this function has to be mutexed.
-///
-/// \param id : Identifier of the sound
+/// \param id : Identifier of the sound, nullptr if not found
 ///////////////////////////////////////////////////////////////////////////////
 
-Synthesizer::Sound* Synthesizer::getSoundPtr (int id)
+const Tone* Synthesizer::getSoundPointer (const int id) const
 {
-    auto snd = mChord.find(id);
-    if (snd!=mChord.end()) return &(snd->second);
-    else return nullptr;
+    const Tone *snd(nullptr);
+    mPlayingMutex.lock();
+    for (auto &ch : mPlayingTones) if (ch.keynumber==id) { snd=&ch; break; }
+    mPlayingMutex.unlock();
+    return snd;
 }
 
-
-//-----------------------------------------------------------------------------
-// 	                Add a Fourier component to a sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Add a Fourier component to a sound.
-///
-/// This function adds a Fourier component (sine wave) to an existing sound
-/// identified by an integer 'id'. The function is only carried out if the
-/// sound with the identifier 'id' has already been created (see Create Sound)
-/// or if the sound is still active, otherwise the function call is ignored.
-///
-/// \param id : identity tag of the sound (number of key).
-/// \param f : Frequency of the spectral line in Hz.
-/// \param amplitude : Amplitude of the spectral line.
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::addFourierComponent (int id, double f, double amplitude)
+Tone* Synthesizer::getSoundPointer (const int id)
 {
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->fouriermodes[f]=amplitude;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
-}
-
-
-
-//-----------------------------------------------------------------------------
-// 	                         Play a sound
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Play a sound.
-///
-/// This function marks the sound as ready for being played in the main loop.
-///
-/// \param id : identity tag of the sound (number of key).
-///////////////////////////////////////////////////////////////////////////////
-
-void Synthesizer::playSound (int id)
-{
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->stage = 1;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
+    Tone *snd(nullptr);
+    mPlayingMutex.lock();
+    for (auto &ch : mPlayingTones) if (ch.keynumber==id) { snd=&ch; break; }
+    mPlayingMutex.unlock();
+    return snd;
 }
 
 
@@ -335,17 +409,16 @@ void Synthesizer::playSound (int id)
 /// \brief Terminate a sound.
 ///
 /// This function forces the sound to fade out, entering the release phase.
-///
 /// \param id : identity tag of the sound (number of key).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::releaseSound (int id)
+void Synthesizer::releaseSound (const int id)
 {
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->stage=4;
-    else LogW("id does not exist");
-    mChordMutex.unlock();
+    bool released=false;
+    mPlayingMutex.lock();
+    for (auto &ch : mPlayingTones) if ((ch.keynumber & 0xff)==id) { ch.stage=4; released=true; }
+    mPlayingMutex.unlock();
+    if (not released) LogW("Release: Sound with id=%d does not exist.",id);
 }
 
 
@@ -360,13 +433,8 @@ void Synthesizer::releaseSound (int id)
 /// \return Boolean telling whether the sound is still playing.
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Synthesizer::isPlaying (int id)
-{
-    mChordMutex.lock();
-    bool isplaying = (mChord.find(id) != mChord.end());
-    mChordMutex.unlock();
-    return isplaying;
-}
+bool Synthesizer::isPlaying (const int id) const
+{ return (getSoundPointer(id) != nullptr); }
 
 
 //-----------------------------------------------------------------------------
@@ -384,11 +452,14 @@ bool Synthesizer::isPlaying (int id)
 /// \param level : New sustain level in (0...1).
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::ModifySustainLevel (int id, double level)
+void Synthesizer::ModifySustainLevel (const int id, const double level)
 {
-    mChordMutex.lock();
-    auto snd = getSoundPtr(id);
-    if (snd) snd->sustain = level;
-    else LogW ("id does not exist");
-    mChordMutex.unlock();
+    Tone* snd = getSoundPointer(id);
+    if (snd)
+    {
+        mPlayingMutex.lock();
+        snd->envelope.sustain = level;
+        mPlayingMutex.unlock();
+    }
+    else LogW ("Cannot modify sustain level: id %d does not exist",id);
 }

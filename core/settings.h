@@ -23,7 +23,7 @@
 #include <memory>
 #include <string>
 
-#include "piano/soundgeneratormode.h"
+#include "audio/soundgeneratormode.h"
 
 class Settings
 {

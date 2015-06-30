@@ -25,6 +25,7 @@
 #define SOUNDGENERATOR_H
 
 #include "soundgeneratormode.h"
+
 #include "../audio/synthesizer.h"
 #include "../midi/midiadapter.h"
 #include "../piano/piano.h"
@@ -43,37 +44,32 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioadapter);
     ~SoundGenerator(){}
 
-    void init ();
-    void exit ();
+    void init () { mSynthesizer.init(); }
+    void exit () { mSynthesizer.exit(); }
 
-    void start();
-    void stop();
+    void start() { mSynthesizer.start(); }
+    void stop()  { mSynthesizer.stop(); }
 
 private:
     void handleMessage(MessagePtr m) override final;
     void handleMidiKeypress(MidiAdapter::Data &data);
-    double getStereo (int keynumber);
-    void playSineWave(int keynumber, double frequency, double volume);
-    void playReferenceTone (const Key &key, int keynumber, double frequency, double volume);
+    void playResonatingSineWave (int keynumber, double frequency, double volume);
     void playResonatingReferenceSound (int keynumber);
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
-
-    void playOriginalSoundOfKey (const Key &key, int id,
-                                 double frequency, double volume,
-                                 double attack=30, double decay=0.5,
-                                 double sustain=0, double release=30);
+    void preCalculateSoundOfKey (const int keynumber);
+    void preCalculateSoundOfAllKeys ();
 
 private:
-    Synthesizer mSynthesizer;           ///< Instance of the synthesizer.
-    const Piano *mPiano;                ///< Pointer to the piano.
-    OperationMode mOperationMode;       ///< Copy of the operation mode.
-    double mConcertPitch;               ///< Copy of the concert pitch.
-    int mNumberOfKeys;                  ///< Copy of the number of keys.
-    int mKeyNumberOfA4;                 ///< Copy of A-key position.
-    int mSelectedKey;                   ///< Copy of selected key.
-    int mResonatingKey;                 ///< Key of the resonating sound
-    double mResonatingVolume;           ///< Volume of the resonating sound
+    Synthesizer mSynthesizer;                   ///< Instance of the synthesizer.
+    const AudioPlayerAdapter *mAudioAdapter;    ///< Pointer to the audio device
+    const Piano *mPiano;                        ///< Pointer to the piano.
+    OperationMode mOperationMode;               ///< Copy of the operation mode.
+    int mNumberOfKeys;                          ///< Copy of the number of keys.
+    int mKeyNumberOfA4;                         ///< Copy of A-key position.
+    int mSelectedKey;                           ///< Copy of selected key.
+    int mResonatingKey;                         ///< Key of the resonating sound
+    double mResonatingVolume;                   ///< Volume of the resonating sound
 };
 
 #endif // SOUNDGENERATOR_H

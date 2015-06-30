@@ -28,7 +28,7 @@
 #include "analyzers/signalanalyzer.h"
 #include "calculation/calculationmanager.h"
 #include "audio/audiorecorderadapter.h"
-#include "piano/soundgenerator.h"
+#include "audio/soundgenerator.h"
 #include "messages/messagelistener.h"
 #include "system/log.h"
 #include "adapters/coreinitialisationadapter.h"
