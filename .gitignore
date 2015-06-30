@@ -25,6 +25,8 @@
 dependencies
 *.pdf
 docs/doxy*
+docs/html*
+docs/latex*
 *.autosave
 log
 publish
