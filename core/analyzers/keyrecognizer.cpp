@@ -120,7 +120,7 @@ void KeyRecognizer::recognizeKey (
     EptAssert(fftPointer->isValid(), "Invaild fft data");
 
     if (forceRestart) stop();                   // if restart forced stop thread
-    else if (isThreadRunnding()) return;        // if it is running do nothing
+    else if (isThreadRunning()) return;        // if it is running do nothing
 
     // copy data from the piano
     mPiano = piano;

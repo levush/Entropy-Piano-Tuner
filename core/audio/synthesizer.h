@@ -24,15 +24,8 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
-#include <vector>
-#include <map>
-#include <cmath>
-#include <thread>
-#include <mutex>
-#include <chrono>
-
 #include "audioplayeradapter.h"
-#include "sound.h"
+#include "waveformgenerator.h"
 #include "../system/simplethreadhandler.h"
 
 
@@ -42,6 +35,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Structure describing the envelope (dynamics) of a sound
+///
+/// The envelope of synthesizer sounds follows the conventional ADSR scheme.
+/// A first attack phase and a subsequent decay is followed by a sustain
+/// period of constant volume while the key is pressed. Finally, when the
+/// key is released, the envelope enters the release phase.
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Envelope
@@ -57,7 +55,6 @@ struct Envelope
              double hammer=0);
 };
 
-
 //=============================================================================
 //                          Structure of a tone
 //=============================================================================
@@ -66,7 +63,7 @@ struct Envelope
 /// \brief Structure of a single tone.
 ///
 /// This structure contains all data elements which characterize a single
-/// tone. Each tone carries an ID for housekeeping. The tone is characterized
+/// tone. Each tone carries an identifying keynumber. The tone is characterized
 /// mainly by the sound (static properties) and the envelope (dynamics).
 ///
 /// The clock variable counts the number of samples from the beginning of
@@ -76,16 +73,18 @@ struct Envelope
 
 struct Tone
 {
-    int id;                             ///< Identification tag
-    Sound sound;                        ///< Static properties of the tone
+    int keynumber;                      ///< Identification tag (negativ=sine)
+    double frequency;                   ///< Fundamental frequency
+    double leftamplitude;               ///< Left stereo volume
+    double rightamplitude;              ///< Right stereo volume
+    double phaseshift;                  ///< Stereo phase shift
     Envelope envelope;                  ///< Dynamic properties of the tone
 
-    int_fast64_t frequency;             ///< converted sine frequency
     int_fast64_t clock;                 ///< Running time in sample cycles.
-    int_fast64_t clock_timeout;         ///< Timeout when forced to release
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
-    SampledSound::WaveForm waveform;    ///< Copy of precalculated waveform
+
+    WaveformGenerator::Waveform waveform;
 };
 
 
@@ -94,27 +93,36 @@ struct Tone
 /// \brief Synthesizer class
 ///
 /// This is the synthesizer of the EPT. It runs in an independent thread.
+/// The acoustic system of the EPT is driven by messages. The SoundGenerator
+/// listens to these messages and tells the Synthesizer which notes have to
+/// be played. The Synthesizer in turn calls the WaveformGenerator to
+/// pre-calculate PCM data for sound generation. The main task of the
+/// synthesizer class is to create a real-time superposition of these
+/// pre-calculated PCM waveforms. Moreover, it creates appropriate volume
+/// differences and phase shifts between the two stereo channels.
 ///////////////////////////////////////////////////////////////////////////////
 
 class Synthesizer : public SimpleThreadHandler
 {
 public:
-    using Spectrum = Sound::Spectrum;
 
+    using Spectrum = std::map<double,double>;   // type of spectrum
 
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
     void exit () { stop(); }
 
+    void setNumberOfKeys (int numberOfKeys);
+
     void preCalculateWaveform   (const int id,
-                                 const Sound &sound,
-                                 const double sampletime,
-                                 const double waitingtime=0);
+                                 const Spectrum &spectrum);
 
     void playSound              (const int id,
-                                 const Sound &sound,
-                                 const Envelope &env);
+                                 const double frequency,
+                                 const double volume,
+                                 const Envelope &env,
+                                 const bool waitforcomputation = false);
 
     void ModifySustainLevel     (const int id,
                                  const double level);
@@ -126,9 +134,13 @@ public:
 
 private:
 
-    using WaveForm = SampledSound::WaveForm;
+    using Waveform = WaveformGenerator::Waveform;
 
-    std::map <int,SampledSound> mPreCalculatedSounds;
+    int mSampleRate;
+
+    WaveformGenerator mWaveformGenerator;
+
+    int mNumberOfKeys;                      ///< Number of keys, passed in init()
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.
@@ -136,8 +148,8 @@ private:
     const int_fast64_t  SineLength = 16384; ///< sine value buffer length.
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
-    WaveForm mSineWave;                     ///< Sine wave vector, computed in init().
-    WaveForm mHammerWave;                   ///< Hammer noise, computed in init().
+    Waveform mSineWave;                     ///< Sine wave vector, computed in init().
+    Waveform mHammerWave;                   ///< Hammer noise, computed in init().
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 

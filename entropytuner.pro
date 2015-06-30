@@ -178,24 +178,14 @@ HEADERS  += \
     Qt/calculationprogressgroup.h \
     Qt/recordingqualitybar.h \
     Qt/autoclosingmessagebox.h \
-    core/drawers/graphicsitem.h \
     Qt/graphicsitemforqt.h \
-    core/messages/messagekeydatachanged.h \
     Qt/editpianosheetdialog.h \
-    core/calculation/algorithm.h \
-    core/calculation/algorithmfactory.h \
-    core/calculation/algorithmfactorydescription.h \
     Qt/options/environment/optionspageenvironmenttuningpage.h \
-    core/piano/soundgeneratormode.h \
-    core/calculation/algorithminformation.h \
-    core/calculation/algorithmparameter.h \
-    core/calculation/algorithminformationparser.h \
     Qt/doubleslider.h \
     Qt/simplefiledialog.h \
     Qt/algorithmdialog.h \
     Qt/qtconfig.h \
     Qt/keyboard/graphicskeyitem.h \
-    core/piano/pianodefines.h \
     Qt/aboutdialog.h \
     Qt/versioncheck.h \
     Qt/runguard.h \
@@ -204,7 +194,7 @@ HEADERS  += \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h \
-    core/system/platformtoolscore.h
+    core/audio/waveformgenerator.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -240,18 +230,9 @@ SOURCES +=  \
     Qt/calculationprogressgroup.cpp \
     Qt/recordingqualitybar.cpp \
     Qt/autoclosingmessagebox.cpp \
-    core/drawers/graphicsitem.cpp \
-    core/adapters/graphicsviewadapter.cpp \
     Qt/graphicsitemforqt.cpp \
-    core/messages/messagekeydatachanged.cpp \
     Qt/editpianosheetdialog.cpp \
-    core/calculation/algorithm.cpp \
-    core/calculation/algorithmfactory.cpp \
-    core/calculation/algorithmfactorydescription.cpp \
     Qt/options/environment/optionspageenvironmenttuningpage.cpp \
-    core/calculation/algorithminformation.cpp \
-    core/calculation/algorithmparameter.cpp \
-    core/calculation/algorithminformationparser.cpp \
     Qt/doubleslider.cpp \
     Qt/simplefiledialog.cpp \
     Qt/algorithmdialog.cpp \
@@ -264,7 +245,7 @@ SOURCES +=  \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp \
-    core/system/platformtoolscore.cpp
+    core/audio/waveformgenerator.cpp
 
 #------------- Message system --------------------
 
@@ -283,6 +264,7 @@ CORE_MESSAGE_SYSTEM_HEADERS = \
     core/messages/messagefinalkey.h \
     core/messages/messagechangetuningcurve.h \
     core/messages/messagetuningdeviation.h \
+    core/messages/messagekeydatachanged.h \
 
 CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagelistener.cpp \
@@ -299,6 +281,7 @@ CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagefinalkey.cpp \
     core/messages/messagechangetuningcurve.cpp \
     core/messages/messagetuningdeviation.cpp \
+    core/messages/messagekeydatachanged.cpp \
 
 #------------- Drawers --------------------
 
@@ -309,12 +292,14 @@ CORE_DRAWER_HEADERS = \
     core/drawers/zoomedspectrumdrawer.h \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
+    core/drawers/graphicsitem.h \
 
 CORE_DRAWER_SOURCES = \
     core/drawers/drawerbase.cpp \
     core/drawers/zoomedspectrumdrawer.cpp \
     core/drawers/tuningcurvegraphdrawer.cpp \
     core/drawers/fourierspectrumgraphdrawer.cpp \
+    core/drawers/graphicsitem.cpp \
 
 #------------- Adapters --------------------
 
@@ -334,6 +319,7 @@ CORE_ADAPTER_SOURCES = \
     core/adapters/recorderlevel.cpp \
     core/adapters/filemanager.cpp \
     core/adapters/coreinitialisationadapter.cpp \
+    core/adapters/graphicsviewadapter.cpp \
 
 #---------------- Audio -----------------
 
@@ -343,12 +329,15 @@ CORE_AUDIO_HEADERS = \
     core/audio/audioplayeradapter.h \
     core/audio/synthesizer.h \
     core/audio/circularbuffer.h \
+    core/audio/soundgenerator.h \
+    core/audio/soundgeneratormode.h \
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
     core/audio/audiobase.cpp \
     core/audio/audioplayeradapter.cpp \
     core/audio/synthesizer.cpp \
+    core/audio/soundgenerator.cpp \
 
 #----------------- Midi ------------------
 
@@ -413,7 +402,7 @@ CORE_PIANO_HEADERS = \
     core/piano/key.h \
     core/piano/pianomanager.h \
     core/piano/keyboard.h \
-    core/piano/soundgenerator.h \
+    core/piano/pianodefines.h \
 
 CORE_PIANO_SOURCES = \
     core/piano/piano.cpp  \
@@ -421,16 +410,27 @@ CORE_PIANO_SOURCES = \
     core/piano/key.cpp \
     core/piano/pianomanager.cpp \
     core/piano/keyboard.cpp \
-    core/piano/soundgenerator.cpp \
 
 #--------------- Calculation ---------------
 
 CORE_CALCULATION_HEADERS = \
     core/calculation/calculationmanager.h \
+    core/calculation/algorithm.h \
+    core/calculation/algorithmfactory.h \
+    core/calculation/algorithmfactorydescription.h \
+    core/calculation/algorithminformation.h \
+    core/calculation/algorithmparameter.h \
+    core/calculation/algorithminformationparser.h \
 
 
 CORE_CALCULATION_SOURCES = \
     core/calculation/calculationmanager.cpp \
+    core/calculation/algorithm.cpp \
+    core/calculation/algorithmfactory.cpp \
+    core/calculation/algorithmfactorydescription.cpp \
+    core/calculation/algorithminformation.cpp \
+    core/calculation/algorithmparameter.cpp \
+    core/calculation/algorithminformationparser.cpp \
 
 #----------------- Core --------------------
 
