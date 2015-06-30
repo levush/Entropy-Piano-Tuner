@@ -54,9 +54,6 @@ macx {
 
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/osx/Info.plist
-
-    # all warnings, and as error
-    QMAKE_CXXFLAGS += -Werror
 }
 
 # iOS

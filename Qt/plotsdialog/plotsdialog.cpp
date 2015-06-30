@@ -1,4 +1,5 @@
 #include "plotsdialog.h"
+#include <cmath>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -30,6 +31,7 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     std::fill(mCurves.begin(), mCurves.end(), nullptr);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
     setLayout(mainLayout);
 
     QToolBar *toolBar = new QToolBar;
