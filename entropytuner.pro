@@ -8,9 +8,9 @@ QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG += c++11
 TARGET = entropypianotuner
 TEMPLATE = app
-CONFIG += c++11
 
 INCLUDEPATH += dependencies/include
 INCLUDEPATH += Qt
@@ -26,6 +26,23 @@ Debug:OBJECTS_DIR = debug/.obj
 Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
+
+# add qwt
+QWT_CONFIG += QwtPlot
+include($$PWD/thirdparty/qwt/src.pri)
+QWT_H = $$HEADERS
+HEADERS = \
+    Qt/plotsdialog/centralplotframe.h \
+    Qt/plotsdialog/keyindexscaleengine.h \
+    Qt/plotsdialog/keyindexscaledraw.h
+QWT_S = $$SOURCES
+SOURCES = \
+    Qt/plotsdialog/centralplotframe.cpp \
+    Qt/plotsdialog/keyindexscaleengine.cpp \
+    Qt/plotsdialog/keyindexscaledraw.cpp
+for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
+for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
+INCLUDEPATH += $$PWD/thirdparty/qwt
 
 # MacOS X (no iOS)
 macx {
@@ -204,7 +221,8 @@ HEADERS  += \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h \
-    core/system/platformtoolscore.h
+    core/system/platformtoolscore.h \
+    Qt/plotsdialog/plotsdialog.h
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -264,7 +282,8 @@ SOURCES +=  \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp \
-    core/system/platformtoolscore.cpp
+    core/system/platformtoolscore.cpp \
+    Qt/plotsdialog/plotsdialog.cpp
 
 #------------- Message system --------------------
 

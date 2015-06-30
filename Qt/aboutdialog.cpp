@@ -54,7 +54,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
     QString dependenciesText = tr("Based on");
-    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://fftw.org\">fftw3</a>");
+    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://qwt.sf.net\">Qwt</a>, <a href=\"http://fftw.org\">fftw3</a>");
     dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
 #if defined(Q_OS_IOS)
     dependenciesText.append(", <a href=\"https://github.com/petegoodliffe/PGMidi\">PgMidi</a>");
