@@ -23,6 +23,7 @@
 
 #include "waveformgenerator.h"
 
+#include <random>
 #include "../math/mathtools.h"
 #include "../system/log.h"
 
