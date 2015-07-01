@@ -110,7 +110,7 @@ public:
     Synthesizer (AudioPlayerAdapter *audioadapter);
 
     void init ();
-    void exit () { stop(); }
+    void exit () { mWaveformGenerator.stop(); stop(); }
 
     void setNumberOfKeys (int numberOfKeys);
 
