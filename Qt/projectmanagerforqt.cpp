@@ -78,6 +78,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::askForSaving() {
 
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileType) {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
+    Q_UNUSED(fileType);
     return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
     QString path(getCurrentPath());
@@ -102,6 +103,7 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
 
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileType)  {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
+    Q_UNUSED(fileType);
     return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
     QString path(getCurrentPath());
