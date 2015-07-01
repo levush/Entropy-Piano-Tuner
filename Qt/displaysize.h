@@ -49,6 +49,9 @@ public:
     GraphDisplayMode getGraphDisplayMode() const;
     KeyboardDisplayMode getKeyboardDisplayMode() const;
     MainGroupBoxDisplayStyle getMainGroupBoxDisplayStyle() const;
+
+    bool showPlotNavigationVertical() const;
+    bool abbrevPlotLabels() const;
 };
 
 #endif // DISPLAYSIZE

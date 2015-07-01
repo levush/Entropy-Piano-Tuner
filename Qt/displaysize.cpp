@@ -82,3 +82,12 @@ MainGroupBoxDisplayStyle DisplaySizeDefines::getMainGroupBoxDisplayStyle() const
         return MGBDS_NORMAL;
     }
 }
+
+bool DisplaySizeDefines::showPlotNavigationVertical() const {
+    return mDisplaySize <= DS_SMALL;
+}
+
+bool DisplaySizeDefines::abbrevPlotLabels() const {
+    return mDisplaySize <= DS_XSMALL;
+}
+

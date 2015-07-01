@@ -29,12 +29,15 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     mKeyboard(piano.getKeyboard())
 {
     std::fill(mCurves.begin(), mCurves.end(), nullptr);
+    const bool vNav(DisplaySizeDefines::getSingleton()->showPlotNavigationVertical());
 
     CentralPlotFrame *plot = new CentralPlotFrame(mKeyboard.getNumberOfKeys(), mKeyboard.getKeyNumberOfA4());
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMargin(0);
     setLayout(mainLayout);
+
+    QLayout *plotLayout = mainLayout;
 
     QToolBar *toolBar = new QToolBar;
     int iconSize = DisplaySizeDefines::getSingleton()->getMediumIconSize();
@@ -44,6 +47,20 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     QHBoxLayout *barLayout = new QHBoxLayout;
     barLayout->setMargin(0);
     mainLayout->addLayout(barLayout);
+
+    QToolBar *navBar = toolBar;
+    if (vNav) {
+        navBar = new QToolBar;
+        navBar->setIconSize(QSize(iconSize, iconSize));
+        navBar->setOrientation(Qt::Vertical);
+
+        QHBoxLayout *vTbExtraLayout = new QHBoxLayout;
+        vTbExtraLayout->setMargin(0);
+        mainLayout->addLayout(vTbExtraLayout);
+        vTbExtraLayout->addWidget(navBar);
+
+        plotLayout = vTbExtraLayout;
+    }
 
     auto makeColorIcon = [](QColor c) {
         int size = DisplaySizeDefines::getSingleton()->getSmallIconSize() / 2;
@@ -67,18 +84,26 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
         return b;
     };
 
-    toolBar->addAction(QIcon(":/media/icons/view-fullscreen.png"), tr("Reset view"), plot, SLOT(resetView()));
-    toolBar->addAction(QIcon(":/media/icons/go-first.png"), tr("Go first"), plot, SLOT(zoomGoFirst()));
-    toolBar->addAction(QIcon(":/media/icons/go-previous.png"), tr("Go previous"), plot, SLOT(zoomGoPrevious()));
-    toolBar->addAction(QIcon(":/media/icons/go-next.png"), tr("Go next"), plot, SLOT(zoomGoNext()));
-    toolBar->addAction(QIcon(":/media/icons/go-last.png"), tr("Go last"), plot, SLOT(zoomGoLast()));
+    navBar->addAction(QIcon(":/media/icons/view-fullscreen.png"), tr("Reset view"), plot, SLOT(resetView()));
+    navBar->addAction(QIcon(":/media/icons/go-first.png"), tr("Go first"), plot, SLOT(zoomGoFirst()));
+    navBar->addAction(QIcon(":/media/icons/go-previous.png"), tr("Go previous"), plot, SLOT(zoomGoPrevious()));
+    navBar->addAction(QIcon(":/media/icons/go-next.png"), tr("Go next"), plot, SLOT(zoomGoNext()));
+    navBar->addAction(QIcon(":/media/icons/go-last.png"), tr("Go last"), plot, SLOT(zoomGoLast()));
 
-    toolBar->addSeparator();
-
-    makeToolButton(Qt::darkGreen, tr("Inharmonicity"), CURVE_INHARMONICITY);
-    makeToolButton(Qt::red, tr("Recorded"), CURVE_RECORDED);
-    makeToolButton(Qt::blue, tr("Computed"), CURVE_COMPUTED);
-    makeToolButton(Qt::green, tr("Tuned"), CURVE_TUNED);
+    if (!vNav) {
+        toolBar->addSeparator();
+    }
+    if (DisplaySizeDefines::getSingleton()->abbrevPlotLabels()) {
+        makeToolButton(Qt::darkGreen, tr("Inh."), CURVE_INHARMONICITY);
+        makeToolButton(Qt::red, tr("Rec."), CURVE_RECORDED);
+        makeToolButton(Qt::blue, tr("Comp."), CURVE_COMPUTED);
+        makeToolButton(Qt::green, tr("Tuned"), CURVE_TUNED);
+    } else {
+        makeToolButton(Qt::darkGreen, tr("Inharmonicity"), CURVE_INHARMONICITY);
+        makeToolButton(Qt::red, tr("Recorded"), CURVE_RECORDED);
+        makeToolButton(Qt::blue, tr("Computed"), CURVE_COMPUTED);
+        makeToolButton(Qt::green, tr("Tuned"), CURVE_TUNED);
+    }
 
     toolBar->addSeparator();
 
@@ -107,7 +132,7 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     marker->attach(plot);
     marker->setZ(-100);
 
-    mainLayout->addWidget(plot);
+    plotLayout->addWidget(plot);
 
     for (int i = 0; i < CURVE_COUNT; i++) {
         prepareCurve(static_cast<Curves>(i));

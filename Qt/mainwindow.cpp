@@ -226,8 +226,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // enable export button
     QAction *exportAction = new QAction(tr("Export"), ui->menuFile);
     QObject::connect(exportAction, SIGNAL(triggered(bool)), this, SLOT(onExport()));
-    ui->menuFile->insertAction(ui->actionSave_As, exportAction);
-    ui->menuFile->insertSeparator(ui->actionSave_As);
+    ui->menuFile->insertAction(ui->actionShare, exportAction);
+    ui->menuFile->insertSeparator(exportAction);
 #endif
 
 #if __APPLE__
