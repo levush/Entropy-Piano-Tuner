@@ -50,7 +50,7 @@ public:
 
 private:
     int mSampleRate;
-    int mWaveformSize;
+    int mWaveformSize = 0;
     int mNumberOfKeys;
     std::vector<Waveform> mLibrary;
     std::vector<std::mutex> mLibraryMutex;

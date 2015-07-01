@@ -31,18 +31,12 @@ private:
     void prepareCurve(Curves curve);
 
 private slots:
-    void zoomGoNext();
-    void zoomGoPrevious();
-    void zoomGoLast();
-    void zoomGoFirst();
 
     void updateTickWidth(double d);
     void plotToolButtonToggled(bool);
-    void resetView();
 
 private:
     CentralPlotFrame *mPlot;
-    QwtPlotZoomer *mPlotZoomer;
     std::array<QwtPlotCurve *, CURVE_COUNT> mCurves;
     std::array<PlotToolButton *, CURVE_COUNT> mPlotToolButtons;
 

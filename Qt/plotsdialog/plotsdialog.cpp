@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QToolBar>
 #include <QToolButton>
-#include <QScroller>
+#include <QDialogButtonBox>
 #include "core/system/eptexception.h"
 #include "qtconfig.h"
 #include "displaysize.h"
@@ -29,6 +29,8 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     mKeyboard(piano.getKeyboard())
 {
     std::fill(mCurves.begin(), mCurves.end(), nullptr);
+
+    CentralPlotFrame *plot = new CentralPlotFrame(mKeyboard.getNumberOfKeys(), mKeyboard.getKeyNumberOfA4());
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMargin(0);
@@ -65,11 +67,11 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
         return b;
     };
 
-    toolBar->addAction(QIcon(":/media/icons/view-fullscreen.png"), tr("Reset view"), this, SLOT(resetView()));
-    toolBar->addAction(QIcon(":/media/icons/go-first.png"), tr("Go first"), this, SLOT(zoomGoFirst()));
-    toolBar->addAction(QIcon(":/media/icons/go-previous.png"), tr("Go previous"), this, SLOT(zoomGoPrevious()));
-    toolBar->addAction(QIcon(":/media/icons/go-next.png"), tr("Go next"), this, SLOT(zoomGoNext()));
-    toolBar->addAction(QIcon(":/media/icons/go-last.png"), tr("Go last"), this, SLOT(zoomGoLast()));
+    toolBar->addAction(QIcon(":/media/icons/view-fullscreen.png"), tr("Reset view"), plot, SLOT(resetView()));
+    toolBar->addAction(QIcon(":/media/icons/go-first.png"), tr("Go first"), plot, SLOT(zoomGoFirst()));
+    toolBar->addAction(QIcon(":/media/icons/go-previous.png"), tr("Go previous"), plot, SLOT(zoomGoPrevious()));
+    toolBar->addAction(QIcon(":/media/icons/go-next.png"), tr("Go next"), plot, SLOT(zoomGoNext()));
+    toolBar->addAction(QIcon(":/media/icons/go-last.png"), tr("Go last"), plot, SLOT(zoomGoLast()));
 
     toolBar->addSeparator();
 
@@ -78,14 +80,18 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     makeToolButton(Qt::blue, tr("Computed"), CURVE_COMPUTED);
     makeToolButton(Qt::green, tr("Tuned"), CURVE_TUNED);
 
+    toolBar->addSeparator();
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    toolBar->addWidget(buttonBox);
+    QObject::connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
 
-    CentralPlotFrame *plot = new CentralPlotFrame(mKeyboard.getNumberOfKeys(), mKeyboard.getKeyNumberOfA4());
     mPlot = plot;
     plot->setCanvasBackground( Qt::white );
     // plot->insertLegend( new QwtLegend() );
     plot->setAxisTitle(QwtPlot::xBottom, tr("Key index"));
-    resetView();
+    plot->resetView();
 
     QwtPlotGrid *grid = new QwtPlotGrid();
     grid->setMinorPen(Qt::darkGray, 1);
@@ -109,15 +115,6 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
 
     //QwtPlotPicker *pickers = new QwtPlotPicker(plot->canvas());
     //pickers->setTrackerMode(QwtPlotPicker::AlwaysOn);
-
-    // panning with the left mouse button
-    QwtPlotPanner *panner = new QwtPlotPanner( mPlot->canvas() );
-    panner->setMouseButton(Qt::LeftButton, Qt::ControlModifier);
-
-    // zoom in/out with the wheel
-    ( void ) new QwtPlotMagnifier( mPlot->canvas() );
-
-    mPlotZoomer = new QwtPlotZoomer(mPlot->canvas());
 
     QObject::connect(mPlot, SIGNAL(keyWidthChanged(double)), this, SLOT(updateTickWidth(double)));
 
@@ -249,24 +246,4 @@ void PlotsDialog::plotToolButtonToggled(bool b) {
     mPlot->replot();
 }
 
-void PlotsDialog::resetView() {
-    mPlot->setAxisAutoScale(QwtPlot::yLeft);
-    mPlot->setAxisScale(QwtPlot::xBottom, 0, mKeyboard.getNumberOfKeys(), 12);
-    mPlot->replot();
-}
 
-void PlotsDialog::zoomGoFirst() {
-    mPlotZoomer->zoom(mPlotZoomer->maxStackDepth());
-}
-
-void PlotsDialog::zoomGoLast() {
-    mPlotZoomer->zoom(-mPlotZoomer->maxStackDepth());
-}
-
-void PlotsDialog::zoomGoNext() {
-    mPlotZoomer->zoom(1);
-}
-
-void PlotsDialog::zoomGoPrevious() {
-    mPlotZoomer->zoom(-1);
-}
