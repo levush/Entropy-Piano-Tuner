@@ -27,17 +27,30 @@
 #include "../system/simplethreadhandler.h"
 #include "../math/fftimplementation.h"
 
+////////////////////////////////////////////////////////////////////////////////
+/// \brief The WaveformGenerator class
+///
+/// The purpose of this class is mainly to save time. In early versions of the
+/// EPT we generated the waveforms in real time. This led on small mobile
+/// devices to problems if more the one key was pressed. The present
+/// wave form generator creates the PCM waveforms in advance and stores them
+/// in a vector. This costs some memory but it save a lot of time. The
+/// waveform is generated in the recording pitch. The synthesizer changes
+/// the pitch if required by resampling.
+///
+/// The WaveformGenerator runs in an independent thread with normal priority.
+////////////////////////////////////////////////////////////////////////////////
+
 class WaveformGenerator : public SimpleThreadHandler
 {
 private:
 #ifdef __ANDROID__
-    const double mWaveformTime = 4;
+    const double mWaveformTime = 3;
 #else
-    const double mWaveformTime = 4;
+    const double mWaveformTime = 10;
 #endif
 
 public:
-
     using Waveform = std::vector<float>;
     using Spectrum = std::map<double,double>;   // type of spectrum
 
@@ -45,7 +58,7 @@ public:
     void init (int numberOfKeys, int samplerate);
     void preCalculate (int keynumber, const Spectrum &spectrum);
     Waveform getWaveForm (const int keynumber);
-    double getInterpolation (const Waveform &W, const double t);
+    float getInterpolation(const Waveform &W, const double t);
     bool isComputing (const int keynumber);
 
 private:

@@ -84,9 +84,8 @@ struct Tone
     int stage;                          ///< 1=attack 2=decay 3=sustain 4=release.
     double amplitude;                   ///< current envelope amplitude
 
-    WaveformGenerator::Waveform waveform;
+    WaveformGenerator::Waveform waveform; ///< Copy of the waveform
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,8 +114,7 @@ public:
 
     void setNumberOfKeys (int numberOfKeys);
 
-    void preCalculateWaveform   (const int id,
-                                 const Spectrum &spectrum);
+    void preCalculateWaveform   (const int id, const Spectrum &spectrum);
 
     void playSound              (const int id,
                                  const double frequency,
@@ -124,8 +122,7 @@ public:
                                  const Envelope &env,
                                  const bool waitforcomputation = false);
 
-    void ModifySustainLevel     (const int id,
-                                 const double level);
+    void ModifySustainLevel     (const int id, const double level);
 
     void releaseSound           (const int id);
 

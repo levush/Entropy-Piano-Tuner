@@ -108,14 +108,20 @@ void Synthesizer::init ()
     mSampleRate = mAudioPlayer->getSamplingRate();
     mHammerWave.resize(mSampleRate);
     mHammerWave.assign(mSampleRate,0);
+    double hammerVolume = 0.03;
     for (int i=0; i<mSampleRate; i++)
-        mHammerWave[i]=0.2*sin(2*3.141592655*i*18.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
+        mHammerWave[i]=hammerVolume*sin(2*3.141592655*i*18.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
     for (int i=0; i<mSampleRate; i++)
-        mHammerWave[i]+=0.2*sin(2*3.141592655*i*27.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
+        mHammerWave[i]+=hammerVolume*sin(2*3.141592655*i*27.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
     std::default_random_engine generator;
     std::normal_distribution<double> distribution(0,0.1);
+    double y=0,z=0;
     for (int i=0; i<mSampleRate; i++)
-        mHammerWave[i]+=distribution(generator)/pow(2,i*10.0/mSampleRate);
+    {
+        y=y*0.9+distribution(generator);
+        z=z*0.9+y;
+        mHammerWave[i]+=hammerVolume/10*z/pow(2,i*5.0/mSampleRate);
+    }
 
     mWaveformGenerator.init(mNumberOfKeys,mSampleRate);
     mWaveformGenerator.start();
@@ -125,6 +131,11 @@ void Synthesizer::init ()
 //-----------------------------------------------------------------------------
 //                          Set number of keys
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Tell the synthesizer to change the total number of keys
+/// \param numberOfKeys : Number of keys
+///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::setNumberOfKeys (int numberOfKeys)
 {
@@ -206,7 +217,7 @@ void Synthesizer::playSound (const int keynumber,
     Tone tone;
     tone.keynumber = keynumber;
     tone.frequency = frequency;
-    double stereo = (10+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+20);
+    double stereo = (20+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+40);
     tone.leftamplitude = sqrt((1-stereo)*volume);
     tone.rightamplitude = sqrt(stereo*volume);
     tone.phaseshift = (stereo-0.5)/500;
@@ -344,11 +355,11 @@ void Synthesizer::generateAudioSignal ()
             }
             else // if complex sound
             {
-//                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
-//                {
-//                    left += 0.2 * volume* (1-stereo) * mHammerWave[2*tone.clock];
-//                    right += 0.2 * volume *  stereo * mHammerWave[2*tone.clock+1];
-//                }
+                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
+                {
+                    left += tone.leftamplitude * mHammerWave[2*tone.clock];
+                    right += tone.rightamplitude* mHammerWave[2*tone.clock+1];
+                }
 
                 double t = (1+tone.clock*1.0/mSampleRate)*tone.frequency;
                 left += tone.leftamplitude * y * 0.3 *

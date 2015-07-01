@@ -125,7 +125,7 @@ void FFT_Implementation::optimize (FFTRealVector &in)
 
 void FFT_Implementation::optimize (FFTComplexVector &in)
 {
-    updatePlan(in,FFTW_PATIENT);
+    updatePlan(in,FFTW_MEASURE);
 }
 
 

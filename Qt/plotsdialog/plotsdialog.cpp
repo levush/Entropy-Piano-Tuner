@@ -171,6 +171,8 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
     QwtPlotCurve *c = mCurves[curve] = new QwtPlotCurve;
 
+    auto cents = [] (double ratio) { return 1200.0 * log(ratio)/log(2); };
+
     if (curve == CURVE_INHARMONICITY) {
         c->setTitle(tr("Inharmonicity"));
         c->setStyle(QwtPlotCurve::NoCurve);
@@ -191,7 +193,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5, std::log2(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5, cents(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_COMPUTED) {
@@ -201,7 +203,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5, std::log2(mKeyboard[i].getComputedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5, cents(mKeyboard[i].getComputedFrequency() / mPiano.getEqualTempFrequency(i,0,440)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_TUNED) {
@@ -211,7 +213,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5, std::log2(mKeyboard[i].getTunedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5, cents(mKeyboard[i].getTunedFrequency() / mPiano.getEqualTempFrequency(i)));
         }
         c->setSamples(points);
     }
@@ -237,7 +239,7 @@ void PlotsDialog::plotToolButtonToggled(bool b) {
             mPlot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
         } else {
             mPlotToolButtons[CURVE_INHARMONICITY]->setChecked(false);
-            mPlot->setAxisTitle(QwtPlot::yLeft, tr("Frequency deviation"));
+            mPlot->setAxisTitle(QwtPlot::yLeft, tr("Frequency deviation [cent]"));
             mPlot->setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
         }
     } else {
