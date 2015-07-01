@@ -57,6 +57,8 @@ public:
     int getKeyNumberOfA4() const {return mKeyNumberOfA4;}
     int &getKeyNumberOfA4() {return mKeyNumberOfA4;}
 
+    int getKeyOffset() const {return 48 - mKeyNumberOfA4;}
+
     int convertLocalToGlobal(int index) const;
 
 private:

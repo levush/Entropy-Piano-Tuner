@@ -10,16 +10,14 @@
 #include "keyindexscaledraw.h"
 #include "keyindexscaleengine.h"
 
-CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keynumberOfA) :
+CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keyOffset) :
     mNumberOfKeys(numberOfKeys),
-    mKeynumberOfA(keynumberOfA)
+    mKeyOffset(keyOffset)
 {
-    Q_UNUSED(keynumberOfA);
-
     // important: accept touch events, so they dont get propagated
     setAttribute(Qt::WA_AcceptTouchEvents);
 
-    setAxisScaleEngine(xBottom, new KeyIndexScaleEngine(numberOfKeys));
+    setAxisScaleEngine(xBottom, new KeyIndexScaleEngine(numberOfKeys, mKeyOffset));
 
     KeyIndexScaleDraw *xScaleDraw = new KeyIndexScaleDraw;
     setAxisScaleDraw(xBottom, xScaleDraw);
@@ -187,7 +185,7 @@ void CentralPlotFrame::paintEvent(QPaintEvent *e) {
 
 void CentralPlotFrame::resetView() {
     setAxisAutoScale(QwtPlot::yLeft);
-    setAxisScale(QwtPlot::xBottom, 0, mNumberOfKeys, 12);
+    setAxisScale(QwtPlot::xBottom, mKeyOffset, mKeyOffset + mNumberOfKeys, 12);
     replot();
 
     // set initial zoom rect to current view

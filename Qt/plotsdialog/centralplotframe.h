@@ -9,7 +9,7 @@ class CentralPlotFrame : public QwtPlot
 {
     Q_OBJECT
 public:
-    CentralPlotFrame(int numberOfKeys, int keynumberOfA);
+    CentralPlotFrame(int numberOfKeys, int keyOffset);
 
     double currentTickDistanceInPixel() const;
 protected:
@@ -36,7 +36,7 @@ public slots:
 
 private:
     const int mNumberOfKeys;
-    const int mKeynumberOfA;
+    const int mKeyOffset;
     QwtPlotZoomer *mPlotZoomer;
 
 

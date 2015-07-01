@@ -152,6 +152,7 @@ void KeyboardGraphicsView::scrollContentsBy(int dx, int dy) {
     QRectF visibleRect(getVisibleContentsRect());
 
     for (AutoScaledToKeyboardGraphicsView *view : mAutoScaledGraphicsViews) {
+        view->scene()->setSceneRect(visibleRect);
         view->fitInView(visibleRect, Qt::IgnoreAspectRatio);
     }
 }

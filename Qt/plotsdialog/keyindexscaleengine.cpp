@@ -1,7 +1,8 @@
 #include "keyindexscaleengine.h"
 
-KeyIndexScaleEngine::KeyIndexScaleEngine(int maxKeys) :
-    mMaxKeys(maxKeys) {
+KeyIndexScaleEngine::KeyIndexScaleEngine(int maxKeys, int keyOffset) :
+    mMaxKeys(maxKeys),
+    mKeyOffset(keyOffset) {
 
 }
 
@@ -19,7 +20,7 @@ QwtScaleDiv KeyIndexScaleEngine::divideScale(double x1, double x2, int maxMajorS
 
     QList<double> minorTicks, mediumTicks, majorTicks;
 
-    for (int i = std::max(static_cast<int>(x1), 0); i < std::min(static_cast<int>(x2 + 1.5), mMaxKeys + 1); ++i) {
+    for (int i = std::max(static_cast<int>(x1), mKeyOffset); i < std::min(static_cast<int>(x2 + 1.5), mMaxKeys + 1 + mKeyOffset); ++i) {
         if (i % 12 == 0 || (i - 1) % 12 == 0) {
             majorTicks << i;
         } else {
