@@ -64,6 +64,17 @@ public:
         R_ACCEPTED,
     };
 
+
+
+    struct FileDialogResult {
+        FileDialogResult(const std::string path = "");
+
+        const std::string path;
+        const piano::FileType fileType;
+
+        bool isValid() {return path.size() != 0 && fileType != piano::FT_NONE;}
+    };
+
 public:
     ProjectManagerAdapter();                    ///< Constructor
     virtual ~ProjectManagerAdapter() {}         ///< Empty destructor
@@ -84,9 +95,11 @@ public:
     bool    onQuit();
     Results onEditFile();
     Results onShare();
+    Results onExport();
+
 
     // open or save file
-    Results saveFile(const std::string &path);
+    Results saveFile(const std::string &path, piano::FileType type);
     Results openFile(const std::string &path, bool cached = false);
 
 protected:
@@ -102,11 +115,11 @@ protected:
 
     /// \brief get a path were to save the file
     /// \return the absolute file path
-    virtual std::string getSavePath() = 0;
+    virtual FileDialogResult getSavePath(int fileType) = 0;
 
     /// \brief get a path to a file to open
     /// \return the absolute file path
-    virtual std::string getOpenPath() = 0;
+    virtual FileDialogResult getOpenPath(int fileType) = 0;
 
     /// \brief shares the current file with the actual device
     /// \return R_ACCEPTED if successful

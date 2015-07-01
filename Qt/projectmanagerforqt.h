@@ -68,14 +68,14 @@ public:
     /// \return Absolute file path or an empty string if the user cancelled
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    virtual std::string getSavePath() override final;
+    virtual FileDialogResult getSavePath(int fileType) override final;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Opens a QFileDialog to get a path to open a file.
     /// \return Absolute file path or an empty string if the user cancelled
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    virtual std::string getOpenPath() override final;
+    virtual FileDialogResult getOpenPath(int fileType) override final;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Handle the share button.
@@ -116,6 +116,9 @@ protected:
     /// \param path The absolute file path
     ///////////////////////////////////////////////////////////////////////////////
     void setCurrentPath(QString path);
+
+
+    QString getFileFilters(int fileTypes, bool addAll) const;
 
 private:
     /// The main window.

@@ -76,36 +76,39 @@ ProjectManagerForQt::Results ProjectManagerForQt::askForSaving() {
     }
 }
 
-std::string ProjectManagerForQt::getSavePath() {
+ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileType) {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
-    QFileDialog d(mMainWindow, MainWindow::tr("Save"), path, MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
+
+
+    QFileDialog d(mMainWindow, MainWindow::tr("Save"), path, getFileFilters(fileType, true));
     d.setAcceptMode(QFileDialog::AcceptSave);
     d.setFileMode(QFileDialog::AnyFile);
-    d.setDefaultSuffix("ept");
+    if (fileType & piano::FT_EPT) {d.setDefaultSuffix("ept");}
+    else if (fileType & piano::FT_CSV) {d.setDefaultSuffix("csv");}
     SHOW_DIALOG(&d);
     if (d.exec() == QDialog::Accepted) {
         setCurrentPath(d.directory().absolutePath());
-        return d.selectedFiles().first().toStdString();
+        const QString file = d.selectedFiles().first();
+        return file.toStdString();
     } else {
         return std::string();
     }
 #endif
 }
 
-std::string ProjectManagerForQt::getOpenPath()  {
+ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileType)  {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
-    QFileDialog d(mMainWindow, MainWindow::tr("Open"), path, MainWindow::tr("Entopy piano tuner (*.ept);; All files (*.*)"));
+    QFileDialog d(mMainWindow, MainWindow::tr("Open"), path, getFileFilters(fileType, true));
     d.setAcceptMode(QFileDialog::AcceptOpen);
     d.setFileMode(QFileDialog::AnyFile);
-    d.setDefaultSuffix("ept");
     SHOW_DIALOG(&d);
     if (d.exec() == QDialog::Accepted) {
         setCurrentPath(d.directory().absolutePath());
@@ -168,4 +171,18 @@ void ProjectManagerForQt::setCurrentPath(QString path) {
     QSettings s;
     s.setValue(SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH, path);
     EptAssert(QDir(path).exists(), "Default path should exist.");
+}
+
+QString ProjectManagerForQt::getFileFilters(int fileTypes, bool addAll) const {
+    QString files;
+    if (fileTypes & piano::FT_EPT) {
+        files += MainWindow::tr("Entopy piano tuner") + " (*.ept);;";
+    }
+    if (fileTypes & piano::FT_CSV) {
+        files += MainWindow::tr("Comma-separated values") + " (*.csv);;";
+    }
+    if (addAll) {
+        files += MainWindow::tr("All files") + " (*.*)";
+    }
+    return files;
 }

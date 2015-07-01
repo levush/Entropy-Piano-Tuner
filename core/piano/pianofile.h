@@ -37,10 +37,12 @@ public:
     ~PianoFile();
 
     bool read(const std::string &absolutePath, Piano &piano);
-    bool write(const std::string &absolutePath, const Piano &piano) const;
+    bool write(const std::string &absolutePath, const Piano &piano, piano::FileType fileType) const;
 
     void readXmlFile(const std::string &absolutePath, Piano &piano);
     void writeXmlFile(const std::string &absolutePath, const Piano &piano) const;
+
+    void writeCsvFile(const std::string &absolutePath, const Piano &piano) const;
 
 protected:
     std::string getText(const tinyxml2::XMLElement *element);

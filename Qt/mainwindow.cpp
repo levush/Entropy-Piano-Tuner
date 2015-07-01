@@ -222,6 +222,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionAbout->setIcon(iconFromTheme("help-about"));
 #endif
 
+#ifdef Q_OS_DESKTOP
+    // enable export button
+    QAction *exportAction = new QAction(tr("Export"), ui->menuFile);
+    QObject::connect(exportAction, SIGNAL(triggered(bool)), this, SLOT(onExport()));
+    ui->menuFile->insertAction(ui->actionSave_As, exportAction);
+    ui->menuFile->insertSeparator(ui->actionSave_As);
+#endif
+
 #if __APPLE__
 #   if defined(TARGET_IPHONE_SIMULATOR) || defined(TARGET_OS_IPHONE)
     ui->menuBar->setVisible(false);
@@ -714,6 +722,10 @@ void MainWindow::onToggleFullscreen() {
     } else {
         showFullScreen();
     }
+}
+
+void MainWindow::onExport() {
+    mCore->getProjectManager()->onExport();
 }
 
 void MainWindow::onVersionUpdate(VersionInformation information) {

@@ -31,6 +31,16 @@
 #include "../messages/messagehandler.h"
 #include "../messages/messageprojectfile.h"
 
+using piano::FT_CSV;
+using piano::FT_EPT;
+using piano::FT_NONE;
+using piano::parseFileType;
+
+ProjectManagerAdapter::FileDialogResult::FileDialogResult(const std::string p) :
+    path(p),
+    fileType(parseFileType(p.substr(p.find_last_of(".") + 1))) {
+}
+
 //-----------------------------------------------------------------------------
 //                              Constructor
 //-----------------------------------------------------------------------------
@@ -133,7 +143,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile() {
     }
 
     // save at current location
-    saveFile(mCurrentFilePath);
+    saveFile(mCurrentFilePath, FT_EPT);
     return R_ACCEPTED;
 }
 
@@ -143,14 +153,14 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile() {
 //-----------------------------------------------------------------------------
 
 ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFileAs() {
-    std::string path = getSavePath();
-    if (path.size() == 0) {
+    FileDialogResult r = getSavePath(FT_EPT);
+    if (!r.isValid()) {
         // user cancelled
         return R_CANCELED;
     }
 
     // file was stored    
-    saveFile(path);
+    saveFile(r.path, r.fileType);
     return R_ACCEPTED;
 }
 
@@ -163,16 +173,15 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onOpenFile()
 {
     if (checkForNoChanges() == R_CANCELED) {return R_CANCELED;}
 
-    std::string path = getOpenPath();
-    if (path.size() == 0)
-    {
+    FileDialogResult r = getOpenPath(FT_EPT);
+    if (!r.isValid()) {
         // user cancelled
         return R_CANCELED;
     }
 
 
     // file was opened
-    openFile(path);
+    openFile(r.path);
 
     return R_ACCEPTED;
 }
@@ -240,6 +249,21 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onShare() {
 }
 
 
+ProjectManagerAdapter::Results ProjectManagerAdapter::onExport() {
+    if (checkForNoChanges() != R_ACCEPTED) {return R_CANCELED;}
+
+    FileDialogResult r = getSavePath(FT_CSV);
+    if (!r.isValid()) {
+        // user cancelled
+        return R_CANCELED;
+    }
+
+    // file was stored
+    saveFile(r.path, r.fileType);
+    return R_ACCEPTED;
+}
+
+
 ProjectManagerAdapter::Results ProjectManagerAdapter::checkForNoChanges() {
     if (mChangesInFile) {
         switch (askForSaving()) {
@@ -281,9 +305,12 @@ void ProjectManagerAdapter::setChangesInFile(bool b) {
 
 }
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path) {
+ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path, piano::FileType type) {
+    EptAssert(type != FT_NONE, "File type not valid.");
+    EptAssert(path.size() > 0, "Path not valid.");
+
     try {
-        if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano())) {
+        if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano(), type)) {
             LogW("File could not be saved");
             return R_CANCELED;
         }

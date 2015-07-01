@@ -1,6 +1,8 @@
 #ifndef PIANODEFINES_H
 #define PIANODEFINES_H
 
+#include <string>
+
 namespace piano {
 
     /// Enumeration of piano types
@@ -33,6 +35,17 @@ namespace piano {
 
         KC_COUNT
     };
+
+    /// \brief supported piano file types
+    enum FileType
+    {
+        FT_NONE   = 0,
+        FT_EPT    = 1,
+        FT_CSV    = 2,
+    };
+
+    std::string toFileEnding(FileType ft);
+    FileType parseFileType(const std::string &fileEnding);
 
 }  // namespace piano
 

@@ -309,6 +309,9 @@ public slots:
     ///////////////////////////////////////////////////////////////////////////////
     void onToggleFullscreen();
 
+    /// \brief Slot to open the export dialog
+    void onExport();
+
 
 private slots:
     void onVersionUpdate(VersionInformation information);

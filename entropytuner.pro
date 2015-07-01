@@ -39,7 +39,8 @@ QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \
     Qt/plotsdialog/keyindexscaleengine.cpp \
-    Qt/plotsdialog/keyindexscaledraw.cpp
+    Qt/plotsdialog/keyindexscaledraw.cpp \
+    core/piano/pianodefines.cpp
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt

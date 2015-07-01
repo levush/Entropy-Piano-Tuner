@@ -58,11 +58,17 @@ bool PianoFile::read(const std::string &absolutePath, Piano &piano) {
     return true;
 }
 
-bool PianoFile::write(const std::string &absolutePath, const Piano &piano) const {
+bool PianoFile::write(const std::string &absolutePath, const Piano &piano, piano::FileType fileType) const {
     // change locale to be sure to write doubles in classic format
     std::locale oldLocale(std::locale::global(std::locale::classic()));
     try {
-        writeXmlFile(absolutePath, piano);
+        if (fileType == piano::FT_EPT) {
+            writeXmlFile(absolutePath, piano);
+        } else if (fileType == piano::FT_CSV) {
+            writeCsvFile(absolutePath, piano);
+        } else {
+            EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Writing of file type not supported yet.");
+        }
     } catch (...) {
         std::locale::global(oldLocale);
         throw;
@@ -327,5 +333,25 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Keyboard &keyboard) const {
             peakElement->SetAttribute("frequency", peak.first);
             peakElement->SetAttribute("intensity", peak.second);
         }
+    }
+}
+
+
+// ==================================================================================================
+// CSV
+void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano) const {
+    std::ofstream stream;
+    stream.open(absolutePath);
+    if (!stream.is_open()) {
+        EPT_EXCEPT(EptException::ERR_CANNOT_WRITE_TO_FILE, "Cannot write to file '" + absolutePath + "'");
+    }
+
+    // only write
+    // key index + 1, inharmonicity, recorded frequency, computed frequenct, tuned frequency, quality
+    for (int i = 0; i < piano.getKeyboard().getNumberOfKeys(); ++i) {
+        const Key &key = piano.getKeyboard()[i];
+        stream << i + 1 << ", " << key.getMeasuredInharmonicity() << ", " << key.getRecordedFrequency()
+               << ", " << key.getComputedFrequency() << ", " << key.getTunedFrequency()
+               << ", " << key.getRecognitionQuality() << std::endl;
     }
 }
