@@ -184,7 +184,7 @@ QString ProjectManagerForQt::getFileFilters(int fileTypes, bool addAll) const {
         files += MainWindow::tr("Comma-separated values") + " (*.csv);;";
     }
     if (addAll) {
-        files += MainWindow::tr("All files") + " (*.*)";
+        files += MainWindow::tr("All files") + " (*)";
     }
     return files;
 }
