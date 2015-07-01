@@ -2,33 +2,18 @@
 <manifest package="org.entropytuner.app" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.5" android:versionCode="9" android:installLocation="auto">
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="@string/app_name" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.uniwue.tp3.TunerApplication" android:label="@string/app_name" android:screenOrientation="sensorLandscape" android:launchMode="singleTask" android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+            <!-- Link ept file ending -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="file"/>
-                <data android:host="*"/>
-                <data android:mimeType="application/*"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:host="*" />
                 <data android:pathPattern=".*\\.ept"/>
-            </intent-filter>
-            <!-- For email attachments -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/*"/>
-                <data android:mimeType="application/*"/>
-                <data android:host="*"/>
-                <data android:pathPattern=".*..*..*..*..*..*.ept"/>
-                <data android:pathPattern=".*..*..*..*..*.ept"/>
-                <data android:pathPattern=".*..*..*..*.ept"/>
-                <data android:pathPattern=".*..*..*.ept"/>
-                <data android:pathPattern=".*..*.ept"/>
-                <data android:pathPattern=".*.ept"/>
-                <data android:pathPattern=".*\\.ept"/>
+                <data android:pathPattern=".*\\..*\\.ept"/>
+                <data android:pathPattern=".*\\..*\\..*\\.ept"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.ept"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ept"/>
             </intent-filter>
 
             <meta-data android:name="android.app.lib_name" android:value="entropypianotuner"/>
