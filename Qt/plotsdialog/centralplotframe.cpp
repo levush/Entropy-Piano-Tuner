@@ -1,9 +1,9 @@
 #include "centralplotframe.h"
 #include <QGestureEvent>
-#include <QPinchGesture>
 #include <QApplication>
 #include <cmath>
 #include "qwt_plot_panner.h"
+#include "qwt_plot_canvas.h"
 #include "qwt_plot_magnifier.h"
 #include "qwt_plot_zoomer.h"
 #include "core/system/log.h"
@@ -16,6 +16,9 @@ CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keynumberOfA) :
 {
     Q_UNUSED(keynumberOfA);
 
+    // important: accept touch events, so they dont get propagated
+    setAttribute(Qt::WA_AcceptTouchEvents);
+
     setAxisScaleEngine(xBottom, new KeyIndexScaleEngine(numberOfKeys));
 
     KeyIndexScaleDraw *xScaleDraw = new KeyIndexScaleDraw;
@@ -24,7 +27,7 @@ CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keynumberOfA) :
 
     // panning with the left mouse button
     QwtPlotPanner *panner = new QwtPlotPanner(canvas());
-    panner->setMouseButton(Qt::LeftButton);
+    panner->setMouseButton(Qt::LeftButton, Qt::ControlModifier);
     QObject::connect(this, SIGNAL(moveCanvas(int,int)), panner, SLOT(moveCanvas(int,int)));
 
     // zoom in/out with the wheel
@@ -32,11 +35,7 @@ CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keynumberOfA) :
 
     // rect zoomer and used manually for touch
     mPlotZoomer = new QwtPlotZoomer(canvas());
-    mPlotZoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton, Qt::ShiftModifier);
-
-
-    grabGesture(Qt::PanGesture);
-    grabGesture(Qt::PinchGesture);
+    mPlotZoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton);
 }
 
 double CentralPlotFrame::currentTickDistanceInPixel() const {
@@ -140,6 +139,7 @@ void CentralPlotFrame::applyTouchTransform() {
 
 bool CentralPlotFrame::event(QEvent *e) {
     if (dynamic_cast<QTouchEvent*>(e)) {
+        e->accept();
         return touchEvent(static_cast<QTouchEvent *>(e));
     }
     return QwtPlot::event(e);
