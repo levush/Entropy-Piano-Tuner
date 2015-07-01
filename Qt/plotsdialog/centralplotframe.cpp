@@ -24,12 +24,13 @@ CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keynumberOfA) :
 
     // panning with the left mouse button
     QwtPlotPanner *panner = new QwtPlotPanner(canvas());
-    panner->setMouseButton(Qt::MidButton);
+    panner->setMouseButton(Qt::LeftButton);
     QObject::connect(this, SIGNAL(moveCanvas(int,int)), panner, SLOT(moveCanvas(int,int)));
 
     // zoom in/out with the wheel
-    //( void ) new QwtPlotMagnifier( canvas() );
+    ( void ) new QwtPlotMagnifier( canvas() );
 
+    // rect zoomer and used manually for touch
     mPlotZoomer = new QwtPlotZoomer(canvas());
     mPlotZoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton, Qt::ShiftModifier);
 
@@ -188,6 +189,16 @@ void CentralPlotFrame::resetView() {
     setAxisAutoScale(QwtPlot::yLeft);
     setAxisScale(QwtPlot::xBottom, 0, mNumberOfKeys, 12);
     replot();
+
+    // set initial zoom rect to current view
+    const QwtInterval xInterval(axisInterval(xBottom));
+    const QwtInterval yInterval(axisInterval(yLeft));
+    QPointF topLeft(xInterval.minValue(), yInterval.maxValue());
+    QPointF botRight(xInterval.maxValue(), yInterval.minValue());
+    QStack<QRectF> stack;
+    QRectF r(topLeft, botRight);
+    stack << r.normalized();
+    mPlotZoomer->setZoomStack(stack);
 }
 
 void CentralPlotFrame::zoomGoFirst() {
