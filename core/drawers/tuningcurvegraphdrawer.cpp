@@ -323,10 +323,18 @@ double TuningCurveGraphDrawer::getMarkerPosition(int keyindex, RoleType role)
     }
     else if (role & ROLE_RECORDED_FREQUENCY)
     {
-        if (mOperationMode != MODE_TUNING)
+        if (mOperationMode == MODE_RECORDING or mOperationMode == MODE_IDLE)
         {
             double ratio = key.getRecordedFrequency() /
                            mPiano->getEqualTempFrequency(keyindex);
+            if (ratio > 0) return convertCentsToY(ratioToCents(ratio));
+        }
+        else if (mOperationMode == MODE_CALCULATION)
+        {
+            int keyA4 = mPiano->getKeyboard().getKeyNumberOfA4();
+            double fA4 = mPiano->getKey(keyA4).getRecordedFrequency();
+            double ratio = key.getRecordedFrequency() /
+                           mPiano->getEqualTempFrequency(keyindex,0,fA4);
             if (ratio > 0) return convertCentsToY(ratioToCents(ratio));
         }
     }
