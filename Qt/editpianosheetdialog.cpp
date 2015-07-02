@@ -27,6 +27,7 @@
 #include "../core/config.h"
 #include "../core/piano/piano.h"
 #include "qtconfig.h"
+#include "displaysize.h"
 #include "QScroller"
 
 EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) :
@@ -35,6 +36,12 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
 {
     ui->setupUi(this);
     setModal(true);
+
+    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
+        // on small devices we need a bit more space for translated languages (e.g. German), reduce margins in general for xsmall devices
+        layout()->setMargin(3);
+        ui->scrollAreaWidgetContents->layout()->setMargin(1);
+    }
 
     ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());
