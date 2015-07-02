@@ -53,7 +53,7 @@ BINARY_FILE_NAME="entropypianotuner"
 # Qt bin and lib dir    
 export QT_BIN_DIR=${QTDIR}"/bin"
 export QT_LIB_DIR=${QTDIR}"/lib"
-export QT_PLUGINS_DIR=${QTDIR}"/plugins"
+export QT_LANG_DIR=${QTDIR}"/translations"
 
 if [ ! -d "$QTDIR" ]; then
     echo "$QTDIR is not a valid Qt installation"
@@ -65,10 +65,16 @@ if [ ! -d "$QT_BIN_DIR" ]; then
 	exit
 fi
 
+if [ ! -d "$QT_LANG_DIR" ]; then
+	echo "The lang path of qt does not exist: $QT_LANG_DIR"
+	exit
+fi
+
 if [ ! -d $QTIFWDIR ]; then
     echo "The Qt installer framework was not found at: $QTIFWDIR"
     exit
 fi
+
 
 # set other usefull paths
 ###########################################################
