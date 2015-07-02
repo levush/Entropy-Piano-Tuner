@@ -29,7 +29,7 @@ Debug:UI_DIR = debug/.ui
 
 # add qwt
 QWT_CONFIG += QwtPlot
-include($$PWD/thirdparty/qwt/src.pri)
+include($$PWD/thirdparty/qwt/qwt.pri)
 QWT_H = $$HEADERS
 HEADERS = \
     Qt/plotsdialog/centralplotframe.h \
