@@ -22,13 +22,13 @@
 
 // Define the version of the entropy tuner program
 #define EPT_VERSION_MAJOR      1
-#define EPT_VERSION_MINOR      0
-#define EPT_VERSION_PATCH      5
+#define EPT_VERSION_MINOR      1
+#define EPT_VERSION_PATCH      0
 
-#define EPT_VERSION_STRING     "1.0.5"
+#define EPT_VERSION_STRING     "1.1.0"
 
 // The rolling version is an integer that increments with each published verion
-#define EPT_VERSION_ROLLING    9
+#define EPT_VERSION_ROLLING    11
 
 
 // define the version of the dependencies
