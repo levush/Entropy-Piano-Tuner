@@ -36,11 +36,13 @@ ResetToRecording::ResetToRecording(const Piano &piano, const AlgorithmFactoryDes
 
 void ResetToRecording::algorithmWorkerFunction()
 {
-
+    const int A4key = mPiano.getKeyboard().getKeyNumberOfA4();
+    const double fA4 = mPiano.getKey(A4key).getRecordedFrequency();
+    if (fA4 < 400 or fA4 > 480) return;
     for (int i = 0; i < mNumberOfKeys; ++i)
     {
         // set the tuning curve
-        updateTuningCurve(i, mPiano.getKey(i).getRecordedFrequency());
+        updateTuningCurve(i, mPiano.getKey(i).getRecordedFrequency()/fA4*440);
     }
 }
 

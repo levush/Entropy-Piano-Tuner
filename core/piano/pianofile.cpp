@@ -24,6 +24,7 @@
 #include <sstream>
 #include <chrono>
 #include <fstream>
+#include <cmath>
 
 #include "../system/eptexception.h"
 #include "../adapters/filemanager.h"
@@ -339,6 +340,8 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Keyboard &keyboard) const {
 
 // ==================================================================================================
 // CSV
+
+
 void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano) const {
     std::ofstream stream;
     stream.open(absolutePath);
@@ -350,13 +353,28 @@ void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano
     // key index + 1, inharmonicity, recorded frequency, computed frequency, tuned frequency, quality
 
     // header
-    stream << "Key index, Inharmonicity, Redorded frequency, Computed frequency, Tuned frequency, Quality" << std::endl;
+    stream << "\"Key index\",\"Inharmonicity\",\"Recorded frequency\",\"Recorded deviation\",\"Computed frequency\",\"Computed deviation\",\"Tuned frequency\",\"Tuned deviation\",\"Quality\"" << std::endl;
 
     // data
+    const int A4 = piano.getKeyboard().getKeyNumberOfA4();
+    const Key &Akey = piano.getKey(A4);
+    auto cents = [A4] (int i, double f, double fA4)
+    {
+        double ET = pow(2.0,(i-A4)/12.0);
+        if (fA4 == 0) return 0.0;
+        else return 1200.0 * std::log(f/fA4/ET)/std::log(2.0);
+    };
     for (int i = 0; i < piano.getKeyboard().getNumberOfKeys(); ++i) {
         const Key &key = piano.getKeyboard()[i];
-        stream << i + 1 << ", " << key.getMeasuredInharmonicity() << ", " << key.getRecordedFrequency()
-               << ", " << key.getComputedFrequency() << ", " << key.getTunedFrequency()
-               << ", " << key.getRecognitionQuality() << std::endl;
+        stream << std::setw(3) << std::left << i + 1 << std::fixed << std::right
+               << ", " << std::setw(8) << std::setprecision(5) << key.getMeasuredInharmonicity()
+               << ", " << std::setw(8) << std::setprecision(2) << key.getRecordedFrequency()
+               << ", " << std::setw(6) << std::setprecision(1) << cents(i,key.getRecordedFrequency(),Akey.getRecordedFrequency())
+               << ", " << std::setw(8) << std::setprecision(2) << key.getComputedFrequency()
+               << ", " << std::setw(6) << std::setprecision(1) << cents(i,key.getComputedFrequency(),Akey.getComputedFrequency())
+               << ", " << std::setw(8) << std::setprecision(2) << key.getTunedFrequency()
+               << ", " << std::setw(6) << std::setprecision(1) << cents(i,key.getTunedFrequency(),piano.getConcertPitch())
+               << ", " << std::setw(6) << std::setprecision(2) << key.getRecognitionQuality()
+               << std::endl;
     }
 }
