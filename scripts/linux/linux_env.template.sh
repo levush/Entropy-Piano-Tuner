@@ -54,6 +54,7 @@ BINARY_FILE_NAME="entropypianotuner"
 export QT_BIN_DIR=${QTDIR}"/bin"
 export QT_LIB_DIR=${QTDIR}"/lib"
 export QT_LANG_DIR=${QTDIR}"/translations"
+export QT_PLUGINS_DIR=${QTDIR}"/plugins"
 
 if [ ! -d "$QTDIR" ]; then
     echo "$QTDIR is not a valid Qt installation"
@@ -67,6 +68,11 @@ fi
 
 if [ ! -d "$QT_LANG_DIR" ]; then
 	echo "The lang path of qt does not exist: $QT_LANG_DIR"
+	exit
+fi
+
+if [ ! -d "$QT_PLUGINS_DIR" ]; then
+	echo "The plugins path of qt does not exist: $QT_PLUGINS_DIR"
 	exit
 fi
 
