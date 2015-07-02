@@ -35,7 +35,7 @@ PUBLISH_SUB_DIR="publish"
 # Elsewise the program wont start after intallation
 BINARY_FILE_NAME="entropypianotuner"
 
-# The file name of the resulting dmg file
+# The file name of the resulting app file
 APP_FILE_NAME="EntropyPianoTuner_iOS"
 
 # The name of the developer
@@ -48,7 +48,7 @@ RESOURCE_RULES_PLIST="/Applications/Xcode.app/Contents/Developer/Platforms/iPhon
 XCRUN=/usr/bin/xcrun
 
 # You MAY specify a target device family (1: iphone, 2: ipad, 1,2: both)
-QMAKE_IOS_TARGETED_DEVICE_FAMILY=2
+QMAKE_IOS_TARGETED_DEVICE_FAMILY=1,2
 
 
 # validate paths
