@@ -26,12 +26,14 @@
 #include <QDoubleSpinBox>
 #include <QScrollArea>
 #include <QSlider>
+#include <QFontMetrics>
 #include "../core/messages/messagecaluclationprogress.h"
 #include "../core/system/log.h"
 #include "../core/calculation/calculationmanager.h"
 #include "../core/calculation/algorithmfactorydescription.h"
 #include "settingsforqt.h"
 #include "algorithmdialog.h"
+#include "displaysize.h"
 
 CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     : DisplaySizeDependingGroupBox(parent, new QVBoxLayout, toFlag(MODE_CALCULATION)),
@@ -53,12 +55,37 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     QHBoxLayout *progressLayout = new QHBoxLayout;
     mainLayout->addLayout(progressLayout);
 
-    progressLayout->addWidget(mCalculationProgressBar = new QProgressBar);
-    progressLayout->addWidget(mStartCancelButton = new QPushButton);
+    class MinSizePushButton : public QPushButton {
+    public:
+        MinSizePushButton(QString text = QString()) :
+            QPushButton(text) {
+            setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        }
 
-    QPushButton *showAlgorithmInfo = new QPushButton(tr("Info"));
+    private:
+        virtual QSize minimumSizeHint() const override {
+            QFontMetrics f(fontMetrics());
+            // add also some extra spacing of 2 chars (x)
+            return f.size(Qt::TextSingleLine, text() + "xx");
+        }
+        virtual QSize sizeHint() const override {
+            QSize sh(QPushButton::sizeHint());
+            sh.setWidth(std::max(minimumSizeHint().width(), sh.width()));
+            return sh;
+        }
+    };
+
+    class MinSizeProgressBar : public QProgressBar{
+    private:
+        virtual QSize sizeHint() const override {return QSize(0, 0);}
+    };
+
+    progressLayout->addWidget(mCalculationProgressBar = new MinSizeProgressBar);
+    mCalculationProgressBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    progressLayout->addWidget(mStartCancelButton = new MinSizePushButton);
+
+    QPushButton *showAlgorithmInfo = new MinSizePushButton(tr("Info"));
     progressLayout->addWidget(showAlgorithmInfo);
-    showAlgorithmInfo->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     QObject::connect(showAlgorithmInfo, SIGNAL(clicked()), this, SLOT(showAlgorithmInfo()));
 
 
@@ -164,7 +191,12 @@ void CalculationProgressGroup::onCancelCalculation() {
 }
 
 void CalculationProgressGroup::onResetCalculation() {
-    mStatusLabel->setText(tr("Press the button to start the calculation"));
+    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
+        mStatusLabel->setText(QString());  // not enough space for the text
+    } else {
+        mStatusLabel->setText(tr("Press the button to start the calculation"));
+    }
+
     mCalculationProgressBar->setValue(0);
     mStartCancelButton->setText(tr("Start calculation"));
 

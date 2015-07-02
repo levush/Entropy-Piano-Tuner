@@ -39,6 +39,9 @@ public:
     static DisplaySize inchToDisplaySize(double inch);
     static const std::unique_ptr<DisplaySizeDefines> &getSingleton();
 
+    bool isLEq(DisplaySize ds) const {return ds <= mDisplaySize;}
+    bool isGEq(DisplaySize ds) const {return ds >= mDisplaySize;}
+
     double getSmallIconSize();
     double getMediumIconSize();
     double getLargeIconSize();
