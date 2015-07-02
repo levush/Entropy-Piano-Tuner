@@ -97,7 +97,7 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
         makeToolButton(Qt::darkGreen, tr("Inh."), CURVE_INHARMONICITY);
         makeToolButton(Qt::red, tr("Rec."), CURVE_RECORDED);
         makeToolButton(Qt::blue, tr("Comp."), CURVE_COMPUTED);
-        makeToolButton(Qt::green, tr("Tuned"), CURVE_TUNED);
+        makeToolButton(Qt::green, tr("Tun."), CURVE_TUNED);
     } else {
         makeToolButton(Qt::darkGreen, tr("Inharmonicity"), CURVE_INHARMONICITY);
         makeToolButton(Qt::red, tr("Recorded"), CURVE_RECORDED);
@@ -199,7 +199,6 @@ void PlotsDialog::prepareCurve(Curves curve) {
     auto cents = [] (double ratio) { return 1200.0 * log(ratio)/log(2); };
 
     if (curve == CURVE_INHARMONICITY) {
-        c->setTitle(tr("Inharmonicity"));
         c->setStyle(QwtPlotCurve::NoCurve);
         c->setSymbol(new QwtSymbol(QwtSymbol::HLine, QBrush(), QPen(Qt::darkGreen, 2), QSize(mPlot->currentTickDistanceInPixel(), 1)));
 
@@ -212,7 +211,6 @@ void PlotsDialog::prepareCurve(Curves curve) {
         }
         c->setSamples( points );
     } else if (curve == CURVE_RECORDED) {
-        c->setTitle(tr("Recorded frequencies"));
         c->setStyle(QwtPlotCurve::NoCurve);
         c->setSymbol(new QwtSymbol(QwtSymbol::HLine, QBrush(), QPen(Qt::red, 2), QSize(mPlot->currentTickDistanceInPixel(), 1)));
 
@@ -222,7 +220,6 @@ void PlotsDialog::prepareCurve(Curves curve) {
         }
         c->setSamples(points);
     } else if (curve == CURVE_COMPUTED) {
-        c->setTitle(tr("Computed frequencies"));
         c->setStyle(QwtPlotCurve::NoCurve);
         c->setSymbol(new QwtSymbol(QwtSymbol::HLine, QBrush(), QPen(Qt::blue, 2), QSize(mPlot->currentTickDistanceInPixel(), 1)));
 
@@ -232,7 +229,6 @@ void PlotsDialog::prepareCurve(Curves curve) {
         }
         c->setSamples(points);
     } else if (curve == CURVE_TUNED) {
-        c->setTitle(tr("Tuned frequencies"));
         c->setStyle(QwtPlotCurve::NoCurve);
         c->setSymbol(new QwtSymbol(QwtSymbol::HLine, QBrush(), QPen(Qt::green, 2), QSize(mPlot->currentTickDistanceInPixel(), 1)));
 

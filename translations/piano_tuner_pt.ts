@@ -495,10 +495,6 @@
         <translation>Salvar</translation>
     </message>
     <message>
-        <source>Entopy piano tuner (*.ept);; All files (*.*)</source>
-        <translation>Afinador de piano por entropia (*.ept);; Todos os arquivos(*.*)</translation>
-    </message>
-    <message>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
@@ -564,6 +560,104 @@
     </message>
     <message>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entopy piano tuner</source>
+        <translation>Afinador de piano por entropia</translation>
+    </message>
+    <message>
+        <source>Comma-separated values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation>Todos os arquivos</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlotsDialog</name>
+    <message>
+        <source>Reset view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inh.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comp.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tuned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inharmonicity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recorded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frequency deviation [cent]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tun.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QwtPlotRenderer</name>
+    <message>
+        <source>Documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export File Name</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

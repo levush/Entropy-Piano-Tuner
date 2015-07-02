@@ -187,7 +187,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addAction(iconFromTheme("document-save-as"), tr("Save as"), this, SLOT(onFileSaveAs()));
     mFileToolBar->addAction(iconFromTheme("document-properties"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
-    mFileToolBar->addAction(QIcon(":/media/icons/mathematical_plot.png"), tr("Plots"), this, SLOT(onOpenPlots()));
+    mFileToolBar->addAction(QIcon(":/media/icons/mathematical_plot.png"), tr("Graphs"), this, SLOT(onOpenPlots()));
 
     QToolBar *helpToolBar = new QToolBar(tr("Help"));
     helpToolBar->setObjectName("helpToolBar");

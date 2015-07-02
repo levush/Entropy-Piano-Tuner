@@ -347,7 +347,12 @@ void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano
     }
 
     // only write
-    // key index + 1, inharmonicity, recorded frequency, computed frequenct, tuned frequency, quality
+    // key index + 1, inharmonicity, recorded frequency, computed frequency, tuned frequency, quality
+
+    // header
+    stream << "Key index, Inharmonicity, Redorded frequency, Computed frequency, Tuned frequency, Quality" << std::endl;
+
+    // data
     for (int i = 0; i < piano.getKeyboard().getNumberOfKeys(); ++i) {
         const Key &key = piano.getKeyboard()[i];
         stream << i + 1 << ", " << key.getMeasuredInharmonicity() << ", " << key.getRecordedFrequency()
