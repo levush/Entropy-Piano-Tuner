@@ -226,7 +226,7 @@ void WaveformGenerator::workerFunction()
                     const double frequency = partial.first;
                     const double intensity = sqrt(partial.second / norm);
                     int k = MathTools::roundToInteger(frequency*mWaveformTime);
-                    if (k>0 and k<mWaveformSize)
+                    if (k>0 and k<mWaveformSize/2+1)
                     {
                         std::complex<double> phase(0,distribution(generator));
                         mIn[k] = exp(phase) * intensity;
