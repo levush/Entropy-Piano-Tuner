@@ -361,7 +361,7 @@ void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano
     auto cents = [A4] (int i, double f, double fA4)
     {
         double ET = pow(2.0,(i-A4)/12.0);
-        if (fA4 == 0) return 0.0;
+        if (f == 0 or fA4 == 0) return 0.0;
         else return 1200.0 * std::log(f/fA4/ET)/std::log(2.0);
     };
     for (int i = 0; i < piano.getKeyboard().getNumberOfKeys(); ++i) {
