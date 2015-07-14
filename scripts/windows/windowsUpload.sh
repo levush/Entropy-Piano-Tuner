@@ -9,14 +9,6 @@ do
 	ssh-add $sshkey
 done
 
-# normal upload script
-USERNAME=hinrichsen
-SERVER=webpages.physik.uni-wuerzburg.de
-ROOT_DIR=public_html/ept
-DOWNLOADS_DIR=Resources/Public/Downloads
-
-SERVER_DOWNLOADS=$SERVER:$ROOT_DIR/$DOWNLOADS_DIR
-
 # set working directory to the tuner root
 cd $(dirname $0)
 cd ../..
@@ -27,14 +19,17 @@ TUNER_BASE_DIR=${PWD}
 PUBLISH_DIR=$TUNER_BASE_DIR/publish
 INSTALLER_DIR=$TUNER_BASE_DIR/appstore/installer
 
+# load server environment
+cd $TUNER_BASE_DIR/scripts/unix_shared
+. ./webpages_env.sh
+cd $TUNER_BASE_DIR
 
 # upload fles
-
 echo "Uploading files"
-rsync -vh "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x64.exe" $USERNAME@$SERVER_DOWNLOADS
-rsync -vh "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x86.exe" $USERNAME@$SERVER_DOWNLOADS
-rsync -vh -r "$INSTALLER_DIR/windows_repository_x64" $USERNAME@$SERVER_DOWNLOADS/Repository
-rsync -vh -r "$INSTALLER_DIR/windows_repository_x86" $USERNAME@$SERVER_DOWNLOADS/Repository
+server_push "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x64.exe" $_SERVER_DOWNLOADS_DIR
+server_push "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x86.exe" $_SERVER_DOWNLOADS_DIR
+server_push_dir "$INSTALLER_DIR/windows_repository_x64" $_SERVER_REPOSITORY_DIR
+server_push_dir "$INSTALLER_DIR/windows_repository_x86" $_SERVER_REPOSITORY_DIR
 
 # version file is created under linux/mac, and is uploaded from there
-# rsync -vh "$INSTALLER_DIR/version.xml" $USERNAME@$SERVER_DOWNLOADS
+# server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR
