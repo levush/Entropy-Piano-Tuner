@@ -10,6 +10,9 @@
 #include "keyindexscaledraw.h"
 #include "keyindexscaleengine.h"
 
+
+const int CentralPlotFrame::FLYING_UPDATE_INTERVALL_IN_MS = 100;
+
 CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keyOffset) :
     mNumberOfKeys(numberOfKeys),
     mKeyOffset(keyOffset)
@@ -34,13 +37,17 @@ CentralPlotFrame::CentralPlotFrame(int numberOfKeys, int keyOffset) :
     // rect zoomer and used manually for touch
     mPlotZoomer = new QwtPlotZoomer(canvas());
     mPlotZoomer->setMousePattern(QwtEventPattern::MouseSelect1, Qt::LeftButton);
+
+    // this zoomer is just for on the fly updates
+    mNonStackInvisibleZoomer = new QwtPlotZoomer(canvas());
+    mNonStackInvisibleZoomer->setEnabled(false);
 }
 
 double CentralPlotFrame::currentTickDistanceInPixel() const {
     return transform(QwtPlot::xBottom, 3) - transform(QwtPlot::xBottom, 2);
 }
 
-void CentralPlotFrame::applyTouchTransform() {
+void CentralPlotFrame::applyTouchTransform(int final) {
     bool isLogX = dynamic_cast<QwtLogScaleEngine*>(axisScaleEngine(xBottom)) != nullptr;
     bool isLogY = dynamic_cast<QwtLogScaleEngine*>(axisScaleEngine(yLeft)) != nullptr;
 
@@ -127,12 +134,24 @@ void CentralPlotFrame::applyTouchTransform() {
         newRect.setBottomRight(botRight);
     }
 
-    if (newRect.isNull() == false) {
-        zoomStack << newRect.normalized();
-        mPlotZoomer->setZoomStack(zoomStack);
+    if (final) {
+        if (newRect.isNull() == false) {
+            zoomStack << newRect.normalized();
+            mPlotZoomer->setZoomStack(zoomStack);
+        }
+        mTouchPoints.clear();
+    } else {
+        // check timer
+        if (mPlotTimer.elapsed() > FLYING_UPDATE_INTERVALL_IN_MS) {
+            mPlotTimer = QTime();  // reset, but dont start
+            if (newRect.isNull() == false) {
+                mNonStackInvisibleZoomer->zoom(newRect);
+                replot();
+            }
+            mTouchPoints.clear();
+        }
     }
 
-    mTouchPoints.clear();
 }
 
 bool CentralPlotFrame::event(QEvent *e) {
@@ -153,12 +172,16 @@ bool CentralPlotFrame::touchEvent(QTouchEvent *e) {
         }
     }
     if (points.size() != mTouchPoints.size()) {
-        applyTouchTransform();
+        applyTouchTransform(true);
         mTouchPoints = points;
+        if (mTouchPoints.size() > 0) {
+            mPlotTimer.start();
+        }
     } else {
         for (int i = 0; i < points.size(); ++i) {
             mTouchPoints[i].setPos(points[i].pos());
         }
+        applyTouchTransform(false);
     }
 
    return true;
@@ -181,6 +204,7 @@ void CentralPlotFrame::resizeEvent(QResizeEvent *e) {
 
 void CentralPlotFrame::paintEvent(QPaintEvent *e) {
     QwtPlot::paintEvent(e);
+    mPlotTimer.start();
 }
 
 void CentralPlotFrame::resetView() {

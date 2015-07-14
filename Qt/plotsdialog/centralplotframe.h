@@ -4,16 +4,19 @@
 #include "qwt_plot.h"
 #include "qwt_plot_zoomer.h"
 #include <QTouchEvent>
+#include <QTime>
 
 class CentralPlotFrame : public QwtPlot
 {
     Q_OBJECT
 public:
+    static const int FLYING_UPDATE_INTERVALL_IN_MS;
+
     CentralPlotFrame(int numberOfKeys, int keyOffset);
 
     double currentTickDistanceInPixel() const;
 protected:
-    void applyTouchTransform();
+    void applyTouchTransform(int final);
 
     virtual bool event(QEvent *) override;
     virtual bool touchEvent(QTouchEvent *e);
@@ -38,6 +41,9 @@ private:
     const int mNumberOfKeys;
     const int mKeyOffset;
     QwtPlotZoomer *mPlotZoomer;
+    QwtPlotZoomer *mNonStackInvisibleZoomer;
+
+    QTime mPlotTimer;
 
 
     QList<QTouchEvent::TouchPoint> mTouchPoints;
