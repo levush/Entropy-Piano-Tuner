@@ -25,8 +25,8 @@
 
 #include <algorithm>
 
-#include "../system/eptexception.h"
 #include "../system/log.h"
+#include "../system/eptexception.h"
 #include "../system/simplethreadhandler.h"
 #include "../messages/messagechangetuningcurve.h"
 #include "../messages/messagekeyselectionchanged.h"
@@ -202,10 +202,11 @@ void SoundGenerator::handleMessage(MessagePtr m)
             {
                 auto message(std::static_pointer_cast<MessageFinalKey>(m));
                 int keynumber = message->getKeyNumber();
+                auto spectrum = message->getFinalKey()->getPeaks();
                 // replay only if the selected key was recognized:
-                if (keynumber == mSelectedKey)
+                if (keynumber == mSelectedKey and spectrum.size() > 0)
                 {
-                    preCalculateSoundOfKey (keynumber);
+                    preCalculateSoundOfKey (keynumber,spectrum);
                     mSynthesizer.playSound(keynumber,1,0.2,Envelope(5,5,0,30,false),true);
                 }
             }
@@ -434,6 +435,22 @@ void SoundGenerator::playResonatingSineWave (int keynumber, double frequency, do
 void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 {
     mSynthesizer.preCalculateWaveform(keynumber, mPiano->getKey(keynumber).getPeaks());
+}
+
+
+//-----------------------------------------------------------------------------
+//			     Calculate the sound of a given key in advance
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Calculate the sound of a given key in advance
+/// \param keynumber : Number of the key
+/// \param spectrum : The explicit spectrum
+///////////////////////////////////////////////////////////////////////////////
+
+void SoundGenerator::preCalculateSoundOfKey (const int keynumber, Synthesizer::Spectrum &spectrum)
+{
+    mSynthesizer.preCalculateWaveform(keynumber,spectrum);
 }
 
 
