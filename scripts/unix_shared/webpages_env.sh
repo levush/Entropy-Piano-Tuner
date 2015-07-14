@@ -1,7 +1,12 @@
 # setup server configuration
-export SERVER_USERNAME=hinrichsen
-export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
-export _SERVER_ROOT_DIR=public_html/ept
+
+export SERVER_USERNAME=u81468700-download
+export SERVER_ADDRESS=s582786137.online.de
+export _SERVER_ROOT_DIR=
+
+#export SERVER_USERNAME=hinrichsen
+#export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
+#export _SERVER_ROOT_DIR=public_html/ept
 
 # load version
 . ./loadVersion.sh
