@@ -58,6 +58,7 @@ private:
     void stopResonatingReferenceSound ();
     void changeVolumeOfResonatingReferenceSound (double level);
     void preCalculateSoundOfKey (const int keynumber);
+    void preCalculateSoundOfKey (const int keynumber, Synthesizer::Spectrum &spectrum);
     void preCalculateSoundOfAllKeys ();
 
 private:

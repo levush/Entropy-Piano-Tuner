@@ -104,6 +104,7 @@ void WaveformGenerator::init (int numberOfKeys, int samplerate)
 
 void WaveformGenerator::preCalculate(int keynumber, const Spectrum &spectrum)
 {
+    if (spectrum.size()==0) LogE("called with zero spectrum");
     mQueueMutex.lock();
     mQueue[keynumber] = spectrum;
     mComputing[keynumber] = true;
@@ -193,7 +194,7 @@ bool WaveformGenerator::isComputing (const int keynumber)
 
 void WaveformGenerator::workerFunction()
 {
-    setThreadName("WaveformGenerator");
+    setThreadName("Waveformer");
     LogI("Waveform generator thread started");
     Spectrum spectrum;
     std::default_random_engine generator;
@@ -202,6 +203,8 @@ void WaveformGenerator::workerFunction()
     while (not cancelThread())
     {
         int keynumber = -1;
+
+        // Check the queue for new keys to be computed
         mQueueMutex.lock();
         if(not mQueue.empty())
         {
@@ -212,7 +215,8 @@ void WaveformGenerator::workerFunction()
         }
         mQueueMutex.unlock();
 
-        if (keynumber >= 0 and keynumber<=mNumberOfKeys)
+        // If so, compute the waveform
+        if (keynumber >= 0 and keynumber<=mNumberOfKeys and spectrum.size()>0)
         {
             if (counter == 0) LogI("Waveform generator starting in background")
             counter ++;
@@ -236,9 +240,6 @@ void WaveformGenerator::workerFunction()
                 mLibraryMutex[keynumber].lock();
                 for (int i=0; i<mWaveformSize; i++) mLibrary[keynumber][i]=mOut[i];
                 mLibraryMutex[keynumber].unlock();
-                mQueueMutex.lock();
-                mComputing[keynumber] = false;
-                mQueueMutex.unlock();
             }
         }
         else
@@ -246,6 +247,14 @@ void WaveformGenerator::workerFunction()
             if (counter > 0) LogI("Waveform generator stops after %d waveforms.",counter);
             counter = 0;
             msleep(20);
+        }
+
+        // Finally register the job as being done
+        if (keynumber >= 0  and keynumber<=mNumberOfKeys)
+        {
+            mQueueMutex.lock();
+            mComputing[keynumber] = false;
+            mQueueMutex.unlock();
         }
     }
 }

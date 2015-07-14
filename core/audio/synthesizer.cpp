@@ -180,7 +180,7 @@ void Synthesizer::setNumberOfKeys (int numberOfKeys)
 void Synthesizer::preCalculateWaveform  (const int id,
                                          const Spectrum &spectrum)
 {
-    if (id>=0 and id<88) mWaveformGenerator.preCalculate(id, spectrum);
+    if (id>=0 and id<100) mWaveformGenerator.preCalculate(id, spectrum);
 }
 
 
@@ -226,9 +226,11 @@ void Synthesizer::playSound (const int keynumber,
     tone.stage=1;
     tone.amplitude=0;
 
+    int timeout = 0;
     if (frequency>0 and frequency<10)
     {
-        if (waitforcomputation and mWaveformGenerator.isComputing(keynumber)) msleep(1);
+        while (waitforcomputation and mWaveformGenerator.isComputing(keynumber)
+               and timeout++ < 1000) msleep(1);
         tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
     }
     else
