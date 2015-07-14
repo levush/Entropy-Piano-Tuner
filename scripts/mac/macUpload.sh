@@ -15,12 +15,11 @@ cd $UNIX_SHARED
 
 echo "Uploading files to $versionString"
 #upload dmg
-rsync -vh $DMG_FILE $US_BINARY
+server_push $DMG_FILE $_SERVER_VERSION_DIR
 # create system link
-ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$DMG_FILE_NAME.dmg"
-ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString/$DMG_FILE_NAME.dmg $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/"
+server_ln $_SERVER_VERSION_DIR $_SERVER_DOWNLOADS_DIR $DMG_FILE_NAME.dmg
 # upload version
-rsync -vh "$INSTALLER_DIR/version.xml" $US_DOWNLOADS
+server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR
 
 
 echo "Uploading finished successfully"

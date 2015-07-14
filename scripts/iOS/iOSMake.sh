@@ -100,8 +100,7 @@ if $DO_UPLOAD ; then
 	. ./webpages_env.sh
 
 	# upload the ipa file into the webpages
-	rsync -vh $IPA_FILE $US_BINARY
+	server_push $IPA_FILE $_SERVER_VERSION_DIR
 	# create system link
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$APP_FILE_NAME.ipa"
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString/$APP_FILE_NAME.ipa $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/"
+	server_ln $_SERVER_VERSION_DIR $_SERVER_DOWNLOADS_DIR $APP_FILE_NAME.ipa
 fi

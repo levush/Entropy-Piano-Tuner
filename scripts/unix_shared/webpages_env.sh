@@ -85,15 +85,24 @@ put -r $local_dir
 EOF
 }
 
-# ln REMOTE_FILE REMOTE_PATH
+# ln REMOTE_PATH_ORIGIN REMOTE_PATH_TARGET FILENAME
 ########################################
 function ssh_ln {
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $1 $2"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $2/$3"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $1/$3 $2"
 }
 
 function sftp_ln {
+	# remove old link is important
 	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
-ln $1 $2
+cd $_SERVER_ROOT_DIR/$2
+rm $3
+EOF
+
+	# create ln
+	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
+cd $_SERVER_ROOT_DIR
+ln $1/$3 $2/$3
 EOF
 }
 
@@ -112,7 +121,7 @@ function server_push_dir {
 }
 
 function server_ln {
-	sftp_ln $1 $2
+	sftp_ln $1 $2 $3
 }
 
 # create directory structure
