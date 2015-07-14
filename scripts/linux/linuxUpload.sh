@@ -12,6 +12,6 @@ cd $UNIX_SHARED
 # upload fles
 
 echo "Uploading files"
-rsync -vh "$PUBLISH_DIR/EntropyPianoTuner_Linux_online_x64.run" $US_DOWNLOADS
-rsync -vh -r "$INSTALLER_DIR/linux_repository_x64" $US_REPOSITORY
-rsync -vh "$INSTALLER_DIR/version.xml" $US_DOWNLOADS
+server_push "$PUBLISH_DIR/EntropyPianoTuner_Linux_online_x64.run" $_SERVER_DOWNLOADS_DIR
+server_push_dir "$INSTALLER_DIR/linux_repository_x64" $_SERVER_REPOSITORY_DIR
+server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR
