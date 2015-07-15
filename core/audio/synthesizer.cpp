@@ -18,13 +18,13 @@
  *****************************************************************************/
 
 #include "synthesizer.h"
+#include "hammerknock.h"
 
 #include "../system/log.h"
 #include "../math/mathtools.h"
 
 #include <random>
 #include <iostream>
-
 
 //=============================================================================
 //                  Structure describing an envelope
@@ -75,7 +75,13 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mPlayingTones(),
     mPlayingMutex(),
     mSineWave(),
-    mHammerWave(),
+    mHammerWaveLeft(),
+    mHammerWaveRight(),
+    mReverbSize(0),
+    mReverbCounter(0),
+    mReverbL(),
+    mReverbR(),
+    mIntensity(0),
     mAudioPlayer(audioadapter)
 {}
 
@@ -100,29 +106,45 @@ void Synthesizer::init ()
     { LogW("Could not start synthesizer: AudioPlayer not connected."); return; }
 
     // Pre-calculate a sine wave for speedup
+    mSampleRate = mAudioPlayer->getSamplingRate();
     mSineWave.resize(SineLength);
     for (int i=0; i<SineLength; ++i)
         mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
 
     // Pre-calculate a piano-hammer-like noise (one second), could be improved
-    mSampleRate = mAudioPlayer->getSamplingRate();
-    mHammerWave.resize(mSampleRate);
-    mHammerWave.assign(mSampleRate,0);
-    double hammerVolume = 0.03;
-    for (int i=0; i<mSampleRate; i++)
-        mHammerWave[i]=hammerVolume*sin(2*3.141592655*i*18.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
-    for (int i=0; i<mSampleRate; i++)
-        mHammerWave[i]+=hammerVolume*sin(2*3.141592655*i*27.0/mSampleRate)/pow(2,i*5.0/mSampleRate);
-    std::default_random_engine generator;
-    std::normal_distribution<double> distribution(0,0.1);
-    double y=0,z=0;
+    FFTComplexType amplitude (0.15/mSampleRate);
+    int datasize = std::min(mSampleRate/2+1,static_cast<int>(mHammerKnockFFT[0].size()));
+    FFTComplexVector fftl(mSampleRate/2+1,0),fftr(mSampleRate/2+1,0);
+    for (int i=0; i<datasize; i++)
+    {
+        fftl[i] = FFTComplexType(mHammerKnockFFT[0][i],-mHammerKnockFFT[1][i])*amplitude;
+        fftr[i] = FFTComplexType(mHammerKnockFFT[2][i],-mHammerKnockFFT[3][i])*amplitude;
+    }
+    FFT_Implementation transformer;
+    mHammerWaveLeft.resize(mSampleRate);
+    mHammerWaveRight.resize(mSampleRate);
+    mHammerWaveLeft.assign(mSampleRate,0);
+    mHammerWaveRight.assign(mSampleRate,0);
+    transformer.calculateFFT(fftl,mHammerWaveLeft);
+    transformer.calculateFFT(fftr,mHammerWaveRight);
     for (int i=0; i<mSampleRate; i++)
     {
-        y=y*0.9+distribution(generator);
-        z=z*0.9+y;
-        mHammerWave[i]+=hammerVolume/10*z/pow(2,i*5.0/mSampleRate);
+        mHammerWaveRight[i] *= exp(-pow(i*3.0/mSampleRate,1.5));
+        mHammerWaveLeft[i] *= exp(-pow(i*3.0/mSampleRate,1.5));
     }
 
+    // Initialize reverb
+    mReverbSize = mSampleRate/10;
+    mReverbCounter = 0;
+    mReverbL.resize(mReverbSize);
+    mReverbR.resize(mReverbSize);
+    mReverbL.assign(mReverbSize,0);
+    mReverbR.assign(mReverbSize,0);
+    mDelay1 = static_cast<int> (0.1128*mReverbSize);
+    mDelay2 = static_cast<int> (0.3928*mReverbSize);
+    mDelay3 = static_cast<int> (0.8762*mReverbSize);
+
+    // Start the waveform generator
     mWaveformGenerator.init(mNumberOfKeys,mSampleRate);
     mWaveformGenerator.start();
 }
@@ -261,12 +283,19 @@ void Synthesizer::playSound (const int keynumber,
 void Synthesizer::workerFunction ()
 {
     setThreadName("Synthesizer");
+    mIntensity = 0;
+
     while (not cancelThread())
     {
         mPlayingMutex.lock();
-        bool active = (mAudioPlayer and mPlayingTones.size()>0);
+        if (mAudioPlayer and mPlayingTones.size()>0) mIntensity = 1;
         mPlayingMutex.unlock();
-        if (not active) msleep(5); // Synthesizer in idle state
+
+        if (mIntensity < 0.0000001)
+        {
+            mIntensity = 0;
+            msleep(5); // Synthesizer in idle state
+        }
         else
         {
             // first remove all sounds with a volume below cutoff:
@@ -275,11 +304,11 @@ void Synthesizer::workerFunction ()
                 if (it->stage>=2 and it->amplitude<CutoffVolume)
                     it=mPlayingTones.erase(it);
                 else ++it;
-            size_t N = mPlayingTones.size();
+            //size_t N = mPlayingTones.size();
             mPlayingMutex.unlock();
 
             // then generate the audio signal:
-            if (N>0) generateAudioSignal();
+            generateAudioSignal();
         }
     }
 }
@@ -298,8 +327,9 @@ void Synthesizer::workerFunction ()
 
 void Synthesizer::generateAudioSignal ()
 {
-    int64_t mSampleRate = mAudioPlayer->getSamplingRate();
-    int64_t clock_timeout = 60*mSampleRate; // one minute timeout
+    int64_t sampleRate = mSampleRate;
+    int64_t clock_timeout = 40*sampleRate; // one minute timeout
+    int hammerwavesize = mHammerWaveLeft.size();
 
     int channels = mAudioPlayer->getChannelCount();
     if (channels<=0 or channels>2) return;
@@ -320,7 +350,7 @@ void Synthesizer::generateAudioSignal ()
             switch (tone.stage)                 // Manage ADSR
             {
                 case 1: // ATTACK
-                        y += envelope.attack/mSampleRate;
+                        y += envelope.attack/sampleRate;
                         if (envelope.decay>0)
                         {
                             if (y >= 1) tone.stage++;
@@ -331,15 +361,15 @@ void Synthesizer::generateAudioSignal ()
                         }
                         break;
                 case 2: // DECAY
-                        y *= (1-(1+y)*envelope.decay/mSampleRate); // DECAY
+                        y *= (1-(1+y)*envelope.decay/sampleRate); // DECAY
                         if (y <= envelope.sustain) tone.stage++;
                         break;
                 case 3: // SUSTAIN
-                        y += (envelope.sustain-y) * envelope.release / mSampleRate;
+                        y += (envelope.sustain-y) * envelope.release / sampleRate;
                         if (tone.clock > clock_timeout) tone.stage=4;
                         break;
                 case 4: // RELEASE
-                        y *= (1-envelope.release/mSampleRate);
+                        y *= (1-envelope.release/sampleRate);
                         break;
             }
             tone.amplitude = y;
@@ -349,7 +379,7 @@ void Synthesizer::generateAudioSignal ()
 
             if (tone.frequency > 10) // if sine wave
             {
-                double t = 1+tone.clock*1.0/mSampleRate;
+                double t = 1+tone.clock*1.0/sampleRate;
                 int i = static_cast<int64_t>(SineLength*tone.frequency*t);
                 int j = static_cast<int64_t>(SineLength*tone.frequency*(t+tone.phaseshift));
                 left  += tone.leftamplitude  * y * 0.2 * mSineWave[i%SineLength];;
@@ -357,19 +387,33 @@ void Synthesizer::generateAudioSignal ()
             }
             else // if complex sound
             {
-                if (envelope.hammer) if (tone.clock < static_cast<int>(mHammerWave.size()/2-1))
+                if (envelope.hammer) if (tone.clock < hammerwavesize)
                 {
-                    left += tone.leftamplitude * mHammerWave[2*tone.clock];
-                    right += tone.rightamplitude* mHammerWave[2*tone.clock+1];
+                    left += tone.leftamplitude * mHammerWaveLeft[tone.clock];
+                    int phaseshifted = tone.clock + static_cast<int>(tone.phaseshift * sampleRate);
+                    if (phaseshifted < hammerwavesize)
+                        right += tone.rightamplitude* mHammerWaveRight[phaseshifted];
                 }
 
-                double t = (1+tone.clock*1.0/mSampleRate)*tone.frequency;
+                double t = (1+tone.clock*1.0/sampleRate)*tone.frequency;
                 left += tone.leftamplitude * y * 0.3 *
                         mWaveformGenerator.getInterpolation(tone.waveform,t);
                 right += tone.rightamplitude * y * 0.3 *
-                        mWaveformGenerator.getInterpolation(tone.waveform,t+tone.phaseshift);
+                         mWaveformGenerator.getInterpolation(tone.waveform,t+tone.phaseshift);
             }
         }
+
+        const double reverbamplitude = 0.2;
+        double echo1 = mReverbR[(mReverbCounter+mDelay1) % mReverbSize];
+        double echo2 = mReverbL[(mReverbCounter+mDelay2) % mReverbSize];
+        double echo3 = mReverbR[(mReverbCounter+mDelay3) % mReverbSize];
+        double echo4 = mReverbL[(mReverbCounter+1) % mReverbSize];
+        left  += reverbamplitude * ( echo2 + echo3 );
+        right += reverbamplitude * ( echo1 + echo4 );
+        mReverbL[mReverbCounter] = left;
+        mReverbR[mReverbCounter] = right;
+        mReverbCounter = (mReverbCounter+1) % mReverbSize;
+        mIntensity = 0.98 * mIntensity + left*left + right*right;
 
         mPlayingMutex.unlock();
         if (channels==1)

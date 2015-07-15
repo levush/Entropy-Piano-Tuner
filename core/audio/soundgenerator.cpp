@@ -273,19 +273,25 @@ void SoundGenerator::handleMidiKeypress (MidiAdapter::Data &data)
     {
         // In this mode select key and play the original sound in the original pitch
         MessageHandler::send<MessageKeySelectionChanged>(key, &(mPiano->getKey(key)));
-        double frequencyshift = mPiano->getKey(key).getComputedFrequency() *
-                                mPiano->getConcertPitch()  /
-                                440.0 / mPiano->getKey(key).getRecordedFrequency();
-        mSynthesizer.playSound(key,frequencyshift,0.1*volume,envelope,true);
+        double recorded = mPiano->getKey(key).getRecordedFrequency();
+        if (recorded > 0)
+        {
+            double frequencyshift = mPiano->getKey(key).getComputedFrequency() *
+                                    mPiano->getConcertPitch()  / 440.0 / recorded;
+            mSynthesizer.playSound(key,frequencyshift,0.1*volume,envelope,true);
+        }
     }
     break;
     case MODE_TUNING:
     {
         // In this mode play the computed sound in selected concert pitch
-        double frequencyshift = mPiano->getKey(key).getComputedFrequency() *
-                                mPiano->getConcertPitch()  /
-                           440.0 / mPiano->getKey(key).getRecordedFrequency();
-        mSynthesizer.playSound(key,frequencyshift,0.1*volume,envelope);
+        double recorded = mPiano->getKey(key).getRecordedFrequency();
+        if (recorded > 0)
+        {
+            double frequencyshift = mPiano->getKey(key).getComputedFrequency() *
+                                    mPiano->getConcertPitch()  / 440.0 / recorded;
+            mSynthesizer.playSound(key,frequencyshift,0.1*volume,envelope);
+        }
     }
     break;
     default:

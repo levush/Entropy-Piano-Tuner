@@ -104,7 +104,7 @@ void WaveformGenerator::init (int numberOfKeys, int samplerate)
 
 void WaveformGenerator::preCalculate(int keynumber, const Spectrum &spectrum)
 {
-    if (spectrum.size()==0) LogE("called with zero spectrum");
+    if (spectrum.size()==0) return;
     mQueueMutex.lock();
     mQueue[keynumber] = spectrum;
     mComputing[keynumber] = true;
