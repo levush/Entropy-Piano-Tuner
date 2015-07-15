@@ -146,7 +146,15 @@ private:
     const double CutoffVolume = 0.00001;    ///< Fade-out volume cutoff.
 
     Waveform mSineWave;                     ///< Sine wave vector, computed in init().
-    Waveform mHammerWave;                   ///< Hammer noise, computed in init().
+
+    static const std::vector< std::vector<int> > mHammerKnockFFT;
+    FFTRealVector mHammerWaveLeft;          ///< Hammer noise, computed in init().
+    FFTRealVector mHammerWaveRight;
+
+    int mReverbSize,mReverbCounter;
+    int mDelay1,mDelay2,mDelay3,mDeley4;
+    std::vector<double> mReverbL,mReverbR;    ///< Reverb
+    double mIntensity;
 
     AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
 
