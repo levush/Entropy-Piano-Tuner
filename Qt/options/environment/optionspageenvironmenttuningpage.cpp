@@ -40,23 +40,33 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
     layout->addWidget(mSynthesizerMode, 0, 1);
 
     mSynthesizerVolumeDynamic = new QCheckBox;
+    QLabel *synthesizerVolumeDynamicLabel = new QLabel(tr("Dynamic synthesizer volume"));
+    synthesizerVolumeDynamicLabel->setWordWrap(true);
+    layout->addWidget(synthesizerVolumeDynamicLabel, 1, 0);
+    layout->addWidget(mSynthesizerVolumeDynamic, 1, 1);
 
-    layout->addWidget(new QLabel(tr("Dynamic synthesizer volume")), 1, 0);
-    layout->addWidget(mSynthesizerVolumeDynamic);
+    mDisableAutomaticKeySelecetion = new QCheckBox;
+    QLabel *disableAutomaticKeySelectionLabel = new QLabel(tr("Disable automatic key selection"));
+    disableAutomaticKeySelectionLabel->setWordWrap(true);
+    layout->addWidget(disableAutomaticKeySelectionLabel, 2, 0);
+    layout->addWidget(mDisableAutomaticKeySelecetion, 2, 1);
 
     layout->setRowStretch(5, 1);
 
     mSynthesizerMode->setCurrentIndex(mSynthesizerMode->findData(QVariant(SettingsForQt::getSingleton().getSoundGeneratorMode())));
     mSynthesizerVolumeDynamic->setChecked(SettingsForQt::getSingleton().isSoundGeneratorVolumeDynamic());
+    mDisableAutomaticKeySelecetion->setChecked(SettingsForQt::getSingleton().isAutomaticKeySelectionDisabled());
 
     QObject::connect(mSynthesizerMode, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
     QObject::connect(mSynthesizerVolumeDynamic, SIGNAL(toggled(bool)), optionsDialog, SLOT(onChangesMade()));
+    QObject::connect(mDisableAutomaticKeySelecetion, SIGNAL(toggled(bool)), optionsDialog, SLOT(onChangesMade()));
 }
 
 void PageEnvironmentTuning::apply() {
     SettingsForQt::getSingleton().setSoundGeneratorMode(
                 static_cast<SoundGeneratorMode>(mSynthesizerMode->currentData().toInt()));
     SettingsForQt::getSingleton().setSoundGeneratorVolumeDynamic(mSynthesizerVolumeDynamic->isChecked());
+    SettingsForQt::getSingleton().setDisableAutomaticKeySelection(mDisableAutomaticKeySelecetion->isChecked());
 }
 
 }  // namespace options

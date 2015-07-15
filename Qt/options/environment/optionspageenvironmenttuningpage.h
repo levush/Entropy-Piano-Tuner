@@ -38,6 +38,7 @@ public:
 private:
     QComboBox *mSynthesizerMode;
     QCheckBox *mSynthesizerVolumeDynamic;
+    QCheckBox *mDisableAutomaticKeySelecetion;
 };
 
 }  // namespace options

@@ -26,6 +26,7 @@
 #include "../system/log.h"
 #include "../system/timer.h"
 #include "../config.h"
+#include "../settings.h"
 #include "../messages/messagehandler.h"
 #include "../messages/messageprojectfile.h"
 #include "../messages/messagenewfftcalculated.h"
@@ -545,13 +546,17 @@ void SignalAnalyzer::signalProcessing(FFTWVector &signal, int samplingrate) {
     if (mAnalyzerRole == ROLE_ROLLING_FFT) {
         analyzeSignal();
     }
-    // if the recognizer finds a key next to the current key, change the selected key
-    // of course if the user forced the key, this should not work
-    // also select the key if there is non selected
-    int identifiedKey = identifySelectedKey();
-    if ((!mKeyForced && abs(identifiedKey - mSelectedKey) == 1 && identifiedKey != -1)
+
+    // automatic key selection
+    if (!Settings::getSingleton().isAutomaticKeySelectionDisabled()) {
+        // if the recognizer finds a key next to the current key, change the selected key
+        // of course if the user forced the key, this should not work
+        // also select the key if there is non selected
+        int identifiedKey = identifySelectedKey();
+        if ((!mKeyForced && abs(identifiedKey - mSelectedKey) == 1 && identifiedKey != -1)
             || mSelectedKey == -1) {
-        MessageHandler::sendUnique<MessageKeySelectionChanged>(identifiedKey, mPiano->getKeyPtr(identifiedKey));
+            MessageHandler::sendUnique<MessageKeySelectionChanged>(identifiedKey, mPiano->getKeyPtr(identifiedKey));
+        }
     }
 }
 

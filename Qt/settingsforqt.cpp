@@ -65,6 +65,7 @@ void SettingsForQt::load() {
     mSoundGeneratorMode = static_cast<SoundGeneratorMode>(
                 mSettings.value("core/soundGeneratorMode", static_cast<int>(SGM_REFERENCE_TONE)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
+    mDisableAutomaticKeySelection = mSettings.value("core/disableAutomaticKeySelection", false).toBool();
 }
 
 qlonglong SettingsForQt::getApplicationRuns() const {
@@ -142,4 +143,9 @@ void SettingsForQt::setSoundGeneratorMode(SoundGeneratorMode mode) {
 void SettingsForQt::setSoundGeneratorVolumeDynamic(bool dynamic) {
     Settings::setSoundGeneratorVolumeDynamic(dynamic);
     mSettings.setValue("core/soundGeneratorVolumeDynamic", dynamic);
+}
+
+void SettingsForQt::setDisableAutomaticKeySelection(bool disable) {
+    Settings::setDisableAutomaticKeySelection(disable);
+    mSettings.setValue("core/disableAutomaticKeySelection", disable);
 }

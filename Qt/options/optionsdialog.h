@@ -72,6 +72,7 @@ protected slots:
     void onChangesMade();
 
 private:
+    bool checkForChanges(bool allowCancel);
     void clearPages();
     void addPageButton(QIcon icon, QString text, QButtonGroup *group, QToolBar *tb, OptionPages page);
 

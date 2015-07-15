@@ -96,25 +96,13 @@ void OptionsDialog::accept() {
 }
 
 void OptionsDialog::reject() {
+    if (!checkForChanges(true)) {return;}
+
     QDialog::reject();
 }
 
 void OptionsDialog::onCurrentSelectionChanged(int index) {
-    if (mChangesMade) {
-        QMessageBox msgBox(this);
-        msgBox.setWindowTitle(this->windowTitle());
-        msgBox.setIcon(QMessageBox::Question);
-        msgBox.setText("There are unsaved changes.");
-        msgBox.setInformativeText("Do you want to save your changes?");
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        switch (msgBox.exec()) {
-        case QMessageBox::Yes:
-            onApply();
-            break;
-        default:
-            break;
-        }
-    }
+    checkForChanges(false);
 
     clearPages();
 
@@ -154,6 +142,34 @@ void OptionsDialog::onApply() {
 
 void OptionsDialog::onChangesMade() {
     mChangesMade = true;
+}
+
+bool OptionsDialog::checkForChanges(bool allowCancel) {
+    if (mChangesMade) {
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(this->windowTitle());
+        msgBox.setIcon(QMessageBox::Question);
+        msgBox.setText("There are unsaved changes.");
+        msgBox.setInformativeText("Do you want to save your changes?");
+        if (allowCancel) {
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        } else {
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        }
+
+        switch (msgBox.exec()) {
+        case QMessageBox::Yes:
+            onApply();
+            break;
+        case QMessageBox::Cancel:
+            return false;
+        default:
+            break;
+        }
+        mChangesMade = false;
+    }
+
+    return true;
 }
 
 void OptionsDialog::clearPages() {
