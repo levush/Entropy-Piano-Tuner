@@ -332,8 +332,7 @@ void QtAudioManager::workerFunction()
             continue;
         }
 
-        // always generate a maximum of 10 samples
-        AudioBase::PacketType packet(std::min<size_t>(10, mAudioSink->bytesFree() / sizeof(DataFormat)));
+        AudioBase::PacketType packet(mAudioSink->bytesFree() / sizeof(DataFormat));
         const bool requestPause = !mAudioSource->getWriter()->generateAudioSignal(packet);
 
         if (requestPause) {
