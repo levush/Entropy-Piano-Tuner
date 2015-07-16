@@ -152,7 +152,7 @@ private:
     FFTRealVector mHammerWaveRight;
 
     int mReverbSize,mReverbCounter;
-    int mDelay1,mDelay2,mDelay3,mDeley4;
+    int mDelay1,mDelay2,mDelay3;
     std::vector<double> mReverbL,mReverbR;    ///< Reverb
     double mIntensity;
 
