@@ -58,6 +58,9 @@ public:
     bool isSoundGeneratorVolumeDynamic() const {return mSoundGeneratorVolumeDynamic;}
     virtual void setSoundGeneratorVolumeDynamic(bool dynamic) {mSoundGeneratorVolumeDynamic = dynamic;}
 
+    bool isAutomaticKeySelectionDisabled() const {return mDisableAutomaticKeySelection;}
+    virtual void setDisableAutomaticKeySelection(bool disable) {mDisableAutomaticKeySelection = disable;}
+
 protected:
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -70,6 +73,7 @@ protected:
     std::string mLastUsedAlgorithm;
     SoundGeneratorMode mSoundGeneratorMode;
     bool mSoundGeneratorVolumeDynamic;
+    bool mDisableAutomaticKeySelection;
 
 private:
     static std::unique_ptr<Settings> mSingleton;
