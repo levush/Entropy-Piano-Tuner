@@ -344,7 +344,8 @@ CORE_AUDIO_HEADERS = \
     core/audio/circularbuffer.h \
     core/audio/soundgenerator.h \
     core/audio/soundgeneratormode.h \
-    core/audio/waveformgenerator.h
+    core/audio/waveformgenerator.h \
+    core/audio/hammerknock.h \
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \

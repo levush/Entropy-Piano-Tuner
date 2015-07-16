@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //=============================================================================
-//     Trivial algorithm for explaining how new algorithms can be built
+//                        Pitch raise algorithm
 //=============================================================================
 
 #ifndef PITCHRAISE_H
@@ -47,7 +47,7 @@ protected:
     virtual void algorithmWorkerFunction() override final;
 
 private:
-    const double mConcertPitchParam;
+    const int mSectionSeparatingKey;
 };
 
 }  // namespace pitchraise

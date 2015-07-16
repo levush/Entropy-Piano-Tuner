@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<algorithm year="2015" author="Haye Hinrichsen">
+<algorithm year="2012-2015" author="Haye Hinrichsen">
     <name>
         <string>Entropy minimizer</string>
         <string lang="de">Entropieminimierer</string>
     </name>
     <description>
-        <string>This algorithm performs a Monte-Carlo simulation to find the minimized entropy of the overlayed spectra of all keys.</string>
-        <string lang="de">Dieser Algorithmus führt eine Monte-Carlo-Simulation aus, um das Minimum der Entropie des überlagerten Spektrums aller Tasten zu finden.</string>
+        <string>This algorithm minimizes the entropy of the superposed spectra of all keys (see user manual).</string>
+        <string lang="de">Dieser Algorithmus minimiert die Entropie des überlagerten Spektrums aller Tasten (siehe Bedienungsanleitung).</string>
     </description>
     <param id="accuracy" type="list" default="standard">
         <label>
