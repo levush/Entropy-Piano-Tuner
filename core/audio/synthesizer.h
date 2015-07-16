@@ -26,6 +26,7 @@
 
 #include "audioplayeradapter.h"
 #include "waveformgenerator.h"
+#include "pcmwriterinterface.h"
 #include "../system/simplethreadhandler.h"
 
 
@@ -101,16 +102,16 @@ struct Tone
 /// differences and phase shifts between the two stereo channels.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Synthesizer : public SimpleThreadHandler
+class Synthesizer : public PCMWriterInterface
 {
 public:
 
     using Spectrum = std::map<double,double>;   // type of spectrum
 
-    Synthesizer (AudioPlayerAdapter *audioadapter);
+    Synthesizer ();
 
-    void init ();
-    void exit () { mWaveformGenerator.stop(); stop(); }
+    virtual void init (int sampleRate, int channels) override final;
+    virtual void exit () override final { mWaveformGenerator.stop();}
 
     void setNumberOfKeys (int numberOfKeys);
 
@@ -128,12 +129,11 @@ public:
 
     bool isPlaying              (const int id) const;
 
+    virtual bool generateAudioSignal(AudioBase::PacketType &outputPacket) override final;
 
 private:
 
     using Waveform = WaveformGenerator::Waveform;
-
-    int mSampleRate;
 
     WaveformGenerator mWaveformGenerator;
 
@@ -156,12 +156,9 @@ private:
     std::vector<double> mReverbL,mReverbR;    ///< Reverb
     double mIntensity;
 
-    AudioPlayerAdapter *mAudioPlayer;       ///< Pointer to the audio player.
-
     const Tone* getSoundPointer (const int id) const;
     Tone* getSoundPointer (const int id);
-    void workerFunction () override final;
-    void generateAudioSignal();
+    void updateIntensity();
 };
 
 #endif // SYNTHESIZER_H

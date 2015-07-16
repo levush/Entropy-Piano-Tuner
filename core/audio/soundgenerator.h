@@ -41,14 +41,14 @@
 class SoundGenerator : public MessageListener
 {
 public:
-    SoundGenerator (AudioPlayerAdapter *audioadapter);
+    SoundGenerator (AudioPlayerAdapter *audioAdapter);
     ~SoundGenerator(){}
 
-    void init () { mSynthesizer.init(); }
-    void exit () { mSynthesizer.exit(); }
+    void init () { }
+    void exit () { }
 
-    void start() { mSynthesizer.start(); }
-    void stop()  { mSynthesizer.stop(); }
+    void start() { }
+    void stop()  { }
 
 private:
     void handleMessage(MessagePtr m) override final;

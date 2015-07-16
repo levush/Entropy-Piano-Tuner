@@ -51,9 +51,8 @@
 /// \param audioadapter : Pointer to the audio output implementation
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioadapter) :
-    mSynthesizer (audioadapter),
-    mAudioAdapter (audioadapter),
+SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioAdapter) :
+    mAudioAdapter (audioAdapter),
     mPiano(nullptr),
     mOperationMode(OperationMode::MODE_IDLE),
     mNumberOfKeys(0),
@@ -61,7 +60,9 @@ SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioadapter) :
     mSelectedKey(-1),
     mResonatingKey(-1),
     mResonatingVolume(0)
-{}
+{
+    audioAdapter->setWriter(&mSynthesizer);
+}
 
 
 //-----------------------------------------------------------------------------

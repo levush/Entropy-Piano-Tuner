@@ -70,7 +70,7 @@ Envelope::Envelope(double attack, double decay,
 /// \param audioadapter : Pointer to the implementation of the AudioPlayer
 ///////////////////////////////////////////////////////////////////////////////
 
-Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
+Synthesizer::Synthesizer () :
     mNumberOfKeys(88),
     mPlayingTones(),
     mPlayingMutex(),
@@ -81,8 +81,7 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
     mReverbCounter(0),
     mReverbL(),
     mReverbR(),
-    mIntensity(0),
-    mAudioPlayer(audioadapter)
+    mIntensity(0)
 {}
 
 
@@ -98,15 +97,14 @@ Synthesizer::Synthesizer (AudioPlayerAdapter *audioadapter) :
 /// of the synthesizer in an indpendent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::init ()
+void Synthesizer::init (int sampleRate, int channels)
 {
+    PCMWriterInterface::init(sampleRate, channels);
+
     if (mNumberOfKeys < 0 or mNumberOfKeys > 256)
     { LogW("Called init with an invalid number of keys = %d",mNumberOfKeys); return; }
-    else if (not mAudioPlayer)
-    { LogW("Could not start synthesizer: AudioPlayer not connected."); return; }
 
     // Pre-calculate a sine wave for speedup
-    mSampleRate = mAudioPlayer->getSamplingRate();
     mSineWave.resize(SineLength);
     for (int i=0; i<SineLength; ++i)
         mSineWave[i]=static_cast<float>(sin(MathTools::TWO_PI * i / SineLength));
@@ -169,7 +167,7 @@ void Synthesizer::setNumberOfKeys (int numberOfKeys)
     else if (numberOfKeys != mNumberOfKeys)
     {
         mNumberOfKeys = numberOfKeys;
-        init ();
+        init (mSampleRate, mChannels);
     }
 }
 
@@ -252,7 +250,9 @@ void Synthesizer::playSound (const int keynumber,
     if (frequency>0 and frequency<10)
     {
         while (waitforcomputation and mWaveformGenerator.isComputing(keynumber)
-               and timeout++ < 1000) msleep(1);
+               and timeout++ < 1000) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
         tone.waveform = mWaveformGenerator.getWaveForm(keynumber);
     }
     else
@@ -265,51 +265,41 @@ void Synthesizer::playSound (const int keynumber,
 
 
 //-----------------------------------------------------------------------------
-//	                    Main thread (worker function)
+//	                    update of the intensity
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Main thread of the synthesizer
+/// \brief Update function to update intensity
 ///
-/// This workerFunction is the main thread of the synthesizer. It is running
-/// in an endless loop until the synthesizer is stopped. It looks whether
-/// there is an audio device and sounds in the mPlayingTones-queue. If not,
-/// the synthesizer waits in an idle state. If there are notes to play,
-/// it checks their volume. The tones below a certain cutoff volume are
-/// removed from the queue. All other notes will be played. The playing
-/// is done in a separate function called generateAudioSignal().
+/// This function looks whether there are sounds in the mPlayingTones-queue.
+/// If there are notes to play, it checks their volume.
+/// The tones below a certain cutoff volume are removed from the queue.
+/// All other notes will be played.
+///
+/// This function will be called in generateAudioSignal at the beginning
+/// to update the current states of the played notes.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::workerFunction ()
+void Synthesizer::updateIntensity()
 {
-    setThreadName("Synthesizer");
-    mIntensity = 0;
+    mPlayingMutex.lock();
+    if (mPlayingTones.size()>0) mIntensity = 1;
+    mPlayingMutex.unlock();
 
-    while (not cancelThread())
+    if (mIntensity < 0.0000001)
     {
+        mIntensity = 0;
+    }
+    else
+    {
+        // first remove all sounds with a volume below cutoff:
         mPlayingMutex.lock();
-        if (mAudioPlayer and mPlayingTones.size()>0) mIntensity = 1;
+        for (auto it = mPlayingTones.begin(); it != mPlayingTones.end(); /* no inc */)
+            if (it->stage>=2 and it->amplitude<CutoffVolume)
+                it=mPlayingTones.erase(it);
+            else ++it;
+        //size_t N = mPlayingTones.size();
         mPlayingMutex.unlock();
-
-        if (mIntensity < 0.0000001)
-        {
-            mIntensity = 0;
-            msleep(5); // Synthesizer in idle state
-        }
-        else
-        {
-            // first remove all sounds with a volume below cutoff:
-            mPlayingMutex.lock();
-            for (auto it = mPlayingTones.begin(); it != mPlayingTones.end(); /* no inc */)
-                if (it->stage>=2 and it->amplitude<CutoffVolume)
-                    it=mPlayingTones.erase(it);
-                else ++it;
-            //size_t N = mPlayingTones.size();
-            mPlayingMutex.unlock();
-
-            // then generate the audio signal:
-            generateAudioSignal();
-        }
     }
 }
 
@@ -320,26 +310,35 @@ void Synthesizer::workerFunction ()
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Generate waveform.
+/// \param outputBuffer The buffer where to write
+/// \return True on success, false if the player should pause (no notes)
 ///
 /// This is the heart of the synthesizer which composes the pre-calculated
 /// waveforms.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::generateAudioSignal ()
+bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
 {
-    int64_t sampleRate = mSampleRate;
+    // update intensity and played tones
+    updateIntensity();
+
+    if (mIntensity == 0 ) {
+        return false;
+    }
+
+    const int sampleRate = mSampleRate;
+    const int channels = mChannels;
+
     int64_t clock_timeout = 40*sampleRate; // one minute timeout
     int hammerwavesize = mHammerWaveLeft.size();
 
-    int channels = mAudioPlayer->getChannelCount();
-    if (channels<=0 or channels>2) return;
+    if (channels<=0 or channels>2) return false;
 
-    int writtenSamples = 0;
 
-    while (mAudioPlayer->getFreeSize()>=2 and writtenSamples < 10)
-    {
-        ++writtenSamples;
-        double left=0, right=0; // PCM
+    for (size_t bufferIndex = 0; bufferIndex < outputBuffer.size(); bufferIndex += channels) {
+        // pcm data
+        double left = 0, right = 0;
+
         mPlayingMutex.lock();
         for (Tone &tone : mPlayingTones)
         {
@@ -416,17 +415,21 @@ void Synthesizer::generateAudioSignal ()
         mIntensity = 0.98 * mIntensity + left*left + right*right;
 
         mPlayingMutex.unlock();
+
+        // write data to buffer
         if (channels==1)
         {
-            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>((left+right)/2));
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>((left+right)/2);
         }
         else // if stereo
         {
-            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(left));
-            mAudioPlayer->pushSingleSample(static_cast<AudioBase::PacketDataType>(right));
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(left);
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(right);
         }
 
     }
+
+    return true;
 }
 
 

@@ -26,7 +26,7 @@
 #include "../core/system/simplethreadhandler.h"
 #include "settingsforqt.h"
 
-const double QtAudioManager::BufferMilliseconds = 100;
+const double QtAudioManager::BufferMilliseconds = 50;
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -218,6 +218,10 @@ void QtAudioManager::init()
         return;
     }
 
+    if (mAudioSource->getWriter()) {
+        mAudioSource->getWriter()->init(mAudioSource->getSamplingRate(), mAudioSource->getChannelCount());
+    }
+
     LogI("Initialized Qt audio player using device: %s", mAudioSource->getDeviceName().c_str());
 }
 
@@ -238,6 +242,10 @@ void QtAudioManager::exit()
         delete mAudioSink;
         mAudioSink = nullptr;
         mIODevice = nullptr;
+    }
+
+    if (mAudioSource->getWriter()) {
+        mAudioSource->getWriter()->exit();
     }
     LogI("Qt audio player closed.");
 }
@@ -267,7 +275,6 @@ void QtAudioManager::start()
             qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             return;
         }
-        mAudioSource->setMaximalSize(mAudioSink->bufferSize() / 2);
     }
 }
 
@@ -291,9 +298,15 @@ void QtAudioManager::stop()
     }
 }
 
+///
+/// \brief Pause the audio player
+/// \param pause Pause
+///
 void QtAudioManager::setPause(bool pause) {
     mPause = pause;
 }
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Main worker function of the Qt audio manager
 ///////////////////////////////////////////////////////////////////////////////
@@ -314,34 +327,30 @@ void QtAudioManager::workerFunction()
 
     while (mThreadRunning)
     {
-        if (mPause) {
+        if (mPause || !mAudioSource->getWriter()) {
             QThread::msleep(500);
             continue;
         }
 
-        size_t available = mAudioSource->getSize();
-        if (mAudioSink->state() == QAudio::SuspendedState)
-        {
-            if (available > 0) {mAudioSink->resume();}
-            else QThread::msleep(10);
-        }
-        else // if device is active
-        {
-            size_t requested = mAudioSink->bytesFree()/sizeof(DataFormat);
-            if (requested == 0) {QThread::msleep(5); continue;}
+        // always generate a maximum of 10 samples
+        AudioBase::PacketType packet(std::min<size_t>(10, mAudioSink->bytesFree() / sizeof(DataFormat)));
+        const bool requestPause = !mAudioSource->getWriter()->generateAudioSignal(packet);
 
-            size_t buffersize = mAudioSink->bufferSize() / mAudioSource->getChannelCount();
-            if (requested > 0 and available == 0) mAudioSink->suspend();
-            else if (requested < buffersize / 100 or available < mAudioSource->getMaximalSize() / 2) QThread::msleep(1);
-            else
-            {
-                auto packet = mAudioSource->getPacket(requested);
-                size_t transferSize = packet.size();
-                EptAssert(transferSize <= requested, "buffer too large");
-                std::vector<DataFormat> buffer(transferSize);
-                for (size_t i=0; i<transferSize; ++i) buffer[i] =static_cast<DataFormat>(packet[i] * scaling);
-                mIODevice->write((const char*)buffer.data(), transferSize * sizeof(DataFormat));
+        if (requestPause) {
+            if (mAudioSink->state() != QAudio::SuspendedState) {
+                mAudioSink->suspend();
             }
+            QThread::msleep(10);
+            continue;
+        } else {
+            if (mAudioSink->state() == QAudio::SuspendedState) {
+                mAudioSink->resume();
+            }
+            if (packet.size() == 0) {QThread::msleep(5); continue;}
+
+            std::vector<DataFormat> buffer(packet.size());
+            for (size_t i=0; i<buffer.size(); ++i) buffer[i] = static_cast<DataFormat>(packet[i] * scaling);
+            mIODevice->write((const char*)buffer.data(), buffer.size() * sizeof(DataFormat));
         }
     }
     exit();

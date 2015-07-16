@@ -26,6 +26,7 @@
 
 #include "audiobase.h"
 #include "circularbuffer.h"
+#include "pcmwriterinterface.h"
 
 #include <mutex>
 #include <cstdint>
@@ -53,20 +54,11 @@ public:
     AudioPlayerAdapter();
     virtual ~AudioPlayerAdapter() {};
 
-    size_t getSize (void);
-    size_t getFreeSize (void);
-    size_t getMaximalSize (void);
-    void   setMaximalSize(size_t s);
-    void pushSingleSample (AudioBase::PacketDataType);
-
-public:
-
-    PacketType getPacket(size_t n);
+    void setWriter(PCMWriterInterface *interface);
+    PCMWriterInterface *getWriter() {return mPCMWriter;}
 
 private:
-
-    CircularBuffer<AudioBase::PacketDataType> mBuffer;
-    std::mutex mBufferMutex;
+    PCMWriterInterface *mPCMWriter = 0;
 };
 
 #endif // AUDIOPLAYERADAPTER_H

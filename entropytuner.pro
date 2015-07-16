@@ -34,7 +34,8 @@ QWT_H = $$HEADERS
 HEADERS = \
     Qt/plotsdialog/centralplotframe.h \
     Qt/plotsdialog/keyindexscaleengine.h \
-    Qt/plotsdialog/keyindexscaledraw.h
+    Qt/plotsdialog/keyindexscaledraw.h \
+    core/audio/pcmwriterinterface.h
 QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \

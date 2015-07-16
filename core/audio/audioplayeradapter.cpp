@@ -35,77 +35,26 @@ const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 100;
 //			                    Constructor
 //-----------------------------------------------------------------------------
 
-AudioPlayerAdapter::AudioPlayerAdapter() :
-    mBuffer(1000)
+AudioPlayerAdapter::AudioPlayerAdapter()
 {
     setChannelCount(2);
 }
 
-
 //-----------------------------------------------------------------------------
-//			   Transmit a single PCM value, wait if not ready
-//                  To be called by the user (synthesizer)
+//			          Set the current PCM writer interface
+//               The old one will be exited, the new one initialized
 //-----------------------------------------------------------------------------
 
-void AudioPlayerAdapter::pushSingleSample (AudioBase::PacketDataType s)
+void AudioPlayerAdapter::setWriter(PCMWriterInterface *interface)
 {
-    mBufferMutex.lock();
-    size_t free = mBuffer.maximum_size()-mBuffer.size();
-    if (free>0) mBuffer.push_back(s);
-    mBufferMutex.unlock();
-    //if (free==0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
-}
+    if (mPCMWriter)
+    {
+        mPCMWriter->exit();
+    }
 
-//-----------------------------------------------------------------------------
-//                      Get a packet of a certain size
-//                    To be called by the implementation
-//-----------------------------------------------------------------------------
+    mPCMWriter = interface;
 
-AudioBase::PacketType AudioPlayerAdapter::getPacket (size_t n)
-{
-    mBufferMutex.lock();
-    size_t m = std::min(mBuffer.size(),n);
-    AudioBase::PacketType packet = mBuffer.readData(m);
-    mBufferMutex.unlock();
-    return packet;
-}
-
-
-//-----------------------------------------------------------------------------
-//                         Get the free buffer size
-//-----------------------------------------------------------------------------
-
-size_t AudioPlayerAdapter::getFreeSize (void)
-{
-    mBufferMutex.lock();
-    int free = mBuffer.maximum_size()-mBuffer.size();
-    mBufferMutex.unlock();
-    return free;
-}
-
-
-//-----------------------------------------------------------------------------
-//                          Get occupied size
-//-----------------------------------------------------------------------------
-
-size_t AudioPlayerAdapter::getSize (void)
-{
-    mBufferMutex.lock();
-    int occupied = mBuffer.size();
-    mBufferMutex.unlock();
-    return occupied;
-}
-
-size_t AudioPlayerAdapter::getMaximalSize ()
-{
-    std::lock_guard<std::mutex> lock(mBufferMutex);
-    return mBuffer.maximum_size();
-}
-
-void AudioPlayerAdapter::setMaximalSize(size_t s)
-{
-    std::lock_guard<std::mutex> lock(mBufferMutex);
-    if (s != mBuffer.maximum_size()) {
-        mBuffer.resize(s);
+    if (mPCMWriter) {
+        mPCMWriter->init(getSamplingRate(), getChannelCount());
     }
 }
