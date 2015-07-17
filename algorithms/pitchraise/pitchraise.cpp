@@ -54,7 +54,7 @@ namespace pitchraise
 PitchRaise::PitchRaise(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description),
     // load the parameter from the description
-    mSectionSeparatingKey(static_cast<int>(description.getDoubleParameter("sectionSeparator"))),
+    mSectionSeparatingKey(static_cast<int>(description.getIntParameter("sectionSeparator"))),
     mPitch(piano.getKeyboard().getNumberOfKeys(),0)
 
 {
