@@ -712,6 +712,22 @@
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>File existing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid filename</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please provide a valid filename.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TunerApplication</name>
@@ -899,6 +915,10 @@
     <message>
         <source>Dynamic synthesizer volume</source>
         <translation>Volume de sintetizador dinâmico</translation>
+    </message>
+    <message>
+        <source>Disable automatic key selection</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
