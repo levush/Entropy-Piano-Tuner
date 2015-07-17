@@ -30,6 +30,7 @@
 
 #include "pitchraise.h"
 
+#include "core/math/mathtools.h"
 #include "core/calculation/algorithmfactory.h"
 
 //=============================================================================
@@ -53,10 +54,47 @@ namespace pitchraise
 PitchRaise::PitchRaise(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description),
     // load the parameter from the description
-    mSectionSeparatingKey(static_cast<int>(description.getDoubleParameter("sectionSeparator")))
+    mSectionSeparatingKey(static_cast<int>(description.getDoubleParameter("sectionSeparator"))),
+    mPitch(piano.getKeyboard().getNumberOfKeys(),0)
+
 {
 }
 
+
+//-----------------------------------------------------------------------------
+//                     Update the displayed tuning curve
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update the tuning curve for a given key number
+///
+/// This function translates the actual mPitch value into the corresponding
+/// frequency, stores the value in the local piano copy mPiano and sends a
+/// message that the tuning curve has to be redrawn.
+/// \param keynumber : Number of the key to be updated
+///////////////////////////////////////////////////////////////////////////////
+
+void PitchRaise::updateTuningcurve (int keynumber)
+{
+    EptAssert (keynumber>=0 and keynumber<mNumberOfKeys,"Range of keynumber");
+    double f = mPiano.getDefiningTempFrequency(keynumber, mPitch[keynumber],440);
+    updateTuningCurve(keynumber, f);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update the entire tuning curve
+///
+/// This function translates the all mPitch values into the corresponding
+/// frequencies, stores the values in the local piano copy mPiano and sends a
+/// sequence of messages that the tuning curve has to be redrawn.
+///////////////////////////////////////////////////////////////////////////////
+
+void PitchRaise::updateTuningcurve ()
+{
+    for (int keynumber = 0; keynumber < mNumberOfKeys; ++keynumber)
+        updateTuningcurve(keynumber);
+}
 
 //-----------------------------------------------------------------------------
 //                             Worker function
@@ -108,15 +146,62 @@ void PitchRaise::algorithmWorkerFunction()
         B[s] = (N[s]*XY[s] - X[s]*Y[s]) / (N[s]*XX[s] - X[s]*X[s]);
     }
 
+    // Define lambda regression function
+    auto estimatedInharmonicity = [this,A,B] (int k)
+    {
+        int s = (k < mSectionSeparatingKey ? 0 : 1);
+        double minusLogB = A[s] + k*B[s];
+        return exp(-minusLogB);
+    };
+
+
     for (int i = 0; i < mNumberOfKeys; ++i)
     {
-        int s = (i < mSectionSeparatingKey ? 0 : 1);
-        double logB = A[s]+i*B[s];
-        LogI("B[%d]=%lf",i,exp(-logB));
+        LogI("B[%d]=%lf",i,estimatedInharmonicity(i));
     }
 
-        // set the tuning curve
-        //updateTuningCurve(i, mPiano.getEqualTempFrequency(i, 0, mConcertPitchParam));
+    // For the computation we need at least two octaves to both sides of A4:
+    if (mKeyNumberOfA4<=13 or mNumberOfKeys-mKeyNumberOfA4<=13) return;
+
+    // Compute the expected stretch deviation of the n_th partial of a given key:
+    auto cents = [estimatedInharmonicity] (int keynumber, int n)
+    { return 600.0  / MathTools::LOG2 *
+                log((1+n*n*estimatedInharmonicity(keynumber)) /
+                    (1+estimatedInharmonicity(keynumber))); };
+
+    // Define a linear section of the curve in the middle
+    int numberA3 = mKeyNumberOfA4-12;
+    int numberA4 = mKeyNumberOfA4;
+    int numberA5 = mKeyNumberOfA4+12;
+    double pitchA5 = 0.5*cents(numberA4,3)+0.5*cents(numberA4,2);
+    double pitchA3 = cents(numberA4,2)-cents(numberA3,4);
+    for (int k=numberA3; k<mKeyNumberOfA4; ++k)
+        mPitch[k] = pitchA3*(mKeyNumberOfA4-k)/12.0;
+    for (int k=mKeyNumberOfA4+1; k<=numberA5; ++k)
+        mPitch[k] = pitchA5*(k-mKeyNumberOfA4)/12.0;
+
+    // Extend curve to the right by iteration:
+    for (int k=numberA5+1; k<mNumberOfKeys; k++)
+    {
+        double pitch42 = mPitch[k-12] + cents(k-12,4) -cents(k,2);
+        double pitch21 = mPitch[k-12] + cents(k-12,2);
+        mPitch[k] = 0.3*pitch42 + 0.7*pitch21;
     }
+
+    // Extend the curve to the left by iteration:
+    for (int k=numberA3-1; k>=0; k--)
+    {
+        double pitch42 = mPitch[k+12] + cents(k+12,2) -cents(k,4);
+        //double pitch63 = mPitch[k+12] + cents(k+12,3) -cents(k,6);
+        double pitch105 = mPitch[k+12] + cents(k+12,5) -cents(k,10);
+        double fraction = 1.0*k/numberA3;
+        mPitch[k] = pitch42*fraction+pitch105*(1-fraction);
+    }
+
+    // set the tuning curve
+    updateTuningcurve();
+}
+
+
 
 }  // namespace pitchraise

@@ -47,7 +47,10 @@ protected:
     virtual void algorithmWorkerFunction() override final;
 
 private:
+    void updateTuningcurve (int keynumber);
+    void updateTuningcurve ();
     const int mSectionSeparatingKey;
+    std::vector<double> mPitch;
 };
 
 }  // namespace pitchraise
