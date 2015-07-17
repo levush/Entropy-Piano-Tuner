@@ -39,6 +39,10 @@ void AlgorithmFactoryBase::loadDefaultParams() {
             if (mDescription.hasDoubleParameter(param.getID())) {continue;}
             mDescription.setDoubleParameter(param.getID(), param.getDoubleDefaultValue());
             break;
+        case AlgorithmParameter::TYPE_INT:
+            if (mDescription.hasIntParameter(param.getID())) {continue;}
+            mDescription.setIntParameter(param.getID(), param.getIntDefaultValue());
+            break;
         case AlgorithmParameter::TYPE_LIST:
             if (mDescription.hasStringParameter(param.getID())) {continue;}
             mDescription.setStringParameter(param.getID(), param.getStringDefaultValue());
