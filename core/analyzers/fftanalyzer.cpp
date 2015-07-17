@@ -149,60 +149,122 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
     return std::make_pair(FFTAnalyzerErrorTypes::ERR_NONE, key);
 }
 
+//-----------------------------------------------------------------------------
+//                 Determine the frequency of a known key
+//-----------------------------------------------------------------------------
 
-FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey(
+///////////////////////////////////////////////////////////////////////////////
+/// \brief FFTAnalyzer::detectFrequencyOfKnownKey
+/// \param finalFFT
+/// \param piano
+/// \param key
+/// \param keyIndex
+/// \return
+///////////////////////////////////////////////////////////////////////////////
+
+FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey (
         FFTDataPointer finalFFT,
         const Piano *piano,
         const Key &key,
-        int keyIndex) {
+        int keyIndex)
+{
     // consisty check
     EptAssert(piano, "Piano has to be set");
     EptAssert(finalFFT, "FFT has to exist");
     EptAssert(finalFFT->isValid(), "The FFT data is not valid");
     EptAssert(keyIndex >= 0, "The final key has to be set.");
 
-    LogV("FFTAnalyzer started");
-
+    // Create a shared pointer in which the result will be stored:
     FrequencyDetectionResult result = std::make_shared<FrequencyDetectionResultStruct>();
 
-    if (key.isRecorded() == false) {
-        result->error = FFTAnalyzerErrorTypes::ERR_KEY_NOT_RECORDED;
+    // This is the frequency to which we would like to tune the string
+    double targetFrequency = piano->getConcertPitch()/440.0 *
+                             key.getComputedFrequency();
+
+    if (targetFrequency <= 20 or targetFrequency > 10000)
+    {
+        result->error = FFTAnalyzerErrorTypes::ERR_NO_COMPUTED_FREQUENCY;
         return result;
     }
+
+
+
+    // Define the frequency which corresponds to the middle of the array
+    double centerFrequency = key.getRecordedFrequency();
+    if (centerFrequency<=10) centerFrequency = targetFrequency;
 
     // Map the final FFT to a logarithmically binned spectrum:
     SpectrumType spectrum(NumberOfBins);
     constructLogBinnedSpectrum(finalFFT, spectrum);
 
-    // create the kernel of the key, if the key changed
-    if (&key != mCurrentKernelKey) {
-        mCurrentKernel = std::move(constructKernel(key.getSpectrum()));
-        mCurrentKernelKey = &key;
+    // Define the search size around the center frequency in cents
+    const int searchSize = 200;
+    TuningDeviationCurveType out(searchSize), zoomedPeak (searchSize);
+
+
+    // First method: Simply magnify the lowest peak
+    if (not key.isRecorded())
+    {
+        double maximum = 0;
+        double middle = centerFrequency;
+        if (piano->getKeyboard().getKeyNumberOfA4()-keyIndex > 24)
+        {
+            double B = piano->getExpectedInharmonicity(centerFrequency);
+            middle *= 2 * sqrt((1+4*B)/(1+B));
+        }
+
+        for (int i=0; i<searchSize; ++i)
+        {
+            int m = Key::FrequencyToRealIndex(middle) - searchSize/2 + i;
+            if (m>0 and m<static_cast<int>(spectrum.size()))
+            {
+                double value = spectrum[m] * spectrum[m];
+                if (value > maximum) maximum = value;
+                zoomedPeak[i] = value;
+            }
+        }
+        if (maximum < 1E-15)
+        {
+            result->error = FFTAnalyzerErrorTypes::ERR_NO_PEAK_AMPLITUDE;
+            return result;
+        }
+        for (auto &element : zoomedPeak) element /= maximum;
+        out = std::move(zoomedPeak);
     }
 
-    // compute the deviation
-    int searchSize = 200;
-    TuningDeviationCurveType out(std::move(computeTuningDeviation(mCurrentKernel, spectrum, searchSize)));
+    // else if the key has been recorded explicitely we use the method developed
+    // by Christoph. It uses an inverse kernel convolution
+    else
+    {
+
+
+        // create the kernel of the key, if the key changed
+        if (&key != mCurrentKernelKey)
+        {
+            mCurrentKernel = std::move(constructKernel(key.getSpectrum()));
+            mCurrentKernelKey = &key;
+        }
+
+        // compute the deviation
+        out = std::move(computeTuningDeviation(mCurrentKernel, spectrum, searchSize));
+    }
 
     int maxIndex = MathTools::findMaximum(out);
-    // double index = MathTools::findSmoothedMaximum(out);
     double index = MathTools::weightedArithmetricMean(out, std::max(maxIndex - 10, 0), maxIndex + 10);
     index -= searchSize / 2;
 
-    double recordedFrequency = key.getRecordedFrequency() * std::pow(2.0, (index) / 1200.0);
-    double targetFrequency = piano->getConcertPitch()/440.0 * key.getComputedFrequency();
-    int computedIndex = MathTools::roundToInteger(log(targetFrequency / key.getRecordedFrequency()) * 1200 / MathTools::LOG2);
+    double detectedFrequency = centerFrequency * std::pow(2.0, (index) / 1200.0);
+    EptAssert(detectedFrequency > 1 && detectedFrequency < 20000, "Unallowed frequency range");
 
-    EptAssert(recordedFrequency > 1 && recordedFrequency < 20000, "Unallowed frequency range");
+    int computedIndex = MathTools::roundToInteger(log(targetFrequency / centerFrequency) * 1200 / MathTools::LOG2);
+
 
     result->deviationInCents = static_cast<int>(index - computedIndex);
-    result->detectedFrequency = recordedFrequency;
+    result->detectedFrequency = detectedFrequency;
     result->positionOfMaximum = index;
     result->tuningDeviationCurve = std::move(out);
 
     LogV("Deviation %d, comp index %d", result->deviationInCents, computedIndex);
-
-    LogV("leaving FFTAnalyzer thread.");
 
     return result;
 }
@@ -247,7 +309,8 @@ FFTAnalyzer::SpectrumType FFTAnalyzer::constructKernel(const SpectrumType &origi
     return kernel;
 }
 
-TuningDeviationCurveType FFTAnalyzer::computeTuningDeviation(const SpectrumType &kernel, const SpectrumType &signal, int searchSize)
+TuningDeviationCurveType FFTAnalyzer::computeTuningDeviation(
+        const SpectrumType &kernel, const SpectrumType &signal, int searchSize)
 {
     const int searchOffset = searchSize / 2;
     TuningDeviationCurveType out(searchSize);
