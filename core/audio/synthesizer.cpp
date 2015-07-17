@@ -335,7 +335,7 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
     if (channels<=0 or channels>2) return false;
 
 
-    for (size_t bufferIndex = 0; bufferIndex < outputBuffer.size(); bufferIndex += channels) {
+    for (size_t bufferIndex = channels - 1; bufferIndex < outputBuffer.size(); bufferIndex += channels) {
         // pcm data
         double left = 0, right = 0;
 
@@ -423,8 +423,8 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
         }
         else // if stereo
         {
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(left);
-            outputBuffer[bufferIndex+1] = static_cast<AudioBase::PacketDataType>(right);
+            outputBuffer[bufferIndex - 1] = static_cast<AudioBase::PacketDataType>(left);
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(right);
         }
 
     }
