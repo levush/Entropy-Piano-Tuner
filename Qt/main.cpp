@@ -22,7 +22,7 @@
 /// \author Christoph Wick and Haye Hinrichsen
 /// \author Institute for Physics and Astronomy<br>
 /// University of Würzburg<br> 97074 Würzburg, Germany
-/// \author e-mail: info at entropy-tuner.org
+/// \author e-mail: info at piano-tuner.org
 ///
 /// The Entropy-Piano-Tuner (EPT) is an experimental software for piano
 /// tuning.
@@ -37,6 +37,7 @@
 #include "tunerapplication.h"
 #include "qdebug.h"
 #include "../core/config.h"
+#include "../core/system/serverinfo.h"
 #include "qtconfig.h"
 #include "../core/system/eptexception.h"
 #include "settingsforqt.h"
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
 
     // basic application properties (needed for settings)
     QCoreApplication::setOrganizationName("tp3");
-    QCoreApplication::setOrganizationDomain("entropy-tuner.org");
+    QCoreApplication::setOrganizationDomain(serverinfo::SERVER_DOMAIN.c_str());
     QCoreApplication::setApplicationName("Entropy Piano Tuner");
 
     try {

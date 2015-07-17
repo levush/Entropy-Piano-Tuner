@@ -34,6 +34,7 @@
 #include "core/system/eptexception.h"
 #include "core/system/version.h"
 #include "core/system/log.h"
+#include "core/system/serverinfo.h"
 #include "qtconfig.h"
 
 
@@ -57,7 +58,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     titleLayout->addWidget(new QLabel(QString("<h1>%1 %2</h1>").arg(tr("Entropy Piano Tuner"), EPT_VERSION_STRING)));
     titleLayout->addStretch();
 
-    QLabel *webpage = new QLabel("<a href=\"http://www.entropy-tuner.org\">www.entropy-tuner.org</a> - <a href=\"mailto:info@entropy-tuner.org\">Feedback</a>");
+    QLabel *webpage = new QLabel(QString::fromStdString("<a href=\"" + serverinfo::SERVER_ADDRESS + "\">" + serverinfo::SERVER_NAME + "</a> - <a href=\"mailto:" + serverinfo::MAIL_ADDRESS + "\">Feedback</a>"));
     QObject::connect(webpage, SIGNAL(linkActivated(QString)), this, SLOT(onOpenAboutLink(QString)));
     mainLayout->addWidget(webpage);
 

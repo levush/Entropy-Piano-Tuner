@@ -24,6 +24,7 @@
 #include "core/system/eptexception.h"
 #include "core/system/version.h"
 #include "core/system/log.h"
+#include "core/system/serverinfo.h"
 
 using tinyxml2::XMLElement;
 using tinyxml2::XMLDocument;
@@ -32,7 +33,7 @@ VersionCheck::VersionCheck(QObject *parent) : QObject(parent)
 {
 #if CONFIG_ENABLE_UPDATE_TOOL
     QNetworkAccessManager *nam = new QNetworkAccessManager(this);
-    QUrl versionFileUrl("http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/version.xml");
+    QUrl versionFileUrl(serverinfo::getVersionFileAddress().c_str());
 
     QObject::connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
     nam->get(QNetworkRequest(versionFileUrl));
@@ -53,7 +54,7 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
                 XMLDocument doc;
                 doc.Parse(replyString.toStdString().c_str());
                 if (doc.Error()) {
-                    EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, "Version.xml file could not be parsed.");
+                    EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, serverinfo::VERSION_FILENAME + " file could not be parsed.");
                 }
 
                 XMLElement *root = doc.FirstChildElement();

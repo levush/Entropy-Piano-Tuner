@@ -35,13 +35,15 @@ HEADERS = \
     Qt/plotsdialog/centralplotframe.h \
     Qt/plotsdialog/keyindexscaleengine.h \
     Qt/plotsdialog/keyindexscaledraw.h \
-    core/audio/pcmwriterinterface.h
+    core/audio/pcmwriterinterface.h \
+    core/system/serverinfo.h
 QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \
     Qt/plotsdialog/keyindexscaleengine.cpp \
     Qt/plotsdialog/keyindexscaledraw.cpp \
-    core/piano/pianodefines.cpp
+    core/piano/pianodefines.cpp \
+    core/system/serverinfo.cpp
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt

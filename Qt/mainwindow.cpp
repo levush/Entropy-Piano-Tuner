@@ -29,6 +29,7 @@
 #include "../core/messages/messagecaluclationprogress.h"
 #include "../core/messages/messagenewfftcalculated.h"
 #include "../core/system/version.h"
+#include "../core/system/serverinfo.h"
 #include <QDebug>
 #include <QCloseEvent>
 #include <QProcess>
@@ -668,7 +669,7 @@ void MainWindow::onTutorial() {
 }
 
 void MainWindow::onManual() {
-    QDesktopServices::openUrl(QUrl(QString("http://www.entropy-tuner.org/www/manual/manual_%1.pdf").arg(QString::fromStdString(SettingsForQt::getSingleton().getUserLanguageId()))));
+    QDesktopServices::openUrl(QUrl(serverinfo::getManualFileAddress(SettingsForQt::getSingleton().getUserLanguageId()).c_str()));
 }
 
 void MainWindow::onAbout() {
@@ -736,9 +737,9 @@ void MainWindow::onVersionUpdate(VersionInformation information) {
     if (mb.exec() == QMessageBox::Yes) {
 #ifdef Q_OS_MACX
         // download new dmg file
-        if (!QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org/Resources/Public/Downloads/EntropyPianoTuner_MacOsX.dmg"))) {
+        if (!QDesktopServices::openUrl(QUrl::fromUserInput(serverinfo::getDownloadsFileAddress(serverinfo::MAC_X86_64_DMG).c_str()))) {
             LogW("Online installer file for mac could not be found.");
-            QDesktopServices::openUrl(QUrl::fromUserInput("http://entropy-tuner.org"));
+            QDesktopServices::openUrl(QUrl::fromUserInput(serverinfo::SERVER_ADDRESS.c_str()));
         } else {
             this->close();
         }

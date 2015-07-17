@@ -4,7 +4,7 @@
     <Version>1.1.0</Version>
     <Title>Entropy Piano Tuner Installer</Title>
     <Publisher>TP III Universität Würzburg</Publisher>
-    <ProductUrl>http://www.entropy-tuner.org</ProductUrl>
+    <ProductUrl>http://piano-tuner.org</ProductUrl>
     <InstallerWindowIcon>windowicon</InstallerWindowIcon>
     <InstallerApplicationIcon>appicon</InstallerApplicationIcon>
     <Logo>logo.png</Logo>
@@ -14,7 +14,7 @@
     <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
     <RemoteRepositories>
         <Repository>
-            <Url>http://www.physik.uni-wuerzburg.de/~hinrichsen/ept/Resources/Public/Downloads/Repository/dummy_repository</Url>
+            <Url>http://download.piano-tuner.org/Resources/Public/Downloads/Repository/dummy_repository</Url>
             <Enabled>1</Enabled>
             <DisplayName>Base repository</DisplayName>
         </Repository>
