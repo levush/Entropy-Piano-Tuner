@@ -139,6 +139,27 @@ QString SimpleFileDialog::getSaveFile(QDir dir) {
     return dir.absoluteFilePath(dialog.getFileName());
 }
 
+void SimpleFileDialog::accept() {
+    const QFileInfo fi(mDir.absoluteFilePath(getFileName()));
+    if (mMode == Mode::Save) {
+        // check if the file already exits
+        if (fi.exists()) {
+            if (QMessageBox::warning(this,
+                                     tr("File existing"),
+                                     tr("A file with the given name already exits at %1. Do you want to overwrite it?").arg(fi.absoluteFilePath()),
+                                     QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
+                return;
+            }
+        }
+    }
+
+    if (fi.baseName().isEmpty()) {
+        QMessageBox::information(this, tr("Invalid filename"), tr("Please provide a valid filename."));
+    } else {
+        QDialog::accept();
+    }
+}
+
 void SimpleFileDialog::onDeleteFile() {
     EptAssert(sender(), "This is a slot and has to be sent by a QPushButton.");
 

@@ -43,6 +43,9 @@ public:
 
     QString getFileName() const {return mNameEdit->text() + ".ept";}
 
+protected:
+    void accept();
+
 signals:
     void fileSelectionChanged(QString);
 private slots:
