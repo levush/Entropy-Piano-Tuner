@@ -45,7 +45,7 @@ public:
     ~SoundGenerator(){}
 
     void init () { }
-    void exit () { }
+    void exit () { mSynthesizer.exit(); }
 
     void start() { }
     void stop()  { }
