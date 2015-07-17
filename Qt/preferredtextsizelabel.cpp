@@ -17,20 +17,15 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "serverinfo.h"
+#include "preferredtextsizelabel.h"
 
-namespace serverinfo {
-
-std::string getDownloadsFileAddress(const std::string &filename) {
-    return SERVER_DOWNLOADS_ADDRESS + "/" + filename;
+PreferredTextSizeLabel::PreferredTextSizeLabel(const QString &text, QWidget *parent) :
+    QLabel(text, parent)
+{
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
-std::string getVersionFileAddress() {
-    return getDownloadsFileAddress(VERSION_FILENAME);
+QSize PreferredTextSizeLabel::sizeHint() const {
+    QFontMetrics f(fontMetrics());
+    return f.boundingRect(text()).size();
 }
-
-std::string getManualFileAddress(const std::string &langCode) {
-    return SERVER_DOCUMENTATION_ADDRESS + "/manual_" + langCode + ".pdf";
-}
-
-}  // namespace serverinfo

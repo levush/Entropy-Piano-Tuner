@@ -36,14 +36,20 @@ HEADERS = \
     Qt/plotsdialog/keyindexscaleengine.h \
     Qt/plotsdialog/keyindexscaledraw.h \
     core/audio/pcmwriterinterface.h \
-    core/system/serverinfo.h
+    core/system/serverinfo.h \
+    Qt/preferredtextsizelabel.h \
+    Qt/verticalscrollarea.h \
+    Qt/options/optionstabcontentsvscrollarea.h
 QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \
     Qt/plotsdialog/keyindexscaleengine.cpp \
     Qt/plotsdialog/keyindexscaledraw.cpp \
     core/piano/pianodefines.cpp \
-    core/system/serverinfo.cpp
+    core/system/serverinfo.cpp \
+    Qt/preferredtextsizelabel.cpp \
+    Qt/verticalscrollarea.cpp \
+    Qt/options/optionstabcontentsvscrollarea.cpp
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt

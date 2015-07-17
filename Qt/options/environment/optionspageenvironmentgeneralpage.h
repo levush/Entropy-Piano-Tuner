@@ -24,11 +24,12 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QCheckBox>
+#include "../optionstabcontentsvscrollarea.h"
 #include "../optionscontentswidgetinterface.h"
 
 namespace options {
 
-class PageEnvironmentGeneral : public QWidget, public ContentsWidgetInterface
+class PageEnvironmentGeneral : public OptionsTabContentsVScrollArea, public ContentsWidgetInterface
 {
     Q_OBJECT
 public:

@@ -20,6 +20,7 @@
 #include "optionspageenvironmenttuningpage.h"
 #include "core/audio/soundgeneratormode.h"
 #include "../../settingsforqt.h"
+#include "preferredtextsizelabel.h"
 #include <QGridLayout>
 
 namespace options {
@@ -27,7 +28,7 @@ namespace options {
 PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
 {
     QGridLayout *layout = new QGridLayout;
-    setLayout(layout);
+    mCentralWidget->setLayout(layout);
     layout->setColumnStretch(1, 1);
 
     mSynthesizerMode = new QComboBox;
@@ -40,13 +41,13 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
     layout->addWidget(mSynthesizerMode, 0, 1);
 
     mSynthesizerVolumeDynamic = new QCheckBox;
-    QLabel *synthesizerVolumeDynamicLabel = new QLabel(tr("Dynamic synthesizer volume"));
+    QLabel *synthesizerVolumeDynamicLabel = new PreferredTextSizeLabel(tr("Dynamic synthesizer volume"));
     synthesizerVolumeDynamicLabel->setWordWrap(true);
     layout->addWidget(synthesizerVolumeDynamicLabel, 1, 0);
     layout->addWidget(mSynthesizerVolumeDynamic, 1, 1);
 
     mDisableAutomaticKeySelecetion = new QCheckBox;
-    QLabel *disableAutomaticKeySelectionLabel = new QLabel(tr("Disable automatic key selection"));
+    QLabel *disableAutomaticKeySelectionLabel = new PreferredTextSizeLabel(tr("Disable automatic key selection"));
     disableAutomaticKeySelectionLabel->setWordWrap(true);
     layout->addWidget(disableAutomaticKeySelectionLabel, 2, 0);
     layout->addWidget(mDisableAutomaticKeySelecetion, 2, 1);

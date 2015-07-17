@@ -17,20 +17,18 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "serverinfo.h"
+#ifndef VERTICALSCROLLAREA_H
+#define VERTICALSCROLLAREA_H
 
-namespace serverinfo {
+#include <QScrollArea>
 
-std::string getDownloadsFileAddress(const std::string &filename) {
-    return SERVER_DOWNLOADS_ADDRESS + "/" + filename;
-}
+class VerticalScrollArea : public QScrollArea
+{
+public:
+    VerticalScrollArea(QWidget *parent = nullptr);
 
-std::string getVersionFileAddress() {
-    return getDownloadsFileAddress(VERSION_FILENAME);
-}
+protected:
+    void resizeEvent(QResizeEvent *e) override final;
+};
 
-std::string getManualFileAddress(const std::string &langCode) {
-    return SERVER_DOCUMENTATION_ADDRESS + "/manual_" + langCode + ".pdf";
-}
-
-}  // namespace serverinfo
+#endif // VERTICALSCROLLAREA_H
