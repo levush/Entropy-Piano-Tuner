@@ -40,6 +40,22 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
 AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        const std::string &label,
                                        const std::string &description,
+                                       int defaultValue,
+                                       int minValue,
+                                       int maxValue) :
+    mParameterType(TYPE_INT),
+    mID(id),
+    mLabel(label),
+    mDescription(description),
+    mIntDefaultValue(defaultValue),
+    mIntMinValue(minValue),
+    mIntMaxValue(maxValue)
+{
+}
+
+AlgorithmParameter::AlgorithmParameter(const std::string &id,
+                                       const std::string &label,
+                                       const std::string &description,
                                        const std::string &defaultValue,
                                        const StringParameterList &list) :
     mParameterType(TYPE_LIST),

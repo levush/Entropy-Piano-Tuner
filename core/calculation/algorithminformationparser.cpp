@@ -144,6 +144,14 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
         element->QueryDoubleAttribute("max", &maxValue);
         element->QueryIntAttribute("precision", &precision);
         return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision);
+    } else if (type == "int") {
+        const int defaultValue = element->IntAttribute("default");
+        int minValue = std::numeric_limits<int>::min();
+        int maxValue = std::numeric_limits<int>::max();
+
+        element->QueryIntAttribute("min", &minValue);
+        element->QueryIntAttribute("max", &maxValue);
+        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue);
     } else if (type == "list") {
         const std::string defaultValue = element->Attribute("default");
         AlgorithmParameter::StringParameterList list;

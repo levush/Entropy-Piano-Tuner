@@ -35,6 +35,10 @@ public:
     bool hasDoubleParameter(const std::string &s) const {return mDoubleParameters.count(s) > 0;}
     double getDoubleParameter(const std::string &s) const;
 
+    void setIntParameter(const std::string &s, int i) {mIntParamters[s] = i;}
+    bool hasIntParameter(const std::string &s) const {return mIntParamters.count(s) > 0;}
+    int getIntParameter(const std::string &s) const;
+
     void setStringParameter(const std::string &id, const std::string &s) {mStringParameters[id] = s;}
     bool hasStringParameter(const std::string &id) const {return mStringParameters.count(id) > 0;}
     const std::string &getStringParameter(const std::string &id) const;
@@ -43,6 +47,7 @@ private:
     const std::string mAlgorithmName;
 
     std::map<std::string, double> mDoubleParameters;
+    std::map<std::string, int> mIntParamters;
     std::map<std::string, std::string> mStringParameters;
 };
 

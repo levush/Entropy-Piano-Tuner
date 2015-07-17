@@ -10,7 +10,7 @@
         <string lang="de">Dieser Algorithmus erzeugt eine ungefähre Stimmkurve, die man für eine Frequenzanhebung (pitch raise) benötigt. Einzelheiten dazu finden Sie in der Bedienungsanleitung.</string>
     </description>
 
-    <param id="sectionSeparator" type="double" min="20" max="40" default="28" precision="1">
+    <param id="sectionSeparator" type="int" min="20" max="40" default="28">
         <label>
             <string>Section-separating key</string>
             <string lang="de">Sektionentrennende Taste</string>

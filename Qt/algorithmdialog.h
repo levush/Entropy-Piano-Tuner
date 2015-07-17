@@ -54,7 +54,7 @@ private:
     using AlgorithmWidgetConnectionList = QList<QPair<std::string, QWidget*>>;
     AlgorithmWidgetConnectionList mAlgorithmWidgetConnectionList;
 
-    AlgorithmFactoryDescription *mCurrenctFactoryDescription = nullptr;
+    AlgorithmFactoryDescription *mCurrentFactoryDescription = nullptr;
     std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;
     QComboBox *mAlgorithmSelection = nullptr;
     QScrollArea *mAlgorithmDescriptionScrollArea = nullptr;
