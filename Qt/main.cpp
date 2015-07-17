@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     if ( !guard.tryToRun() ) {
         // a QApplication is required for showing message boxes
         QApplication q(argc, argv);
-        QMessageBox::warning(nullptr, q.tr("Application can not be started"), q.tr("The Entropy Piano Tuner could not be started because an other instance is already running."));
+        QMessageBox::warning(nullptr, q.tr("Application can not be started"), q.tr("The Entropy Piano Tuner could not be started because another instance is already running."));
         return 0;
     }
 #endif
