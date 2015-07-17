@@ -89,7 +89,7 @@ void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
         mPiano = &mpf->getPiano();
         mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
         mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
-        redraw();
+        mGraphics->clear();
         break;
     }
     case Message::MSG_TUNING_DEVIATION: {
@@ -152,13 +152,16 @@ void ZoomedSpectrumDrawer::draw()
     }
 
     //---------------------- Draw tuning deviation curve -----------------
+
     if (specWindowSize > 0) {
         double max = *std::max_element(mFrequencyDetectionResult->tuningDeviationCurve.begin(),
                                       mFrequencyDetectionResult->tuningDeviationCurve.end());
 
         std::vector<GraphicsViewAdapter::Point> points;
         const int centerIndex = mFrequencyDetectionResult->tuningDeviationCurve.size() / 2;
-        const int startIndex = std::max<int>(0, centerIndex - specWindowSize / 2 + MathTools::roundToInteger(mFrequencyDetectionResult->positionOfMaximum) - mFrequencyDetectionResult->deviationInCents);
+        const int startIndex = std::max<int>(0, centerIndex - specWindowSize / 2 +
+                               MathTools::roundToInteger(mFrequencyDetectionResult->positionOfMaximum) -
+                               mFrequencyDetectionResult->deviationInCents);
         const int endIndex = std::min<int>(startIndex + specWindowSize,
                                            mFrequencyDetectionResult->tuningDeviationCurve.size());
         for (int i = startIndex; i < endIndex; ++i) {

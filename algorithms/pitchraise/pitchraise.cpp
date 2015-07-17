@@ -192,7 +192,6 @@ void PitchRaise::algorithmWorkerFunction()
     for (int k=numberA3-1; k>=0; k--)
     {
         double pitch42 = mPitch[k+12] + cents(k+12,2) -cents(k,4);
-        //double pitch63 = mPitch[k+12] + cents(k+12,3) -cents(k,6);
         double pitch105 = mPitch[k+12] + cents(k+12,5) -cents(k,10);
         double fraction = 1.0*k/numberA3;
         mPitch[k] = pitch42*fraction+pitch105*(1-fraction);
