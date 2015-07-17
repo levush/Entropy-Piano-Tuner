@@ -30,7 +30,8 @@ public:
 public:
     enum Type {
         TYPE_DOUBLE,
-        TYPE_LIST
+        TYPE_INT,
+        TYPE_LIST,
     };
 
 public:
@@ -42,6 +43,14 @@ public:
                        double minValue,
                        double maxValue,
                        int precision = -1);
+
+    // constructor for a int parameter
+    AlgorithmParameter(const std::string &id,
+                       const std::string &label,
+                       const std::string &description,
+                       int defaultValue,
+                       int minValue,
+                       int maxValue);
 
     // constructor for a list
     AlgorithmParameter(const std::string &id,
@@ -62,6 +71,10 @@ public:
     double getDoubleMaxValue() const {return mDoubleMaxValue;}
     int    getDoublePrecision() const {return mDoublePrecision;}
 
+    int getIntDefaultValue() const {return mIntDefaultValue;}
+    int getIntMinValue() const {return mIntMinValue;}
+    int getIntMaxValue() const {return mIntMaxValue;}
+
     const std::string &getStringDefaultValue() const {return mStringDefaultValue;}
     const StringParameterList &getStringList() const {return mStringList;}
 
@@ -76,6 +89,10 @@ private:
     const double mDoubleMinValue = 0;
     const double mDoubleMaxValue = 0;
     const int    mDoublePrecision = 1;
+
+    const int    mIntDefaultValue = 0;
+    const int    mIntMinValue = 0;
+    const int    mIntMaxValue = 0;
 
     const std::string mStringDefaultValue;
     const StringParameterList mStringList;

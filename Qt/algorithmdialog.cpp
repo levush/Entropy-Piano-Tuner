@@ -110,7 +110,7 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
 }
 
 void AlgorithmDialog::acceptCurrent() {
-    if (!mCurrenctFactoryDescription) {
+    if (!mCurrentFactoryDescription) {
         // nothin selected
         return;
     }
@@ -122,11 +122,15 @@ void AlgorithmDialog::acceptCurrent() {
 
         if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
             const QDoubleSpinBox *sb = dynamic_cast<const QDoubleSpinBox*>(widget);
-            EptAssert(sb, "This parameter is descripted by a QDoubleSpinBox");
-            mCurrenctFactoryDescription->setDoubleParameter(paramWidget.first, sb->value());
+            EptAssert(sb, "This parameter is described by a QDoubleSpinBox");
+            mCurrentFactoryDescription->setDoubleParameter(paramWidget.first, sb->value());
+        } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
+            const QSpinBox *sb = dynamic_cast<const QSpinBox*>(widget);
+            EptAssert(sb, "This parameter is described by a QSpinBox");
+            mCurrentFactoryDescription->setIntParameter(paramWidget.first, sb->value());
         } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
             const QComboBox *cb = qobject_cast<const QComboBox*>(widget);
-            mCurrenctFactoryDescription->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
+            mCurrentFactoryDescription->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
         } else {
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parameter type not implemented");
         }
@@ -143,7 +147,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     // load new
     QString algId = mAlgorithmSelection->itemData(index).toString();
     AlgorithmFactoryDescription &description = CalculationManager::getSingleton().getAlgorithmDescription(algId.toStdString());
-    mCurrenctFactoryDescription = &description;
+    mCurrentFactoryDescription = &description;
     mCurrentAlgorithmInformation = CalculationManager::getSingleton().loadAlgorithmInformation(description.getAlgorithmName());
     const AlgorithmInformation &info(*mCurrentAlgorithmInformation.get());
 
@@ -205,6 +209,31 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
                     sb->setDecimals(param.getDoublePrecision());
                 }
+
+                valueLayout->addWidget(sb);
+
+                dataWidget = sb;
+            } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
+                QHBoxLayout *valueLayout = new QHBoxLayout;
+                dataLayout = valueLayout;
+
+                QSpinBox *sb = new QSpinBox();
+                sb->setRange(param.getIntMinValue(), param.getIntMaxValue());
+                if (description.hasIntParameter(param.getID())) {
+                    sb->setValue(description.getIntParameter(param.getID()));
+                } else {
+                    sb->setValue(param.getIntDefaultValue());
+                }
+
+                // add a slider aswell
+                QSlider *slider = new QSlider(Qt::Horizontal);
+                slider->setMinimum(param.getIntMinValue());
+                slider->setMaximum(param.getIntMaxValue());
+                slider->setValue(sb->value());
+                valueLayout->addWidget(slider);
+
+                QObject::connect(slider, SIGNAL(valueChanged(int)), sb, SLOT(setValue(int)));
+                QObject::connect(sb, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
 
                 valueLayout->addWidget(sb);
 

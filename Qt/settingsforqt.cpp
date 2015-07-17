@@ -63,7 +63,7 @@ void SettingsForQt::load() {
 
     mLastUsedAlgorithm = mSettings.value("core/lastUsedAlgorithm", QString()).toString().toStdString();
     mSoundGeneratorMode = static_cast<SoundGeneratorMode>(
-                mSettings.value("core/soundGeneratorMode", static_cast<int>(SGM_REFERENCE_TONE)).toInt());
+                mSettings.value("core/soundGeneratorMode", static_cast<int>(SGM_SYNTHESIZE_KEY)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
     mDisableAutomaticKeySelection = mSettings.value("core/disableAutomaticKeySelection", false).toBool();
 }
