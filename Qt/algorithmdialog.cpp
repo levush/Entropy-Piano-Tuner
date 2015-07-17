@@ -29,6 +29,7 @@
 #include <QGroupBox>
 #include <QDoubleSpinBox>
 #include <QScroller>
+#include <QDebug>
 #include "doubleslider.h"
 
 #include "qtconfig.h"
@@ -190,6 +191,10 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 dataLayout = valueLayout;
 
                 QDoubleSpinBox *sb = new QDoubleSpinBox();
+#ifdef __ANDROID__
+                // HACK: fix spin box size on android
+                sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
+#endif
                 sb->setRange(param.getDoubleMinValue(), param.getDoubleMaxValue());
                 if (description.hasDoubleParameter(param.getID())) {
                     sb->setValue(description.getDoubleParameter(param.getID()));
@@ -218,6 +223,10 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 dataLayout = valueLayout;
 
                 QSpinBox *sb = new QSpinBox();
+#ifdef __ANDROID__
+                // HACK: fix spin box size on android
+                sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
+#endif
                 sb->setRange(param.getIntMinValue(), param.getIntMaxValue());
                 if (description.hasIntParameter(param.getID())) {
                     sb->setValue(description.getIntParameter(param.getID()));
