@@ -107,11 +107,15 @@ void PitchRaise::algorithmWorkerFunction()
     std::vector<double> X(2,0),Y(2,0),XX(2,0),XY(2,0),A(2,0),B(2,0);
     std::vector<int> N(2,0);
 
+    // make tuning curve initially flat
+    updateTuningcurve();
+
     for (int i = 0; i < mNumberOfKeys; ++i)
     {
         CHECK_CANCEL_THREAD;
         Key &key = mPiano.getKey(i);
-        showCalculationProgress(key, 0.0, 0.2);
+        showCalculationProgress(i*0.25/mNumberOfKeys);
+        msleep(5);
         if (key.getMeasuredInharmonicity()>1E-10)
         {
             double B = key.getMeasuredInharmonicity();
@@ -129,13 +133,13 @@ void PitchRaise::algorithmWorkerFunction()
     if (N[0]==0)
     {
         // Error left
-        LogW("Not enough keys recorded in the left section (key 1...%d)",mSectionSeparatingKey);
+        LogE("Not enough keys recorded in the left section (key 1...%d)",mSectionSeparatingKey);
         return;
     }
     if (N[1]==0)
     {
         // Error right
-        LogW("Not enough keys recorded in the right section (key %d...%d)",mSectionSeparatingKey,mNumberOfKeys);
+        LogE("Not enough keys recorded in the right section (key %d...%d)",mSectionSeparatingKey,mNumberOfKeys);
         return;
     }
 
@@ -154,12 +158,6 @@ void PitchRaise::algorithmWorkerFunction()
         return exp(-minusLogB);
     };
 
-
-    for (int i = 0; i < mNumberOfKeys; ++i)
-    {
-        LogI("B[%d]=%lf",i,estimatedInharmonicity(i));
-    }
-
     // For the computation we need at least two octaves to both sides of A4:
     if (mKeyNumberOfA4<=13 or mNumberOfKeys-mKeyNumberOfA4<=13) return;
 
@@ -176,29 +174,47 @@ void PitchRaise::algorithmWorkerFunction()
     double pitchA5 = 0.5*cents(numberA4,3)+0.5*cents(numberA4,2);
     double pitchA3 = cents(numberA4,2)-cents(numberA3,4);
     for (int k=numberA3; k<mKeyNumberOfA4; ++k)
+    {
+        CHECK_CANCEL_THREAD;
         mPitch[k] = pitchA3*(mKeyNumberOfA4-k)/12.0;
+        showCalculationProgress(0.25+(k-numberA3)*0.125/12);
+        updateTuningcurve(k);
+        msleep(30);
+
+    }
     for (int k=mKeyNumberOfA4+1; k<=numberA5; ++k)
+    {
+        CHECK_CANCEL_THREAD;
         mPitch[k] = pitchA5*(k-mKeyNumberOfA4)/12.0;
+        showCalculationProgress(0.375+(k-mKeyNumberOfA4)*0.125/12);
+        updateTuningcurve(k);
+        msleep(30);
+    }
 
     // Extend curve to the right by iteration:
     for (int k=numberA5+1; k<mNumberOfKeys; k++)
     {
+        CHECK_CANCEL_THREAD;
         double pitch42 = mPitch[k-12] + cents(k-12,4) -cents(k,2);
         double pitch21 = mPitch[k-12] + cents(k-12,2);
         mPitch[k] = 0.3*pitch42 + 0.7*pitch21;
+        updateTuningcurve(k);
+        showCalculationProgress(0.5+(k-numberA5)*0.25/(mNumberOfKeys-numberA5));
+        msleep(30);
     }
 
     // Extend the curve to the left by iteration:
     for (int k=numberA3-1; k>=0; k--)
     {
+        CHECK_CANCEL_THREAD;
         double pitch42 = mPitch[k+12] + cents(k+12,2) -cents(k,4);
         double pitch105 = mPitch[k+12] + cents(k+12,5) -cents(k,10);
         double fraction = 1.0*k/numberA3;
         mPitch[k] = pitch42*fraction+pitch105*(1-fraction);
+        updateTuningcurve(k);
+        msleep(30);
+        showCalculationProgress(0.75+(numberA3-k)*0.25/(numberA3));
     }
-
-    // set the tuning curve
-    updateTuningcurve();
 }
 
 
