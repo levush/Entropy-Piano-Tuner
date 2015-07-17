@@ -424,11 +424,10 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
         else // if stereo
         {
             outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(left);
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(right);
+            outputBuffer[bufferIndex+1] = static_cast<AudioBase::PacketDataType>(right);
         }
 
     }
-
     return true;
 }
 

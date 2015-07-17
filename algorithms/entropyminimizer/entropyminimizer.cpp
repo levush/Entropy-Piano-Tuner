@@ -100,7 +100,6 @@ void EntropyMinimizer::algorithmWorkerFunction()
     for (int k=0; k<mNumberOfKeys; k++)
     {
         double f = mPiano.getEqualTempFrequency(k,0,440);
-        //double f = mKeyboard[k].getRecordedFrequency(); // for testing
         mKeyboard[k].setComputedFrequency(f);
         updateTuningCurve(k, f);
     }
@@ -109,20 +108,19 @@ void EntropyMinimizer::algorithmWorkerFunction()
 
     if (success)
     {
-        std::cout << "CalculationManager: Initialize entropy minimizer" << std::endl;
-
-        std::cout << "CalculationManager: Compute initial condition" << std::endl;
+        LogI("Compute initial condition");
         ComputeInitialTuningCurve();
 
-        std::cout << "CalculationManager: Wait 0.5 sec" << std::endl;
+        LogI("Wait 0.5 sec");
         Timer T; T.wait(500);
 
         MessageHandler::send<MessageCaluclationProgress>
                 (MessageCaluclationProgress::CALCULATION_ENTROPY_REDUCTION_STARTED);
-        std::cout << "CalculationManager: Start entropy minimization" << std::endl;
+
+        LogI("Start entropy minimization");
         minimizeEntropy();
 
-        std::cout << "CalculationManager: Stop calculation" << std::endl;
+        LogI("CalculationManager: Stop calculation");
     }
 }
 
@@ -439,12 +437,6 @@ void EntropyMinimizer::ComputeInitialTuningCurve ()
     int numberA3 = mKeyNumberOfA4-12;
     int numberA4 = mKeyNumberOfA4;
     int numberA5 = mKeyNumberOfA4+12;
-//    double centsA34 = cents(numberA3,2);
-//    double centsA35 = cents(numberA3,4);
-//    double centsA45 = cents(numberA4,2);
-//    double correction = 1 + (centsA35-centsA34-centsA45)/centsA35/2;
-//    double pitchA5 =   correction * centsA45;
-//    double pitchA3 = - correction * centsA34;
     double pitchA5 = cents(numberA4,2);
     double pitchA3 = cents(numberA4,2)-cents(numberA3,4);
     for (int k=numberA3; k<mKeyNumberOfA4; ++k)
@@ -504,52 +496,6 @@ int EntropyMinimizer::getTolerance (int keynumber)
 
 }
 
-
-////-----------------------------------------------------------------------------
-////            Add reference spectrum, defining the basic temperament
-////-----------------------------------------------------------------------------
-
-//void EntropyMinimizer::addReferenceSpectrum(double intensity)
-//{
-//    const double width = 12;  // should be instrument-dependent
-//    const double slope = 300; // for average upright
-
-//    int centralkey = mKeyNumberOfA4;
-//    int lowerkey = std::max(0,mKeyNumberOfA4-24);
-//    int upperkey = std::min(mNumberOfKeys,mKeyNumberOfA4+25);
-
-//    double pitch = 0;
-//    for (int keynumber = centralkey; keynumber < upperkey; ++keynumber)
-//    {
-//        double f = mPiano.getDefiningTempFrequency(keynumber,pitch);
-//        int m = MathTools::roundToInteger(ftom(f));
-//        EptAssert(m>=0 and m<NumberOfBins,"Range of m-Index");
-//        double squaredist = (keynumber-centralkey)*(keynumber-centralkey);
-//        double height = intensity * exp(-pow(squaredist/width/width,3.0));
-//        mAccumulator[m-2] += height/4;
-//        mAccumulator[m-1] += height/2;
-//        mAccumulator[m] += height;
-//        mAccumulator[m+1] += height/2;
-//        mAccumulator[m+2] += height/4;
-//        pitch += slope * mPiano.getExpectedInharmonicity(keynumber);
-//    }
-//    for (int keynumber = centralkey-1; keynumber >= lowerkey; --keynumber)
-//    {
-//        double f = mPiano.getDefiningTempFrequency(keynumber,pitch);
-//        int m = MathTools::roundToInteger(ftom(f));
-//        EptAssert(m>=0 and m<NumberOfBins,"Range of m-Index");
-//        double squaredist = (keynumber-centralkey)*(keynumber-centralkey);
-//        double height = intensity * exp(-pow(squaredist/width/width,3.0));
-//        mAccumulator[m-2] += height/4;
-//        mAccumulator[m-1] += height/2;
-//        mAccumulator[m] += height;
-//        mAccumulator[m+1] += height/2;
-//        mAccumulator[m+2] += height/4;
-//        pitch -= slope * mPiano.getExpectedInharmonicity(keynumber);
-//    }
-//}
-
-
 //-----------------------------------------------------------------------------
 
 double EntropyMinimizer::computeEntropy()
@@ -587,12 +533,9 @@ void EntropyMinimizer::minimizeEntropy ()
 
     setAllSpectralComponents();
 
-    // Add the reference spectrum
-    //addReferenceSpectrum(0.2);
-
     // compute initial entropy
     double H = computeEntropy();
-    std::cout << "STARTING WITH ENTROPY H=" << H << std::endl;
+    LogI("STARTING WITH ENTROPY H=%lf.",H);
 
     // counter for calculating progress
     uint64_t attemptsCounter = 0;
@@ -603,7 +546,7 @@ void EntropyMinimizer::minimizeEntropy ()
     {
         // update entropy and tuning curve
         H = Hnew;
-        std::cout << "H=" << H << std::endl;
+        LogI("ENTROPY H=%lf.",H);
         if (keynumber>=0) updateTuningcurve(keynumber);
         else updateTuningcurve();
 
@@ -668,11 +611,10 @@ void EntropyMinimizer::minimizeEntropy ()
         if (mRecalculateEntropy)
         {
             int manualpitch = getPitchET440(mRecalculateKey,mRecalculateFrequency);
-            std::cout << "NEW PITCH(" << mRecalculateKey << ") = "
-                      << manualpitch << std::endl;
+            LogI("NEW PITCH(%d) = %d.",mRecalculateKey,manualpitch);
             modifySpectralComponent(mRecalculateKey,manualpitch);
             H = computeEntropy();
-            std::cout << "RESET ENTROPY H=" << H << std::endl;
+            LogI("RESET ENTROPY H = %lf.",H);
             mRecalculateEntropy=false;
             mRecalculateKey=-1;
             mRecalculateFrequency=0;
@@ -704,7 +646,6 @@ void EntropyMinimizer::minimizeEntropy ()
             {
                 acceptUpdate (-1,Hnew);
                 methodratio *= 0.995;
-                std::cout << "METHODRATIO = " << methodratio << std::endl;
             }
             else
             {

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <algorithm year="2015" author="Christoph Wick">
     <name>
-        <string>Reset to recorded frequency</string>
-        <string lang="de">Zurücksetzen auf augenommene Frequenz</string>
+        <string>Restore recorded frequencies</string>
+        <string lang="de">Stimmen nach aufgenommener Frequenz</string>
     </name>
     <description>
-        <string>Running this algorithm will just reset the calculated frequency to the recorded one.</string>
-        <string lang="de">Das Ausführen diese Algorithmus setzt nur die berechnete Freuqenz auf die Aufgenommene zurück.</string>
+        <string>This algorithm just copies the measured frequencies, allowing you to tune the piano according to the recorded pitches.</string>
+        <string lang="de">Dieser Algorithmus kopiert die gemessenen Frequenzen und ermöglicht es Ihnen, die aufgenommene Stimmung zu reproduzieren.</string>
     </description>
 </algorithm>

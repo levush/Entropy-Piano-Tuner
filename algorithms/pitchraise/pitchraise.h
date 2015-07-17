@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //=============================================================================
-//     Trivial algorithm for explaining how new algorithms can be built
+//                        Pitch raise algorithm
 //=============================================================================
 
 #ifndef PITCHRAISE_H
@@ -47,7 +47,10 @@ protected:
     virtual void algorithmWorkerFunction() override final;
 
 private:
-    const double mConcertPitchParam;
+    void updateTuningcurve (int keynumber);
+    void updateTuningcurve ();
+    const int mSectionSeparatingKey;
+    std::vector<double> mPitch;
 };
 
 }  // namespace pitchraise

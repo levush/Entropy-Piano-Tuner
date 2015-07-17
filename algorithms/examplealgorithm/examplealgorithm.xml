@@ -5,7 +5,7 @@
         <string lang="de">Beispielalgorithmus</string>
     </name>
     <description>
-        <string>This is just an example algorithm that will set the tuning curve to be in equal temprament.</string>
+        <string>This is just an example algorithm that will set the tuning curve to equal temprament.</string>
         <string lang="de">Dies ist nur ein Beispielalgorithmus, der die Stimmkurve auf eine gleichtemperierte Stimmung bringt.</string>
     </description>
     <param id="concertPitch" type="double" min="430" max="450" default="440" precision="1">

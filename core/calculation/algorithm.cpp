@@ -94,6 +94,8 @@ void Algorithm::showCalculationProgress (double fraction)
 /// \param key : reference to the key that is being processed, converted
 /// to a percentage. The progress value is reconstructed from the measured
 /// frequency.
+/// \param start : The starting value of the progress value
+/// \param range : The range of the progress value (start ... start+range)
 ///////////////////////////////////////////////////////////////////////////////
 
 void Algorithm::showCalculationProgress (const Key &key,
