@@ -212,35 +212,37 @@ void Synthesizer::preCalculateWaveform  (const int id,
 /// \brief Function which plays a single note (sound)
 ///
 /// This function generates a sound according to the sound structure passed
-/// as a parameter. If the sound happens to coincide with a previously
-/// calculated sound marked by the identifier id, then the pre-calculated
-/// wave form is loaded and played immediately with the envelope
-/// specified by the parameter env. If a pre-calculated waveform does not
-/// yet exist a short sample is played and a longer calculation is
-/// scheduled for later.
+/// as a parameter. If the waveform for the sound was already computed
+/// the sound is played with the envelope specified by the parameter env.
+/// If a pre-calculated waveform does not yet exist, then by default no
+/// sound is played. However, if the flag waitforcomputation is set, the
+/// function waits until the computation of the sound is completed,
+/// forcing the sound to be played. This is particularly important for the
+/// echo sound after recording.
 ///
-/// If the sound contains an empty spectrum, a simple sine wave with the
-/// fundamental frequency is played.
-///
-/// \param id : Identification tag or the sound (usually the keynumber).
-/// \param sound : Sound structure describing statics (frequency and spectrum)
+/// \param keynumber : Number of the key
+/// \param frequency : Frequency of the sound
+/// \param volume : Volume of the sound
 /// \param env : Envelope structure describing dynamics (ADSR-curve)
+/// \param waitforcomputation : Wait until the sound has been computed
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::playSound (const int keynumber,
                              const double frequency,
                              const double volume,
                              const Envelope &env,
-                             const bool waitforcomputation)
+                             const bool waitforcomputation,
+                             const bool stereo)
 {
     if (frequency <= 0 or volume <= 0 or mNumberOfKeys == 0) return;
     Tone tone;
     tone.keynumber = keynumber;
     tone.frequency = frequency;
-    double stereo = (20+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+40);
-    tone.leftamplitude = sqrt((1-stereo)*volume);
-    tone.rightamplitude = sqrt(stereo*volume);
-    tone.phaseshift = (stereo-0.5)/500;
+    double position = (20+(keynumber&0xff)) * 1.0 / (mNumberOfKeys+40);
+    if (not stereo) position = 0.5;
+    tone.leftamplitude = sqrt((1-position)*volume);
+    tone.rightamplitude = sqrt(position*volume);
+    tone.phaseshift = (position-0.5)/500;
     tone.envelope = env;
     tone.clock=0;
     tone.stage=1;

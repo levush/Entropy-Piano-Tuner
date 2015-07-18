@@ -121,7 +121,8 @@ public:
                                  const double frequency,
                                  const double volume,
                                  const Envelope &env,
-                                 const bool waitforcomputation = false);
+                                 const bool waitforcomputation = false,
+                                 const bool stereo = true);
 
     void ModifySustainLevel     (const int id, const double level);
 

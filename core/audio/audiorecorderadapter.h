@@ -58,6 +58,7 @@ public:
     static const double LEVEL_RETRIGGER;            // level for retriggering
     static const double LEVEL_TRIGGER;              // level where rec. starts
     static const double LEVEL_CUTOFF;               // highest allowed level
+    static const double DB_OFF;                     // dB shift for off mark
 
     /// \brief Reasons for beeing in a stand by modus
     /// These are flags that may be combined by a logical or

@@ -122,7 +122,9 @@ void SoundGenerator::handleMessage(MessagePtr m)
     // STOP REFERENCE SOUND AT THE END OF RECORDING
     case Message::MSG_RECORDING_ENDED:
         {
-                stopResonatingReferenceSound();
+            // if reference tone with constant volume stop it here.
+            if (Settings::getSingleton().getSoundGeneratorMode() == SGM_REFERENCE_TONE)
+            stopResonatingReferenceSound();
         }
         break;
     // REFERENCE SOUND VOLUME ADJUSTMENT IN TUNING MODE
@@ -198,7 +200,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
     // RECALCULATE AND PLAY ECHO SOUND IN THE RECORDING MODE
     case Message::MSG_FINAL_KEY:
         {
-            // echo sound texture of the recorded key in recording mode.
+            // echo synthesized sound of the recorded key in recording mode.
             if (mOperationMode==MODE_RECORDING)
             {
                 auto message(std::static_pointer_cast<MessageFinalKey>(m));
@@ -208,7 +210,7 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 if (keynumber == mSelectedKey and spectrum.size() > 0)
                 {
                     preCalculateSoundOfKey (keynumber,spectrum);
-                    mSynthesizer.playSound(keynumber,1,0.2,Envelope(5,5,0,30,false),true);
+                    mSynthesizer.playSound(keynumber,1,0.2,Envelope(5,5,0,30,false),true,false);
                 }
             }
         }
@@ -345,7 +347,7 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
             Envelope env(30,50,mResonatingVolume,20,false);
             double frequencyshift = frequency /
                     mPiano->getKey(keynumber).getRecordedFrequency();
-            mSynthesizer.playSound(keynumber,frequencyshift,volume,env);
+            mSynthesizer.playSound(keynumber,frequencyshift,volume,env,false,false);
         }
         break;
         default:
@@ -426,7 +428,7 @@ void SoundGenerator::playResonatingSineWave (int keynumber, double frequency, do
     if (keynumber < mKeyNumberOfA4-30) it++;
     if (keynumber < mKeyNumberOfA4-36) it++;
     double frequ = it->first*factor;
-    mSynthesizer.playSound(keynumber,frequ,0.5,Envelope(30,5,1,30));
+    mSynthesizer.playSound(keynumber,frequ,0.5,Envelope(30,5,1,30),false,false);
 }
 
 
