@@ -57,13 +57,16 @@ const double AudioRecorderAdapter::ATTACKRATE = 0.97;
 const double AudioRecorderAdapter::DECAYRATE  = 0.7;
 
 /// Level below which retriggering (restart) is allowed.
-const double  AudioRecorderAdapter::LEVEL_RETRIGGER = 0.3;
+const double AudioRecorderAdapter::LEVEL_RETRIGGER = 0.3;
 
 /// Level above which the recorder starts to operate.
-const double  AudioRecorderAdapter::LEVEL_TRIGGER = 0.45;
+const double AudioRecorderAdapter::LEVEL_TRIGGER = 0.48;
 
 /// Level above which the input mGain is automatically reduced.
 const double  AudioRecorderAdapter::LEVEL_CUTOFF = 0.9;
+
+/// dB shift for off mark (high value = shorter recording)
+const double AudioRecorderAdapter::DB_OFF = 2;
 
 
 //-----------------------------------------------------------------------------
@@ -346,7 +349,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
             MAX += exp(e.first) * e.second;
         }
         if (norm==0) return;
-        double dBoff = -pow(MIN/norm,1.0/10) + 4;
+        double dBoff = -pow(MIN/norm,1.0/10) + DB_OFF;
         double dBmax = log(MAX/norm);
 
         // slowly adjust the gain according to the upper edge
@@ -365,7 +368,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
 
         // After 10 packages decrease the whole histogram by a factor.
         // This ensures that new data gradually overwrites older data.
-        if (mPacketCounter >= 10) for (auto &e: mIntensityHistogram) e.second /= 1.02;
+        if (mPacketCounter >= 10) for (auto &e: mIntensityHistogram) e.second /= 1.018;
     }
 }
 
