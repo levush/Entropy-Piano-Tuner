@@ -62,7 +62,7 @@ const double  AudioRecorderAdapter::LEVEL_RETRIGGER = 0.3;
 /// Level above which the recorder starts to operate.
 const double  AudioRecorderAdapter::LEVEL_TRIGGER = 0.45;
 
-/// Level above which the input gain is automatically reduced.
+/// Level above which the input mGain is automatically reduced.
 const double  AudioRecorderAdapter::LEVEL_CUTOFF = 0.9;
 
 
@@ -115,7 +115,8 @@ void AudioRecorderAdapter::resetNoiseLevel()
 /// \param muted : Activate or deactivate the muting
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::setMuted(bool muted) {
+void AudioRecorderAdapter::setMuted (bool muted)
+{
     mMuted = muted;
 }
 
@@ -258,6 +259,15 @@ template void AudioRecorderAdapter::pushRawData(const std::vector<double> &data)
 template void AudioRecorderAdapter::pushRawData(const std::vector<float> &data);
 
 
+//-----------------------------------------------------------------------------
+//                               Manage standby
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Manage standby mode
+/// \param m Message from the message handler
+///////////////////////////////////////////////////////////////////////////////
+
 void AudioRecorderAdapter::handleMessage(MessagePtr m)
 {
     switch (m->getType())
@@ -307,17 +317,17 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
 {
     if (intensity == 0) return;
 
-    // maximal raw data intensity
-    if (intensity > 0.9) {
-        // the volume change is sent to system
-        setVolume(getVolume() * 0.9);
-    }
+    // Limit the maximal raw pcm intensity.
+    // A sine wave with maximal amplitude +/- 1 has the integrated intensity 1/2.
+    // Therefore, we reduce the hardware input level whenever this value
+    // is surpassed. This down-regulation is irreversible.
+    if (intensity > 0.45) setVolume(getVolume() * 0.9);
 
-    // level is the signal scaled with mGain
+    // The level (passed as parameter) is a power law funtion of the intensity
+    // scaled with the parameter mGain. The parameter mGain controls the overall
+    // input amplification. It can move in both directions.
 
-    // if the signal gets quieter mGain can programatically increase the volume
-
-    // if level exceeds cutoff turn gain down
+    // if level exceeds predefined cutoff turn gain down
     if (level > LEVEL_CUTOFF) mGain *= 0.9;
 
     // compute intensity histogram in decibel
@@ -327,11 +337,6 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
     // after 10 packets if the histogram has enough entries
     if ((++mPacketCounter)%10==0 and mIntensityHistogram.size()>5)
     {
-//        std::ofstream os("9-histogram.dat");
-//        for (auto e : mIntensityHistogram)
-//                    os << e.first << " " << e.second << std::endl;
-//        os.close();
-
         // determine left and right boundary in a soft way
         double norm=0, MIN=0, MAX=0;
         for (auto &e : mIntensityHistogram)
@@ -360,7 +365,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
 
         // After 10 packages decrease the whole histogram by a factor.
         // This ensures that new data gradually overwrites older data.
-        if (mPacketCounter >= 10) for (auto e: mIntensityHistogram) e.second /= 1.1;
+        if (mPacketCounter >= 10) for (auto &e: mIntensityHistogram) e.second /= 1.02;
     }
 }
 
