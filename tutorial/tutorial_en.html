@@ -5,7 +5,9 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 4.3.7.2 (Linux)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2015-07-17T12:40:32.360979938"/>
+	<meta name="changed" content="2015-07-18T14:54:13.557072545"/>
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2015-07-17T12:40:32.360979938">
 	<style type="text/css">
 		td p { color: #000000 }
 		h1 { color: #000000 }
@@ -88,30 +90,30 @@ phones. </span>
 <p lang="en-US"><b>Microphone: </b>To operate the tuner one needs an
 external microphone of good quality. We recommend a low-noise
 condenser microphone with a linear frequency response. Inbuilt
-microphones of tablets and cellphones may be used for testing but
+microphones of tablets and smartphones may be used for testing but
 they may fail at low and high frequencies.</p>
 <p lang="en-US"><b>Headphone:</b> Optionally an ordinary headphone
 will be useful to check the recorded tones. If you do not use a
 headphone you should mute the loudspeaker of your device in order to
 avoid unintended feedback via the microphone.</p>
 <p lang="en-US"><b>MIDI keyboard: </b>Optionally you may connect a
-MIDI keyboard to your device which allows you to play and select the
+MIDI keyboard to your device which allows you to play and select
 individual keys. However, a MIDI keyboard is not required for tuning.</p>
 <p><span lang="en-US"><b>Installation:</b></span> <span lang="en-US">The
 Entropy Piano Tuner is available for OS-X, IOS, Android, Windows and
 Linux. Please visit our <a href="http://piano-tuner.org/download">download
 page</a>.</span></p>
-<p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><a name="first steps"></a>
-<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Getting
-started</b></font></font></p>
+<p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>First
+steps</b></font></font></p>
 <p lang="en-US">Before starting the EPT, connect your microphone and
 make sure that it works. Make sure that the VU meter responds to the
 microphone and that the level adjusts automatically. If you tune the
-instrument for the first time, choose File-New and provide the
-necessary data.The left toolbar allows you to switch between four
-different operation modes which can be selected by mouse click or by
-using the TAB key. These operations modes correspond to the main step
-of the tuning procedure.</p>
+instrument for the first time, choose <i>File-New</i><span style="font-style: normal">,
+</span><span style="font-style: normal">specify the concert pitch,</span>
+and provide the necessary information.The left toolbar allows you to
+switch between four different operation modes which can be selected
+by mouse click or by using the TAB key. These operations modes
+correspond to the main step of the tuning procedure.</p>
 <p>The tuning process consist of three steps:</p>
 <ul>
 	<li/>
@@ -134,27 +136,27 @@ spectrum with the partials as a red line.</p>
 <p lang="en-US">Please keep the piano key pressed until the red
 recording symbol disappears and wait until the data has been
 processed. If you use an earphone a successful recording will trigger
-a brief echo of the same pitch. The corresponding key is marked by a
-green tick.</p>
+a brief echo of the same pitch. The corresponding key will be marked
+by a green tick.</p>
 <p lang="en-US">If you decide to record a certain note again select
 the corresponding key by a mouse click or by using the arrow keys. If
-the key is not correctly recognized, e.g. in the treble, it is
-possible to force the recognition by clicking the key twice or by
-hitting the enter key.</p>
+the key is not correctly recognized, e.g. in the bass or in the
+treble, it is possible to force the recognition by clicking the key
+twice or by hitting the enter key.</p>
 <p lang="en-US">After recording the EPT displays the quality of the
 recorded signal. There is no need for this quality to be maximal, but
 it should vary smoothly from key to key. For tones with several
-strings it is recommended to record only one string while damping the
+strings it is recommended to record only one string while muting the
 other ones.</p>
 <p lang="en-US">During recording two curves will emerge above the
 spectrum. The blue markers measure the pitch relative to the equal
 temperament. Contrarily, the gray markers quantify the inharmonicity
 plotted upside-down. Apart from a jump between the two diagonal
 string sections, the inharmonicity levels should vary smoothly. The
-inharmonicity is not measured in the top octave.</p>
-<p lang="en-US">Once all key are marked by a green tick please save
-your work (using File-SaveAs....). With a MIDI keyboard it is
-possible to verify the recorded keys.</p>
+inharmonicity is not measured in the topmost octave.</p>
+<p lang="en-US">Once all keys are marked by a green tick please save
+your work (using <i>File-SaveAs....</i>). With a MIDI keyboard it is
+possible to verify the recorded keys acoustically.</p>
 <p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><a name="calculating"></a>
 <font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>2.
 Calculation</b></font></font></p>
@@ -164,11 +166,12 @@ evolves. As you can see, a tuning curve emerges that is represented
 by the green markers. If there are no major changes any more you may
 stop the calculation process. 
 </p>
-<p lang="en-US">Subsequently you can verify the new tune by playing
-your MIDI keyboard. Here the EPT synthesizes artificial sounds
-according to the recorded one, taking inharmonicity into account. If
-you find that certain keys are clearly out of tune, it is possible to
-fix it my moving the green markers around with the help of the mouse.</p>
+<p lang="en-US">Subsequently it is possible to test the tune by
+playing on the MIDI keyboard. Here the EPT synthesizes artificial
+sounds according to the recorded ones, taking inharmonicity into
+account. If you find that certain keys are clearly out of tune, you
+can correct it by moving the green markers around with the help of
+the mouse.</p>
 <p lang="en-US">After successful calculation you should again save
 your project.</p>
 <p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><a name="tuning"></a>
@@ -176,9 +179,8 @@ your project.</p>
 Tuning</b></font></font></p>
 <p lang="en-US">Now switch to the tuning mode. Here the EPT works in
 the same way as an ordinary tuning device. However, since
-inharmonicity is taken into account, the recorded keys have to stem
-from the instrument that is being tuned. 
-</p>
+inharmonicity is taken into account, it works only with the same
+instrument that was recorded.</p>
 <p lang="en-US">To tune a string simply try to bring the rectangular
 marker in the Analyzer-Window to the center. Alternative, try to move
 the red markers to the region in the center which is highlighted in
@@ -187,8 +189,9 @@ to first tune one of them and then to tune the other aurally relative
 to the first one.</p>
 <p lang="en-US">In the tuning mode the EPT recognizes the tuned key
 automatically. At the same time a synthetic sound is generated in the
-earphone which should coincide with the string. Again it is possible
-to select a particular key and to force the recognition.</p>
+headphone which should coincide with the sound of the string. Again
+it is possible to select a particular key and to force its
+recognition.</p>
 <p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><a name="license"></a>
 <font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>License
 / Disclaimer</b></font></font></p>
