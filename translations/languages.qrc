@@ -9,6 +9,7 @@
         <file>qt_pt.qm</file>
         <file>piano_tuner_pt.qm</file>
         <file>qt_ru.qm</file>
-        <file>piano_tuner_kr.qm</file>
+        <file>piano_tuner_ko.qm</file>
+        <file>qt_ko.qm</file>
     </qresource>
 </RCC>

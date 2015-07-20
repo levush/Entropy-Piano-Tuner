@@ -560,7 +560,7 @@ TRANSLATIONS = \
     translations/piano_tuner_pl.ts \
     translations/piano_tuner_pt.ts \
     translations/piano_tuner_ru.ts \
-    translations/piano_tuner_kr.ts \
+    translations/piano_tuner_ko.ts \
 
 
 # -------- algorithms ---------------
