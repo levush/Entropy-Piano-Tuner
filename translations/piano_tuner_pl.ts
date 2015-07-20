@@ -57,42 +57,42 @@
 <context>
     <name>AlgorithmDialog</name>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="73"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="74"/>
         <source>Algorithm:</source>
         <translation>Algorytm:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="150"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="155"/>
         <source>Info of algorithm: %1</source>
         <translation>Informacje na temat algorytmu: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="158"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="163"/>
         <source>Info</source>
         <translation>Informacje</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="164"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="169"/>
         <source>Name:</source>
         <translation>Nazwa:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="165"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="170"/>
         <source>Author:</source>
         <translation>Autor:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="166"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
         <source>Year:</source>
         <translation>Rok:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
         <source>Description:</source>
         <translation>Opis:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="181"/>
         <source>Parameters</source>
         <translation>Parametry</translation>
     </message>
@@ -1116,32 +1116,32 @@
 <context>
     <name>options::PageEnvironmentTuning</name>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="35"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
         <source>Disabled</source>
         <translation>Nieaktywny</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
         <source>Synthesized key sound</source>
         <translation>Zrekonstruowany dźwięk klawisza</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
         <source>Reference key</source>
         <translation>Klawisz odniesienia</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="39"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="40"/>
         <source>Synthesizer mode</source>
         <translation>Tryb syntetyzatora</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="43"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="44"/>
         <source>Dynamic synthesizer volume</source>
         <translation>Dynamiczna głośność</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="49"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="50"/>
         <source>Disable automatic key selection</source>
         <translation type="unfinished"></translation>
     </message>

@@ -178,7 +178,7 @@ void ProjectManagerForQt::setCurrentPath(QString path) {
 QString ProjectManagerForQt::getFileFilters(int fileTypes, bool addAll) const {
     QString files;
     if (fileTypes & piano::FT_EPT) {
-        files += MainWindow::tr("Entopy piano tuner") + " (*.ept);;";
+        files += MainWindow::tr("Entropy piano tuner") + " (*.ept);;";
     }
     if (fileTypes & piano::FT_CSV) {
         files += MainWindow::tr("Comma-separated values") + " (*.csv);;";

@@ -58,7 +58,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     titleLayout->addWidget(new QLabel(QString("<h1>%1 %2</h1>").arg(tr("Entropy Piano Tuner"), EPT_VERSION_STRING)));
     titleLayout->addStretch();
 
-    QLabel *webpage = new QLabel(QString::fromStdString("<a href=\"" + serverinfo::SERVER_ADDRESS + "\">" + serverinfo::SERVER_NAME + "</a> - <a href=\"mailto:" + serverinfo::MAIL_ADDRESS + "\">Feedback</a>"));
+    QLabel *webpage = new QLabel(QString::fromStdString("<a href=\"" + serverinfo::SERVER_ADDRESS + "\">" + serverinfo::SERVER_NAME + "</a> - <a href=\"mailto:.org\">Feedback</a>"));
     QObject::connect(webpage, SIGNAL(linkActivated(QString)), this, SLOT(onOpenAboutLink(QString)));
     mainLayout->addWidget(webpage);
 
@@ -92,7 +92,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
 
     const QString acknowledgementsText = tr("We thank all those who have contributed to the project:") +
-           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich.";
+           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich., Dr. J. Um";
 
     auto makeParagraphTags = [](const QString &t) {return "<p>" + t + "</p>";};
     QString completeText;

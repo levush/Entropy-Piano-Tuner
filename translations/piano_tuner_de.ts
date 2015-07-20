@@ -57,42 +57,42 @@
 <context>
     <name>AlgorithmDialog</name>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="73"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="74"/>
         <source>Algorithm:</source>
         <translation>Algorithmus:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="150"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="155"/>
         <source>Info of algorithm: %1</source>
         <translation>Informationen zum Algorithmus: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="158"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="163"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="164"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="169"/>
         <source>Name:</source>
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="165"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="170"/>
         <source>Author:</source>
         <translation>Autor:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="166"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
         <source>Year:</source>
         <translation>Jahr:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
         <source>Description:</source>
         <translation>Beschreibung:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
+        <location filename="../Qt/algorithmdialog.cpp" line="181"/>
         <source>Parameters</source>
         <translation>Parameter</translation>
     </message>
@@ -1116,32 +1116,32 @@
 <context>
     <name>options::PageEnvironmentTuning</name>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="35"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
         <source>Disabled</source>
         <translation>Deaktiviert</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
         <source>Synthesized key sound</source>
         <translation>Rekonstruierter Klang der Taste</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
         <source>Reference key</source>
         <translation>Bezugstaste</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="39"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="40"/>
         <source>Synthesizer mode</source>
         <translation>Synthesizer-Modus</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="43"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="44"/>
         <source>Dynamic synthesizer volume</source>
         <translation>Dynamisch angepasste Lautstärke</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="49"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="50"/>
         <source>Disable automatic key selection</source>
         <translation>Automatische Tastenselektierung deaktivieren</translation>
     </message>
