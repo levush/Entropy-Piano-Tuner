@@ -301,6 +301,10 @@ void KeyboardGraphicsView::selectKey(int8_t key0, piano::KeyState keyState, bool
     }
 
     if (mSelectedKey >= 0) {
+        if (mSelectedKey >= mKeyboard->getNumberOfKeys()) {
+            return;  // out of rage
+        }
+
         // reset key and marker!
         resetKey(mSelectedKey);
 

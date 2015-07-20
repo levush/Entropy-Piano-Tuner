@@ -102,6 +102,8 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
     {
     case Message::MSG_PROJECT_FILE:
     {
+        // stop the thread
+        this->stop();
         auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
         mPiano = &mpf->getPiano();
         break;
