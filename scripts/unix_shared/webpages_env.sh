@@ -33,13 +33,14 @@ export US_DEPENDENCIES=$US_DOWNLOADS/dependencies/$depsVersionString
 
 # using ssh
 function ssh_mkdir {
-	remote_path=$1
+	local remote_path=$1
 	ssh $SERVER_USERNAME@$SERVER_ADDRESS "mkdir -p $_SERVER_ROOT_DIR$remote_path"
 }
 
 # using sftp
 function sftp_mkdir {
-	remote_path=$1
+	local remote_path=$1
+	echo "Creating remote directory at: $remote_path"
 	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
 mkdir $remote_path
 EOF
@@ -51,15 +52,15 @@ EOF
 
 # using rsync
 function rsync_push {
-	local_file=$1
-	remote_path=$2
+	local local_file=$1
+	local remote_path=$2
 	rsync -vh $local_file $remote_path
 }
 
 # using sftp
 function sftp_push {
-	local_file=$1
-	remote_path=$2
+	local local_file=$1
+	local remote_path=$2
 
 	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
 cd $_SERVER_ROOT_DIR
@@ -72,22 +73,27 @@ EOF
 
 # using rsync
 function rsync_push_dir {
-	local_dir=$1
-	remote_path=$2
+	local local_dir=$1
+	local remote_path=$2
 	rsync -vh -r $local_dir $remote_path
 }
 
 # using sftp
 function sftp_push_dir {
-	local_dir=$1
-	remote_path=$2
-
-	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
-mkdir $remote_path
-cd $_SERVER_ROOT_DIR
-cd $remote_path
-put -r $local_dir
-EOF
+	local local_dir=$1
+	local remote_path=$2
+	
+	sftp_mkdir $_SERVER_ROOT_DIR/$remote_path
+	
+	cd $local_dir
+	for file in *
+	do
+		echo "File $file"
+		[ -f $file ] && sftp_push $file $remote_path
+		[ -d $file ] && sftp_push_dir $local_dir/$file $remote_path/$file
+	done
+	
+	cd ..
 }
 
 # ln REMOTE_PATH_ORIGIN REMOTE_PATH_TARGET FILENAME

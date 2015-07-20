@@ -1,6 +1,6 @@
 set -e
 
-cd ${0%/*}
+cd $(dirname $0)
 cd ../..
 
 if [ -z "$TUNER_BASE_DIR" ] ; then
