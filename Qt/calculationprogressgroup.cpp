@@ -120,7 +120,8 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
         switch (mcp->getCalculationType()) {
         case MessageCaluclationProgress::CALCULATION_FAILED: {
             QString errorText;
-            switch (mcp->getErrorCode()) {
+            switch (mcp->getErrorCode())
+            {
             case MessageCaluclationProgress::CALCULATION_ERROR_NONE:
                 LogW("Calculation error message was sent but no error code was set");
                 errorText = tr("An unknown error occured during the calculation.");
@@ -133,6 +134,16 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
                 break;
             case MessageCaluclationProgress::CALCULATION_ERROR_KEY_DATA_INCONSISTENT:
                 errorText = tr("Key data inconsistent.");
+                break;
+            case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_LEFTSECTION:
+                errorText = tr("Not enough keys recorded in left section.");
+                break;
+            case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_RIGHTSECTION:
+                errorText = tr("Not enough keys recorded in right section.");
+                break;
+            default:
+                errorText = tr("Undefined error message.");
+                LogI("Undefined error message");
                 break;
             }
 

@@ -17,32 +17,6 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-/*****************************************************************************
- * Copyright 2015 Haye Hinrichsen, Christoph Wick
- *
- * This file is s of Entropy Piano Tuner.
- *
- * Entropy Piano Tuner is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * Entropy Piano Tuner is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A sICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
- *****************************************************************************/
-
-// Berenung mittels
-
-// Fehlercode Rückgabe
-
-// Why after start of algorithm
-// Application gone active?
-
 //=============================================================================
 //                        Pitch raise algorithm
 //=============================================================================
@@ -51,6 +25,8 @@
 
 #include "core/math/mathtools.h"
 #include "core/calculation/algorithmfactory.h"
+#include "core/messages/messagehandler.h"
+#include "core/messages/messagecaluclationprogress.h"
 
 //=============================================================================
 //                        Create algorithm factory
@@ -67,15 +43,18 @@ namespace pitchraise
 //                             Constructor
 //-----------------------------------------------------------------------------
 
-// constructor that expects the originam piano. This piano will be copied into mPiano which is why
-// you may do any changes to mPiano because it doesnt change the actual one.
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of the pitch-raise algorithm
+///
+/// \param piano : Reference to the original piano, will be copied to mPiano
+/// \param description : Short description of the algorithm
+///////////////////////////////////////////////////////////////////////////////
 
 PitchRaise::PitchRaise(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description),
     // load the parameter from the description
     mSectionSeparatingKey(static_cast<int>(description.getIntParameter("sectionSeparator"))),
     mPitch(piano.getKeyboard().getNumberOfKeys(),0)
-
 {
 }
 
@@ -119,6 +98,23 @@ void PitchRaise::updateTuningcurve ()
 //                             Worker function
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief PitchRaise::algorithmWorkerFunction
+///
+/// This is the main worker function of the Pitch-Raise algorithm which is
+/// executed in an independent thread. All computations are carried out here.
+/// The main parts are the following. First the recorded keys are identified.
+/// their measured inharmonicity is loaded and the logarithm is taken. The
+/// assumption is that this logarithm varies linearly with the key index in
+/// both diagonal sections of the strings. Therefore, an ordinary linear
+/// regression is carried out. This allows one to define an approximated
+/// inharmonicity for all keys (implemented as a lambda function). With this
+/// data a tuning curve is computed by a mixed 4:2 6:3 ... tuning, similar
+/// to the initial condition in the entropy minimizer. The whole process
+/// is artificially slowed down (msleep) in order to show how the tuning
+/// curve grows.
+///////////////////////////////////////////////////////////////////////////////
+///
 void PitchRaise::algorithmWorkerFunction()
 {
     LogI("Pitch Raise algorithm started");
@@ -151,14 +147,18 @@ void PitchRaise::algorithmWorkerFunction()
     }
     if (N[0]==0)
     {
-        // Error left
-        LogE("Not enough keys recorded in the left section (key 1...%d)",mSectionSeparatingKey);
+        // Error: Not enough recorded keys in the left section
+        MessageHandler::send<MessageCaluclationProgress>
+                (MessageCaluclationProgress::CALCULATION_FAILED,
+                 MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_LEFTSECTION);// Error left
         return;
     }
     if (N[1]==0)
     {
-        // Error right
-        LogE("Not enough keys recorded in the right section (key %d...%d)",mSectionSeparatingKey,mNumberOfKeys);
+        // Error: Not enough recorded keys in the right section
+        MessageHandler::send<MessageCaluclationProgress>
+                (MessageCaluclationProgress::CALCULATION_FAILED,
+                 MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_RIGHTSECTION);// Error left
         return;
     }
 

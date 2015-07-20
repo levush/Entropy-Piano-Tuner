@@ -5,9 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 4.3.7.2 (Linux)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2015-07-18T14:54:13.557072545"/>
-	<meta name="created" content="00:00:00">
-	<meta name="changed" content="2015-07-17T12:40:32.360979938">
+	<meta name="changed" content="2015-07-20T15:09:55.466202060"/>
 	<style type="text/css">
 		td p { color: #000000 }
 		h1 { color: #000000 }
@@ -97,30 +95,32 @@ will be useful to check the recorded tones. If you do not use a
 headphone you should mute the loudspeaker of your device in order to
 avoid unintended feedback via the microphone.</p>
 <p lang="en-US"><b>MIDI keyboard: </b>Optionally you may connect a
-MIDI keyboard to your device which allows you to play and select
-individual keys. However, a MIDI keyboard is not required for tuning.</p>
+MIDI keyboard to your device which allows you to play and hear the
+computed tune in advance. However, a MIDI keyboard is not required
+for tuning.</p>
 <p><span lang="en-US"><b>Installation:</b></span> <span lang="en-US">The
 Entropy Piano Tuner is available for OS-X, IOS, Android, Windows and
-Linux. Please visit our <a href="http://piano-tuner.org/download">download
-page</a>.</span></p>
+Linux. Please visit our </span><a href="http://piano-tuner.org/download"><span lang="en-US">D</span><span lang="en-US">ownload
+page</span></a><span lang="en-US">.</span></p>
 <p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>First
 steps</b></font></font></p>
-<p lang="en-US">Before starting the EPT, connect your microphone and
-make sure that it works. Make sure that the VU meter responds to the
-microphone and that the level adjusts automatically. If you tune the
-instrument for the first time, choose <i>File-New</i><span style="font-style: normal">,
-</span><span style="font-style: normal">specify the concert pitch,</span>
-and provide the necessary information.The left toolbar allows you to
-switch between four different operation modes which can be selected
-by mouse click or by using the TAB key. These operations modes
-correspond to the main step of the tuning procedure.</p>
-<p>The tuning process consist of three steps:</p>
+<p><span lang="en-US">Connect your microphone and start the EPT</span><span lang="en-US">.
+Make sure that the VU meter responds to the microphone and that the
+</span><span lang="en-US">input </span><span lang="en-US">level </span><span lang="en-US">is</span><span lang="en-US">
+automatically </span><span lang="en-US">adjusted</span><span lang="en-US">.
+If you tune the instrument for the first time, choose </span><span lang="en-US"><i>File-New</i></span><span lang="en-US">,
+specify the concert pitch, and provide the necessary </span><span lang="en-US">information.
+The</span><span lang="en-US"> left toolbar allows you to switch
+between four different operation modes which can be selected by mouse
+click or by using the TAB key. These operations modes correspond to
+the </span><span lang="en-US">three </span><span lang="en-US">main
+step</span><span lang="en-US">s</span><span lang="en-US"> of the
+tuning procedure:</span></p>
 <ul>
 	<li/>
-<p style="margin-bottom: 0cm">Recording of all piano keys.</p>
+<p>Recording of all piano keys.</p>
 	<li/>
-<p style="margin-bottom: 0cm">Calculation of the
-	entropy-optimized tune.</p>
+<p>Calculation of the entropy-optimized tune.</p>
 	<li/>
 <p>Electronically assisted manual tuning of the piano.</p>
 </ul>
@@ -129,23 +129,23 @@ correspond to the main step of the tuning procedure.</p>
 Recording</b></font></font></p>
 <p lang="en-US">Select the recording mode and strike all keys of your
 piano subsequently from the left to the right in order to record the
-keys. The recording starts whenever the VU meter passes the upper
-mark and stops when it falls below the lower mark. The pressed key is
+keys. The recording starts whenever the VU meter passes the 'on' mark
+and stops when it falls below the 'off' mark. The pressed key is
 recognized automatically. Above the keys you will see the frequency
 spectrum with the partials as a red line.</p>
 <p lang="en-US">Please keep the piano key pressed until the red
 recording symbol disappears and wait until the data has been
-processed. If you use an earphone a successful recording will trigger
-a brief echo of the same pitch. The corresponding key will be marked
-by a green tick.</p>
+processed. If you use a headphone a successful recording will
+acknowledged by  a brief echo of the same pitch. The corresponding
+key will be marked by a green tick.</p>
 <p lang="en-US">If you decide to record a certain note again select
 the corresponding key by a mouse click or by using the arrow keys. If
 the key is not correctly recognized, e.g. in the bass or in the
 treble, it is possible to force the recognition by clicking the key
 twice or by hitting the enter key.</p>
-<p lang="en-US">After recording the EPT displays the quality of the
-recorded signal. There is no need for this quality to be maximal, but
-it should vary smoothly from key to key. For tones with several
+<p lang="en-US">After each recording the EPT displays the quality of
+the recorded signal. There is no need for this quality to be maximal,
+but it should vary smoothly from key to key. For tones with several
 strings it is recommended to record only one string while muting the
 other ones.</p>
 <p lang="en-US">During recording two curves will emerge above the
@@ -160,17 +160,17 @@ possible to verify the recorded keys acoustically.</p>
 <p lang="en-US" style="margin-top: 0.42cm; page-break-after: avoid"><a name="calculating"></a>
 <font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>2.
 Calculation</b></font></font></p>
-<p lang="en-US">Go to the calculation mode and start the calculation.
-In the tuning curve window you can watch how the tuning process
-evolves. As you can see, a tuning curve emerges that is represented
-by the green markers. If there are no major changes any more you may
-stop the calculation process. 
+<p lang="en-US">Go to the calculation mode, select the entropy
+minimizer and start the calculation. In the tuning curve window you
+can monitor how the tuning process evolves. As you can see, the
+algorithm creates a tuning represented by green markers. If there are
+no major changes any more you may stop the calculation process. 
 </p>
-<p lang="en-US">Subsequently it is possible to test the tune by
+<p lang="en-US">Now it is possible to test the calculated tune by
 playing on the MIDI keyboard. Here the EPT synthesizes artificial
 sounds according to the recorded ones, taking inharmonicity into
 account. If you find that certain keys are clearly out of tune, you
-can correct it by moving the green markers around with the help of
+can correct them by moving the green markers around with the help of
 the mouse.</p>
 <p lang="en-US">After successful calculation you should again save
 your project.</p>
