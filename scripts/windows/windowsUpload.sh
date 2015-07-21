@@ -32,4 +32,4 @@ server_push_dir "$INSTALLER_DIR/windows_repository_x64" "$_SERVER_REPOSITORY_DIR
 server_push_dir "$INSTALLER_DIR/windows_repository_x86" "$_SERVER_REPOSITORY_DIR/windows_repository_x86"
 
 # version file is created under linux/mac, and is uploaded from there
-server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR
+# server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR

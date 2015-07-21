@@ -1,12 +1,12 @@
 # setup server configuration
 
-export SERVER_USERNAME=u81468700-download
-export SERVER_ADDRESS=s582786137.online.de
-export _SERVER_ROOT_DIR=
+#export SERVER_USERNAME=u81468700-download
+#export SERVER_ADDRESS=s582786137.online.de
+#export _SERVER_ROOT_DIR=
 
-#export SERVER_USERNAME=hinrichsen
-#export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
-#export _SERVER_ROOT_DIR=public_html/ept
+export SERVER_USERNAME=hinrichsen
+export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
+export _SERVER_ROOT_DIR=public_html/ept
 
 # load version
 . ./loadVersion.sh
@@ -34,7 +34,7 @@ export US_DEPENDENCIES=$US_DOWNLOADS/dependencies/$depsVersionString
 # using ssh
 function ssh_mkdir {
 	local remote_path=$1
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "mkdir -p $_SERVER_ROOT_DIR$remote_path"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "mkdir -p $_SERVER_ROOT_DIR/$remote_path"
 }
 
 # using sftp
@@ -42,6 +42,7 @@ function sftp_mkdir {
 	local remote_path=$1
 	echo "Creating remote directory at: $remote_path"
 	sftp $SERVER_USERNAME@$SERVER_ADDRESS <<EOF
+cd $_SERVER_ROOT_DIR
 mkdir $remote_path
 EOF
 }
@@ -53,7 +54,7 @@ EOF
 # using rsync
 function rsync_push {
 	local local_file=$1
-	local remote_path=$2
+	local remote_path=$SERVER_USERNAME@$SERVER_ADDRESS:$_SERVER_ROOT_DIR/$2
 	rsync -vh $local_file $remote_path
 }
 
@@ -74,7 +75,7 @@ EOF
 # using rsync
 function rsync_push_dir {
 	local local_dir=$1
-	local remote_path=$2
+	local remote_path=$SERVER_USERNAME@$SERVER_ADDRESS:$_SERVER_ROOT_DIR/$2
 	rsync -vh -r $local_dir $remote_path
 }
 
@@ -120,28 +121,32 @@ EOF
 # choose the function to use
 #########################################
 function server_mkdir {
-	sftp_mkdir $1
+	#sftp_mkdir $1
+	ssh_mkdir $1
 }
 
 function server_push {
-	sftp_push $1 $2
+	#sftp_push $1 $2
+	rsync_push $1 $2
 }
 
 function server_push_dir {
-	sftp_push_dir $1 $2
+	#sftp_push_dir $1 $2
+	rsync_push_dir $1 $2
 }
 
 function server_ln {
-	sftp_ln $1 $2 $3
+	#sftp_ln $1 $2 $3
+	ssh_ln $1 $2 $3
 }
 
 # create directory structure
 #########################################
 echo "Creating remote directories. Note that these commands may fail if the remote directories already exist (when using sftp)"
 
-server_mkdir $_SERVER_ROOT_DIR
-server_mkdir $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR
-server_mkdir $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$versionString
-server_mkdir $_SERVER_ROOT_DIR/$_SERVER_DOWNLOADS_DIR/$depsVersionString
+server_mkdir /
+server_mkdir $_SERVER_DOWNLOADS_DIR
+server_mkdir $_SERVER_DOWNLOADS_DIR/$versionString
+server_mkdir $_SERVER_DOWNLOADS_DIR/$depsVersionString
 
 echo "Done."
