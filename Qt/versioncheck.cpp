@@ -29,14 +29,13 @@
 using tinyxml2::XMLElement;
 using tinyxml2::XMLDocument;
 
-VersionCheck::VersionCheck(QObject *parent) : QObject(parent)
+VersionCheck::VersionCheck(QObject *parent) : QNetworkAccessManager(parent)
 {
 #if CONFIG_ENABLE_UPDATE_TOOL
-    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
     QUrl versionFileUrl(serverinfo::getVersionFileAddress().c_str());
 
-    QObject::connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
-    nam->get(QNetworkRequest(versionFileUrl));
+    QObject::connect(this, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReply(QNetworkReply*)));
+    this->get(QNetworkRequest(versionFileUrl));
 #else
     deleteLater();
 #endif
@@ -48,6 +47,11 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
     if (reply->error() == QNetworkReply::NoError) {
         int httpstatuscode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toUInt();
         switch(httpstatuscode) {
+        case 301: { // redirecting
+            QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl().toString();
+            this->get(QNetworkRequest(redirect));
+            break;
+        }
         case 200:  // status code ok
             if (reply->isReadable()) {
                 QString replyString = QString::fromUtf8(reply->readAll().data());
@@ -90,6 +94,8 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
             } else {
                 LogE("File not readable");
             }
+            // we did our job, delete us
+            this->deleteLater();
         break;
         default:
             LogD("Invalid network status. Code (%i)", httpstatuscode);
@@ -100,7 +106,6 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
     }
 
     reply->deleteLater();
-    this->deleteLater();
 #else
     Q_UNUSED(reply);
 #endif  // CONFIG_ENABLE_UPDATE_TOOL

@@ -24,13 +24,14 @@
 #include "qtconfig.h"
 
 #include <QNetworkReply>
+#include <QNetworkAccessManager>
 
 struct VersionInformation {
     QString mAppVersion;
     QString mDepsVersion;
 };
 
-class VersionCheck : public QObject
+class VersionCheck : public QNetworkAccessManager
 {
     Q_OBJECT
 public:
