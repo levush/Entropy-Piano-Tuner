@@ -28,8 +28,8 @@ cd $TUNER_BASE_DIR
 echo "Uploading files"
 server_push "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x64.exe" $_SERVER_DOWNLOADS_DIR
 server_push "$PUBLISH_DIR/EntropyPianoTuner_Windows_online_x86.exe" $_SERVER_DOWNLOADS_DIR
-server_push_dir "$INSTALLER_DIR/windows_repository_x64" "$_SERVER_REPOSITORY_DIR/windows_repository_x64"
-server_push_dir "$INSTALLER_DIR/windows_repository_x86" "$_SERVER_REPOSITORY_DIR/windows_repository_x86"
+server_push_dir "$INSTALLER_DIR/windows_repository_x64" "$_SERVER_REPOSITORY_DIR"
+server_push_dir "$INSTALLER_DIR/windows_repository_x86" "$_SERVER_REPOSITORY_DIR"
 
 # version file is created under linux/mac, and is uploaded from there
 # server_push "$INSTALLER_DIR/version.xml" $_SERVER_DOWNLOADS_DIR
