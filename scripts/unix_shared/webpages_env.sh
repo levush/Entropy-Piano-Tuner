@@ -100,8 +100,8 @@ function sftp_push_dir {
 # ln REMOTE_PATH_ORIGIN REMOTE_PATH_TARGET FILENAME
 ########################################
 function ssh_ln {
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $2/$3"
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $1/$3 $2"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "rm -f $_SERVER_ROOT_DIR/$2/$3"
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "ln $_SERVER_ROOT_DIR/$1/$3 $_SERVER_ROOT_DIR/$2"
 }
 
 function sftp_ln {
