@@ -145,7 +145,7 @@ void PitchRaise::algorithmWorkerFunction()
             XY[s] += x*y;
         }
     }
-    if (N[0]==0)
+    if (N[0]<2)
     {
         // Error: Not enough recorded keys in the left section
         MessageHandler::send<MessageCaluclationProgress>
@@ -153,7 +153,7 @@ void PitchRaise::algorithmWorkerFunction()
                  MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_LEFTSECTION);// Error left
         return;
     }
-    if (N[1]==0)
+    if (N[1]<2)
     {
         // Error: Not enough recorded keys in the right section
         MessageHandler::send<MessageCaluclationProgress>
