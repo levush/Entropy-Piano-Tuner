@@ -24,10 +24,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
     </message>
@@ -42,6 +38,10 @@
     <message>
         <source>Ok</source>
         <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -147,6 +147,18 @@
     </message>
     <message>
         <source>Calculation with: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not enough keys recorded in left section.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not enough keys recorded in right section.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undefined error message.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -568,7 +580,7 @@
     </message>
     <message>
         <source>Entopy piano tuner</source>
-        <translation>Afinador de piano por entropia</translation>
+        <translation type="obsolete">Afinador de piano por entropia</translation>
     </message>
     <message>
         <source>Comma-separated values</source>
