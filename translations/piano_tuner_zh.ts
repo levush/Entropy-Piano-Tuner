@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pl_PL">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="49"/>
         <source>About</source>
-        <translation>Informacje o EPT</translation>
+        <translation>关于</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="58"/>
         <source>Entropy Piano Tuner</source>
-        <translation>Entropy Piano Tuner</translation>
+        <translation>熵钢琴调律器</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="73"/>
         <source>Built on %1</source>
-        <translation>Utworzono: %1</translation>
+        <translation>建于 %1</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="74"/>
         <source>by %1 and %2</source>
-        <translation>przez %1 oraz %2</translation>
+        <translation>由 %1 y %2</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="76"/>
         <source>Based on</source>
-        <translation>Oparte na</translation>
+        <translation>基于</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="87"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">版权所有 2015 Würzburg大学物理理论系III。保留所有权利</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
+        <translation>本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
-        <translation></translation>
+        <translation>该程序不提供任何形式的担保，包括设计、特殊用途的可销性和适用性的担保。</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="94"/>
         <source>We thank all those who have contributed to the project:</source>
-        <translation>Dziękujemy wszystkim tym, którzy pomogli przy projekcie:</translation>
+        <translation>我们感谢所有为这个项目贡献的人:</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="118"/>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation>确认</translation>
     </message>
 </context>
 <context>
@@ -59,42 +59,42 @@
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="74"/>
         <source>Algorithm:</source>
-        <translation>Algorytm:</translation>
+        <translation>算法:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="155"/>
         <source>Info of algorithm: %1</source>
-        <translation>Informacje na temat algorytmu: %1</translation>
+        <translation>算法信息: %1</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="163"/>
         <source>Info</source>
-        <translation>Informacje</translation>
+        <translation>信息</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="169"/>
         <source>Name:</source>
-        <translation>Nazwa:</translation>
+        <translation>名称:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="170"/>
         <source>Author:</source>
-        <translation>Autor:</translation>
+        <translation>作者:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="171"/>
         <source>Year:</source>
-        <translation>Rok:</translation>
+        <translation>年份:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="176"/>
         <source>Description:</source>
-        <translation>Opis:</translation>
+        <translation>描述:</translation>
     </message>
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="181"/>
         <source>Parameters</source>
-        <translation>Parametry</translation>
+        <translation>参数</translation>
     </message>
 </context>
 <context>
@@ -102,103 +102,104 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="49"/>
         <source>Status:</source>
-        <translation>Status:</translation>
+        <translation>状态:</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="87"/>
         <source>Info</source>
-        <translation>Informacje</translation>
+        <translatorcomment>信息</translatorcomment>
+        <translation>信息</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="127"/>
         <source>An unknown error occured during the calculation.</source>
-        <translation>Podczas obliczeń wystąpił nieznany błąd.</translation>
+        <translation>计算中产生一个不明错误</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="130"/>
         <source>No data available.</source>
-        <translation>Brak danych.</translation>
+        <translation>无数据可用.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="133"/>
         <source>Not all keys recorded</source>
-        <translation>Nie wszystkie klawisze zostały nagrane</translation>
+        <translation>不是所有键被录音</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="136"/>
         <source>Key data inconsistent.</source>
-        <translation>Dane klawiszy niekonsystentne.</translation>
+        <translation>键数据不一致.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
         <source>Not enough keys recorded in left section.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
         <source>Not enough keys recorded in right section.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
         <source>Undefined error message.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
         <source>Calculation error</source>
-        <translation>Błąd podczas obliczeń</translation>
+        <translation>计算出错</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
         <source>Error code</source>
-        <translation>Kod błędu</translation>
+        <translation>错误码</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="158"/>
         <source>Calculation started</source>
-        <translation>Obliczenia rozpoczęte</translation>
+        <translation>计算已开始</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="159"/>
         <source>Stop calculation</source>
-        <translation>Zatrzymaj obliczenia</translation>
+        <translation>停止计算</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
         <source>Calculation finished</source>
-        <translation>Obliczenia zakończone</translation>
+        <translation>计算完成</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
-        <translation>Obliczenia zakończone sukcesem! Teraz możesz przejść do trybu strojenia by nastroić swój instrument.</translation>
+        <translation>计算成功完成！可以切换到调律模式并调整钢琴.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
         <source>Minimizing the entropy</source>
-        <translation>Minimalizuję entropię</translation>
+        <translation>最小化熵</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="184"/>
         <source>Calculation with: %1</source>
-        <translation>Obliczenia z: %1</translation>
+        <translation>计算进度: %1</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="195"/>
         <source>Calculation canceled</source>
-        <translation>Obliczenia przerwane</translation>
+        <translation>计算中止</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
         <location filename="../Qt/calculationprogressgroup.cpp" line="212"/>
         <source>Start calculation</source>
-        <translation>Rozpocznij obliczenia</translation>
+        <translation>开始计算</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="208"/>
         <source>Press the button to start the calculation</source>
-        <translation>Naciśnij przycisk by rozpocząć obliczenia</translation>
+        <translation>按此键开始计算</translation>
     </message>
 </context>
 <context>
@@ -206,52 +207,52 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="29"/>
         <source>Do not show again.</source>
-        <translation>Nie pokazuj ponownie.</translation>
+        <translation>不再显示.</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
-        <translation>Zresetuj nagrania</translation>
+        <translation>重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
         <source>Not all keys recorded</source>
-        <translation>Nie wszystkie klawisze zostały nagrane</translation>
+        <translation>不是所有键被录音</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="42"/>
         <source>Tuning curve not calculated</source>
-        <translation>Krzywa strojenia niewyznaczona</translation>
+        <translation>没有计算调律曲线</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="46"/>
         <source>Tuning curve must be recalculated</source>
-        <translation>Kryzwa strojenia musi zostać wyznaczona ponownie</translation>
+        <translation>调律曲线需重新计算</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="50"/>
         <source>Question</source>
-        <translation>Pytanie</translation>
+        <translation>问题</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>Czy naprawdę chcesz zresetować wszystkie nagrania klawiszy? Ta operacja nie może zostać cofnięta!</translation>
+        <translation>确信要重置所有已录音的键吗？这是不能复原的!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
         <source>Not all keys have been recorded. Switch the mode and record them.</source>
-        <translation>Nie wszystkie klawisze zostały nagrane. Zmień tryb i nagraj je.</translation>
+        <translation>并不是所有的键都被录音，切换模式并录音.</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="64"/>
         <source>The tuning curve has not been calculated. Switch the mode and calculate it.</source>
-        <translation>Krzywa strojenia nie została wyznaczona. Zmień tryb i rozpocznij obliczenia.</translation>
+        <translation>调律曲线没有被计算.切换到模式并计算.</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="67"/>
         <source>There are missing frequencies in the calculated tuning curve. Recalculate to fix this.</source>
-        <translation>Obliczona krzywa strojenia nie zawiera wszystkich częstotliwości. Oblicz ponownie by to naprawić.</translation>
+        <translation>计算调律曲线时丢失频率.再次计算修复它。</translation>
     </message>
 </context>
 <context>
@@ -259,94 +260,94 @@
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="14"/>
         <source>Piano data sheet</source>
-        <translation>Dane instrumentu</translation>
+        <translation>钢琴数据表</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="35"/>
         <source>Piano operating site information</source>
-        <translation>Dane miejsca działania instrumentu</translation>
+        <translation>钢琴现场作业信息</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="44"/>
         <source>Tuning location</source>
-        <translation>Miejsce strojenia</translation>
+        <translation>调律地点</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="54"/>
         <source>Time of tuning</source>
-        <translation>Czas strojenia</translation>
+        <translation>调律时间</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="82"/>
         <source>Now</source>
-        <translation>Teraz</translation>
+        <translation>现在</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="91"/>
         <source>Concert pitch</source>
-        <translation>Ton wzorcowy</translation>
+        <translation>音乐会音高</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="106"/>
         <source>A</source>
-        <translation>a</translation>
+        <translation>A</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
         <source>Default</source>
-        <translation>Domyślne</translation>
+        <translation>缺省</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="140"/>
         <source>Piano manufacturer information</source>
-        <translation>Informacje producenta</translation>
+        <translation>钢琴制造商信息</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="149"/>
         <source>Piano name</source>
-        <translation>Nazwa instrumentu</translation>
+        <translation>钢琴品牌</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="159"/>
         <source>Serial number</source>
-        <translation>Numer seryjny</translation>
+        <translation>序列号</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="169"/>
         <source>Manufaction year</source>
-        <translation>Rok produkcji</translation>
+        <translation>制造年份</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="189"/>
         <source>Production location</source>
-        <translation>Miejsce produkcji</translation>
+        <translation>产地</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="199"/>
         <source>Number of keys</source>
-        <translation>Liczba klawiszy</translation>
+        <translation>键数目</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="233"/>
         <source>Key number of A</source>
-        <translation>Numer klawisza a</translation>
+        <translation>A的键号</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="267"/>
         <source>Piano type</source>
-        <translation>Typ instrumentu</translation>
+        <translation>钢琴类型</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="275"/>
         <source>Grand</source>
-        <translation>Fortepian</translation>
+        <translation>卧式</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
         <source>Upright</source>
-        <translation>Pianino</translation>
+        <translation>立式</translation>
     </message>
 </context>
 <context>
@@ -354,7 +355,7 @@
     <message>
         <location filename="../Qt/keyboard/fullscreenkeyboarddialog.cpp" line="30"/>
         <source>Keyboard</source>
-        <translation>Klawiatura</translation>
+        <translation>键盘</translation>
     </message>
 </context>
 <context>
@@ -362,27 +363,27 @@
     <message>
         <location filename="../Qt/initializedialog.cpp" line="68"/>
         <source>Initializing the core component</source>
-        <translation>Inicjalizacja komponentu głównego</translation>
+        <translation>初始化核心部件</translation>
     </message>
     <message>
         <location filename="../Qt/initializedialog.cpp" line="98"/>
         <source>Preparing</source>
-        <translation>Przygotowywanie</translation>
+        <translation>准备</translation>
     </message>
     <message>
         <location filename="../Qt/initializedialog.cpp" line="101"/>
         <source>Initializing, please wait</source>
-        <translation>Inicjalizacja, proszę czekać</translation>
+        <translation>初始化，请等待</translation>
     </message>
     <message>
         <location filename="../Qt/initializedialog.cpp" line="104"/>
         <source>Initializing the midi component</source>
-        <translation>Inicjalizacja komponentu midi</translation>
+        <translation>初始化midi部件</translation>
     </message>
     <message>
         <location filename="../Qt/initializedialog.cpp" line="107"/>
         <source>Finished</source>
-        <translation>Ukończony</translation>
+        <translation>已完成</translation>
     </message>
 </context>
 <context>
@@ -390,7 +391,7 @@
     <message>
         <location filename="../Qt/keyboard/keyboardgraphicsview.cpp" line="78"/>
         <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
-        <translation>To okno wyświetla klawiaturę. Każdy klawisz zawiera mały wskaźnik, który wyświetli aktualny stan tego klawisza.</translation>
+        <translation>这个窗口显示键盘。每个键都有一个小的指示器，该指示器将显示这个键的当前录音状态</translation>
     </message>
 </context>
 <context>
@@ -399,7 +400,7 @@
         <location filename="../Qt/logviewer.ui" line="20"/>
         <location filename="../Qt/logviewer.ui" line="34"/>
         <source>Log</source>
-        <translation>Log</translation>
+        <translation>日志</translation>
     </message>
 </context>
 <context>
@@ -409,343 +410,344 @@
         <location filename="../Qt/mainwindow.cpp" line="518"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
-        <translation>Entropy Piano Tuner</translation>
+        <translation>熵钢琴调律器</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="47"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This windows displays the tuning curve.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To okno wyświetla krzywą strojenia.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这个窗口显示调律曲线.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="58"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This window displays the recorded spectrum of a single note. Bars will indicate the peaks that were found during the analysis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To okno wyświetla zebrane spektrum pojedynczej nuty. Paski wskazują na maksima znalezione podczas analizy.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这个窗口显示单个音符的记录频谱，竖条中将显示在分析过程中发现的峰。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="76"/>
         <source>&amp;File</source>
-        <translation>&amp;Plik</translation>
+        <translation>&amp;文件</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="89"/>
         <source>&amp;Tools</source>
-        <translation>&amp;Narzędzia</translation>
+        <translation>&amp;工具</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="98"/>
         <source>&amp;Help</source>
-        <translation>P&amp;omoc</translation>
+        <translation>&amp;帮助</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="128"/>
         <source>&amp;Open</source>
-        <translation>&amp;Otwórz</translation>
+        <translation>&amp;打开</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="133"/>
         <source>&amp;Save</source>
-        <translation>&amp;Zapisz</translation>
+        <translation>&amp;保存</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="138"/>
         <source>E&amp;xit</source>
-        <translation>Za&amp;kończ</translation>
+        <translation>&amp;退出</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
         <location filename="../Qt/mainwindow.cpp" line="208"/>
         <source>About</source>
-        <translation>Informacje o EPT</translation>
+        <translation>关于</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="148"/>
         <source>Open sound control</source>
-        <translation>Otwórz ustawienia głośności</translation>
+        <translation>打开声音控制</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="153"/>
         <source>Save &amp;As</source>
-        <translation>Zapisz &amp;jako</translation>
+        <translation>另存 &amp;为</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="158"/>
         <source>&amp;New</source>
-        <translation>&amp;Nowy</translation>
+        <translation>&amp;新建</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="163"/>
         <source>&amp;Edit piano data sheet</source>
-        <translation>&amp;Edytuj dane pianina</translation>
+        <translation>&amp;编辑钢琴数据表</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="173"/>
         <source>Share</source>
-        <translation>Współdzielenie</translation>
+        <translation>共享</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="181"/>
         <source>View log</source>
-        <translation>Zobacz log</translation>
+        <translation>查看日志</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="186"/>
         <source>&amp;Options</source>
-        <translation>&amp;Opcje</translation>
+        <translation>&amp;选项</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;Resetuj nagrania</translation>
+        <translation>&amp;重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="196"/>
         <source>Manual</source>
-        <translation>Podręcznik użytkownika</translation>
+        <translation>手册</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="201"/>
         <location filename="../Qt/mainwindow.cpp" line="206"/>
         <source>Tutorial</source>
-        <translation>Tutorial</translation>
+        <translation>教程</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="143"/>
         <source>Idle</source>
-        <translation>Nieaktywny</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="145"/>
-        <source>Press this button to switch to the idle mode.</source>
-        <translation>Naciśnij ten przycisk by przełączyć w tryb nieaktywny.</translation>
+        <translation>空闲</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="149"/>
         <source>Record</source>
-        <translation>Nagrywaj</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="151"/>
-        <source>Press this button to switch to the recording mode.</source>
-        <translation>Naciśnij ten przycik by przejść do trybu nagrywania.</translation>
+        <translation>录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="155"/>
         <source>Calculate</source>
-        <translation>Oblicz</translation>
-    </message>
-    <message>
-        <location filename="../Qt/mainwindow.cpp" line="157"/>
-        <source>Press this button to switch to the calculation mode.</source>
-        <translation>Naciśnij ten przycsk by przełączyć w tryb obliczeń.</translation>
+        <translation>计算</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="161"/>
         <source>Tune</source>
-        <translation>Strojenie</translation>
+        <translation>调律</translation>
+    </message>
+    <message>
+        <location filename="../Qt/mainwindow.cpp" line="145"/>
+        <source>Press this button to switch to the idle mode.</source>
+        <translation>按此钮切换到空闲模式.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/mainwindow.cpp" line="151"/>
+        <source>Press this button to switch to the recording mode.</source>
+        <translation>按此钮切换到录音模式.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/mainwindow.cpp" line="157"/>
+        <source>Press this button to switch to the calculation mode.</source>
+        <translation>按此钮切换到计算模式.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="163"/>
         <source>Press this button to switch to the tuning mode.</source>
-        <translation>Naciśnij ten przycsk by przełączyć w tryb strojenia.</translation>
+        <translation>按此钮切换到调律模式.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="179"/>
         <source>Documents and tools</source>
-        <translation>Dokumenty i narzędzia</translation>
+        <translation>文档和工具</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="185"/>
         <source>New</source>
-        <translation>Nowy</translation>
+        <translation>新建</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="188"/>
         <source>Save as</source>
-        <translation>Zapisz jako</translation>
+        <translation>另存为</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="189"/>
         <source>Edit piano data sheet</source>
-        <translation>Edytuj dane pianina</translation>
+        <translation>编辑钢琴数据表</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Options</source>
-        <translation>Opcje</translation>
+        <translatorcomment>选项</translatorcomment>
+        <translation>选项</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Graphs</source>
-        <translation type="unfinished"></translation>
+        <translation>图</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="193"/>
         <source>Help</source>
-        <translation>Pomoc</translation>
+        <translation>帮助</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Log</source>
-        <translation>Log</translation>
+        <translation>日志</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="228"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>导出</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="360"/>
         <source>File created</source>
-        <translation>Plik został utworzony</translation>
+        <translation>文件已建立</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="363"/>
         <source>File edited</source>
-        <translation>Plik został zmieniony</translation>
+        <translation>文件已编辑</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="366"/>
         <source>File opened</source>
-        <translation>Plik został otwarty</translation>
+        <translation>文件已打开</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="369"/>
         <source>File saved</source>
-        <translation>Plik został zapisany</translation>
+        <translation>文件已保存</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="435"/>
         <source>Recording keystroke</source>
-        <translation>Nagrywanie stuknięcia klawisza</translation>
+        <translation>录音击键</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="443"/>
         <source>Signal analysis started</source>
-        <translation>Analiza sygnału rozpoczęta</translation>
+        <translation>信号分析已开始</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="446"/>
         <source>Signal analysis ended</source>
-        <translation>Analiza sygnału zakończona</translation>
+        <translation>信号分析已结束</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="475"/>
         <source>Calculation failed</source>
-        <translation>Wystąpił błąd podczas obliczeń</translation>
+        <translation>计算失败</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="478"/>
         <source>Calculation ended</source>
-        <translation>Obliczenia zakończone</translation>
+        <translation>计算已结束</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="481"/>
         <source>Calculation started</source>
-        <translation>Obliczenia rozpoczęte</translation>
+        <translation>计算已开始</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <location filename="../Qt/mainwindow.cpp" line="753"/>
         <source>Warning</source>
-        <translation>Ostrzeżenie</translation>
+        <translation>告警</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Nie udało się znaleźć systemowych ustawień głośności.</translation>
+        <translation>无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
         <source>Canceled</source>
-        <translation>Anulowano</translation>
+        <translation>中止</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
         <source>You need to save the file before you can share it.</source>
-        <translation>Należy zapisać plik przed jego współdzieleniem.</translation>
+        <translation>在你共享文件之前需要保存文件o</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="734"/>
         <source>A new update is available!</source>
-        <translation>Nowa aktualizacja jest dostępna!</translation>
+        <translation>一个新的更新可用！</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="735"/>
         <source>The online app version is %1. Do you want to install this update?</source>
-        <translation>Wersja dostępna online jest w wersji %1. Czy chcesz zainstalować aktualizację?</translation>
+        <translation>在线应用程序的版本是 %1.您想安装此更新吗？</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="753"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
-        <translation>Narzędzie serwisowe nie zdołało uruchomić się automatycznie. W celu aktualizacji programu należy uruchomić narzędzie serwisowe ręcznie.</translation>
+        <translation>无法自动启动维护工具。要更新程序，您必须手动启动维护工具。</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="66"/>
         <source>The document has been modified.</source>
-        <translation>Dokument został zmodyfikowany.</translation>
+        <translation>文档已被修改.</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="67"/>
         <source>Do you want to save your changes?</source>
-        <translation>Czy chcesz zachować zmiany?</translation>
+        <translation>要保存你的更改?</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="187"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="88"/>
         <source>Save</source>
-        <translation>Zapisz</translation>
+        <translation>保存</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="186"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="111"/>
         <source>Open</source>
-        <translation>Otwórz</translation>
+        <translation>打开</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="130"/>
         <source>Share tuning data</source>
-        <translation>Współdziel dane strojenia</translation>
+        <translation>共享调律数据</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="147"/>
         <source>New piano</source>
-        <translation>Nowe pianino</translation>
+        <translation>新钢琴</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="150"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="152"/>
         <source>Unknown</source>
-        <translation>Nieznany</translation>
+        <translation>不明</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="160"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="164"/>
         <source>Error</source>
-        <translation>Błąd</translation>
+        <translation>出错</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="160"/>
         <source>File could not be opened.</source>
-        <translation>Plik nie mógł być otworzony.</translation>
+        <translation>无法打开文件</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="164"/>
         <source>File could not be saved.</source>
-        <translation>Plik nie mógł być zapisany.</translation>
+        <translation>无法保存文件.</translation>
     </message>
     <message>
         <source>Entopy piano tuner</source>
-        <translation type="obsolete">Entopy piano tuner</translation>
+        <translation type="obsolete">熵钢琴调律器</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="184"/>
         <source>Comma-separated values</source>
-        <translation type="unfinished"></translation>
+        <translation>逗号分隔的数值</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="187"/>
         <source>All files</source>
-        <translation>Wszystkie pliki</translation>
+        <translation>所有文件</translation>
     </message>
 </context>
 <context>
@@ -753,78 +755,84 @@
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="106"/>
         <source>Reset view</source>
-        <translation type="unfinished"></translation>
+        <translation>重置视图</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="107"/>
         <source>Go first</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>先走</translatorcomment>
+        <translation>到开始</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="108"/>
         <source>Go previous</source>
-        <translation type="unfinished"></translation>
+        <translation>上一页</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="109"/>
         <source>Go next</source>
-        <translation type="unfinished"></translation>
+        <translation>下一页</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="110"/>
         <source>Go last</source>
-        <translation type="unfinished"></translation>
+        <translation>到最后</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="116"/>
         <source>Inh.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>失谐系数</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>录音</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
         <source>Comp.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>计算</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="119"/>
         <source>Tun.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>调律</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="124"/>
         <source>Tuned</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>已调律的</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
         <source>Inharmonicity</source>
-        <translation type="unfinished"></translation>
+        <translation>失谐</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="122"/>
         <source>Recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>已录音</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="123"/>
         <source>Computed</source>
-        <translation type="unfinished"></translation>
+        <translation>已计算</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="137"/>
         <source>Key index</source>
-        <translation type="unfinished"></translation>
+        <translation>键索引</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
         <source>Frequency deviation [cent]</source>
-        <translation type="unfinished"></translation>
+        <translation>频率偏差[音分]</translation>
     </message>
 </context>
 <context>
@@ -834,17 +842,17 @@
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="982"/>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="985"/>
         <source>Documents</source>
-        <translation type="unfinished"></translation>
+        <translation>文档</translation>
     </message>
     <message>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="990"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>图像</translation>
     </message>
     <message>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="1005"/>
         <source>Export File Name</source>
-        <translation type="unfinished"></translation>
+        <translation>导出文件名</translation>
     </message>
 </context>
 <context>
@@ -852,12 +860,12 @@
     <message>
         <location filename="../Qt/recordingqualitybar.cpp" line="40"/>
         <source>Quality</source>
-        <translation>Jakość</translation>
+        <translation>质量</translation>
     </message>
     <message>
         <location filename="../Qt/recordingqualitybar.cpp" line="41"/>
         <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
-        <translation>Ten pasek wyświetla jakość nagrania. Wszystkie nagrane klawisze powinny mieć w przybliżeniu podobną jakość przed rozpoczęciem obliczeń.</translation>
+        <translation>此条显示录音质量。开始前计算所有已录音的键应该有一个几乎相等的质量，</translation>
     </message>
 </context>
 <context>
@@ -865,7 +873,7 @@
     <message>
         <location filename="../Qt/recordingstatusgraphicsview.cpp" line="33"/>
         <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
-        <translation>Ten moduł wyświetla status nagrywania. Czerwone kółko oznacza, że sygnał dźwiękowy jest obecnie nagrywany. Niebieskie obracające się kółko jest wyświetlane gdy program przetwarza nagrany sygnał. Zielony sygnał pauzy jest wyświetlany gdy możliwe jest nagranie kolejnego klawisza.</translation>
+        <translation>该项显示录音器的状态。一个红色圆圈表示音频信号是当前录音的。一个蓝色旋转圆表示程序处理已录信号。如果你能录下一个键，则显示绿色的暂停符号；</translation>
     </message>
 </context>
 <context>
@@ -873,7 +881,7 @@
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="31"/>
         <source>Signal analyzer</source>
-        <translation>Analizator sygnału</translation>
+        <translation>信号分析器</translation>
     </message>
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="68"/>
@@ -883,12 +891,12 @@
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="78"/>
         <source>This label displays the current selected key.</source>
-        <translation>Ta etykieta wyświetla obecnie wybrany klawisz.</translation>
+        <translation>此标签显示当前选定的键</translation>
     </message>
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="79"/>
         <source>This label shows the ground frequency of the selected key.</source>
-        <translation>Ta etykieta wyświetla częstotliwość podstawową obecnie wybranego klawisz.</translation>
+        <translation>此标签显示当前选定键的基频</translation>
     </message>
 </context>
 <context>
@@ -896,37 +904,37 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="92"/>
         <source>Name:</source>
-        <translation>Nazwa:</translation>
+        <translation>名称:</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="148"/>
         <source>File existing</source>
-        <translation type="unfinished"></translation>
+        <translation>文件存在</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>给定名称的文件已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Invalid filename</source>
-        <translation type="unfinished"></translation>
+        <translation>无效文件名</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Please provide a valid filename.</source>
-        <translation type="unfinished"></translation>
+        <translation>请提供有效文件名</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="178"/>
         <source>Remove file</source>
-        <translation>Usuń plik</translation>
+        <translation>删除文件</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="179"/>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
-        <translation>Czy na pewno chcesz skasować plik &quot;%1&quot;?</translation>
+        <translation>你确定要删除文件 &quot;%1&quot;吗？</translation>
     </message>
 </context>
 <context>
@@ -934,12 +942,12 @@
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
         <source>Crash handler</source>
-        <translation>Obsługa błędów</translation>
+        <translation>系统崩溃处理</translation>
     </message>
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
         <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
-        <translation>Aplikacja została nieoczekiwanie zamknięta podczas ostatniego działania. Czy chcesz wyświetlić ostatni log (dziennik zdarzeń)?</translation>
+        <translation>应用程序在最后一次运行时意外退出。你想查看最后一个日志吗？</translation>
     </message>
 </context>
 <context>
@@ -947,7 +955,7 @@
     <message>
         <location filename="../Qt/tuninggroupbox.cpp" line="28"/>
         <source>Tuning</source>
-        <translation>Strojenie</translation>
+        <translation>调律</translation>
     </message>
 </context>
 <context>
@@ -955,37 +963,37 @@
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="37"/>
         <source>Volume control</source>
-        <translation>Ustawienia głośności</translation>
+        <translation>音量控制</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="46"/>
         <source>Volume</source>
-        <translation>Głośność</translation>
+        <translation>音量</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="128"/>
         <source>This widgets provides settings and information about the input level of the input device.</source>
-        <translation>Ten widżet dostarcza ustawień i informacji na temat poziomu wejściowego urządzenia wejściowego.</translation>
+        <translation>此部件提供输入设备信息和输入电平设置。.</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="129"/>
         <source>If the input level drops below this mark the recorder stops and does not process the input signal.</source>
-        <translation>Jeżeli poziom wejściowy spadnie poniżej tego znacznika program przestaje przetwarzać sygnał wejściowy.</translation>
+        <translation>如果输入电平下降到下面这个标记的话，录音器会停止并不处理输入信号。</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="130"/>
         <source>If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.</source>
-        <translation>Jeżeli poziom wejściowy przekroczy ten znacznik program rozpoczyna  przetwarzanie sygnału wejściowego.</translation>
+        <translation>如果输入电平达到这个阈值，录音器开始分析输入设备的信号，直到电平降到 &apos;Off&apos;标记.</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="131"/>
         <source>Click this button to reset the automatic calibration of the input volume.</source>
-        <translation>Naciśnij ten przycisk by zresetować automatyczną kalibrację wejściowego poziomu głośności.</translation>
+        <translation>单击此按钮可重置输入音量的自动校准。</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="132"/>
         <source>Click this button to mute the input device.</source>
-        <translation>Naciśnij ten przycisk by wyciszyć wejściowe urządzenie.</translation>
+        <translation>请按此钮使输入设备静音。</translation>
     </message>
 </context>
 <context>
@@ -993,7 +1001,7 @@
     <message>
         <location filename="../Qt/volumecontrollevel.cpp" line="32"/>
         <source>This bar displays the current input level.</source>
-        <translation>Ten pasek wyświetla obecny poziom wejściowy. Użyj przycisku po prawej stronie by zwiększyć lub zmniejszyć ten poziom w celu dopasowania progów poziomu wejściowego pokazanych poniżej.</translation>
+        <translation>这条块显示当前输入电平.</translation>
     </message>
 </context>
 <context>
@@ -1001,7 +1009,7 @@
     <message>
         <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation>To jest urządzenie strojące. Dla optymalnego strojenia wierzchołek oraz pasek wskaźnika powinny znaleźć się na środku okna. Gdy strojonych jest kilka strun na raz, może pojawić się kilka wierzchołków. Wszystkie powinny zostać nastrojone tak, by znaleźć się w środku.</translation>
+        <translation>这是调律装置。在窗口中间带有峰值和指示条以作优化调律用。当一次调整几根弦时，可能会出现几个峰值，所有这些峰都应该被调到匹配的中心。</translation>
     </message>
 </context>
 <context>
@@ -1009,17 +1017,17 @@
     <message>
         <location filename="../Qt/options/optionsdialog.cpp" line="47"/>
         <source>Options</source>
-        <translation>Opcje</translation>
+        <translation>选项</translation>
     </message>
     <message>
         <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
         <source>Environment</source>
-        <translation>Środowisko</translation>
+        <translation>环境</translation>
     </message>
     <message>
         <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
         <source>Audio</source>
-        <translation>Dźwięk</translation>
+        <translation>音频</translation>
     </message>
 </context>
 <context>
@@ -1027,17 +1035,17 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudio.cpp" line="30"/>
         <source>Input device</source>
-        <translation>Urządzenie wejściowe</translation>
+        <translation>输入设备</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudio.cpp" line="31"/>
         <source>Output device</source>
-        <translation>Urządzenie wyjściowe</translation>
+        <translation>输出设备</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudio.cpp" line="32"/>
         <source>Midi</source>
-        <translation>MIDI</translation>
+        <translation>Midi</translation>
     </message>
 </context>
 <context>
@@ -1046,32 +1054,32 @@
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="59"/>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="66"/>
         <source>Default</source>
-        <translation>Domyślne</translation>
+        <translation>缺省</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="61"/>
         <source>Input device</source>
-        <translation>Urządzenie wejściowe</translation>
+        <translation>输入设备</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sample rates</source>
-        <translation>Częstość próbkowania</translation>
+        <translation>采样率</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
         <source>Open system settings</source>
-        <translation>Otwórz ustawienia systemowe</translation>
+        <translation>打开系统设置</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
         <source>Warning</source>
-        <translation>Ostrzeżenie</translation>
+        <translation>警告</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
-        <translation>Częstość próbkowania nie może być niższa od %1 by nagrać wszystkie klawisze.</translation>
+        <translation>对所有键录音需要至少 %1的采样率</translation>
     </message>
 </context>
 <context>
@@ -1079,7 +1087,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudiomidipage.cpp" line="33"/>
         <source>Midi device</source>
-        <translation>Urządzenie MIDI</translation>
+        <translation>MIDI设备</translation>
     </message>
 </context>
 <context>
@@ -1087,12 +1095,12 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="28"/>
         <source>General</source>
-        <translation>Ogólne</translation>
+        <translation>通用</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="29"/>
         <source>Tuning</source>
-        <translation>Strojenie</translation>
+        <translation>调律</translation>
     </message>
 </context>
 <context>
@@ -1100,32 +1108,32 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="38"/>
         <source>User Interface</source>
-        <translation>Interfejs użytkownika</translation>
+        <translation>用户接口</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="45"/>
         <source>Language</source>
-        <translation>Język</translation>
+        <translation>语言</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="47"/>
         <source>&lt;System Language&gt;</source>
-        <translation>&lt;Język systemowy&gt;</translation>
+        <translation>&lt;系统语言&gt;</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="65"/>
         <source>Reset warnings</source>
-        <translation>Przywróć ostrzeżenia</translation>
+        <translation>重置警告</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
         <source>Information</source>
-        <translation>Informacja</translation>
+        <translation>信息</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
-        <translation>Zmiana języka zostanie zastosowana przy ponownym uruchomieniu programu.</translation>
+        <translation>语言改变必须重启熵钢琴调律器后生效</translation>
     </message>
 </context>
 <context>
@@ -1133,32 +1141,32 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
         <source>Disabled</source>
-        <translation>Nieaktywny</translation>
+        <translation>不可用</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
         <source>Synthesized key sound</source>
-        <translation>Zrekonstruowany dźwięk klawisza</translation>
+        <translation>合成键声音</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
         <source>Reference key</source>
-        <translation>Klawisz odniesienia</translation>
+        <translation>参考键</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="40"/>
         <source>Synthesizer mode</source>
-        <translation>Tryb syntetyzatora</translation>
+        <translation>合成器模式</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="44"/>
         <source>Dynamic synthesizer volume</source>
-        <translation>Dynamiczna głośność</translation>
+        <translation>动态合成器音量</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="50"/>
         <source>Disable automatic key selection</source>
-        <translation type="unfinished"></translation>
+        <translation>禁止自动键选择</translation>
     </message>
 </context>
 </TS>

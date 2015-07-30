@@ -111,78 +111,93 @@
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="126"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="127"/>
         <source>An unknown error occured during the calculation.</source>
         <translation>В процессе вычисления произошла неизвестная ошибка.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="129"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="130"/>
         <source>No data available.</source>
         <translation>Данные недоступны.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="132"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="133"/>
         <source>Not all keys recorded</source>
         <translation>Не все клавиши записаны</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="135"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="136"/>
         <source>Key data inconsistent.</source>
         <translation>Данные противоречивы.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
+        <source>Not enough keys recorded in left section.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
+        <source>Not enough keys recorded in right section.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
+        <source>Undefined error message.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
         <source>Calculation error</source>
         <translation>Ошибка в вычислениях</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
         <source>Error code</source>
         <translation>Код ошибки</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="147"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="158"/>
         <source>Calculation started</source>
         <translation>Вычисления начаты</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="148"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="159"/>
         <source>Stop calculation</source>
         <translation>Остоновить вычисления</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="153"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
         <source>Calculation finished</source>
         <translation>Расчет закончен</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="153"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
         <translation>Расчет успешно завершен!  Теперь вы можете перейти в режим настройки и настроить Ваше фортепиано. </translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="160"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
         <source>Minimizing the entropy</source>
         <translation>Поиск минимума энтропии</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="173"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="184"/>
         <source>Calculation with: %1</source>
         <translation>Расчет с: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="184"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="195"/>
         <source>Calculation canceled</source>
         <translation>Расчёт отменён</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="186"/>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="201"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="212"/>
         <source>Start calculation</source>
         <translation>Начать вычисления</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="208"/>
         <source>Press the button to start the calculation</source>
         <translation>Нажмите кнопку для начала вычислений</translation>
     </message>
@@ -393,6 +408,7 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
         <location filename="../Qt/mainwindow.cpp" line="518"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>Энтропийный Тюнер для Фортепиано</translation>
     </message>
@@ -719,9 +735,8 @@
         <translation>Не удаётся сохранить файл.</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entopy piano tuner</source>
-        <translation>Энтропийный Тюнер для Фортепиано</translation>
+        <translation type="obsolete">Энтропийный Тюнер для Фортепиано</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="184"/>
@@ -1099,17 +1114,17 @@
         <translation>&lt;Язык системы&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="64"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="65"/>
         <source>Reset warnings</source>
         <translation>Сбросить предупреждения</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="77"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
         <source>Information</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="77"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
         <translation>Изменение языка вступит в силу после перезапуска Энтропийного Тюнера для Фортепиано.</translation>
     </message>

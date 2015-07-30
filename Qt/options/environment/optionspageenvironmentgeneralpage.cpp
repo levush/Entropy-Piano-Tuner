@@ -50,6 +50,7 @@ PageEnvironmentGeneral::PageEnvironmentGeneral(OptionsDialog *optionsDialog)
     mLanguageSelection->addItem("Español", QVariant("es"));
     mLanguageSelection->addItem("Polski", QVariant("pl"));
     mLanguageSelection->addItem("Português", QVariant("pt"));
+    mLanguageSelection->addItem("中国", QVariant("zh"));
     mLanguageSelection->addItem("한국어", QVariant("ko"));
     //mLanguageSelection->addItem("Pусский", QVariant("ru"));
 
