@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="49"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="58"/>
@@ -21,32 +21,33 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="74"/>
         <source>by %1 and %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 и %2</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="76"/>
         <source>Based on</source>
-        <translation type="unfinished"></translation>
+        <translation>Основан на</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="87"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished"></translation>
+        <translation>Все права на принадлежат Кафедре теоретической физики III университета Вюрцбург, 2015г.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>Bin mir nicht sicher</translatorcomment>
+        <translation>Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
-        <translation type="unfinished"></translation>
+        <translation>Программа предоставляется с надеждой на то, что она пригодится пользователям, но она предоставляется БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, так же не гарантируется её ПРИГОДНОСТИ ДЛЯ КАКИХ-ЛИБО КОНКРЕТНЫХ ЦЕЛЕЙ.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="94"/>
         <source>We thank all those who have contributed to the project:</source>
-        <translation type="unfinished"></translation>
+        <translation>Мы благодарим всех тех, кто внес свой вклад в этот проект:</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="118"/>
@@ -94,7 +95,7 @@
     <message>
         <location filename="../Qt/algorithmdialog.cpp" line="181"/>
         <source>Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Параметры</translation>
     </message>
 </context>
 <context>
@@ -152,12 +153,12 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="153"/>
         <source>Calculation finished</source>
-        <translation type="unfinished"></translation>
+        <translation>Расчет закончен</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="153"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
-        <translation type="unfinished"></translation>
+        <translation>Расчет успешно завершен!  Теперь вы можете перейти в режим настройки и настроить Ваше фортепиано. </translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="160"/>
@@ -167,7 +168,7 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="173"/>
         <source>Calculation with: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Расчет с: %1</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="184"/>
@@ -196,7 +197,7 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Сброс записи</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -231,7 +232,7 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="64"/>
         <source>The tuning curve has not been calculated. Switch the mode and calculate it.</source>
-        <translation type="unfinished"></translation>
+        <translation> Рассчитаная кривая не была  вычислена. Переключите режим и вычислите её.</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="67"/>
@@ -249,7 +250,7 @@
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="35"/>
         <source>Piano operating site information</source>
-        <translation type="unfinished"></translation>
+        <translation>Информация о настройке фортепиано</translation>
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="44"/>
@@ -339,7 +340,7 @@
     <message>
         <location filename="../Qt/keyboard/fullscreenkeyboarddialog.cpp" line="30"/>
         <source>Keyboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавиатура</translation>
     </message>
 </context>
 <context>
@@ -375,7 +376,7 @@
     <message>
         <location filename="../Qt/keyboard/keyboardgraphicsview.cpp" line="78"/>
         <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
-        <translation type="unfinished"></translation>
+        <translation>В этом окне отображается клавиатура. Каждая клавиша имеет небольшой индикатор, который будет отображать текущее состояние записи этой клавиши.</translation>
     </message>
 </context>
 <context>
@@ -428,7 +429,7 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="133"/>
         <source>&amp;Save</source>
-        <translation>&amp;Сохранить</translation>
+        <translation>&amp;_Сохранить</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="138"/>
@@ -439,12 +440,12 @@
         <location filename="../Qt/mainwindow.ui" line="143"/>
         <location filename="../Qt/mainwindow.cpp" line="208"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="148"/>
         <source>Open sound control</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть управление звуком</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="153"/>
@@ -454,7 +455,7 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="158"/>
         <source>&amp;New</source>
-        <translation>&amp;Создать</translation>
+        <translation>&amp;Новый</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="163"/>
@@ -464,22 +465,22 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="173"/>
         <source>Share</source>
-        <translation type="unfinished"></translation>
+        <translation>Поделиться</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="181"/>
         <source>View log</source>
-        <translation type="unfinished"></translation>
+        <translation>Посмотреть журнал</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="186"/>
         <source>&amp;Options</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Reset recoding</source>
-        <translation type="unfinished"></translation>
+        <translation>Сбросить &amp;запись</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="196"/>
@@ -495,12 +496,12 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="143"/>
         <source>Idle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ожидание</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="145"/>
         <source>Press this button to switch to the idle mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите эту кнопку для переключения в режим ожидания.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="149"/>
@@ -510,32 +511,32 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="151"/>
         <source>Press this button to switch to the recording mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите эту кнопку, чтобы перейти в режим записи.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="155"/>
         <source>Calculate</source>
-        <translation type="unfinished"></translation>
+        <translation>Вычислить</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="157"/>
         <source>Press this button to switch to the calculation mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите эту кнопку, чтобы переключиться в режим расчета.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="161"/>
         <source>Tune</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройка</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="163"/>
         <source>Press this button to switch to the tuning mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите эту кнопку, чтобы перейти в режим настройки.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="179"/>
         <source>Documents and tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Документы и инструменты</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="185"/>
@@ -560,7 +561,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Graphs</source>
-        <translation type="unfinished"></translation>
+        <translation>Диаграммы</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="193"/>
@@ -575,7 +576,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="228"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Экспортировать</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="360"/>
@@ -600,7 +601,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="435"/>
         <source>Recording keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Запись клавиш</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="443"/>
@@ -636,12 +637,12 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="unfinished"></translation>
+        <translation>Невозможно найти поддерживаемую регулировку звука.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
         <source>Canceled</source>
-        <translation type="unfinished"></translation>
+        <translation>Отменено</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -651,17 +652,17 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="734"/>
         <source>A new update is available!</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновление доступно!</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="735"/>
         <source>The online app version is %1. Do you want to install this update?</source>
-        <translation type="unfinished"></translation>
+        <translation>Онлай версия приложения %1.Вы хотите, чтобы установить это обновление?</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="753"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
-        <translation type="unfinished"></translation>
+        <translation>Инструмент обслуживания не может быть запущен автоматически. Чтобы обновить программу, вы должны начать инструмент обслуживания вручную.</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="66"/>
@@ -688,7 +689,7 @@
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="130"/>
         <source>Share tuning data</source>
-        <translation type="unfinished"></translation>
+        <translation>Поделиться тюнинговыми данными</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="147"/>
@@ -699,7 +700,7 @@
         <location filename="../Qt/projectmanagerforqt.cpp" line="150"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="152"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Неизвестно</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="160"/>
@@ -725,7 +726,7 @@
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="184"/>
         <source>Comma-separated values</source>
-        <translation type="unfinished"></translation>
+        <translation>Значения разделенные запятыми</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="187"/>
@@ -738,78 +739,78 @@
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="106"/>
         <source>Reset view</source>
-        <translation type="unfinished"></translation>
+        <translation>Вернуть</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="107"/>
         <source>Go first</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти к первой</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="108"/>
         <source>Go previous</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти к предыдущей</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="109"/>
         <source>Go next</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти к следующей </translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="110"/>
         <source>Go last</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти к последней</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="116"/>
         <source>Inh.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
         <source>Comp.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="119"/>
         <source>Tun.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="124"/>
         <source>Tuned</source>
-        <translation type="unfinished"></translation>
+        <translation>Настроено</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
         <source>Inharmonicity</source>
-        <translation type="unfinished"></translation>
+        <translation>Негармонично</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="122"/>
         <source>Recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>Записанно</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="123"/>
         <source>Computed</source>
-        <translation type="unfinished"></translation>
+        <translation>Вычисленно</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="137"/>
         <source>Key index</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер кавиши</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
         <source>Frequency deviation [cent]</source>
-        <translation type="unfinished"></translation>
+        <translation>Отклонение частоты [cent]</translation>
     </message>
 </context>
 <context>
@@ -819,17 +820,17 @@
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="982"/>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="985"/>
         <source>Documents</source>
-        <translation type="unfinished"></translation>
+        <translation>Документы</translation>
     </message>
     <message>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="990"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Изображения</translation>
     </message>
     <message>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="1005"/>
         <source>Export File Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Экспортировать файл с именем</translation>
     </message>
 </context>
 <context>
@@ -850,7 +851,7 @@
     <message>
         <location filename="../Qt/recordingstatusgraphicsview.cpp" line="33"/>
         <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Эти символы отображают состояние записывающего устройства. Красный круг указывает на то, что аудиосигнал в настоящее время записывается. Синий круг вращающихся отображается, когда программа обрабатывает записанный сигнал. Зеленый символ паузы отображается, если вы можете записать следующую клавишу.</translation>
     </message>
 </context>
 <context>
@@ -868,12 +869,12 @@
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="78"/>
         <source>This label displays the current selected key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Этот знак отображает выбранную сейчас клавишу.</translation>
     </message>
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="79"/>
         <source>This label shows the ground frequency of the selected key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Этот знак показывает основную частоту выбранной клавиши.</translation>
     </message>
 </context>
 <context>
@@ -881,37 +882,37 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="92"/>
         <source>Name:</source>
-        <translation type="unfinished">Имя:</translation>
+        <translation>Имя:</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="148"/>
         <source>File existing</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл существует</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл с заданным именем уже существует на %1. Вы хотите перезаписать его?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Invalid filename</source>
-        <translation type="unfinished"></translation>
+        <translation>Неверное имя файла</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Please provide a valid filename.</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста введите правельное имя файла.</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="178"/>
         <source>Remove file</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить файл</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="179"/>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что Вы действительно хотите удалить файл &quot;%1&quot;?</translation>
     </message>
 </context>
 <context>
@@ -919,12 +920,12 @@
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
         <source>Crash handler</source>
-        <translation type="unfinished"></translation>
+        <translation>Обработка ошибок</translation>
     </message>
     <message>
         <location filename="../Qt/tunerapplication.cpp" line="97"/>
         <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
-        <translation type="unfinished"></translation>
+        <translation>Последний раз приложение неожиданно завершило работу. Вы хотите посмотреть последнюю запись журнала?</translation>
     </message>
 </context>
 <context>
@@ -932,7 +933,7 @@
     <message>
         <location filename="../Qt/tuninggroupbox.cpp" line="28"/>
         <source>Tuning</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройка</translation>
     </message>
 </context>
 <context>
@@ -986,7 +987,7 @@
     <message>
         <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation type="unfinished"></translation>
+        <translation>Это устройство настройки. Вы должны принести пик и полоску индикатора в середину окна для оптимальной настройки. При настройке нескольких струн сразу, там может появиться несколько пиков.Все они должны быть так, чтобы были в центре.</translation>
     </message>
 </context>
 <context>
@@ -1041,7 +1042,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sample rates</source>
-        <translation type="unfinished"></translation>
+        <translation>Частоты дискретизации</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
@@ -1056,7 +1057,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы должны иметь хотя бы частоту дискретизации от %1 для записи и проигрывания всех клавиш.</translation>
     </message>
 </context>
 <context>
@@ -1072,12 +1073,12 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="28"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Основные</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="29"/>
         <source>Tuning</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройка</translation>
     </message>
 </context>
 <context>
@@ -1095,12 +1096,12 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="47"/>
         <source>&lt;System Language&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Язык системы&gt;</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="64"/>
         <source>Reset warnings</source>
-        <translation type="unfinished"></translation>
+        <translation>Сбросить предупреждения</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="77"/>
@@ -1123,27 +1124,27 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
         <source>Synthesized key sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Синтезированный звук клавиши</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
         <source>Reference key</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавиша для сравнения</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="40"/>
         <source>Synthesizer mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим синтезатора</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="44"/>
         <source>Dynamic synthesizer volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Динамическая громкось синтезатора</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="50"/>
         <source>Disable automatic key selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Отключить автоматический выбор кавиши</translation>
     </message>
 </context>
 </TS>
