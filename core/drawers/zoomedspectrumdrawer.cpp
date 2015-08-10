@@ -132,7 +132,7 @@ void ZoomedSpectrumDrawer::draw()
     //------- Draw a horizontal and a vertical line separating the field ------
 
 
-    mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
+    mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN);
     mGraphics->drawLine(0,   0.8, 1, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
 
     int keynumber = (mSelectedKey >= 0 ? mSelectedKey : mRecognizedKey);
@@ -155,7 +155,7 @@ void ZoomedSpectrumDrawer::draw()
 
     if (specWindowSize > 0) {
         double max = *std::max_element(mFrequencyDetectionResult->tuningDeviationCurve.begin(),
-                                      mFrequencyDetectionResult->tuningDeviationCurve.end());
+                                       mFrequencyDetectionResult->tuningDeviationCurve.end());
 
         std::vector<GraphicsViewAdapter::Point> points;
         const int centerIndex = mFrequencyDetectionResult->tuningDeviationCurve.size() / 2;
@@ -173,6 +173,23 @@ void ZoomedSpectrumDrawer::draw()
         }
         mGraphics->drawChart(points, GraphicsViewAdapter::PEN_THIN_RED);
     }
+
+    //---------------------- Draw overpull marker ------------------------
+
+    double overpull = 0;       // overpull in cents to be calculated, this line will be replaced
+
+    if (abs(overpull)>5 and abs(overpull<100))
+    {
+        auto overpullColor = GraphicsViewAdapter::PEN_THIN_BLUE;
+        if (abs(overpull) > specWindowSize/2)
+        {
+            overpullColor = GraphicsViewAdapter::PEN_MEDIUM_RED;
+            overpull = specWindowSize/2 * (overpull>0 ? 1:-1);
+        }
+        double x = 0.5 + overpull / specWindowSize;
+        mGraphics->drawLine(x,0,x,0.8,overpullColor);
+    }
+
 
 
     //----------------------- Draw tuning marker -------------------------
