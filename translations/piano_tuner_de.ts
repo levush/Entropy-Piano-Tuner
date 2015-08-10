@@ -31,7 +31,7 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="87"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished">Copyright 2015 Lehrstuhl. für Theor. Phys. III, Universität Würzburg. Alle Rechte vorbehalten.</translation>
+        <translation>Copyright 2015 Lehrstuhl. für Theor. Phys. III, Universität Würzburg. Alle Rechte vorbehalten.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
@@ -132,17 +132,17 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
         <source>Not enough keys recorded in left section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht genug Töne auf dem Bass-Steg aufgenommen.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
         <source>Not enough keys recorded in right section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht genug Töne auf dem Diskantsteg aufgenommen.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
         <source>Undefined error message.</source>
-        <translation type="unfinished"></translation>
+        <translation>Undefinierte Fehlermeldung.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>

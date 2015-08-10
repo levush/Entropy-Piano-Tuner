@@ -548,7 +548,7 @@ void MainWindow::onOpenSoundControl() {
     }
 
     // no program could be started
-    QMessageBox::warning(this, tr("Warning"), tr("Unable to find a supported sound conrol."));
+    QMessageBox::warning(this, tr("Warning"), tr("Unable to find a supported sound control."));
 #endif
 }
 

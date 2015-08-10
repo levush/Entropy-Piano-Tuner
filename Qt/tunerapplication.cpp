@@ -181,7 +181,7 @@ void TunerApplication::playStartupSound() {
     // it cannot be played out a resource file
     QFile audioFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + fileName);
     if (!audioFile.exists()) {
-        // file does not exits yet, copy it
+        // file does not exists yet, copy it
         QFile::copy(":/media/audio/" + fileName, audioFile.fileName());
     } else {
         if (audioFile.size() != QResource(":/media/audio/" + fileName).size()) {
