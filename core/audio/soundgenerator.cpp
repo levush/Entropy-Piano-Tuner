@@ -123,7 +123,8 @@ void SoundGenerator::handleMessage(MessagePtr m)
     case Message::MSG_RECORDING_ENDED:
         {
             // if reference tone with constant volume stop it here.
-            if (Settings::getSingleton().getSoundGeneratorMode() == SGM_REFERENCE_TONE)
+            if (Settings::getSingleton().getSoundGeneratorMode() == SGM_REFERENCE_TONE
+                    or mOperationMode!=MODE_TUNING)
             stopResonatingReferenceSound();
         }
         break;
@@ -344,7 +345,7 @@ void SoundGenerator::playResonatingReferenceSound (int keynumber)
         case SGM_SYNTHESIZE_KEY:
         {
             const double volume = 0.2;
-            Envelope env(30,50,mResonatingVolume,20,false);
+            Envelope env(30,50,mResonatingVolume,10,false);
             double frequencyshift = frequency /
                     mPiano->getKey(keynumber).getRecordedFrequency();
             mSynthesizer.playSound(keynumber,frequencyshift,volume,env,false,false);
