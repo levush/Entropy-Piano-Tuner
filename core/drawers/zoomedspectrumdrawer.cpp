@@ -176,7 +176,7 @@ void ZoomedSpectrumDrawer::draw()
 
     //---------------------- Draw overpull marker ------------------------
 
-    double overpull = 0;       // overpull in cents to be calculated, this line will be replaced
+    double overpull = computeOverpull();
 
     if (abs(overpull)>5 and abs(overpull<100))
     {
@@ -210,3 +210,31 @@ void ZoomedSpectrumDrawer::draw()
 }
 
 
+//-----------------------------------------------------------------------------
+//                            Compute overpull
+//-----------------------------------------------------------------------------
+
+double ZoomedSpectrumDrawer::computeOverpull()
+{
+    // First we have to check whether enough measured values exist
+    if (mNumberOfKeys <= 0) return 0;
+    const int maxGapsize = 80;
+    int gapsize = 0;
+    auto tuned = [this] (int key) { return mPiano->getKey(key).getTunedFrequency(); };
+    for (int k=0; k<mNumberOfKeys; k++)
+    {
+        if (tuned(k) <= 0) gapsize++;
+        else gapsize=0;
+        if (gapsize > maxGapsize) return 0;
+    }
+
+    // If so, create spline interpolation of tuning levels
+    std::vector<double> interpolation (mNumberOfKeys,0);
+    int leftmost = 0;
+    while (tuned(leftmost) <= 0 and leftmost < mNumberOfKeys) leftmost++;
+    int rightmost = mNumberOfKeys-1;
+    while (tuned(rightmost) <= 0 and rightmost >= 0) rightmost--;
+    if (leftmost >= rightmost) return 0;
+
+    return 0;
+}
