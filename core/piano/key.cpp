@@ -190,7 +190,7 @@ double &Key::getComputedFrequency ()
 
 void Key::setTunedFrequency (double f)
 {
-    EptAssert(f > 0 && f < 20000, "Freqency must be below 20000 and greater than 0");
+    EptAssert(f >= 0 && f < 20000, "Freqency must be below 20000 and greater than 0");
     mTunedFrequency=f;
 }
 

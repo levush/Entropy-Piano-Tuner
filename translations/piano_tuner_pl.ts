@@ -35,8 +35,12 @@
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
+        <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
+        <translation type="vanished">Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -494,16 +498,25 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset recoding</source>
-        <translation>&amp;Resetuj nagrania</translation>
+        <source>&amp;Reset recording</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="196"/>
+        <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset recording</source>
+        <translation type="unfinished">Zresetuj nagrania</translation>
+    </message>
+    <message>
+        <source>&amp;Reset recoding</source>
+        <translation type="vanished">&amp;Resetuj nagrania</translation>
+    </message>
+    <message>
+        <location filename="../Qt/mainwindow.ui" line="199"/>
         <source>Manual</source>
         <translation>Podręcznik użytkownika</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="201"/>
+        <location filename="../Qt/mainwindow.ui" line="204"/>
         <location filename="../Qt/mainwindow.cpp" line="206"/>
         <source>Tutorial</source>
         <translation>Tutorial</translation>
@@ -651,8 +664,12 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
+        <source>Unable to find a supported sound control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Nie udało się znaleźć systemowych ustawień głośności.</translation>
+        <translation type="vanished">Nie udało się znaleźć systemowych ustawień głośności.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -905,7 +922,7 @@
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
-        <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
+        <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1054,9 +1071,13 @@
         <translation>Urządzenie wejściowe</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sample rates</source>
-        <translation>Częstość próbkowania</translation>
+        <translation type="vanished">Częstość próbkowania</translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
+        <source>Sampling rates</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
@@ -1113,17 +1134,17 @@
         <translation>&lt;Język systemowy&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="65"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
         <source>Reset warnings</source>
         <translation>Przywróć ostrzeżenia</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
         <source>Information</source>
         <translation>Informacja</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="78"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
         <translation>Zmiana języka zostanie zastosowana przy ponownym uruchomieniu programu.</translation>
     </message>

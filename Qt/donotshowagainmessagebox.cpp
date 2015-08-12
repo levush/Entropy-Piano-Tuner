@@ -30,7 +30,7 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
 
     // generate title and buttons
     switch (type) {
-    case RESET_RECORDING:
+    case RESET_PITCHES:
         setWindowTitle(tr("Reset recording"));
         setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
         break;
@@ -54,7 +54,7 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
 
     if (text.isEmpty()) {
         switch (type) {
-        case RESET_RECORDING:
+        case RESET_PITCHES:
             setText(tr("Do you really want to reset all recorded keys? This can not be made undone!"));
             break;
         case NOT_ALL_KEYS_RECORDED:

@@ -45,7 +45,7 @@ public:
     Piano &getPiano()             {return mPiano;}
     const Piano &getPiano() const {return mPiano;}
 
-    void clear ();
+    void resetPitches ();
 
 protected:
     void handleMessage(MessagePtr m) override final;

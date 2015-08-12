@@ -53,16 +53,35 @@ PianoManager::PianoManager() :
 
 
 //-----------------------------------------------------------------------------
-//			                       Clear
+//			                   Reset recording
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Clear all keys and send a message to clear recording.
+/// \brief Reset all recorded keys and send a message to redraw all elements.
+///
+/// This function is called by selecting the menu entry "Reset recording".
+/// Its action depends on the operation mode: In the idle and recording mode
+/// all key-related data is cancelled. In the calculation the tuning curve
+/// is set to zero (ET). In the tuning mode the measured tuning levels are
+/// cancelled.
 ///////////////////////////////////////////////////////////////////////////////
 
-void PianoManager::clear()
+void PianoManager::resetPitches()
 {
-    mPiano.clearKeys();
+    switch (mOperationMode)
+    {
+    case MODE_IDLE:
+    case MODE_RECORDING:
+        mPiano.getKeyboard().clearKeys();
+        break;
+    case MODE_CALCULATION:
+        mPiano.getKeyboard().clearComputedPitches();
+        break;
+    case MODE_TUNING:
+        mPiano.getKeyboard().clearTunedPitches();
+    default:
+        break;
+    }
     MessageHandler::send(Message::MSG_CLEAR_RECORDING);
 }
 

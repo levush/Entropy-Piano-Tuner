@@ -23,17 +23,30 @@
 
 Keyboard::Keyboard(size_t initialSize) :
     mKeys(initialSize),
-    mKeyNumberOfA4(48) {
-
+    mKeyNumberOfA4(48),
+    mKeyNumberTrebleBridge(28)
+{
 }
 
 
-void Keyboard::resize(size_t s) {
+void Keyboard::resize(size_t s)
+{
     mKeys.resize(s);
 }
 
-void Keyboard::clearKeys() {
+void Keyboard::clearKeys()
+{
     for (auto &key : mKeys) key.clear();
+}
+
+void Keyboard::clearComputedPitches()
+{
+    for (auto &key : mKeys) key.setComputedFrequency(0);
+}
+
+void Keyboard::clearTunedPitches()
+{
+    for (auto &key : mKeys) key.setTunedFrequency(0);
 }
 
 //----------------------------------------------------------------------

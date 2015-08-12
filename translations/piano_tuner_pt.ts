@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
+        <translation type="vanished">Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
     </message>
     <message>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
@@ -41,6 +41,10 @@
     </message>
     <message>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -396,7 +400,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;Reset gravação</translation>
+        <translation type="vanished">&amp;Reset gravação</translation>
     </message>
     <message>
         <source>Manual</source>
@@ -484,7 +488,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Incapaz de achar um controle de som suportado.</translation>
+        <translation type="vanished">Incapaz de achar um controle de som suportado.</translation>
     </message>
     <message>
         <source>Canceled</source>
@@ -592,6 +596,18 @@
     </message>
     <message>
         <source>Graphs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Reset recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset recording</source>
+        <translation type="unfinished">Reset gravação</translation>
+    </message>
+    <message>
+        <source>Unable to find a supported sound control.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -729,15 +745,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invalid filename</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Please provide a valid filename.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -846,7 +862,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>Taxas de sampling</translation>
+        <translation type="vanished">Taxas de sampling</translation>
     </message>
     <message>
         <source>Open system settings</source>
@@ -859,6 +875,10 @@
     <message>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
         <translation>Você precisa de uma taxa de sampling de no mínimo %1 para gravar e tocar todas as teclas.</translation>
+    </message>
+    <message>
+        <source>Sampling rates</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

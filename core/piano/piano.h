@@ -91,9 +91,6 @@ public:
 
     // other:
 
-    void clearKeys();                           ///< clear the data of all keys (needed?)
-
-
     double getExpectedInharmonicity (double f) const;
 
     double getEqualTempFrequency (int keynumber, double cents=0, double A4=0) const;

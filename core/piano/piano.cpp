@@ -73,18 +73,6 @@ void Piano::setNow() {
 }
 
 
-//----------------------------------------------------------------------
-//			                   clear all keys
-//----------------------------------------------------------------------
-
-void Piano::clearKeys()
-{
-    mKeyboard.clearKeys();
-}
-
-
-
-
 /// This function provides a rough estimate of the expected inharmonicity coefficient
 /// for an average upright. It is used to improve the expectation where the spectral
 /// lines should reside in the spectrum

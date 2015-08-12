@@ -35,6 +35,9 @@ public:
 
     void resize(size_t s);
     void clearKeys();
+    void clearComputedPitches();
+    void clearTunedPitches();
+
     size_t size() const {return mKeys.size();}
 
     const Key &operator[](size_t i) const {return mKeys[i];}
@@ -57,15 +60,21 @@ public:
     int getKeyNumberOfA4() const {return mKeyNumberOfA4;}
     int &getKeyNumberOfA4() {return mKeyNumberOfA4;}
 
+    int getKeyNumberTrebleBridge() const {return mKeyNumberTrebleBridge;}
+    int &getKeyNumberTrebleBridge() {return mKeyNumberTrebleBridge;}
+
     int getKeyOffset() const {return 48 - mKeyNumberOfA4;}
 
-    int convertLocalToGlobal(int index) const;
+    int convertLocalToGlobal (int index) const;
 
 private:
     Keys mKeys;
 
     /// index of the key A (corresponding with the concert pitch)
     int mKeyNumberOfA4;
+
+    /// index of the key where the treble bridge starts
+    int mKeyNumberTrebleBridge;
 };
 
 #endif // KEYBOARD_H

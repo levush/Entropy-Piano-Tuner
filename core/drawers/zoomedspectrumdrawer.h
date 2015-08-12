@@ -56,6 +56,7 @@ private:
     FFTDataPointer mFFTData;
     FrequencyDetectionResult mFrequencyDetectionResult;
 
+    double overpullMatrix (const int keyin, const int keyout, piano::PianoType pt, int treblebridge);
     double computeOverpull ();
 };
 

@@ -216,7 +216,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionSave_As->setIcon(iconFromTheme("document-save-as"));
     ui->actionExit->setIcon(iconFromTheme("application-exit"));
     ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("document-properties"));
-    ui->actionReset_recoding->setIcon(iconFromTheme("edit-clear"));
+    ui->actionReset_recording->setIcon(iconFromTheme("edit-clear"));
     ui->actionOptions->setIcon(iconFromTheme("preferences-system"));
     ui->actionTutorial->setIcon(iconFromTheme("help-contents"));
     ui->actionView_log->setIcon(iconFromTheme("accessories-text-editor"));
@@ -601,8 +601,8 @@ void MainWindow::onEditPianoDataSheet() {
 }
 
 void MainWindow::onResetRecording() {
-    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_RECORDING, this) == QMessageBox::Accepted) {
-        mCore->getPianoManager()->clear();
+    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_PITCHES, this) == QMessageBox::Accepted) {
+        mCore->getPianoManager()->resetPitches();
     }
 }
 
