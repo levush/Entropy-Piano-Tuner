@@ -28,7 +28,7 @@ namespace piano {
     enum PianoType
     {
         PT_GRAND = 0,                          ///< The piano is a grand piano
-        PT_UPGRIGHT,                           ///< The piano is a upgright piano
+        PT_UPRIGHT,                           ///< The piano is a upgright piano
 
         PT_COUNT
     };

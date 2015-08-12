@@ -96,6 +96,10 @@ public:
     double  getTunedFrequency () const;             ///< Get tuned frequency
     double &getTunedFrequency ();                   ///< Get tuned frequency
 
+    void    setOverpull (double cents);             ///< Set overpull in cents
+    double  getOverpull () const;                   ///< Get overpull in cents
+    double &getOverpull ();                         ///< Get overpull in cents
+
     void setRecorded(bool r) {mRecorded = r;}
     bool isRecorded() const {return mRecorded;}
     bool &isRecorded() {return mRecorded;}
@@ -108,6 +112,7 @@ private:
     double mRecognitionQuality;         ///< Accuracy of higher partials (in cents)
     double mComputedFrequency;          ///< Computed frequency (tuning curve)
     double mTunedFrequency;             ///< Tuned frequency
+    double mOverpull;                   ///< Overpull
     bool   mRecorded;                   ///< Is the key already recorded?
 };
 

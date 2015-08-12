@@ -46,8 +46,17 @@ public:
     const Key &at(size_t i) const {return mKeys[i];}
     Key &at(size_t i) {return mKeys[i];}
 
-    const Key *getKeyPtr(int i) const {if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;} return &mKeys[i];}
-    Key *getKeyPtr(int i) {if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;} return &mKeys[i];}
+    const Key *getKeyPtr(int i) const
+    {
+        if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;}
+        return &mKeys[i];
+    }
+
+    Key *getKeyPtr(int i)
+    {
+        if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;}
+        return &mKeys[i];
+    }
 
     Keys &getKeys() {return mKeys;}
 
@@ -60,12 +69,14 @@ public:
     int getKeyNumberOfA4() const {return mKeyNumberOfA4;}
     int &getKeyNumberOfA4() {return mKeyNumberOfA4;}
 
-    int getKeyNumberTrebleBridge() const {return mKeyNumberTrebleBridge;}
-    int &getKeyNumberTrebleBridge() {return mKeyNumberTrebleBridge;}
+    int getNumberOfBassKeys() const {return mNumberOfBassKeys;}
+    int &getNumberOfBassKeys() {return mNumberOfBassKeys;}
 
     int getKeyOffset() const {return 48 - mKeyNumberOfA4;}
 
     int convertLocalToGlobal (int index) const;
+
+    double computeOverpull (int keynumber, double concertPitch, piano::PianoType pt) const;
 
 private:
     Keys mKeys;
@@ -74,7 +85,10 @@ private:
     int mKeyNumberOfA4;
 
     /// index of the key where the treble bridge starts
-    int mKeyNumberTrebleBridge;
+    int mNumberOfBassKeys;
+
+    /// Overpull matrix
+    double overpullMatrix (const int keyin, const int keyout, piano::PianoType pt, int basskeys) const;
 };
 
 #endif // KEYBOARD_H

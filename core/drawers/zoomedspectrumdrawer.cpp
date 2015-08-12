@@ -35,6 +35,7 @@
 #include "../messages/messagetuningdeviation.h"
 #include "../math/mathtools.h"
 #include "../math/mathtools.h"
+#include "../system/log.h"
 #include "../piano/piano.h"
 
 ZoomedSpectrumDrawer::ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics) :
@@ -178,7 +179,9 @@ void ZoomedSpectrumDrawer::draw()
 
     //---------------------- Draw overpull marker ------------------------
 
-    double overpull = computeOverpull();
+    double concertpitch = mPiano->getConcertPitch();
+    piano::PianoType pt =  mPiano->getPianoType();
+    double overpull = mPiano->getKeyboard().computeOverpull(keynumber,concertpitch,pt);
 
     if (abs(overpull)>5 and abs(overpull<100))
     {
@@ -211,90 +214,3 @@ void ZoomedSpectrumDrawer::draw()
     mGraphics->drawFilledRect(mx, my, markerWidth, markerHeight, borderline, filling);
 }
 
-
-//-----------------------------------------------------------------------------
-//                         Overpull interaction matrix
-//-----------------------------------------------------------------------------
-
-double ZoomedSpectrumDrawer::overpullMatrix (const int keyin, const int keyout,
-                                             piano::PianoType pt, int treblebridge)
-{
-if (keyin+keyout+treblebridge>0){};
-if
-}
-
-//-----------------------------------------------------------------------------
-//                            Compute overpull
-//-----------------------------------------------------------------------------
-
-double ZoomedSpectrumDrawer::computeOverpull()
-{
-    // check whether key provides valid data
-    auto valid = [this] (int key)
-    {
-        return ( mPiano->getKey(key).getComputedFrequency() > 20 and
-                 mPiano->getKey(key).getTunedFrequency() > 20 );
-    };
-
-    // First we have to check whether enough measured values exist
-    if (mNumberOfKeys <= 0) return 0;
-    const int maxGapsize = 10;
-    int gapsize = 0;
-    for (int k=0; k<mNumberOfKeys; k++)
-    {
-        if (valid(k)) gapsize++; else gapsize=0;
-        if (gapsize > maxGapsize) return 0;
-    }
-
-    // compute tuned deviation against computed levels in cents
-    auto deviation = [this] (int key)
-    {
-        double computed = mPiano->getKey(key).getComputedFrequency();
-        double tuned = mPiano->getKey(key).getTunedFrequency();
-        double cpratio = mPiano->getConcertPitch()/440.0;
-        if (tuned<=0 or computed<=0 or cpratio<=0) return 0.0;
-        return 1200.0*log2(tuned/computed/cpratio);
-    };
-
-
-    // If so, create a piecewise linear interpolation of tuning levels
-    std::vector<double> interpolation (mNumberOfKeys,0);
-    auto interpolate = [&valid,&deviation,&interpolation] (int start, int end)
-    {
-        int leftmost = start, rightmost = end-1;
-        while (not valid(leftmost) and leftmost < end) leftmost++;
-        while (not valid(rightmost) and rightmost >= start) rightmost--;
-        if (leftmost >= rightmost) return false;
-
-        for (int i=start; i<leftmost; i++) interpolation[i]=deviation(leftmost);
-        int left = leftmost, right;
-        do
-        {
-            right = left+1;
-            while (not valid(right) and right<=rightmost) right++;
-            for (int i=left; i<right; ++i) interpolation[i]=
-                    ((i-left)*deviation(right)+(right-i)*deviation(left))/(right-left);
-            left=right;
-        }
-        while (right <= rightmost);
-        for (int i=rightmost; i<end; i++) interpolation[i]=deviation(rightmost);
-        return true;
-    };
-    // Interpolate the two bridges separately.
-    int treblebridge = mPiano->getKeyboard().getKeyNumberTrebleBridge();
-    if (not interpolate (0,treblebridge)) return 0;
-    if (not interpolate (treblebridge,mNumberOfKeys)) return 0;
-
-    piano::PianoType pianotype = mPiano->getPianoType();
-
-
-    // Write to HDD for testing purposes
-    std::ofstream os("000-overpull.dat");
-    for (int key=0; key<mNumberOfKeys; key++) if (deviation(key)) os << key << " " << deviation(key) << std::endl;
-    os << "&" << std::endl;
-    for (int key=0; key<mNumberOfKeys; key++) os << key << " " << interpolation[key] << std::endl;
-    os.close();
-
-
-    return 0;
-}

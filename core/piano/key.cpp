@@ -47,6 +47,7 @@ void Key::clear()
     mRecognitionQuality = 0;
     mComputedFrequency = 0;
     mTunedFrequency = 0;
+    mOverpull = 0;
     mRecorded = false;
 }
 
@@ -199,6 +200,23 @@ double Key::getTunedFrequency () const
 
 double &Key::getTunedFrequency ()
 { return mTunedFrequency; }
+
+
+//-----------------------------------------------------------------------------
+//                   set and get overpull in cents
+//-----------------------------------------------------------------------------
+
+void Key::setOverpull (double cents)
+{
+    EptAssert(abs(cents) <= 100, "Overpull larger than 100 cents unreasonable");
+    mOverpull = cents;
+}
+
+double Key::getOverpull () const
+{ return mOverpull; }
+
+double &Key::getOverpull ()
+{ return mOverpull; }
 
 
 //-----------------------------------------------------------------------------

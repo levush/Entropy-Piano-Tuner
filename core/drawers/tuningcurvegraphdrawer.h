@@ -65,6 +65,7 @@ private:
         ROLE_RECORDED_FREQUENCY = 0x04,     ///< Marker indicating recorded frequency
         ROLE_COMPUTED_FREQUENCY = 0x08,     ///< Marker indicating computed frequency
         ROLE_TUNED_FREQUENCY    = 0x10,     ///< Marker indicating tuned frequency
+        ROLE_OVERPULL           = 0x20,     ///< Marker indicating overpull
 
         ROLE_GLOBAL = ROLE_GRID,            ///< Union of all global markers
         ROLE_KEY_INDIVIDUAL = ROLE_INHARMONICITY | ROLE_RECORDED_FREQUENCY |
@@ -94,6 +95,7 @@ protected:
     static const PenType fgmarkers;         ///< Pen type for recorded frequency in background
     static const PenType fcmarkers;         ///< Pen type for computed frequency markers
     static const PenType ftmarkers;         ///< Pen type for tuned frequency markers
+    static const PenType opmarkers;         ///< Pen type for tuned frequency markers
     static const FillType allowdAreaFill;   ///< Filling for the allowed tuning area
 
     const Piano *mPiano;                    ///< Pointer to the actual piano

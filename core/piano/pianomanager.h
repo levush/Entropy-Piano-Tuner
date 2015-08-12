@@ -55,7 +55,7 @@ private:
     int findNextKey (int keynumber);
 
     Piano mPiano;                   ///< Instance of the piano
-    int mSelectedKey;               ///< Logal copy of the selected key
+    int mSelectedKey;               ///< Local copy of the selected key
     bool mForcedRecording;          ///< Flag for forced recording
     OperationMode mOperationMode;   ///< Local copy of the operation mode
 
