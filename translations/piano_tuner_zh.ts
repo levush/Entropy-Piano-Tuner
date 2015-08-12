@@ -31,12 +31,12 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="87"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished">版权所有 2015 Würzburg大学物理理论系III。保留所有权利</translation>
+        <translation>版权所有 2015 Würzburg大学物理理论系III。保留所有权利.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
@@ -117,7 +117,7 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="127"/>
         <source>An unknown error occured during the calculation.</source>
-        <translation>计算中产生一个不明错误</translation>
+        <translation>计算中产生一个不明错误.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="130"/>
@@ -395,7 +395,7 @@
     <message>
         <location filename="../Qt/keyboard/keyboardgraphicsview.cpp" line="78"/>
         <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
-        <translation>这个窗口显示键盘。每个键都有一个小的指示器，该指示器将显示这个键的当前录音状态</translation>
+        <translation>这个窗口显示键盘。每个键都有一个小的指示器，该指示器将显示这个键的当前录音状态.</translation>
     </message>
 </context>
 <context>
@@ -500,12 +500,12 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <translation>重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
         <source>Reset recording</source>
-        <translation type="unfinished">重置录音</translation>
+        <translation>重置录音</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
@@ -667,7 +667,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
@@ -882,7 +882,7 @@
     <message>
         <location filename="../Qt/recordingqualitybar.cpp" line="41"/>
         <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
-        <translation>此条显示录音质量。开始前计算所有已录音的键应该有一个几乎相等的质量，</translation>
+        <translation>此条显示录音质量。开始前计算所有已录音的键应该有一个几乎相等的质量.</translation>
     </message>
 </context>
 <context>
@@ -890,7 +890,7 @@
     <message>
         <location filename="../Qt/recordingstatusgraphicsview.cpp" line="33"/>
         <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
-        <translation>该项显示录音器的状态。一个红色圆圈表示音频信号是当前录音的。一个蓝色旋转圆表示程序处理已录信号。如果你能录下一个键，则显示绿色的暂停符号；</translation>
+        <translation>该项显示录音器的状态。一个红色圆圈表示音频信号是当前录音的。一个蓝色旋转圆表示程序处理已录信号。如果你能录下一个键，则显示绿色的暂停符号.</translation>
     </message>
 </context>
 <context>
@@ -908,12 +908,12 @@
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="78"/>
         <source>This label displays the current selected key.</source>
-        <translation>此标签显示当前选定的键</translation>
+        <translation>此标签显示当前选定的键.</translation>
     </message>
     <message>
         <location filename="../Qt/signalanalyzergroupbox.cpp" line="79"/>
         <source>This label shows the ground frequency of the selected key.</source>
-        <translation>此标签显示当前选定键的基频</translation>
+        <translation>此标签显示当前选定键的基频.</translation>
     </message>
 </context>
 <context>
@@ -935,7 +935,7 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -945,7 +945,7 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
         <source>Please provide a valid filename.</source>
-        <translation>请提供有效文件名</translation>
+        <translation>请提供有效文件名.</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="178"/>
@@ -1089,7 +1089,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>采样率</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
@@ -1104,7 +1104,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
-        <translation>对所有键录音需要至少 %1的采样率</translation>
+        <translation>对所有键录音需要至少 %1的采样率.</translation>
     </message>
 </context>
 <context>
@@ -1158,7 +1158,7 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
-        <translation>语言改变必须重启熵钢琴调律器后生效</translation>
+        <translation>语言改变必须重启熵钢琴调律器后生效.</translation>
     </message>
 </context>
 <context>

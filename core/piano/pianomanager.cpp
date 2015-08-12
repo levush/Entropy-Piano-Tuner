@@ -132,6 +132,11 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
         mSelectedKey = message->getKeyNumber();
         mForcedRecording = message->isForced();
+
+        double overpull = mPiano.getKeyboard().computeOverpull(mSelectedKey,mPiano.getConcertPitch(),mPiano.getPianoType());
+        std::cout << "************************** " << overpull << " *******************************" << std::endl;
+        mPiano.getKey(mSelectedKey).setOverpull(overpull);
+
     }
     break;
     case Message::MSG_FINAL_KEY:
@@ -149,8 +154,6 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageChangeTuningCurve>(m));
         int keynumber = message->getKeyNumber();
         double frequency = message->getFrequency();
-//        std::cout << "PianoManager noticed change of tuing curve: k="
-//                  << keynumber << ", f=" << frequency << std::endl;
         EptAssert(keynumber >= 0 and keynumber < mPiano.getKeyboard().getNumberOfKeys(), "range of keynumber");
         mPiano.getKey(keynumber).setComputedFrequency(frequency);
         MessageHandler::send<MessageKeyDataChanged>(keynumber, mPiano.getKeyPtr(keynumber));

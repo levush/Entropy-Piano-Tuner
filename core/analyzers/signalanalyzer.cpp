@@ -379,10 +379,8 @@ void SignalAnalyzer::analyzeSignal()
             }
         } else {
             key->setTunedFrequency(result->detectedFrequency);
-
             MessageHandler::send<MessageFinalKey>(keynumber, key);
         }
-
         MessageHandler::send<MessageTuningDeviation>(result);
     }
 }

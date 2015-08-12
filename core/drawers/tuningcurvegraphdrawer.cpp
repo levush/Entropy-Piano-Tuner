@@ -361,7 +361,10 @@ double TuningCurveGraphDrawer::getMarkerPosition(int keyindex, RoleType role)
     else if (role & ROLE_OVERPULL)
     {
         if (mOperationMode == MODE_TUNING)
-            return convertCentsToY(10);
+        {
+            double overpull = key.getOverpull()+5;
+            if (fabs(overpull)>1) return convertCentsToY(overpull);
+        }
     }
     return -1;
 }
