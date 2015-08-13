@@ -95,7 +95,8 @@ void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
         mGraphics->clear();
         break;
     }
-    case Message::MSG_TUNING_DEVIATION: {
+    case Message::MSG_TUNING_DEVIATION:
+    {
         auto mtd(std::static_pointer_cast<MessageTuningDeviation>(m));
         mFrequencyDetectionResult = mtd->getResult();
         redraw();
@@ -142,7 +143,7 @@ void ZoomedSpectrumDrawer::draw()
     if (keynumber<0) return;
 
     if (not mFrequencyDetectionResult) {return;} // we need data
-    if (not mPiano) {return;}           // and a piano
+    if (not mPiano) {return;}                    // and a piano
 
     // show only a quarter of the actual deviation curve
     const int specWindowSize = mFrequencyDetectionResult->tuningDeviationCurve.size() / 4;
@@ -179,11 +180,8 @@ void ZoomedSpectrumDrawer::draw()
 
     //---------------------- Draw overpull marker ------------------------
 
-    double concertpitch = mPiano->getConcertPitch();
-    piano::PianoType pt =  mPiano->getPianoType();
-    double overpull = mPiano->getKeyboard().computeOverpull(keynumber,concertpitch,pt);
-
-    if (abs(overpull)>5 and abs(overpull<100))
+    double overpull = mFrequencyDetectionResult->overpullInCents;
+    if (abs(overpull)>3 and abs(overpull<100))
     {
         auto overpullColor = GraphicsViewAdapter::PEN_THIN_BLUE;
         if (abs(overpull) > specWindowSize/2)

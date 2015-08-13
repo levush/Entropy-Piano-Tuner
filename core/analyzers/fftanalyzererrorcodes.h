@@ -47,6 +47,7 @@ struct FrequencyDetectionResultStruct
     FFTAnalyzerErrorTypes error = FFTAnalyzerErrorTypes::ERR_NONE;
     TuningDeviationCurveType tuningDeviationCurve;
     int deviationInCents = 0;
+    double overpullInCents = 0;
     double positionOfMaximum = 0;
     double detectedFrequency = -1;
 

@@ -37,6 +37,7 @@ public:
     void clearKeys();
     void clearComputedPitches();
     void clearTunedPitches();
+    void clearOverpulls();
 
     size_t size() const {return mKeys.size();}
 
@@ -76,8 +77,6 @@ public:
 
     int convertLocalToGlobal (int index) const;
 
-    double computeOverpull (int keynumber, double concertPitch, piano::PianoType pt) const;
-
 private:
     Keys mKeys;
 
@@ -87,8 +86,6 @@ private:
     /// index of the key where the treble bridge starts
     int mNumberOfBassKeys;
 
-    /// Overpull matrix
-    double overpullMatrix (const int keyin, const int keyout, piano::PianoType pt, int basskeys) const;
 };
 
 #endif // KEYBOARD_H

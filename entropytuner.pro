@@ -39,7 +39,8 @@ HEADERS = \
     core/system/serverinfo.h \
     Qt/preferredtextsizelabel.h \
     Qt/verticalscrollarea.h \
-    Qt/options/optionstabcontentsvscrollarea.h
+    Qt/options/optionstabcontentsvscrollarea.h \
+    core/analyzers/overpull.h
 QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \
@@ -49,7 +50,8 @@ SOURCES = \
     core/system/serverinfo.cpp \
     Qt/preferredtextsizelabel.cpp \
     Qt/verticalscrollarea.cpp \
-    Qt/options/optionstabcontentsvscrollarea.cpp
+    Qt/options/optionstabcontentsvscrollarea.cpp \
+    core/analyzers/overpull.cpp
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt

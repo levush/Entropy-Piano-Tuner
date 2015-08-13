@@ -76,9 +76,12 @@ void PianoManager::resetPitches()
         break;
     case MODE_CALCULATION:
         mPiano.getKeyboard().clearComputedPitches();
+        mPiano.getKeyboard().clearOverpulls();
         break;
     case MODE_TUNING:
         mPiano.getKeyboard().clearTunedPitches();
+        mPiano.getKeyboard().clearOverpulls();
+        break;
     default:
         break;
     }
@@ -132,11 +135,6 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
         mSelectedKey = message->getKeyNumber();
         mForcedRecording = message->isForced();
-
-        double overpull = mPiano.getKeyboard().computeOverpull(mSelectedKey,mPiano.getConcertPitch(),mPiano.getPianoType());
-        std::cout << "************************** " << overpull << " *******************************" << std::endl;
-        mPiano.getKey(mSelectedKey).setOverpull(overpull);
-
     }
     break;
     case Message::MSG_FINAL_KEY:
@@ -144,7 +142,6 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageFinalKey>(m));
         auto keyptr = message->getFinalKey(); // get shared pointer to the new key
         int keynumber = message->getKeyNumber();
-        std::cout << "PianoManager: received final key k=" << keynumber << std::endl;
         EptAssert(keynumber >= 0 && keynumber < mPiano.getKeyboard().getNumberOfKeys(),"Range of keynumber");
         handleNewKey(keynumber,keyptr);
     }
@@ -196,13 +193,15 @@ void PianoManager::handleNewKey (int keynumber, std::shared_ptr<Key> keyptr)
 #endif
         }
     }
-    else if (mOperationMode == MODE_TUNING and
-             (keynumber==mSelectedKey or mForcedRecording))
+    else if (mOperationMode == MODE_TUNING)
     {
-        double f = keyptr->getTunedFrequency();
-        Key* ptr = mPiano.getKeyPtr(mSelectedKey);
-        ptr->setTunedFrequency(f);
-        MessageHandler::send<MessageKeyDataChanged>(mSelectedKey, ptr);
+        double frequency = keyptr->getTunedFrequency();
+        double overpull  = keyptr->getOverpull();
+        Key* keypointer = mPiano.getKeyPtr(keynumber);
+        if (keynumber==mSelectedKey or mForcedRecording)
+            keypointer->setTunedFrequency(frequency);
+        keypointer->setOverpull(overpull);
+        MessageHandler::send<MessageKeyDataChanged>(keynumber, keypointer);
 
     }
 }

@@ -34,6 +34,7 @@
 #include "../math/fftimplementation.h"
 #include "fftanalyzer.h"
 #include "keyrecognizer.h"
+#include "overpull.h"
 
 class AudioRecorderAdapter;
 
@@ -61,7 +62,8 @@ public:
 
 private:
 
-    enum AnalyzerRole {
+    enum AnalyzerRole
+    {
         ROLE_IDLE,                  ///< Idle
         ROLE_RECORD_KEYSTROKE,      ///< Recording a key stroke in recording operation mode
         ROLE_ROLLING_FFT,           ///< Performing rolling ffts in tuning mode
@@ -86,6 +88,7 @@ private:
     void recordSignal();
     void analyzeSignal();
     void recordPostprocessing();                                    // processing after recording finished
+    void updateOverpull();
 
     double signalPreprocessing(FFTWVector &signal);                 // Preprocessing of incoming signal
     void signalProcessing(FFTWVector &signal, int samplingrate);    // processing of the current data
@@ -115,6 +118,7 @@ private:
 
     FFTAnalyzer mFFTAnalyser;               ///< Instance of the FFT analyzer
     KeyRecognizer mKeyRecognizer;           ///< Instance of the Key recognizer
+    OverpullEstimator mOverpull;            ///< Instance of the overpull estimator
     std::map<int,int> mKeyCountStatistics;  ///< Count which key is selected how often
     std::mutex mKeyCountStatisticsMutex;    ///< Corresponding mutex
     int mSelectedKey;                       ///< The selected key by the user

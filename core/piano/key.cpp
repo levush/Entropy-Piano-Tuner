@@ -208,8 +208,9 @@ double &Key::getTunedFrequency ()
 
 void Key::setOverpull (double cents)
 {
-    EptAssert(abs(cents) <= 100, "Overpull larger than 100 cents unreasonable");
-    mOverpull = cents;
+    if (cents>25) mOverpull=25;
+    else if (cents<-25) mOverpull=-25;
+    else mOverpull = cents;
 }
 
 double Key::getOverpull () const
