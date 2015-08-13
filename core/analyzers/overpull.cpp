@@ -42,6 +42,7 @@ void OverpullEstimator::init (const Piano *piano)
     if (not piano) return;
     mNumberOfKeys = piano->getKeyboard().getNumberOfKeys();
     mNumberOfBassKeys = piano->getKeyboard().getNumberOfBassKeys();
+    mConcertPitch = piano->getConcertPitch();
     mPianoType = piano->getPianoType();
     computeInteractionMatrix();
 }
@@ -118,17 +119,17 @@ void OverpullEstimator::computeInteractionMatrix (double average)
     sum /= K;
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) R[j][k] *= average / sum;
 
-//    std::ofstream os("/home/hinrichsen/mat.m");
-//    os << "M={";
-//    for (int j=0; j<K; ++j)
-//    {
-//        os << "{";
-//        for (int k=0; k<K-1; ++k) os << R[j][k] << ",";
-//        os << R[j][K-1];
-//        if (j!=K-1) os << "},\n";
-//        else os << "}};" << std::endl;
-//    }
-//    os.close();
+    std::ofstream os("/home/hinrichsen/mat.m");
+    os << "M={";
+    for (int j=0; j<K; ++j)
+    {
+        os << "{";
+        for (int k=0; k<K-1; ++k) os << R[j][k] << ",";
+        os << R[j][K-1];
+        if (j!=K-1) os << "},\n";
+        else os << "}};" << std::endl;
+    }
+    os.close();
 }
 
 
@@ -205,11 +206,12 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
     if (not interpolate (0,B-1)) return 0;
     if (not interpolate (B-1,K-1)) return 0;
 
-//    double overpull = -deviation(keynumber);
-    double overpull = 0;
+    double overpull = 0, totaldeviation = 0;
     for (int k=0; k<K; k++) if (k != keynumber)
     {
-        double delta = deviation(k);
+        double delta = interpolation[k];
+        if (delta>-2 and delta<10) delta=0;
+        totaldeviation += delta;
         overpull -= delta * R[k][keynumber];
     }
 
@@ -220,6 +222,6 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
 //    for (int key=0; key<mNumberOfKeys; key++) os << key << " " << interpolation[key] << std::endl;
 //    os.close();
 
-
-    return overpull;
+    if (fabs(totaldeviation/K)>5) return overpull;
+    else return 0;
 }

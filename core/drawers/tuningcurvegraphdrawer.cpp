@@ -48,7 +48,7 @@ const PenType TuningCurveGraphDrawer::frmarkers  = GraphicsViewAdapter::PEN_THIN
 const PenType TuningCurveGraphDrawer::fgmarkers  = GraphicsViewAdapter::PEN_THIN_LIGHT_GRAY;
 const PenType TuningCurveGraphDrawer::fcmarkers  = GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN;
 const PenType TuningCurveGraphDrawer::ftmarkers  = GraphicsViewAdapter::PEN_MEDIUM_RED;
-const PenType TuningCurveGraphDrawer::opmarkers  = GraphicsViewAdapter::PEN_MEDIUM_CYAN;
+const PenType TuningCurveGraphDrawer::opmarkers  = GraphicsViewAdapter::PEN_MEDIUM_ORANGE;
 const FillType TuningCurveGraphDrawer::allowdAreaFill = GraphicsViewAdapter::FILL_LIGHT_GREEN;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -363,7 +363,7 @@ double TuningCurveGraphDrawer::getMarkerPosition(int keyindex, RoleType role)
         if (mOperationMode == MODE_TUNING)
         {
             double overpull = key.getOverpull();
-            if (fabs(overpull)>1) return convertCentsToY(overpull);
+            if (fabs(overpull)>0.1) return convertCentsToY(overpull);
         }
     }
     return -1;

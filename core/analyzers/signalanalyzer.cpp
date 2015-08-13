@@ -391,11 +391,9 @@ void SignalAnalyzer::analyzeSignal()
         else
         {
             key->setTunedFrequency(result->detectedFrequency);
-            double overpull = mOverpull.getOverpull(keynumber,mPiano);
-            key->setOverpull(overpull); // this informs the tuning curve window
-            result->overpullInCents = overpull; // this informs the zoomed spectrum
             MessageHandler::send<MessageFinalKey>(keynumber, key);
         }
+        result->overpullInCents = key->getOverpull();
         MessageHandler::send<MessageTuningDeviation>(result);
     }
 }
@@ -450,7 +448,7 @@ void SignalAnalyzer::updateOverpull ()
     {
         double overpull = mOverpull.getOverpull(keynumber,mPiano);
         double currentoverpull = mPiano->getKey(keynumber).getOverpull();
-        if (fabs(overpull-currentoverpull) >= 1 or
+        if (fabs(overpull-currentoverpull) >= 0.1 or
             (currentoverpull!=0 and overpull==0))
         {
             // set new overpull value
