@@ -22,7 +22,9 @@
 //=============================================================================
 
 #include "overpull.h"
-#include "cmath"
+
+#include <cmath>
+#include <iostream>
 
 OverpullEstimator::OverpullEstimator() :
     mPianoType(piano::PT_COUNT),
@@ -66,38 +68,49 @@ void OverpullEstimator::computeInteractionMatrix (double average)
     for (auto &row : R) row.resize(K);
     for (auto &row : R) row.assign(K,0);
 
-    double DL,DR,d,a;
+    double DL,DR,SL,SR,alpha;
 
     switch(mPianoType)
     {
     case piano::PT_GRAND:
-        DL = 16;
-        DR = 45;
-        d = 450;
-        a = 0.5;
+        SL = 1200;      // speaking length treble string left
+        SR = 50;        // speaking length treble string right
+        DL = 450;       // distance from bridge to frame left
+        DR = 100;       // distance from bridge to frame right
+        alpha = 0.5;
         break;
     case piano::PT_UPRIGHT:
-        DL = 16;
-        DR = 25;
-        d = 150;
-        a = 0.4;
+        SL = 1200;      // speaking length treble string left
+        SR = 50;        // speaking length treble string right
+        DL = 450;       // distance from bridge to frame left
+        DR = 100;       // distance from bridge to frame right
+        alpha = 0.5;
         break;
     default:
         LogW("Undefined piano type encountered");
         break;
     }
 
-    auto case2 = [K,B,T,DL,DR,d] (int j, int k)
+    // (G+H(K-1))2^((1-K)/12)==SR
+    // (G+H(B-1))2^((1-B)/12)==SL
+    double G = (-(pow(2,(1 + B)/12.)*(-1 + K)*SL) + pow(2,K/12.)*B*SR)/
+            (pow(2,0.08333333333333333)*(1 + B - K));
+    double H = (pow(2,B/12.)*SL - pow(2,(-1 + K)/12.)*SR)/(1 + B - K);
+    auto stringlength = [G,H] (int k) { return (G+H*k)*pow(2,-k/12.0); };
+
+    for (int k=B; k<K; ++k) std::cout << "SL(" << k << ")=" << stringlength(k) << std::endl;
+
+    auto xcoord = [DL,DR,K,T] (int k)
+    { return (K+1-k)*(DL*(K-k)+DR*(2*T+k-K))/2/T; };
+
+    auto case2 = [K,B,T,DL,DR,SL,SR,xcoord] (int j, int k)
     {
-    return
-    ((-1 + j - K)*(DL*(j - K) + DR*(-j + K - 2*T))*
-         (d - ((-1 + k - K)*(DL*(k - K) + DR*(-k + K - 2*T)))/(2.*T) +
-           ((DL + DR)*(1 + T))/2.)*
-         (-(pow(-1 + j - K,2)*pow(DL*(j - K) + DR*(-j + K - 2*T),2))/
-            (4.*pow(T,2)) + pow(d + ((DL + DR)*(1 + T))/2.,2) -
-           pow(d - ((-1 + k - K)*(DL*(k - K) + DR*(-k + K - 2*T)))/
-              (2.*T) + ((DL + DR)*(1 + T))/2.,2)))/
-       (2.*T*(d + ((DL + DR)*(1 + T))/2.));
+        double LT = 0.5*(T+1)*(DL+DR);
+        double L  = LT+SL+SR;
+        double a  = xcoord(k)+SR;
+        double b  = L-a;
+        double x  = xcoord(j)+SR;
+        return b/L*x*(L*L-x*x-b*b) * pow(2.0,(j+k)/12.0);
     };
 
     auto TM = [case2] (int j, int k)
@@ -106,11 +119,11 @@ void OverpullEstimator::computeInteractionMatrix (double average)
         else return case2(k+1,j+1);
     };
 
-    auto RM = [TM,a,B] (int j, int k)
+    auto RM = [TM,alpha,B] (int j, int k)
     {
-        if (j<B and k<B) return a * a * TM(j+B,k+B);
-        else if (j<B and k>=B) return a * TM(j+B,k);
-        else if (j>=B and k<B) return a * TM(j,k+B);
+        if (j<B and k<B) return alpha * alpha * TM(j+B,k+B);
+        else if (j<B and k>=B) return alpha * TM(j+B,k);
+        else if (j>=B and k<B) return alpha * TM(j,k+B);
         else return TM(j,k);
     };
 
