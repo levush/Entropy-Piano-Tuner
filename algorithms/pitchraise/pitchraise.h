@@ -49,7 +49,6 @@ protected:
 private:
     void updateTuningcurve (int keynumber);
     void updateTuningcurve ();
-    const int mSectionSeparatingKey;
     std::vector<double> mPitch;
 };
 

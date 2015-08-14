@@ -52,8 +52,6 @@ namespace pitchraise
 
 PitchRaise::PitchRaise(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description),
-    // load the parameter from the description
-    mSectionSeparatingKey(static_cast<int>(description.getIntParameter("sectionSeparator"))),
     mPitch(piano.getKeyboard().getNumberOfKeys(),0)
 {
 }
@@ -134,7 +132,7 @@ void PitchRaise::algorithmWorkerFunction()
         if (key.getMeasuredInharmonicity()>1E-10)
         {
             double B = key.getMeasuredInharmonicity();
-            int s = (i < mSectionSeparatingKey ? 0 : 1);
+            int s = (i < mPiano.getKeyboard().getNumberOfBassKeys() ? 0 : 1);
             if (s==0) LogI("Found recorded key number %d in the  left section with B=%lf.",i,B)
             else         LogI("Found recorded key number %d in the right section with B=%lf.",i,B);
             double x = i, y = -log(B);
@@ -172,7 +170,7 @@ void PitchRaise::algorithmWorkerFunction()
     // Define lambda regression function
     auto estimatedInharmonicity = [this,A,B] (int k)
     {
-        int s = (k < mSectionSeparatingKey ? 0 : 1);
+        int s = (k < mPiano.getKeyboard().getNumberOfBassKeys() ? 0 : 1);
         double minusLogB = A[s] + k*B[s];
         return exp(-minusLogB);
     };

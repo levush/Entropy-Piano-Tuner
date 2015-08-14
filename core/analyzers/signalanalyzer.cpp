@@ -448,11 +448,14 @@ void SignalAnalyzer::updateOverpull ()
     {
         double overpull = mOverpull.getOverpull(keynumber,mPiano);
         double currentoverpull = mPiano->getKey(keynumber).getOverpull();
-        if (fabs(overpull-currentoverpull) >= 0.1 or
-            (currentoverpull!=0 and overpull==0))
+        double change = overpull-currentoverpull;
+        if (fabs(change) >= 0.1 or (currentoverpull!=0 and overpull==0))
         {
             // set new overpull value
             std::shared_ptr<Key> key = std::make_shared<Key>(mPiano->getKey(keynumber));
+            double existingtune = key->getTunedFrequency();
+            if (existingtune>20 and currentoverpull!=0)
+                key->setTunedFrequency(existingtune*pow(2,change/1200.0));
             key->setOverpull(overpull); // this informs the tuning curve window
             MessageHandler::send<MessageFinalKey>(keynumber, key);
         }

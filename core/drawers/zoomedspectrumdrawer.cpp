@@ -183,7 +183,7 @@ void ZoomedSpectrumDrawer::draw()
     double overpull = mFrequencyDetectionResult->overpullInCents;
     if (abs(overpull)>0.2 and abs(overpull<100))
     {
-        auto overpullColor = GraphicsViewAdapter::PEN_MEDIUM_ORANGE;
+        auto overpullColor = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
         if (abs(overpull) > specWindowSize/2)
         {
             overpullColor = GraphicsViewAdapter::PEN_MEDIUM_RED;

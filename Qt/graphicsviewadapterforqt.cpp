@@ -148,6 +148,12 @@ QPen GraphicsViewAdapterForQt::getPen(PenType penType, bool cosmetic) const {
     case PEN_MEDIUM_ORANGE:
         pen = QPen(QBrush(QColor(0xff,0x66,0)), 2);
         break;
+    case PEN_MEDIUM_MAGENTA:
+        pen = QPen(QBrush(QColor(0xff,0,0xff)), 2);
+        break;
+    case PEN_THIN_MAGENTA:
+        pen = QPen(QBrush(QColor(0xff,0,0xff)), 1);
+        break;
     case PEN_THIN_RED:
         pen = QPen(QBrush(Qt::red), 1);
         break;

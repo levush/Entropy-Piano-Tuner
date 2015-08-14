@@ -18,13 +18,21 @@
  *****************************************************************************/
 
 //=============================================================================
-//                           Overpull algorithm
+//                           Overpull estimator
 //=============================================================================
 
 #include "overpull.h"
 
 #include <cmath>
 #include <iostream>
+
+//-----------------------------------------------------------------------------
+//                               Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor, resetting the member variables.
+///////////////////////////////////////////////////////////////////////////////
 
 OverpullEstimator::OverpullEstimator() :
     mPianoType(piano::PT_COUNT),
@@ -38,6 +46,14 @@ OverpullEstimator::OverpullEstimator() :
 //-----------------------------------------------------------------------------
 //                        Initialize interaction matrix
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Initialize
+///
+/// This function initializes the member variables and calls the function
+/// computeInteractionMatrix.
+/// \param piano : Pointer to the piano structure
+///////////////////////////////////////////////////////////////////////////////
 
 void OverpullEstimator::init (const Piano *piano)
 {
@@ -54,11 +70,22 @@ void OverpullEstimator::init (const Piano *piano)
 //                         Overpull interaction matrix
 //-----------------------------------------------------------------------------
 
-void OverpullEstimator::computeInteractionMatrix (double average)
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Compute the interaction matrix between the string.
+///
+/// The essential data structure that is needed to operate the overpull system
+/// is a response matrix R which tells us how many cents the string number k
+/// will fall if we increase string number j by one cent. On average the
+/// response is proprtional to the parameter averagePull and should be of
+/// the order of 20%.
+///
+/// \param averagePull : average pull, of the order of 0.2
+///////////////////////////////////////////////////////////////////////////////
+
+void OverpullEstimator::computeInteractionMatrix (double averagePull)
 {
     int K = mNumberOfKeys;
     int B = mNumberOfBassKeys;
-    int T = K-B;
     if (K<=0 or B<=0 or B>K) return;
 
     LogI("Compute overpull interaction matrix");
@@ -68,81 +95,103 @@ void OverpullEstimator::computeInteractionMatrix (double average)
     for (auto &row : R) row.resize(K);
     for (auto &row : R) row.assign(K,0);
 
-    double DL,DR,SL,SR,alpha;
+    double DL,DR,SL,SR,SB,SN,shift;
 
     switch(mPianoType)
     {
     case piano::PT_GRAND:
         SL = 1200;      // speaking length treble string left
         SR = 50;        // speaking length treble string right
-        DL = 450;       // distance from bridge to frame left
-        DR = 100;       // distance from bridge to frame right
-        alpha = 0.5;
+        SB = 1250;      // average speaking length bass string
+        SN = 100;       // average non-speaking length in treble
+        DL = 500;       // distance from bridge to frame left
+        DR = 80;       // distance from bridge to frame right
+        shift = 3;      // shift between bass and treble
         break;
     case piano::PT_UPRIGHT:
         SL = 1200;      // speaking length treble string left
         SR = 50;        // speaking length treble string right
+        SB = 1200;      // average speaking length bass string
+        SN = 100;       // average non-speaking length in treble
         DL = 450;       // distance from bridge to frame left
         DR = 100;       // distance from bridge to frame right
-        alpha = 0.5;
+        shift = 10;     // shift between bass and treble
         break;
     default:
         LogW("Undefined piano type encountered");
         break;
     }
 
-    // (G+H(K-1))2^((1-K)/12)==SR
-    // (G+H(B-1))2^((1-B)/12)==SL
-    double G = (-(pow(2,(1 + B)/12.)*(-1 + K)*SL) + pow(2,K/12.)*B*SR)/
-            (pow(2,0.08333333333333333)*(1 + B - K));
-    double H = (pow(2,B/12.)*SL - pow(2,(-1 + K)/12.)*SR)/(1 + B - K);
+    // COMPUTE APPROXIMATE SPEAKING LENGTH OF THE TREBLE STRINGS
+    double G =-(pow(2,-0.08333333333333333)*
+                (-(SL*pow(2,0.08333333333333333 + B/12.)) +
+                  K*SL*pow(2,0.08333333333333333 + B/12.) - B*SR*pow(2,K/12.))*
+                pow(1 + B - K,-1));
+    double H =((SL*pow(2,1 + B/12.) - SR*pow(2,0.9166666666666666 + K/12.))*
+               pow(1 + B - K,-1))/2.;
     auto stringlength = [G,H] (int k) { return (G+H*k)*pow(2,-k/12.0); };
 
-    for (int k=B; k<K; ++k) std::cout << "SL(" << k << ")=" << stringlength(k) << std::endl;
+    // COMPUTE APPROXIMATE ARC LENGTH ALONG THE TREBLE BRIDGE
+    std::vector<double> arc(K,0);
+    const double d = 13.6; // Unison distance in mm
+    arc[B]=DL;
+    for (int k=B+1; k<K; ++k) arc[k] = arc[k-1] +
+            sqrt(d*d + pow(stringlength(k)-stringlength(k-1),2));
+    double L = arc[K-1]+DR;
 
-    auto xcoord = [DL,DR,K,T] (int k)
-    { return (K+1-k)*(DL*(K-k)+DR*(2*T+k-K))/2/T; };
-
-    auto case2 = [K,B,T,DL,DR,SL,SR,xcoord] (int j, int k)
+    // DEFLECTION FORMULA FOR A BAR
+    auto def = [L,arc] (int j, int k)
     {
-        double LT = 0.5*(T+1)*(DL+DR);
-        double L  = LT+SL+SR;
-        double a  = xcoord(k)+SR;
+        double a  = arc[k];
         double b  = L-a;
-        double x  = xcoord(j)+SR;
-        return b/L*x*(L*L-x*x-b*b) * pow(2.0,(j+k)/12.0);
+        double x  = arc[j];
+        return b/L*x*(L*L-x*x-b*b) ;
     };
 
-    auto TM = [case2] (int j, int k)
+    // COMPUTE SYMMETRIC DEFLECTION RESPONSE
+    auto deflection = [def] (int j, int k)
     {
-        if (j>=k) return case2(j+1,k+1);
-        else return case2(k+1,j+1);
+        if (j<=k) return def(j,k);
+        else return def(k,j);
     };
 
-    auto RM = [TM,alpha,B] (int j, int k)
+    // COPY BEHAVIOR INTO THE BASS SECTION
+    auto epsilon = [deflection,B,shift] (int j, int k)
     {
-        if (j<B and k<B) return alpha * alpha * TM(j+B,k+B);
-        else if (j<B and k>=B) return alpha * TM(j+B,k);
-        else if (j>=B and k<B) return alpha * TM(j,k+B);
-        else return TM(j,k);
+        if (j<B and k<B) return deflection(j+B+shift,k+B+shift);
+        else if (j<B and k>=B) return deflection(j+B+shift,k);
+        else if (j>=B and k<B) return deflection(j,k+B+shift);
+        else return deflection(j,k);
     };
 
+    // TAKE NUMBER OF STRINGS AND THEIR LENGTH INTO ACCOUNT
+    auto response = [B,SB,SN,stringlength,epsilon] (int j, int k)
+    {
+        double unison=3;
+        if (j<8) unison=1; else if (j<B) unison=2;
+        double stringlen = (k<B ? SB+SN : stringlength(k)+SN);
+        return unison * epsilon(j,k) / stringlen;
+    };
+
+    // NORMALIZATION
     double sum = 0;
-    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += (R[j][k] = RM(j,k));
+    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += (R[j][k] = response(j,k));
     sum /= K;
-    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) R[j][k] *= average / sum;
+    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) R[j][k] *= averagePull / sum;
 
-    std::ofstream os("/home/hinrichsen/mat.m");
-    os << "M={";
-    for (int j=0; j<K; ++j)
-    {
-        os << "{";
-        for (int k=0; k<K-1; ++k) os << R[j][k] << ",";
-        os << R[j][K-1];
-        if (j!=K-1) os << "},\n";
-        else os << "}};" << std::endl;
-    }
-    os.close();
+    for (int k=0; k<K; ++k) std::cout << R[40][k] << std::endl;
+
+//    std::ofstream os("/home/hinrichsen/mat.m");
+//    os << "M={";
+//    for (int j=0; j<K; ++j)
+//    {
+//        os << "{";
+//        for (int k=0; k<K-1; ++k) os << R[j][k] << ",";
+//        os << R[j][K-1];
+//        if (j!=K-1) os << "},\n";
+//        else os << "}};" << std::endl;
+//    }
+//    os.close();
 }
 
 
@@ -150,28 +199,40 @@ void OverpullEstimator::computeInteractionMatrix (double average)
 //                            Compute overpull
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Compute the required overpull on the basis of the interaction
+/// matrix.
+///
+/// This function first checks whether enough red markers have been set.
+/// If so, it connects the red markers internally by linear interpolation.
+/// This interpolation is then used to feed the interaction matrix, which
+/// returns the required overpull.
+/// \param keynumber : Number of the key to be tuned
+/// \param piano : Pointer to the piano structure
+/// \return Overpull in cents
+///////////////////////////////////////////////////////////////////////////////
+
 double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
 {
+    // CHECK PARAMETERS FOR CONSISTENCY, OTHERWISE RETURN 0
     if (not piano) return 0;
     int K = piano->getKeyboard().getNumberOfKeys();
     int B = piano->getKeyboard().getNumberOfBassKeys();
     double cpitch = piano->getConcertPitch();
     if (K<=0 or B<=0 or keynumber<0 or keynumber>=K) return 0;
 
-    // If parameter have changed recalculate the matrix
+    // IF KEYBOARD PARAMETERS OR PITCH HAS CHANGED RE-INITIALIZE AGAIN
     if (K != mNumberOfKeys or B != mNumberOfBassKeys or  cpitch != mConcertPitch
         or piano->getPianoType() != mPianoType) init(piano);
 
-    // check whether key provides valid data
+    // CHECK WHETHER A GIVEN KEY PROVIDES VALID DATA
     auto valid = [this] (const Key &key)
-    {
-        bool okay = (key.getComputedFrequency() > 20 and
-                     key.getTunedFrequency() > 20);
-        return okay;
-    };
+    {return (key.getComputedFrequency() > 20 and key.getTunedFrequency() > 20);};
     auto isvalid = [this,valid,piano] (int k) { return valid(piano->getKey(k)); };
 
-    const int maxGapsize = 10;
+    // RED MARKERS HAVE TO BE PLACED WITH GAPS SMALLER THAN 7 HALFTONES
+    // OTHERWISE RETURN 0 (DO NOT SHOW OVERPULL)
+    const int maxGapsize = 7;
     int gapsize = 0;
     for (int k=0; k<K; ++k)
     {
@@ -180,7 +241,7 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
         if (gapsize > maxGapsize) return 0;
     }
 
-    // compute tuned deviation against computed levels in cents
+    // COMPUTE HOW MUCH THE PITCH DEVIATES FROM THE COMPUTED TUNING CURVE
     auto deviation = [this,piano,cpitch] (int k)
     {
         auto key = piano->getKey(k);
@@ -191,7 +252,7 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
         return 1200.0*log2(tuned/computed/cpratio);
     };
 
-    // If so, create a piecewise linear interpolation of tuning levels
+    // FOR THE MISSING RED MARKERS CREATE A LINEAR INTERPOLATION
     std::vector<double> interpolation (K,0);
     auto interpolate = [this,isvalid,deviation,&interpolation] (int start, int end)
     {
@@ -215,10 +276,11 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
         return true;
     };
 
-    // Interpolate the two bridges separately.
+    // THE INTERPOLATION IS CARRIED OUT SEPARATELY ON BOTH BRIDGES
     if (not interpolate (0,B-1)) return 0;
     if (not interpolate (B-1,K-1)) return 0;
 
+    // COMPUTE CURRENTLY NEEDED OVERPULL
     double overpull = 0, totaldeviation = 0;
     for (int k=0; k<K; k++) if (k != keynumber)
     {
@@ -235,6 +297,7 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
 //    for (int key=0; key<mNumberOfKeys; key++) os << key << " " << interpolation[key] << std::endl;
 //    os.close();
 
+    // THE OVERPULL IS ONLY SHOWN IF THE PIANO IS ON AVERAGE MORE THAN 5 CENTS FLAT
     if (fabs(totaldeviation/K)>5) return overpull;
     else return 0;
 }

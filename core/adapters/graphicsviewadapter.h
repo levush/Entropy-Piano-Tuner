@@ -69,6 +69,8 @@ public:
         PEN_THIN_CYAN,
         PEN_MEDIUM_CYAN,
         PEN_MEDIUM_ORANGE,
+        PEN_MEDIUM_MAGENTA,
+        PEN_THIN_MAGENTA,
         PEN_THIN_RED,
         PEN_MEDIUM_RED,
         PEN_THIN_BLUE,
