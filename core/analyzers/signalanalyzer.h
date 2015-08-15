@@ -58,7 +58,7 @@ class SignalAnalyzer :
 {
 public:
     static const int AUDIO_BUFFER_SIZE_IN_SECONDS = 60;             ///< Maximal size of the audio buffer
-    static const int MINIMAL_FFT_INTERVAL_IN_MILLISECONDS = 100;    ///< Time interval for at most one FFT
+    static const int MINIMAL_FFT_INTERVAL_IN_MILLISECONDS = 150;    ///< Time interval for at most one FFT
 
 private:
 
