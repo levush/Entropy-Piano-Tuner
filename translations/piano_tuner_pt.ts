@@ -937,6 +937,10 @@
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
         <translation>A mudança de idioma será ativada após reiniciar o afinador de piano por entropia.</translation>
     </message>
+    <message>
+        <source>Reactivate warnings</source>
+        <translation>Reactivar advertências</translation>
+    </message>
 </context>
 <context>
     <name>options::PageEnvironmentTuning</name>

@@ -1094,7 +1094,7 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation>Частота опроса.</translation>
+        <translation>Частота опроса</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
@@ -1152,6 +1152,10 @@
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
+        <source>Reactivate warnings</source>
+        <translation>Повторная активация предупреждений</translation>
+    </message>
+    <message>
         <source>Reset warnings</source>
         <translation>Сбросить предупреждения</translation>
     </message>

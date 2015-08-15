@@ -810,7 +810,7 @@
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
-        <translation type="unfinished">저장됨</translation>
+        <translation>저장됨</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
@@ -1149,6 +1149,10 @@
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
+        <source>Reactivate warnings</source>
+        <translation>모든 경고를 재 활성화</translation>
+    </message>
+    <message>
         <source>Reset warnings</source>
         <translation>리셋 경고들</translation>
     </message>

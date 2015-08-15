@@ -1164,6 +1164,10 @@
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
+        <source>Reactivate warnings</source>
+        <translation>重新激活警告</translation>
+    </message>
+    <message>
         <source>Reset warnings</source>
         <translation>重置警告</translation>
     </message>

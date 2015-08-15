@@ -63,7 +63,7 @@ PageEnvironmentGeneral::PageEnvironmentGeneral(OptionsDialog *optionsDialog)
         }
     }
 
-    mResetWarningsButton = new QPushButton(tr("Reset warnings"));
+    mResetWarningsButton = new QPushButton(tr("Reactivate warnings"));
     userInterfaceLayout->addRow(mResetWarningsButton, (QWidget*)nullptr);
     mResetWarningsButton->setEnabled(SettingsForQt::getSingleton().countCurrentDoNotShowAgainMessageBoxes() > 0);
 

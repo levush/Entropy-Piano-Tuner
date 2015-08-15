@@ -502,7 +502,7 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="186"/>
         <source>&amp;Options</source>
-        <translation>&amp;Optionen</translation>
+        <translation>&amp;Einstellungen</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
@@ -596,7 +596,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Options</source>
-        <translation>Optionen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="191"/>
@@ -1042,7 +1042,7 @@
     <message>
         <location filename="../Qt/options/optionsdialog.cpp" line="47"/>
         <source>Options</source>
-        <translation>Optionen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
@@ -1151,6 +1151,14 @@
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
+        <source>Reactivate warnings</source>
+        <translation>Reaktiviere Warnungen</translation>
+    </message>
+    <message>
+        <source>Show all warnings</source>
+        <translation>Alle Warnungen zeigen</translation>
+    </message>
+    <message>
         <source>Reset warnings</source>
         <translation>Warnungen zurücksetzen</translation>
     </message>
