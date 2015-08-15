@@ -89,7 +89,7 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionEdit_piano_data_sheet"/>
-    <addaction name="actionReset_recording"/>
+    <addaction name="actionReset_pitches"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -186,12 +186,12 @@
     <string>&amp;Options</string>
    </property>
   </action>
-  <action name="actionReset_recording">
+  <action name="actionReset_pitches">
    <property name="text">
-    <string>&amp;Reset recording</string>
+    <string>&amp;Reset pitch markers</string>
    </property>
    <property name="toolTip">
-    <string>Reset recording</string>
+    <string>Reset pitch markers</string>
    </property>
   </action>
   <action name="actionManual">
@@ -399,7 +399,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionReset_recording</sender>
+   <sender>actionReset_pitches</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>onResetRecording()</slot>

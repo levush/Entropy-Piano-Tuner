@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_ES">
+<TS version="2.0" language="es_ES">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -36,11 +36,11 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este software tiene licencia bajo los términos de %1. El código fuente puede obtenerse en %2.</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="vanished">Este software tiene licencia bajo los términos de %1. El código fuente puede obtenerse en %2.</translation>
+        <translation>Este software tiene licencia bajo los términos de %1. El código fuente puede obtenerse en %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -213,9 +213,13 @@
         <translation>No mostrar otra vez.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
         <translation>Reiniciar grabación</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
+        <source>Reset pitch markers</source>
+        <translation>Restablecer marcadores de tono</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -239,6 +243,10 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation>¿Realmente desea restablecer todos los marcadores de tono? ¡Esta operación no se puede deshacer!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
         <translation>¿Está seguro de querer reiniciar todos los datos grabados? ¡Esta operación no se puede deshacer!</translation>
     </message>
@@ -498,17 +506,21 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;Restablecer marcadores de tono</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset pitch markers</source>
+        <translation>Restablecer marcadores de tono</translation>
+    </message>
+    <message>
         <source>Reset recording</source>
-        <translation type="unfinished">Reiniciar grabación</translation>
+        <translation type="obsolete">Reiniciar grabación</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">&amp;Reiniciar grabación</translation>
+        <translation>&amp;Reiniciar grabación</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -665,11 +677,11 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>Control de sistema no encontrado.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">Control de sistema no encontrado.</translation>
+        <translation>Control de sistema no encontrado.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -922,12 +934,12 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="vanished">Un archivo con el nombre dado ya existe en %1. ¿Quieres sobreescribirlo?</translation>
+        <translation>Un archivo con el nombre dado ya existe en %1. ¿Quieres sobreescribirlo?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Un archivo con el nombre dado ya existe en %1. ¿Quieres sobreescribirlo?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1076,12 +1088,12 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">Tasa de muestreo</translation>
+        <translation>Tasa de muestreo</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>Índices de muestreo</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>

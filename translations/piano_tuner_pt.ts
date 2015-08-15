@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -21,11 +21,11 @@
     </message>
     <message>
         <source>Based on</source>
-        <translation type="unfinished"></translation>
+        <translation>Baseado em</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="vanished">Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
+        <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
     </message>
     <message>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
@@ -33,7 +33,7 @@
     </message>
     <message>
         <source>We thank all those who have contributed to the project:</source>
-        <translation type="unfinished"></translation>
+        <translation>Agradecemos a todos aqueles que contribuíram para o projeto:</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -41,11 +41,11 @@
     </message>
     <message>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Todos os direitos reservados. </translation>
     </message>
     <message>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este software está licenciado sob os termos da %1.O código-fonte pode ser acessado no %2.</translation>
     </message>
 </context>
 <context>
@@ -80,7 +80,7 @@
     </message>
     <message>
         <source>Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Parâmetros</translation>
     </message>
 </context>
 <context>
@@ -143,27 +143,27 @@
     </message>
     <message>
         <source>Calculation finished</source>
-        <translation type="unfinished"></translation>
+        <translation>Cálculo terminado</translation>
     </message>
     <message>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
-        <translation type="unfinished"></translation>
+        <translation>O cálculo terminou com sucesso! Agora você pode alternar para o modo de sintonização e sintonizar o seu piano.</translation>
     </message>
     <message>
         <source>Calculation with: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Cálculo usando: %1</translation>
     </message>
     <message>
         <source>Not enough keys recorded in left section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Demasiado poucas teclas de piano gravado (graves).</translation>
     </message>
     <message>
         <source>Not enough keys recorded in right section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Demasiado poucas teclas de piano gravados (agudos)</translation>
     </message>
     <message>
         <source>Undefined error message.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mensagem de erro indefinida.</translation>
     </message>
 </context>
 <context>
@@ -207,6 +207,14 @@
     <message>
         <source>There are missing frequencies in the calculated tuning curve. Recalculate to fix this.</source>
         <translation> Na curva de afinação calculada, há frequências faltando. Recalcule para arrumar o problema.</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation>Repor marcadores arremesso</translation>
+    </message>
+    <message>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation>Você realmente quer para repor todos os marcadores arremesso? Isso não pode ser desfeito!</translation>
     </message>
 </context>
 <context>
@@ -318,7 +326,7 @@
     <name>KeyboardGraphicsView</name>
     <message>
         <source>This window displays the keyboard. Each key has a small indicator that will display the current recording state of this key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Esta janela exibe o teclado. Cada tecla tem um pequeno indicador que irá exibir o estado actual de gravação desta tecla.</translation>
     </message>
 </context>
 <context>
@@ -400,7 +408,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">&amp;Reset gravação</translation>
+        <translation>&amp;Reset gravação</translation>
     </message>
     <message>
         <source>Manual</source>
@@ -488,7 +496,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">Incapaz de achar um controle de som suportado.</translation>
+        <translation>Incapaz de achar um controle de som suportado.</translation>
     </message>
     <message>
         <source>Canceled</source>
@@ -540,7 +548,7 @@
     </message>
     <message>
         <source>Documents and tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Documentos e ferramentas</translation>
     </message>
     <message>
         <source>New</source>
@@ -568,19 +576,19 @@
     </message>
     <message>
         <source>A new update is available!</source>
-        <translation type="unfinished"></translation>
+        <translation>Uma nova atualização está disponível!</translation>
     </message>
     <message>
         <source>The online app version is %1. Do you want to install this update?</source>
-        <translation type="unfinished"></translation>
+        <translation>A versão on-line  é %1. Você quer instalar esta atualização?</translation>
     </message>
     <message>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
-        <translation type="unfinished"></translation>
+        <translation>A ferramenta de manutenção não pôde ser iniciado automaticamente. Para atualizar o programa que você tem que iniciar a ferramenta de manutenção manualmente.</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportar</translation>
     </message>
     <message>
         <source>Entopy piano tuner</source>
@@ -588,7 +596,7 @@
     </message>
     <message>
         <source>Comma-separated values</source>
-        <translation type="unfinished"></translation>
+        <translation>Valores separados por vírgula</translation>
     </message>
     <message>
         <source>All files</source>
@@ -596,97 +604,101 @@
     </message>
     <message>
         <source>Graphs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Gráficos</translation>
     </message>
     <message>
         <source>Reset recording</source>
-        <translation type="unfinished">Reset gravação</translation>
+        <translation type="obsolete">Reset gravação</translation>
     </message>
     <message>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>Incapaz de encontrar um controle de som suportada</translation>
+    </message>
+    <message>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;Repor marcadores arremesso</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation>Repor marcadores arremesso</translation>
     </message>
 </context>
 <context>
     <name>PlotsDialog</name>
     <message>
         <source>Reset view</source>
-        <translation type="unfinished"></translation>
+        <translation>Redefinir vista</translation>
     </message>
     <message>
         <source>Go first</source>
-        <translation type="unfinished"></translation>
+        <translation>Ir para a primeira</translation>
     </message>
     <message>
         <source>Go previous</source>
-        <translation type="unfinished"></translation>
+        <translation>Ir para a anterior</translation>
     </message>
     <message>
         <source>Go next</source>
-        <translation type="unfinished"></translation>
+        <translation>Ir para a próxima</translation>
     </message>
     <message>
         <source>Go last</source>
-        <translation type="unfinished"></translation>
+        <translation>Ir para durar</translation>
     </message>
     <message>
         <source>Inh.</source>
-        <translation type="unfinished"></translation>
+        <translation>Inh.</translation>
     </message>
     <message>
         <source>Rec.</source>
-        <translation type="unfinished"></translation>
+        <translation>Grav.</translation>
     </message>
     <message>
         <source>Comp.</source>
-        <translation type="unfinished"></translation>
+        <translation>Comp.</translation>
     </message>
     <message>
         <source>Tuned</source>
-        <translation type="unfinished"></translation>
+        <translation>Afin.</translation>
     </message>
     <message>
         <source>Inharmonicity</source>
-        <translation type="unfinished"></translation>
+        <translation>Inharmonicity</translation>
     </message>
     <message>
         <source>Recorded</source>
-        <translation type="unfinished"></translation>
+        <translation>Gravado</translation>
     </message>
     <message>
         <source>Computed</source>
-        <translation type="unfinished"></translation>
+        <translation>Calculado.</translation>
     </message>
     <message>
         <source>Key index</source>
-        <translation type="unfinished"></translation>
+        <translation>Índice de chaves</translation>
     </message>
     <message>
         <source>Frequency deviation [cent]</source>
-        <translation type="unfinished"></translation>
+        <translation>Desvio de frequência. [cent]</translation>
     </message>
     <message>
         <source>Tun.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tun.</translation>
     </message>
 </context>
 <context>
     <name>QwtPlotRenderer</name>
     <message>
         <source>Documents</source>
-        <translation type="unfinished"></translation>
+        <translation>Documentos</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagens</translation>
     </message>
     <message>
         <source>Export File Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportação: nome do arquivo</translation>
     </message>
 </context>
 <context>
@@ -697,14 +709,14 @@
     </message>
     <message>
         <source>This bar displays the quality of the recording. All of the recorded keys should have an almost equal quality before starting the calculation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Esta barra apresenta a qualidade da gravação. Todas as teclas gravado devem ter uma qualidade quase iguais antes de iniciar o cálculo.</translation>
     </message>
 </context>
 <context>
     <name>RecordingStatusGraphicsView</name>
     <message>
         <source>This item displays the status of the recorder. A red circle indicates that the audio signal is currently recorded. A blue rotating circle is shown when the program processes the recorded signal. A green pause symbol is displayed if you can record the next key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este painel exibe o status do gravador. Um círculo vermelho indica que o sinal de áudio está gravado. Um círculo azul rotativo é mostrado quando o programa processa o sinal gravado. Um símbolo de pausa verde é exibida se você pode gravar a próxima tecla.</translation>
     </message>
 </context>
 <context>
@@ -719,53 +731,53 @@
     </message>
     <message>
         <source>This label displays the current selected key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Essa área exibe a chave selecionada atual.</translation>
     </message>
     <message>
         <source>This label shows the ground frequency of the selected key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Esse número mostra a frequência fundamental da chave selecionada.</translation>
     </message>
 </context>
 <context>
     <name>SimpleFileDialog</name>
     <message>
         <source>Name:</source>
-        <translation type="unfinished">Nome:</translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Remove file</source>
-        <translation type="unfinished"></translation>
+        <translation>Remover arquivo</translation>
     </message>
     <message>
         <source>Are you sure that you really want to delete the file &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que você realmente quer apagar o arquivo &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>File existing</source>
-        <translation type="unfinished"></translation>
+        <translation>Arquivo existente</translation>
     </message>
     <message>
         <source>Invalid filename</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome de arquivo inválido</translation>
     </message>
     <message>
         <source>Please provide a valid filename.</source>
-        <translation type="unfinished"></translation>
+        <translation>Por favor, forneça um nome de arquivo válido.</translation>
     </message>
     <message>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Um arquivo com o nome fornecido já existe em %1. Você quer substituí-lo?</translation>
     </message>
 </context>
 <context>
     <name>TunerApplication</name>
     <message>
         <source>Crash handler</source>
-        <translation type="unfinished"></translation>
+        <translation>Bater manipulador</translation>
     </message>
     <message>
         <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
-        <translation type="unfinished"></translation>
+        <translation>O aplicativo foi encerrado inesperadamente na última execução. Você quer ver o último log?</translation>
     </message>
 </context>
 <context>
@@ -799,11 +811,11 @@
     </message>
     <message>
         <source>Click this button to reset the automatic calibration of the input volume.</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique nesse botão para repor a calibração automática do volume de entrada.</translation>
     </message>
     <message>
         <source>Click this button to mute the input device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique nesse botão para silenciar o dispositivo de entrada.</translation>
     </message>
 </context>
 <context>
@@ -817,7 +829,7 @@
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este é o dispositivo de ajuste. Você deve trazer o pico e a barra do indicador no meio da janela para uma afinação ideal. Ao ajustar várias cordas de uma só vez, pode aparecer vários picos. Todos eles devem ser sintonizado para coincidir com o centro.</translation>
     </message>
 </context>
 <context>
@@ -862,7 +874,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">Taxas de sampling</translation>
+        <translation>Taxas de sampling</translation>
     </message>
     <message>
         <source>Open system settings</source>
@@ -878,7 +890,7 @@
     </message>
     <message>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>Taxas de amostragem</translation>
     </message>
 </context>
 <context>
@@ -950,7 +962,7 @@
     </message>
     <message>
         <source>Disable automatic key selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Desabilitar a seleção automática da chave</translation>
     </message>
 </context>
 </TS>

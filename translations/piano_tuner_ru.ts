@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -36,12 +36,12 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translatorcomment>Bin mir nicht sicher</translatorcomment>
-        <translation type="vanished">Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
+        <translation>Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -137,17 +137,17 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
         <source>Not enough keys recorded in left section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Слишком мало ключи, записанные в басу.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
         <source>Not enough keys recorded in right section.</source>
-        <translation type="unfinished"></translation>
+        <translation>Слишком мало ключи, записанные в высоких частот.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
         <source>Undefined error message.</source>
-        <translation type="unfinished"></translation>
+        <translation>Неопределенная сообщение об ошибке.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
@@ -214,9 +214,13 @@
         <translation>Больше не показывать.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
         <translation>Сброс записи</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
+        <source>Reset pitch markers</source>
+        <translation>Сброс основного тона маркеры</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -240,6 +244,10 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation>Вы действительно хотите сбросить все основного тона маркеры? Это не может быть отменено!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
         <translation>Вы действительно хотите сбросить все записанные клавиши? Информация будет утеряна безвозвратно!</translation>
     </message>
@@ -499,17 +507,21 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;Сброс основного тона маркеры</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset pitch markers</source>
+        <translation>Сброс основного тона маркеры</translation>
+    </message>
+    <message>
         <source>Reset recording</source>
-        <translation type="unfinished">Сброс записи</translation>
+        <translation type="obsolete">Сброс записи</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">Сбросить &amp;запись</translation>
+        <translation>Сбросить &amp;запись</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -666,11 +678,11 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>Невозможно найти поддерживаемую регулировку звука.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">Невозможно найти поддерживаемую регулировку звука.</translation>
+        <translation>Невозможно найти поддерживаемую регулировку звука.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -923,12 +935,12 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="vanished">Файл с заданным именем уже существует на %1. Вы хотите перезаписать его?</translation>
+        <translation>Файл с заданным именем уже существует на %1. Вы хотите перезаписать его?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл с заданным именем уже существует на %1 пути. Вы хотите перезаписать его?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1077,12 +1089,12 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">Частоты дискретизации</translation>
+        <translation>Частоты дискретизации</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>Частота опроса.</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>

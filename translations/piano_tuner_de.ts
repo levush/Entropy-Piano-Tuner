@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -11,7 +11,7 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="58"/>
         <source>Entropy Piano Tuner</source>
-        <translation>Entropie Piano Tuner</translation>
+        <translation>Entropie-Piano-Tuner</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="73"/>
@@ -36,11 +36,11 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="vanished">Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
+        <translation>Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -213,9 +213,13 @@
         <translation>Nicht erneut zeigen.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
         <translation>Aufnahme zurücksetzen</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
+        <source>Reset pitch markers</source>
+        <translation>Markierungen zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -239,6 +243,10 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation>Wollen Sie wirklich alle Markierungen löschen? Dies kann nicht rückgängig gemacht werden!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
         <translation>Wollen Sie wirklich alle aufgenommenen Tasten zurücksetzen? Dies kann nicht rückgängig gemacht werden!</translation>
     </message>
@@ -498,17 +506,21 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;Markierungen zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset pitch markers</source>
+        <translation>Markierungen zurücksetzen</translation>
+    </message>
+    <message>
         <source>Reset recording</source>
-        <translation type="unfinished">Aufnahme zurücksetzen</translation>
+        <translation type="obsolete">Aufnahme zurücksetzen</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">Aufnahme &amp;zurücksetzen</translation>
+        <translation>Aufnahme &amp;zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -665,11 +677,11 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>Es konnte kein unterstütztes Audio-Kontrollzentrum gefunden werden.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">Es konnte kein unterstütztes Audio-Kontrollzentrum gefunden werden.</translation>
+        <translation>Es konnte kein unterstütztes Audio-Kontrollzentrum gefunden werden.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -922,12 +934,12 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="vanished">Eine Datei mit den angegebenen Namen existiert bereits am Pfad %1. Möchten Sie sie überschreiben?</translation>
+        <translation>Eine Datei mit den angegebenen Namen existiert bereits am Pfad %1. Möchten Sie sie überschreiben?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Eine Datei mit den angegebenen Namen existiert bereits unter %1. Möchten Sie sie überschreiben?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1076,12 +1088,12 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">Abtastrate</translation>
+        <translation>Abtastrate</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampling-Rate</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>

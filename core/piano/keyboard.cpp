@@ -47,7 +47,7 @@ void Keyboard::clearComputedPitches()
 
 void Keyboard::clearTunedPitches()
 {
-    for (auto &key : mKeys) key.setTunedFrequency(key.getComputedFrequency());
+    for (auto &key : mKeys) key.setTunedFrequency(0);
 }
 
 void Keyboard::clearOverpulls()

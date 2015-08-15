@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko">
+<TS version="2.0" language="ko">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -32,16 +32,16 @@
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="87"/>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation type="unfinished">Copyright 2015 Würzburg대학교 물리학과 TP3 All right reserved.</translation>
+        <translation>Copyright 2015 Würzburg대학교 물리학과 TP3 All right reserved.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="88"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="vanished">본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
+        <translation>본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -138,17 +138,17 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
         <source>Not enough keys recorded in left section.</source>
-        <translation type="unfinished"></translation>
+        <translation>너무 몇 가지 기록 피아노 키 (중저음).</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
         <source>Not enough keys recorded in right section.</source>
-        <translation type="unfinished"></translation>
+        <translation>너무 몇 가지 기록 피아노 키 (고음).</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
         <source>Undefined error message.</source>
-        <translation type="unfinished"></translation>
+        <translation>정의되지 않은 오류 메시지.</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
@@ -215,9 +215,13 @@
         <translation>다시 보지 않겠습니다.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
         <translation>리셋</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
+        <source>Reset pitch markers</source>
+        <translation>피치 마커를 재설정</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -241,6 +245,10 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation>저장된 피치 마커 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
         <translation>저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
     </message>
@@ -500,17 +508,21 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset recording</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;피치 마커를 재설정</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset pitch markers</source>
+        <translation>피치 마커를 재설정</translation>
+    </message>
+    <message>
         <source>Reset recording</source>
-        <translation type="unfinished">리셋</translation>
+        <translation type="obsolete">리셋</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">리셋 녹음(&amp;R)</translation>
+        <translation>리셋 녹음(&amp;R)</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -679,11 +691,11 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="551"/>
         <source>Unable to find a supported sound control.</source>
-        <translation type="unfinished"></translation>
+        <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
+        <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -798,7 +810,7 @@
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
-        <translation>저장됨</translation>
+        <translation type="unfinished">저장됨</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
@@ -920,12 +932,12 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="vanished">%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
+        <translation>%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished"></translation>
+        <translation>%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1074,12 +1086,12 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">샘플링 레이트</translation>
+        <translation>샘플링 레이트</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
         <source>Sampling rates</source>
-        <translation type="unfinished"></translation>
+        <translation>샘플링 속도</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>

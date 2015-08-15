@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation type="vanished">本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
+        <translation>本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -214,9 +214,13 @@
         <translation>不再显示.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Reset recording</source>
         <translation>重置录音</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
+        <source>Reset pitch markers</source>
+        <translation>重置所有节距标记</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -240,6 +244,11 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translatorcomment>added translation by Google, please refine</translatorcomment>
+        <translation>你真的要重置所有节距标记？这不能逆转！</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
         <translation>确信要重置所有已录音的键吗？这是不能复原的!</translation>
     </message>
@@ -499,17 +508,25 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
+        <source>&amp;Reset pitch markers</source>
+        <translation>&amp;重置所有节距标记</translation>
+    </message>
+    <message>
+        <location filename="../Qt/mainwindow.ui" line="194"/>
+        <source>Reset pitch markers</source>
+        <translation>重置所有节距标记</translation>
+    </message>
+    <message>
         <source>&amp;Reset recording</source>
         <translation>重置录音</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.ui" line="194"/>
         <source>Reset recording</source>
         <translation>重置录音</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation type="vanished">&amp;重置录音</translation>
+        <translation>&amp;重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -671,7 +688,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation type="vanished">无法找到一个可支持的声音控制.</translation>
+        <translation>无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -930,7 +947,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation type="vanished">给定名称的文件已存在 %1.你想复盖吗？</translation>
+        <translation>给定名称的文件已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1084,7 +1101,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation type="vanished">采样率</translation>
+        <translation>采样率</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>

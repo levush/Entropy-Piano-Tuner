@@ -48,7 +48,7 @@ const PenType TuningCurveGraphDrawer::frmarkers  = GraphicsViewAdapter::PEN_THIN
 const PenType TuningCurveGraphDrawer::fgmarkers  = GraphicsViewAdapter::PEN_THIN_LIGHT_GRAY;
 const PenType TuningCurveGraphDrawer::fcmarkers  = GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN;
 const PenType TuningCurveGraphDrawer::ftmarkers  = GraphicsViewAdapter::PEN_MEDIUM_RED;
-const PenType TuningCurveGraphDrawer::opmarkers  = GraphicsViewAdapter::PEN_THIN_MAGENTA;
+const PenType TuningCurveGraphDrawer::opmarkers  = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
 const FillType TuningCurveGraphDrawer::allowdAreaFill = GraphicsViewAdapter::FILL_LIGHT_GREEN;
 
 ///////////////////////////////////////////////////////////////////////////////

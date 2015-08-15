@@ -37,7 +37,7 @@ public:
     /// \brief The type and unique id for the message box
     ///////////////////////////////////////////////////////////////////////////////
     enum Type {
-        RESET_PITCHES = 0,            ///< Reset recording
+        RESET_PITCHES = 0,              ///< Reset pitch markers
         NOT_ALL_KEYS_RECORDED,          ///< Not all keys have been recorded
         TUNING_CURVE_NOT_CALCULATED,    ///< The tuning curve has not been calculated
         TUNING_CURVE_NEEDS_UPDATE,      ///< The tuning curve has to be recalculated
