@@ -22,6 +22,15 @@
 #include "../system/eptexception.h"
 #include "../math/mathtools.h"
 
+//-----------------------------------------------------------------------------
+//                          Keyboard Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Keyboard constructor
+/// \param initialSize
+///////////////////////////////////////////////////////////////////////////////
+
 Keyboard::Keyboard(size_t initialSize) :
     mKeys(initialSize),
     mKeyNumberOfA4(48),
@@ -30,90 +39,130 @@ Keyboard::Keyboard(size_t initialSize) :
 }
 
 
-void Keyboard::resize(size_t s)
-{
-    mKeys.resize(s);
-}
+//-----------------------------------------------------------------------------
+//                              Clearing data
+//-----------------------------------------------------------------------------
 
-void Keyboard::clearKeys()
-{
-    for (auto &key : mKeys) key.clear();
-}
+void Keyboard::clearAllKeys()
+{ for (auto &key : mKeys) key.clear(); }
 
 void Keyboard::clearComputedPitches()
-{
-    for (auto &key : mKeys) key.setComputedFrequency(0);
-}
+{ for (auto &key : mKeys) key.setComputedFrequency(0); }
 
 void Keyboard::clearTunedPitches()
-{
-    for (auto &key : mKeys) key.setTunedFrequency(0);
-}
+{ for (auto &key : mKeys) key.setTunedFrequency(0); }
 
 void Keyboard::clearOverpulls()
-{
-    for (auto &key : mKeys) key.setOverpull(0);
-}
+{ for (auto &key : mKeys) key.setOverpull(0); }
 
-//----------------------------------------------------------------------
-//			             set the number of keys
-//----------------------------------------------------------------------
 
-void Keyboard::setNumberOfKeys(int keys, int keyNumberOfA)
+
+//-----------------------------------------------------------------------------
+//			              Change keyboard configuration
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Change keyboard configuration
+///
+/// This function allows the configuration (size and location of A4) to
+/// be changed while the application is running. Keys for which data is
+/// available are automatically shifted to the new component.
+/// \param numberOfKeys : new number of piano keys (standard 88).
+/// \param keyNumberOfA : New index of A4 key (standard 48, counting from 0)
+///////////////////////////////////////////////////////////////////////////////
+
+void Keyboard::changeKeyboardConfiguration (int numberOfKeys, int keyNumberOfA)
 {
     Keys keyCopy(std::move(mKeys));
-    mKeys.resize(0);
-    mKeys.resize(keys);
+    mKeys.clear();
+    mKeys.resize(numberOfKeys);
 
-    int startIndex = mKeyNumberOfA4 - keyNumberOfA;
-
-    // copy keys
-    for (int toIndex = 0; toIndex < static_cast<int>(mKeys.size()); ++toIndex) {
-        int fromIndex = toIndex + startIndex;
-        if (fromIndex >= 0 && fromIndex < static_cast<int>(keyCopy.size())) {
+    // if keys already exist they are shifted to their new locations:
+    for (int toIndex = 0; toIndex < static_cast<int>(mKeys.size()); ++toIndex)
+    {
+        int fromIndex = toIndex + mKeyNumberOfA4 - keyNumberOfA;
+        if (fromIndex >= 0 && fromIndex < static_cast<int>(keyCopy.size()))
+        {
             mKeys[toIndex] = keyCopy[fromIndex];
         }
     }
-
     mKeyNumberOfA4 = keyNumberOfA;
 }
 
 
 
-// Tells the graphics how the keys look like
-// This function should not be static
+//-----------------------------------------------------------------------------
+//			              Get pointer to a key
+//-----------------------------------------------------------------------------
 
-std::string Keyboard::getNoteName(int key) const {
-    // TODO
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get pointer to a key with a given number, returning nullptr if
+/// the number is out of range (read-only version).
+/// \param i : Number of the key
+/// \return : Pointer to the key
+///////////////////////////////////////////////////////////////////////////////
+
+const Key * Keyboard::getKeyPtr (int i) const
+{
+    if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;}
+    return &mKeys[i];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get pointer to a key with a given number, returning nullptr if
+/// the number is out of range (read-write version).
+/// \param i : Number of the key
+/// \return : Pointer to the key
+///////////////////////////////////////////////////////////////////////////////
+
+Key * Keyboard::getKeyPtr(int i)
+{
+    if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;}
+    return &mKeys[i];
+}
+
+
+//-----------------------------------------------------------------------------
+//                        Get the name of the key
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get the name of the key as a string.
+///
+/// \param keynumber : Number of the key
+/// \return : Name of the corresponding note (American notation).
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Keyboard::getNoteName (int keynumber) const
+{
     const int K = size();
     const int Akey = mKeyNumberOfA4;
 
-    if (key < 0 || key >+ K) return "--";
+    if (keynumber < 0 || keynumber >+ K) return "--";
     int Ckey = Akey - 9;
-    int octave = (key - Ckey + 120) / 12 - 6;
-    int index = (key - Ckey + 120) % 12;
+    int octave = (keynumber - Ckey + 120) / 12 - 6;
+    int index = (keynumber - Ckey + 120) % 12;
     const std::string names[12]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
     char octchar = (char)('0' + octave);
     return names[index] + octchar;
 }
 
-// Tells whether the key index k is black or white
 
-piano::KeyColor Keyboard::getKeyColor(int k) const
+//-----------------------------------------------------------------------------
+//                        Get the color of the key
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get the color of the key (black / white)
+/// \param keynumber : Number of the key
+/// \return Color of the key
+///////////////////////////////////////////////////////////////////////////////
+
+piano::KeyColor Keyboard::getKeyColor (int keynumber) const
 {
     const piano::KeyColor White = piano::KC_WHITE;
     const piano::KeyColor Black = piano::KC_BLACK;
     const piano::KeyColor scheme[12] =
     {White, Black, White, Black, White, White, Black, White, Black, White, Black, White};
-    return scheme[(k + 9 + (12 * 100 - getKeyNumberOfA4())) % 12];
+    return scheme[(keynumber + 9 + (12 * 100 - getKeyNumberOfA4())) % 12];
 }
-
-// converts a key index on the local scale [0, numberOfKeys] to the global [0, 87] scale
-
-int Keyboard::convertLocalToGlobal(int index) const {
-    const int scaleOffset = mKeyNumberOfA4 - 48;
-
-    return index - scaleOffset;
-}
-
-

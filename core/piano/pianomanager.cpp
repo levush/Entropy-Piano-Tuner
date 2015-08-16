@@ -72,7 +72,7 @@ void PianoManager::resetPitches()
     {
     case MODE_IDLE:
     case MODE_RECORDING:
-        mPiano.getKeyboard().clearKeys();
+        mPiano.getKeyboard().clearAllKeys();
         break;
     case MODE_CALCULATION:
         mPiano.getKeyboard().clearComputedPitches();

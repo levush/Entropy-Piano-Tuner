@@ -187,7 +187,7 @@ void SignalAnalyzer::updateDataBufferSize() {
     case ROLE_ROLLING_FFT:
     {
         // Initialize the local circular buffer which holds a second of data
-        const int globalKey = mPiano->getKeyboard().convertLocalToGlobal(mSelectedKey);
+        const int globalKey = mSelectedKey + 48 - mPiano->getKeyboard().getKeyNumberOfA4();
         const double timeAtHighest = 0.5;
         const double timeAtLowest = 3;
         const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
@@ -198,6 +198,7 @@ void SignalAnalyzer::updateDataBufferSize() {
 
     mDataBuffer.clear();
 }
+
 
 //-----------------------------------------------------------------------------
 //                      Signal analyzer thread function

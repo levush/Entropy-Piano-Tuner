@@ -230,7 +230,7 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Keyboard &keyboard) {
     int keyNumberOfA = keyboard.getKeyNumberOfA4();
     e->QueryIntAttribute("numberOfKeys", &numberOfKeys);
     e->QueryIntAttribute("keyNumberOfA", &keyNumberOfA);
-    keyboard.setNumberOfKeys(numberOfKeys, keyNumberOfA);
+    keyboard.changeKeyboardConfiguration(numberOfKeys, keyNumberOfA);
 
     for (const tinyxml2::XMLElement *keyElement = e->FirstChildElement(); keyElement;
          keyElement = keyElement->NextSiblingElement()) {

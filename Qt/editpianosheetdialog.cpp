@@ -83,7 +83,7 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
     piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdString());
     piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
-    piano->getKeyboard().setNumberOfKeys(ui->numberOfKeysSpinBox->value(),
+    piano->getKeyboard().changeKeyboardConfiguration(ui->numberOfKeysSpinBox->value(),
                                          ui->keyNumberOfASpinBox->value() - 1);  // counting start from 1 to 0
 }
 

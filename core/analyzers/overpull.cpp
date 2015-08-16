@@ -181,7 +181,7 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
     sum /= K;
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) R[j][k] *= averagePull / sum;
 
-    for (int k=0; k<K; ++k) std::cout << R[40][k] << std::endl;
+    //for (int k=0; k<K; ++k) std::cout << R[40][k] << std::endl;
 
 //    std::ofstream os("/home/hinrichsen/mat.m");
 //    os << "M={";
