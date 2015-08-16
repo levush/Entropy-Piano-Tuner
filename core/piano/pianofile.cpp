@@ -199,7 +199,7 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
             if (data->GetText()) {
                 piano.setTuningTime(data->GetText());
             } else {
-                piano.setNow();
+                piano.setTuningTimeToActualTime();
             }
         } else if (strcmp(data->Value(), "keyboard") == 0) {
             read(data, piano.getKeyboard());

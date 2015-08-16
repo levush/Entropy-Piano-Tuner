@@ -18,9 +18,6 @@
  *****************************************************************************/
 
 #include "keyboard.h"
-#include "../system/log.h"
-#include "../system/eptexception.h"
-#include "../math/mathtools.h"
 
 //-----------------------------------------------------------------------------
 //                          Keyboard Constructor
@@ -28,7 +25,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Keyboard constructor
-/// \param initialSize
+/// \param initialSize : Initial size of the keyboard (standard = 88)
 ///////////////////////////////////////////////////////////////////////////////
 
 Keyboard::Keyboard(size_t initialSize) :

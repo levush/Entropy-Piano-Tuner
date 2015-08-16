@@ -17,9 +17,13 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                            Piano data
-//======================================================================
+//=============================================================================
+//                                Piano class
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief This class holds the complete information of the instrument.
+///
 
 #ifndef PIANO_H
 #define PIANO_H
@@ -72,7 +76,7 @@ public:
     const std::string &getTuningLocation() const {return mTuningLocation;}
 
     void setTuningTime(const std::string &time) {mTuningTime = time;}
-    void setNow();
+    void setTuningTimeToActualTime();
     const std::string &getTuningTime() const {return mTuningTime;}
 
     void setConcertPitch(double pitch) {mConcertPitch = pitch;}

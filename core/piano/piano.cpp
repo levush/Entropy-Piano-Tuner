@@ -17,26 +17,28 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                            Piano data
-//======================================================================
+//=============================================================================
+//                                Piano class
+//=============================================================================
 
 #include "piano.h"
 
-#include <iostream>
 #include <cmath>
-#include <time.h>
 
 #include "../system/eptexception.h"
 
-const int Piano::DEFAULT_NUMBER_OF_KEYS = 88;
-const int Piano::DEFAULT_KEY_NUMBER_OF_A = 48;
+const int    Piano::DEFAULT_NUMBER_OF_KEYS = 88;
+const int    Piano::DEFAULT_KEY_NUMBER_OF_A = 48;
 const double Piano::DEFAULT_CONCERT_PITCH = 440;
 
-//----------------------------------------------------------------------
-//			                   Constructor
-//----------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+//			                        Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of the piano, initializing the member variables.
+///////////////////////////////////////////////////////////////////////////////
 
 Piano::Piano() :
     mName(""),
@@ -49,17 +51,22 @@ Piano::Piano() :
     mConcertPitch(DEFAULT_CONCERT_PITCH),
     mKeyboard(DEFAULT_NUMBER_OF_KEYS)
 {
-    setNow();
+    setTuningTimeToActualTime(); // Set current time as tuning time
 }
 
 
 
-//----------------------------------------------------------------------
-//			                   setNow
-//----------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//			             set tuning time to actual time
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief This function resets the tuning time to the actual time. This is
+/// used as default value.
+///////////////////////////////////////////////////////////////////////////////
 
-void Piano::setNow() {
+void Piano::setTuningTimeToActualTime()
+{
     time_t rawtime = time(0);
     struct tm nowtime;
 #ifdef _MSC_VER
@@ -73,12 +80,22 @@ void Piano::setNow() {
 }
 
 
+//-----------------------------------------------------------------------------
+//			             Set tuning time to actual time
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Compute expected approximative inharmonicity
+///
 /// This function provides a rough estimate of the expected inharmonicity coefficient
 /// for an average upright. It is used to improve the expectation where the spectral
-/// lines should reside in the spectrum
+/// lines should reside in the spectrum.
+///
+/// TODO: This could be depending on the piano type.
 ///
 /// \param f : frequency in Hz
 /// \return Inharmonicity coefficient B
+///////////////////////////////////////////////////////////////////////////////
 
 double Piano::getExpectedInharmonicity (double f) const
 {
@@ -101,7 +118,7 @@ double Piano::getExpectedInharmonicity (double f) const
 /// \return Equal temperament frequency
 ///////////////////////////////////////////////////////////////////////////////
 
-double Piano::getEqualTempFrequency (int keynumber, double cents, double A4) const
+double Piano::getEqualTempFrequency (int keynumber, double cents, double A4=0) const
 {
     EptAssert(keynumber>=0 and keynumber < mKeyboard.getNumberOfKeys(),"range of keynumber");
     return (A4>0 ? A4 : mConcertPitch) *
@@ -116,7 +133,7 @@ double Piano::getEqualTempFrequency (int keynumber, double cents, double A4) con
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Compute the defining temperatent
 ///
-/// This function provides the defining temperament on which the tuning proces
+/// This function provides the defining temperament on which the tuning process
 /// takes place. At the moment non-standard temperaments are not yet
 /// implemented, instead the function simply returns the equal temperamtne (ET).
 /// By defining this function, we prepare ourselves for a possible extension.
