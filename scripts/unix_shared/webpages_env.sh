@@ -77,6 +77,7 @@ function rsync_push_dir {
 	local local_dir=$1
 	local remote_path=$SERVER_USERNAME@$SERVER_ADDRESS:$_SERVER_ROOT_DIR/$2
 	rsync -vh -r $local_dir $remote_path
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "chmod -R 755 $_SERVER_ROOT_DIR/$remote_path"
 }
 
 # using sftp
