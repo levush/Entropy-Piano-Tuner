@@ -148,5 +148,7 @@ server_mkdir /
 server_mkdir $_SERVER_DOWNLOADS_DIR
 server_mkdir $_SERVER_DOWNLOADS_DIR/$versionString
 server_mkdir $_SERVER_DOWNLOADS_DIR/$depsVersionString
+server_mkdir $_SERVER_DOWNLOADS_DIR/dependencies
+server_mkdir $_SERVER_DEPS_VERSION_DIR
 
 echo "Done."
