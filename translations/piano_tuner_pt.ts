@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
+        <translation type="vanished">Este software é licenciado de acordo com os termos de %1. O arquivo-fonte pode ser acessado em %2.</translation>
     </message>
     <message>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
@@ -174,7 +174,7 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>Reset gravação</translation>
+        <translation type="vanished">Reset gravação</translation>
     </message>
     <message>
         <source>Not all keys recorded</source>
@@ -194,7 +194,7 @@
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>Você realmente deseja dar um reset em todas as notas gravadas? Uma vez feito, não há como desfazer!</translation>
+        <translation type="vanished">Você realmente deseja dar um reset em todas as notas gravadas? Uma vez feito, não há como desfazer!</translation>
     </message>
     <message>
         <source>Not all keys have been recorded. Switch the mode and record them.</source>
@@ -290,6 +290,10 @@
     <message>
         <source>Manufaction year</source>
         <translation>Ano de fabricação</translation>
+    </message>
+    <message>
+        <source>Keys on bass bridge</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,7 +412,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;Reset gravação</translation>
+        <translation type="vanished">&amp;Reset gravação</translation>
     </message>
     <message>
         <source>Manual</source>
@@ -496,7 +500,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Incapaz de achar um controle de som suportado.</translation>
+        <translation type="vanished">Incapaz de achar um controle de som suportado.</translation>
     </message>
     <message>
         <source>Canceled</source>
@@ -874,7 +878,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>Taxas de sampling</translation>
+        <translation type="vanished">Taxas de sampling</translation>
     </message>
     <message>
         <source>Open system settings</source>
@@ -927,7 +931,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>Reset avisos</translation>
+        <translation type="vanished">Reset avisos</translation>
     </message>
     <message>
         <source>Information</source>

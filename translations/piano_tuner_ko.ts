@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ko">
+<TS version="2.1" language="ko">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
+        <translation type="vanished">본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -216,7 +216,7 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>리셋</translation>
+        <translation type="vanished">리셋</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
@@ -250,7 +250,7 @@
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
+        <translation type="vanished">저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -309,6 +309,7 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="310"/>
         <source>Default</source>
         <translation>디폴트</translation>
     </message>
@@ -361,6 +362,11 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
         <source>Upright</source>
         <translation>피아노</translation>
+    </message>
+    <message>
+        <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
+        <source>Keys on bass bridge</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -522,7 +528,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>리셋 녹음(&amp;R)</translation>
+        <translation type="vanished">리셋 녹음(&amp;R)</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -695,7 +701,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
+        <translation type="vanished">지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -824,7 +830,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>불협화음</translation>
     </message>
@@ -849,7 +855,7 @@
         <translation>건반 인덱스</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>주기의 차이 [센트]</translation>
     </message>
@@ -932,7 +938,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
+        <translation type="vanished">%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1086,7 +1092,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>샘플링 레이트</translation>
+        <translation type="vanished">샘플링 레이트</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1154,7 +1160,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>리셋 경고들</translation>
+        <translation type="vanished">리셋 경고들</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>

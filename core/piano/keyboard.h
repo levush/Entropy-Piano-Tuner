@@ -74,6 +74,8 @@ public:
     int &getKeyNumberOfA4()         {return mKeyNumberOfA4;}
     int getNumberOfBassKeys() const {return mNumberOfBassKeys;}
     int &getNumberOfBassKeys()      {return mNumberOfBassKeys;}
+    void setNumberOfBassKeys(int keys) {mNumberOfBassKeys = keys;}
+
 
     // compute note name and color
     std::string getNoteName (int keynumber) const;

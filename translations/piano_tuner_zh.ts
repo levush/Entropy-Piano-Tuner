@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
+        <translation type="vanished">本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -215,7 +215,7 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
@@ -250,7 +250,7 @@
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>确信要重置所有已录音的键吗？这是不能复原的!</translation>
+        <translation type="vanished">确信要重置所有已录音的键吗？这是不能复原的!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -309,6 +309,7 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="310"/>
         <source>Default</source>
         <translation>缺省</translation>
     </message>
@@ -361,6 +362,11 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
         <source>Upright</source>
         <translation>立式</translation>
+    </message>
+    <message>
+        <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
+        <source>Keys on bass bridge</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -518,15 +524,15 @@
     </message>
     <message>
         <source>&amp;Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;重置录音</translation>
+        <translation type="vanished">&amp;重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -688,7 +694,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>无法找到一个可支持的声音控制.</translation>
+        <translation type="vanished">无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -844,7 +850,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>失谐</translation>
     </message>
@@ -864,7 +870,7 @@
         <translation>键索引</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>频率偏差[音分]</translation>
     </message>
@@ -947,7 +953,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>给定名称的文件已存在 %1.你想复盖吗？</translation>
+        <translation type="vanished">给定名称的文件已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1101,7 +1107,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>采样率</translation>
+        <translation type="vanished">采样率</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1169,7 +1175,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>重置警告</translation>
+        <translation type="vanished">重置警告</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>

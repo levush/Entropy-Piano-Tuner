@@ -29,6 +29,7 @@
 
 const int    Piano::DEFAULT_NUMBER_OF_KEYS = 88;
 const int    Piano::DEFAULT_KEY_NUMBER_OF_A = 48;
+const int    Piano::DEFAULT_KEYS_ON_BASS_BRIDGE = 28;
 const double Piano::DEFAULT_CONCERT_PITCH = 440;
 
 

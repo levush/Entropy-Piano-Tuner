@@ -46,6 +46,7 @@ class Piano
 public:
     static const int DEFAULT_NUMBER_OF_KEYS;
     static const int DEFAULT_KEY_NUMBER_OF_A;
+    static const int DEFAULT_KEYS_ON_BASS_BRIDGE;
     static const double DEFAULT_CONCERT_PITCH;    ///< default concert pitch of A
 
 public:

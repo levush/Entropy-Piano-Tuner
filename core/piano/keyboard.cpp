@@ -18,6 +18,8 @@
  *****************************************************************************/
 
 #include "keyboard.h"
+#include "piano.h"
+
 
 //-----------------------------------------------------------------------------
 //                          Keyboard Constructor
@@ -30,8 +32,8 @@
 
 Keyboard::Keyboard(size_t initialSize) :
     mKeys(initialSize),
-    mKeyNumberOfA4(48),
-    mNumberOfBassKeys(28)
+    mKeyNumberOfA4(Piano::DEFAULT_KEY_NUMBER_OF_A),
+    mNumberOfBassKeys(Piano::DEFAULT_KEYS_ON_BASS_BRIDGE)
 {
 }
 

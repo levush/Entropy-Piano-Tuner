@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pl_PL">
+<TS version="2.1" language="pl_PL">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
+        <translation type="vanished">Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -214,7 +214,7 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>Zresetuj nagrania</translation>
+        <translation type="vanished">Zresetuj nagrania</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
@@ -248,7 +248,7 @@
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>Czy naprawdę chcesz zresetować wszystkie nagrania klawiszy? Ta operacja nie może zostać cofnięta!</translation>
+        <translation type="vanished">Czy naprawdę chcesz zresetować wszystkie nagrania klawiszy? Ta operacja nie może zostać cofnięta!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -307,6 +307,7 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="310"/>
         <source>Default</source>
         <translation>Domyślne</translation>
     </message>
@@ -359,6 +360,11 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
         <source>Upright</source>
         <translation>Pianino</translation>
+    </message>
+    <message>
+        <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
+        <source>Keys on bass bridge</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -520,7 +526,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;Resetuj nagrania</translation>
+        <translation type="vanished">&amp;Resetuj nagrania</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -681,7 +687,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Nie udało się znaleźć systemowych ustawień głośności.</translation>
+        <translation type="vanished">Nie udało się znaleźć systemowych ustawień głośności.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -831,7 +837,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>Inharmonicity</translation>
     </message>
@@ -851,7 +857,7 @@
         <translation>Indeks klucza.</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>Odchylenie częstotliwości [cent]</translation>
     </message>
@@ -1084,7 +1090,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>Częstość próbkowania</translation>
+        <translation type="vanished">Częstość próbkowania</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1152,7 +1158,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>Przywróć ostrzeżenia</translation>
+        <translation type="vanished">Przywróć ostrzeżenia</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>

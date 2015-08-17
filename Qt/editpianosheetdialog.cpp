@@ -58,6 +58,7 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->concertPitchSpinBox->setValue(piano.getConcertPitch());
     ui->numberOfKeysSpinBox->setValue(piano.getKeyboard().getNumberOfKeys());
     ui->keyNumberOfASpinBox->setValue(piano.getKeyboard().getKeyNumberOfA4() + 1);  // counting starts at 1 (not at 0)
+    ui->keysOnBassBridgeSpinBox->setValue(piano.getKeyboard().getNumberOfBassKeys());
 
     ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
@@ -83,6 +84,8 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
     piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdString());
     piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
+    piano->getKeyboard().setNumberOfBassKeys(ui->keysOnBassBridgeSpinBox->value());
+
     piano->getKeyboard().changeKeyboardConfiguration(ui->numberOfKeysSpinBox->value(),
                                          ui->keyNumberOfASpinBox->value() - 1);  // counting start from 1 to 0
 }
@@ -119,4 +122,8 @@ void EditPianoSheetDialog::onDefaultNumberOfKeys() {
 
 void EditPianoSheetDialog::onDefaultKeyNumberOfA() {
     ui->keyNumberOfASpinBox->setValue(Piano::DEFAULT_KEY_NUMBER_OF_A + 1);
+}
+
+void EditPianoSheetDialog::onDefaultKeysOnBassBridge() {
+    ui->keysOnBassBridgeSpinBox->setValue(Piano::DEFAULT_KEYS_ON_BASS_BRIDGE);
 }

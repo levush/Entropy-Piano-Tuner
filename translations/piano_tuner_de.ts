@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
+        <translation type="vanished">Diese Software ist lizensiert unter den Bedingungen der %1. Der Quellcode kann unter %2 eingesehen werden.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -214,7 +214,7 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>Aufnahme zurücksetzen</translation>
+        <translation type="vanished">Aufnahme zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
@@ -248,7 +248,7 @@
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>Wollen Sie wirklich alle aufgenommenen Tasten zurücksetzen? Dies kann nicht rückgängig gemacht werden!</translation>
+        <translation type="vanished">Wollen Sie wirklich alle aufgenommenen Tasten zurücksetzen? Dies kann nicht rückgängig gemacht werden!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -307,6 +307,7 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
         <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="310"/>
         <source>Default</source>
         <translation>Standard</translation>
     </message>
@@ -359,6 +360,11 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
         <source>Upright</source>
         <translation>Klavier</translation>
+    </message>
+    <message>
+        <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
+        <source>Keys on bass bridge</source>
+        <translation>Tasten im Bass</translation>
     </message>
 </context>
 <context>
@@ -520,7 +526,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>Aufnahme &amp;zurücksetzen</translation>
+        <translation type="vanished">Aufnahme &amp;zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -681,7 +687,7 @@
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Es konnte kein unterstütztes Audio-Kontrollzentrum gefunden werden.</translation>
+        <translation type="vanished">Es konnte kein unterstütztes Audio-Kontrollzentrum gefunden werden.</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="595"/>
@@ -831,7 +837,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>Inharmonizität</translation>
     </message>
@@ -851,7 +857,7 @@
         <translation>Tastenindex</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>Frequenzabweichung [Cent]</translation>
     </message>
@@ -934,7 +940,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>Eine Datei mit den angegebenen Namen existiert bereits am Pfad %1. Möchten Sie sie überschreiben?</translation>
+        <translation type="vanished">Eine Datei mit den angegebenen Namen existiert bereits am Pfad %1. Möchten Sie sie überschreiben?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1088,7 +1094,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>Abtastrate</translation>
+        <translation type="vanished">Abtastrate</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1156,11 +1162,11 @@
     </message>
     <message>
         <source>Show all warnings</source>
-        <translation>Alle Warnungen zeigen</translation>
+        <translation type="vanished">Alle Warnungen zeigen</translation>
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>Warnungen zurücksetzen</translation>
+        <translation type="vanished">Warnungen zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
