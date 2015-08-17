@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -41,7 +41,7 @@
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
         <translatorcomment>Bin mir nicht sicher</translatorcomment>
-        <translation>Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
+        <translation type="vanished">Это программное обеспечение лицензируется на условиях %1. Исходный код можно получить на %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -215,11 +215,15 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>Сброс записи</translation>
+        <translation type="vanished">Сброс записи</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">Сброс основного тона маркеры</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
-        <source>Reset pitch markers</source>
+        <source>Clear pitch markers</source>
         <translation>Сброс основного тона маркеры</translation>
     </message>
     <message>
@@ -244,12 +248,16 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
-        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>Вы действительно хотите сбросить все основного тона маркеры? Это не может быть отменено!</translation>
     </message>
     <message>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation type="vanished">Вы действительно хотите сбросить все основного тона маркеры? Это не может быть отменено!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>Вы действительно хотите сбросить все записанные клавиши? Информация будет утеряна безвозвратно!</translation>
+        <translation type="vanished">Вы действительно хотите сбросить все записанные клавиши? Информация будет утеряна безвозвратно!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -419,7 +427,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="518"/>
+        <location filename="../Qt/mainwindow.cpp" line="519"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>Энтропийный Тюнер для Фортепиано</translation>
@@ -466,7 +474,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
-        <location filename="../Qt/mainwindow.cpp" line="208"/>
+        <location filename="../Qt/mainwindow.cpp" line="209"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
@@ -507,13 +515,22 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset pitch markers</source>
+        <source>&amp;Clear pitch markers</source>
         <translation>&amp;Сброс основного тона маркеры</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
-        <source>Reset pitch markers</source>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <source>Clear pitch markers</source>
         <translation>Сброс основного тона маркеры</translation>
+    </message>
+    <message>
+        <source>&amp;Reset pitch markers</source>
+        <translation type="vanished">&amp;Сброс основного тона маркеры</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">Сброс основного тона маркеры</translation>
     </message>
     <message>
         <source>Reset recording</source>
@@ -521,7 +538,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>Сбросить &amp;запись</translation>
+        <translation type="vanished">Сбросить &amp;запись</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -530,7 +547,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="204"/>
-        <location filename="../Qt/mainwindow.cpp" line="206"/>
+        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Tutorial</source>
         <translation>Обучение</translation>
     </message>
@@ -595,117 +612,116 @@
         <translation>Изменить паспорт фортепиано</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="191"/>
+        <location filename="../Qt/mainwindow.cpp" line="192"/>
         <source>Graphs</source>
         <translation>Диаграммы</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="193"/>
+        <location filename="../Qt/mainwindow.cpp" line="194"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Log</source>
-        <translation>Журнал</translation>
+        <translation type="vanished">Журнал</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="228"/>
+        <location filename="../Qt/mainwindow.cpp" line="229"/>
         <source>Export</source>
         <translation>Экспортировать</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="360"/>
+        <location filename="../Qt/mainwindow.cpp" line="361"/>
         <source>File created</source>
         <translation>Файл создан</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="363"/>
+        <location filename="../Qt/mainwindow.cpp" line="364"/>
         <source>File edited</source>
         <translation>Файл изменён</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="366"/>
+        <location filename="../Qt/mainwindow.cpp" line="367"/>
         <source>File opened</source>
         <translation>Файл открыт</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="369"/>
+        <location filename="../Qt/mainwindow.cpp" line="370"/>
         <source>File saved</source>
         <translation>Файл сохранён</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="435"/>
+        <location filename="../Qt/mainwindow.cpp" line="436"/>
         <source>Recording keystroke</source>
         <translation>Запись клавиш</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="443"/>
+        <location filename="../Qt/mainwindow.cpp" line="444"/>
         <source>Signal analysis started</source>
         <translation>Анализ сигнала начат</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="446"/>
+        <location filename="../Qt/mainwindow.cpp" line="447"/>
         <source>Signal analysis ended</source>
         <translation>Анализ сигнала закончен</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="475"/>
+        <location filename="../Qt/mainwindow.cpp" line="476"/>
         <source>Calculation failed</source>
         <translation>Вычисления не удались</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="478"/>
+        <location filename="../Qt/mainwindow.cpp" line="479"/>
         <source>Calculation ended</source>
         <translation>Вычисления  закончены</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="481"/>
+        <location filename="../Qt/mainwindow.cpp" line="482"/>
         <source>Calculation started</source>
         <translation>Вычисления  закончены</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
         <source>Unable to find a supported sound control.</source>
         <translation>Невозможно найти поддерживаемую регулировку звука.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>Невозможно найти поддерживаемую регулировку звука.</translation>
+        <translation type="vanished">Невозможно найти поддерживаемую регулировку звука.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>Canceled</source>
         <translation>Отменено</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>You need to save the file before you can share it.</source>
         <translation>Вам необходимо сохранить файл перед тем, как Вы сможете им поделиться.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="734"/>
+        <location filename="../Qt/mainwindow.cpp" line="735"/>
         <source>A new update is available!</source>
         <translation>Обновление доступно!</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="735"/>
+        <location filename="../Qt/mainwindow.cpp" line="736"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>Онлай версия приложения %1.Вы хотите, чтобы установить это обновление?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>Инструмент обслуживания не может быть запущен автоматически. Чтобы обновить программу, вы должны начать инструмент обслуживания вручную.</translation>
     </message>
@@ -832,7 +848,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>Негармонично</translation>
     </message>
@@ -852,7 +868,7 @@
         <translation>Номер кавиши</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>Отклонение частоты [cent]</translation>
     </message>
@@ -935,7 +951,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>Файл с заданным именем уже существует на %1. Вы хотите перезаписать его?</translation>
+        <translation type="vanished">Файл с заданным именем уже существует на %1. Вы хотите перезаписать его?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1089,7 +1105,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>Частоты дискретизации</translation>
+        <translation type="vanished">Частоты дискретизации</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1157,7 +1173,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>Сбросить предупреждения</translation>
+        <translation type="vanished">Сбросить предупреждения</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>

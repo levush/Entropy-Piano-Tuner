@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ko">
+<TS version="2.1" language="ko">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
+        <translation type="vanished">본.소프트웨어는 %1를 따릅니다. %2 에 따라 소스코드에 접근할 수 있습니다.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -216,11 +216,15 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>리셋</translation>
+        <translation type="vanished">리셋</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">피치 마커를 재설정</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
-        <source>Reset pitch markers</source>
+        <source>Clear pitch markers</source>
         <translation>피치 마커를 재설정</translation>
     </message>
     <message>
@@ -245,12 +249,16 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
-        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>저장된 피치 마커 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
     </message>
     <message>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation type="vanished">저장된 피치 마커 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
+        <translation type="vanished">저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -420,7 +428,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="518"/>
+        <location filename="../Qt/mainwindow.cpp" line="519"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>엔트로피 피아노 튜너</translation>
@@ -467,7 +475,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
-        <location filename="../Qt/mainwindow.cpp" line="208"/>
+        <location filename="../Qt/mainwindow.cpp" line="209"/>
         <source>About</source>
         <translation>정보</translation>
     </message>
@@ -508,13 +516,22 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset pitch markers</source>
+        <source>&amp;Clear pitch markers</source>
         <translation>&amp;피치 마커를 재설정</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
-        <source>Reset pitch markers</source>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <source>Clear pitch markers</source>
         <translation>피치 마커를 재설정</translation>
+    </message>
+    <message>
+        <source>&amp;Reset pitch markers</source>
+        <translation type="vanished">&amp;피치 마커를 재설정</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">피치 마커를 재설정</translation>
     </message>
     <message>
         <source>Reset recording</source>
@@ -522,7 +539,7 @@
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>리셋 녹음(&amp;R)</translation>
+        <translation type="vanished">리셋 녹음(&amp;R)</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -531,7 +548,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="204"/>
-        <location filename="../Qt/mainwindow.cpp" line="206"/>
+        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Tutorial</source>
         <translation>튜토리얼</translation>
     </message>
@@ -608,117 +625,116 @@
         <translation>편집 피아노 데이터 시트</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="191"/>
+        <location filename="../Qt/mainwindow.cpp" line="192"/>
         <source>Graphs</source>
         <translation>그래프</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="193"/>
+        <location filename="../Qt/mainwindow.cpp" line="194"/>
         <source>Help</source>
         <translation>도움말</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Log</source>
-        <translation>로그</translation>
+        <translation type="vanished">로그</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="228"/>
+        <location filename="../Qt/mainwindow.cpp" line="229"/>
         <source>Export</source>
         <translation>내보내기</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="360"/>
+        <location filename="../Qt/mainwindow.cpp" line="361"/>
         <source>File created</source>
         <translation>파일이 생성됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="363"/>
+        <location filename="../Qt/mainwindow.cpp" line="364"/>
         <source>File edited</source>
         <translation>파일이 편집됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="366"/>
+        <location filename="../Qt/mainwindow.cpp" line="367"/>
         <source>File opened</source>
         <translation>파일이 열림</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="369"/>
+        <location filename="../Qt/mainwindow.cpp" line="370"/>
         <source>File saved</source>
         <translation>파일이 저장됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="435"/>
+        <location filename="../Qt/mainwindow.cpp" line="436"/>
         <source>Recording keystroke</source>
         <translation>건반누름 저장중</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="443"/>
+        <location filename="../Qt/mainwindow.cpp" line="444"/>
         <source>Signal analysis started</source>
         <translation>신호 분석 시작</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="446"/>
+        <location filename="../Qt/mainwindow.cpp" line="447"/>
         <source>Signal analysis ended</source>
         <translation>신호 분석 완료</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="475"/>
+        <location filename="../Qt/mainwindow.cpp" line="476"/>
         <source>Calculation failed</source>
         <translation>계산실패</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="478"/>
+        <location filename="../Qt/mainwindow.cpp" line="479"/>
         <source>Calculation ended</source>
         <translation>계산완료</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="481"/>
+        <location filename="../Qt/mainwindow.cpp" line="482"/>
         <source>Calculation started</source>
         <translation>계산시작</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>Warning</source>
         <translation>경고</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
         <source>Unable to find a supported sound control.</source>
         <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
+        <translation type="vanished">지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>Canceled</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>You need to save the file before you can share it.</source>
         <translation>공유하기 전에 저장하십시오.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="734"/>
+        <location filename="../Qt/mainwindow.cpp" line="735"/>
         <source>A new update is available!</source>
         <translation>새로운 업데이트가 있습니다!</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="735"/>
+        <location filename="../Qt/mainwindow.cpp" line="736"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>새로운 버전 %1 이 존재합니다.업데이트 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>유지보수 프로그램이 자동으로 실행되지 않았습니다.업데이트를 위해 수동으로 유지보수 프로그램을 실행하십시오.</translation>
     </message>
@@ -824,7 +840,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>불협화음</translation>
     </message>
@@ -849,7 +865,7 @@
         <translation>건반 인덱스</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>주기의 차이 [센트]</translation>
     </message>
@@ -932,7 +948,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
+        <translation type="vanished">%1에 같은 이름의 파일이 존재합니다. 덮어쓰시겠습니까?</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1086,7 +1102,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>샘플링 레이트</translation>
+        <translation type="vanished">샘플링 레이트</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1154,7 +1170,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>리셋 경고들</translation>
+        <translation type="vanished">리셋 경고들</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>

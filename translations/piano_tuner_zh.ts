@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>This software is licensed unter the terms of the %1. The source code can be accessed at %2.</source>
-        <translation>本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
+        <translation type="vanished">本软件在 %1的条款内许可.源代码可以访问 %2.</translation>
     </message>
     <message>
         <location filename="../Qt/aboutdialog.cpp" line="92"/>
@@ -215,11 +215,15 @@
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">重置所有节距标记</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
-        <source>Reset pitch markers</source>
+        <source>Clear pitch markers</source>
         <translation>重置所有节距标记</translation>
     </message>
     <message>
@@ -244,13 +248,17 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
-        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
-        <translatorcomment>added translation by Google, please refine</translatorcomment>
+        <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>你真的要重置所有节距标记？这不能逆转！</translation>
     </message>
     <message>
+        <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translatorcomment>added translation by Google, please refine</translatorcomment>
+        <translation type="vanished">你真的要重置所有节距标记？这不能逆转！</translation>
+    </message>
+    <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
-        <translation>确信要重置所有已录音的键吗？这是不能复原的!</translation>
+        <translation type="vanished">确信要重置所有已录音的键吗？这是不能复原的!</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
@@ -420,7 +428,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="518"/>
+        <location filename="../Qt/mainwindow.cpp" line="519"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>熵钢琴调律器</translation>
@@ -467,7 +475,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
-        <location filename="../Qt/mainwindow.cpp" line="208"/>
+        <location filename="../Qt/mainwindow.cpp" line="209"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
@@ -508,25 +516,34 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
-        <source>&amp;Reset pitch markers</source>
+        <source>&amp;Clear pitch markers</source>
         <translation>&amp;重置所有节距标记</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
-        <source>Reset pitch markers</source>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <source>Clear pitch markers</source>
         <translation>重置所有节距标记</translation>
     </message>
     <message>
+        <source>&amp;Reset pitch markers</source>
+        <translation type="vanished">&amp;重置所有节距标记</translation>
+    </message>
+    <message>
+        <source>Reset pitch markers</source>
+        <translation type="vanished">重置所有节距标记</translation>
+    </message>
+    <message>
         <source>&amp;Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
     </message>
     <message>
         <source>Reset recording</source>
-        <translation>重置录音</translation>
+        <translation type="vanished">重置录音</translation>
     </message>
     <message>
         <source>&amp;Reset recoding</source>
-        <translation>&amp;重置录音</translation>
+        <translation type="vanished">&amp;重置录音</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="199"/>
@@ -535,7 +552,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="204"/>
-        <location filename="../Qt/mainwindow.cpp" line="206"/>
+        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Tutorial</source>
         <translation>教程</translation>
     </message>
@@ -600,118 +617,117 @@
         <translation>编辑钢琴数据表</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Options</source>
         <translatorcomment>选项</translatorcomment>
         <translation>选项</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="191"/>
+        <location filename="../Qt/mainwindow.cpp" line="192"/>
         <source>Graphs</source>
         <translation>图</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="193"/>
+        <location filename="../Qt/mainwindow.cpp" line="194"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="207"/>
         <source>Log</source>
-        <translation>日志</translation>
+        <translation type="vanished">日志</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="228"/>
+        <location filename="../Qt/mainwindow.cpp" line="229"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="360"/>
+        <location filename="../Qt/mainwindow.cpp" line="361"/>
         <source>File created</source>
         <translation>文件已建立</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="363"/>
+        <location filename="../Qt/mainwindow.cpp" line="364"/>
         <source>File edited</source>
         <translation>文件已编辑</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="366"/>
+        <location filename="../Qt/mainwindow.cpp" line="367"/>
         <source>File opened</source>
         <translation>文件已打开</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="369"/>
+        <location filename="../Qt/mainwindow.cpp" line="370"/>
         <source>File saved</source>
         <translation>文件已保存</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="435"/>
+        <location filename="../Qt/mainwindow.cpp" line="436"/>
         <source>Recording keystroke</source>
         <translation>录音击键</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="443"/>
+        <location filename="../Qt/mainwindow.cpp" line="444"/>
         <source>Signal analysis started</source>
         <translation>信号分析已开始</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="446"/>
+        <location filename="../Qt/mainwindow.cpp" line="447"/>
         <source>Signal analysis ended</source>
         <translation>信号分析已结束</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="475"/>
+        <location filename="../Qt/mainwindow.cpp" line="476"/>
         <source>Calculation failed</source>
         <translation>计算失败</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="478"/>
+        <location filename="../Qt/mainwindow.cpp" line="479"/>
         <source>Calculation ended</source>
         <translation>计算已结束</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="481"/>
+        <location filename="../Qt/mainwindow.cpp" line="482"/>
         <source>Calculation started</source>
         <translation>计算已开始</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>Warning</source>
         <translation>告警</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="551"/>
+        <location filename="../Qt/mainwindow.cpp" line="552"/>
         <source>Unable to find a supported sound control.</source>
         <translation>无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
         <source>Unable to find a supported sound conrol.</source>
-        <translation>无法找到一个可支持的声音控制.</translation>
+        <translation type="vanished">无法找到一个可支持的声音控制.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>Canceled</source>
         <translation>中止</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="595"/>
+        <location filename="../Qt/mainwindow.cpp" line="596"/>
         <source>You need to save the file before you can share it.</source>
         <translation>在你共享文件之前需要保存文件o</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="734"/>
+        <location filename="../Qt/mainwindow.cpp" line="735"/>
         <source>A new update is available!</source>
         <translation>一个新的更新可用！</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="735"/>
+        <location filename="../Qt/mainwindow.cpp" line="736"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>在线应用程序的版本是 %1.您想安装此更新吗？</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="753"/>
+        <location filename="../Qt/mainwindow.cpp" line="754"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>无法自动启动维护工具。要更新程序，您必须手动启动维护工具。</translation>
     </message>
@@ -844,7 +860,7 @@
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="278"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
         <translation>失谐</translation>
     </message>
@@ -864,7 +880,7 @@
         <translation>键索引</translation>
     </message>
     <message>
-        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="282"/>
+        <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="287"/>
         <source>Frequency deviation [cent]</source>
         <translation>频率偏差[音分]</translation>
     </message>
@@ -947,7 +963,7 @@
     </message>
     <message>
         <source>A file with the given name already exits at %1. Do you want to overwrite it?</source>
-        <translation>给定名称的文件已存在 %1.你想复盖吗？</translation>
+        <translation type="vanished">给定名称的文件已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
@@ -1101,7 +1117,7 @@
     </message>
     <message>
         <source>Sample rates</source>
-        <translation>采样率</translation>
+        <translation type="vanished">采样率</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
@@ -1169,7 +1185,7 @@
     </message>
     <message>
         <source>Reset warnings</source>
-        <translation>重置警告</translation>
+        <translation type="vanished">重置警告</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
