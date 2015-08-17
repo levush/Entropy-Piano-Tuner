@@ -105,18 +105,18 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
         SL = 1200;      // speaking length treble string left
         SR = 50;        // speaking length treble string right
         SB = 1250;      // average speaking length bass string
-        SN = 100;       // average non-speaking length in treble
+        SN = 100;       // average non-speaking length everywhere
         DL = 500;       // distance from bridge to frame left
-        DR = 80;       // distance from bridge to frame right
+        DR = 30;        // distance from bridge to frame right
         shift = 3;      // shift between bass and treble
         break;
     case piano::PT_UPRIGHT:
         SL = 1200;      // speaking length treble string left
         SR = 50;        // speaking length treble string right
         SB = 1200;      // average speaking length bass string
-        SN = 100;       // average non-speaking length in treble
+        SN = 100;       // average non-speaking length everywhere
         DL = 450;       // distance from bridge to frame left
-        DR = 100;       // distance from bridge to frame right
+        DR = 50;        // distance from bridge to frame right
         shift = 10;     // shift between bass and treble
         break;
     default:
@@ -170,8 +170,8 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
     auto response = [B,SB,SN,stringlength,epsilon] (int j, int k)
     {
         double unison=3;
-        if (j<8) unison=1; else if (j<B) unison=2;
-        double stringlen = (k<B ? SB+SN : stringlength(k)+SN);
+        if (k<8) unison=1; else if (k<B) unison=2;
+        double stringlen = (j<B ? SB+SN : stringlength(j)+SN);
         return unison * epsilon(j,k) / stringlen;
     };
 
@@ -179,10 +179,26 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
     double sum = 0;
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += (R[j][k] = response(j,k));
     sum /= K;
-    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) R[j][k] *= averagePull / sum;
+    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k)
+        R[j][k] *= 0.8 * averagePull / sum; // 80% soundboard deformation
 
-    //for (int k=0; k<K; ++k) std::cout << R[40][k] << std::endl;
 
+    // BRIDGE TILT
+    const double sigma = 20;
+    const double amplitude = averagePull * 0.2; // 20% bridge tilt
+    double avstring = B/SB;
+    for (int k=B; k<K; k++) avstring += 1.0/stringlength(k);
+    avstring /= K;
+    double prefactor = amplitude / sqrt(2*3.141) / sigma / avstring / 0.7;
+    for (int j=0; j<B; ++j) for (int k=0; k<B; ++k) R[j][k] += prefactor*exp(-0.5*(j-k)*(j-k)/sigma/sigma)/SB;
+    for (int j=B; j<K; ++j) for (int k=B; k<K; ++k) R[j][k] += prefactor*exp(-0.5*(j-k)*(j-k)/sigma/sigma)/stringlength(j);
+
+//    // Compute average (only for testing)
+//    sum=0;
+//    for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += R[j][k];
+//    std::cout << "************************" << sum/K << "******************************" << std::endl;
+
+//    // Write data (only for testing purposes)
 //    std::ofstream os("/home/hinrichsen/mat.m");
 //    os << "M={";
 //    for (int j=0; j<K; ++j)
@@ -194,6 +210,16 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
 //        else os << "}};" << std::endl;
 //    }
 //    os.close();
+
+//    os.open("/home/hinrichsen/response.dat");
+//    for (int j=0; j<K; ++j)
+//    {
+//        double sum=0;
+//        for (int k=0; k<K; ++k) sum += R[j][k];
+//        os << sum << std::endl;
+//    }
+//    os.close();
+
 }
 
 
@@ -289,7 +315,7 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
         double delta = interpolation[k];
         if (delta>-2 and delta<10) delta=0;
         totaldeviation += delta;
-        overpull -= delta * R[k][keynumber];
+        overpull -= delta * R[keynumber][k];
     }
 
 //    // Write to HDD for testing purposes

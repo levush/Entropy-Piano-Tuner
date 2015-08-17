@@ -97,7 +97,7 @@ public:
 
     double getExpectedInharmonicity (double f) const;
 
-    double getEqualTempFrequency (int keynumber, double cents=0, double A4) const;
+    double getEqualTempFrequency (int keynumber, double cents=0, double A4=0) const;
 
     double getDefiningTempFrequency (int keynumber, double cents=0, double A4=0) const;
 

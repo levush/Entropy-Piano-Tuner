@@ -118,7 +118,7 @@ double Piano::getExpectedInharmonicity (double f) const
 /// \return Equal temperament frequency
 ///////////////////////////////////////////////////////////////////////////////
 
-double Piano::getEqualTempFrequency (int keynumber, double cents, double A4=0) const
+double Piano::getEqualTempFrequency (int keynumber, double cents, double A4) const
 {
     EptAssert(keynumber>=0 and keynumber < mKeyboard.getNumberOfKeys(),"range of keynumber");
     return (A4>0 ? A4 : mConcertPitch) *
