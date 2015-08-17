@@ -130,7 +130,7 @@ public class TunerApplication extends QtActivity {
                 cursor.moveToFirst();
                 mFileToOpen = cursor.getString(0);
 
-                // check if the file exits (downloaded) elsewise copy to tmp dir
+                // check if the file exists (downloaded) elsewise copy to tmp dir
                 File f = new File(mFileToOpen);
                 if(!f.exists()) {
                     int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);

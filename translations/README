@@ -1,0 +1,29 @@
+
+How to add a new language:
+--------------------------
+
+Get ISO language code (here xx)
+
+Create piano_tuner_xx.ts
+
+Translate it with the Qt-Linguist:
+linguist piano_tuner_xx.ts
+
+Call Extras->Extern->Linguist->Update
+Call Extras->Extern->Linguist->Release
+
+In the project file entropytuner.pro add
+    translations/piano_tuner_xx.ts \
+    
+Copy qt_xx.qm from the Qt distribution 
+(search it in the Qt installation directory)
+to the translation directory
+
+In the options file
+Qt/options/environment/optionspageenvironmentgeneralpage.cpp
+add     mLanguageSelection->addItem("XXXXX", QVariant("xx"));
+
+In Qt/aboutdialog.cpp quote the name in the acknowledgements.
+
+In the manual do the same.
+

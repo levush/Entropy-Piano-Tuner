@@ -150,9 +150,9 @@ void ProjectManagerForQt::fillNew(Piano &piano) {
     piano.setManufactureLocation(MainWindow::tr("Unknown").toStdString());
 
     piano.setTuningLocation(MainWindow::tr("Unknown").toStdString());
-    piano.setNow();
+    piano.setTuningTimeToActualTime();
     piano.setConcertPitch(Piano::DEFAULT_CONCERT_PITCH);
-    piano.getKeyboard().setNumberOfKeys(Piano::DEFAULT_NUMBER_OF_KEYS,
+    piano.getKeyboard().changeKeyboardConfiguration(Piano::DEFAULT_NUMBER_OF_KEYS,
                                         Piano::DEFAULT_KEY_NUMBER_OF_A);
 }
 

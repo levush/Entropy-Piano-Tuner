@@ -21,11 +21,41 @@
 
 #include <QCryptographicHash>
 
+//=============================================================================
+//                              Constructor
+//=============================================================================
 
-namespace
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor for a run guard.
+/// \param key : String naming the run guard (e.g. entropypianotuner_runguard)
+///////////////////////////////////////////////////////////////////////////////
+
+RunGuard::RunGuard( const QString& key )
+    : key (key)
+    , memLockKey   (generateKeyHash( key, "_memLockKey"  ))
+    , sharedmemKey (generateKeyHash( key, "_sharedmemKey"))
+    , sharedMem (sharedmemKey)
+    , memLock (memLockKey, 1)
 {
+    QSharedMemory fix (sharedmemKey);    // Fix for *nix: http://habrahabr.ru/post/173281/
+    fix.attach();
+}
 
-QString generateKeyHash( const QString& key, const QString& salt )
+//=============================================================================
+//                         Generate hash string
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Generate hash string for a given keys
+///
+/// This function converts a key (entropypianotuner_runguard) and a second
+/// key extenstion (e.g._memLockKey) into a hash string.
+/// \param key : String holding the key
+/// \param salt : String holding the key extension
+/// \return : String containg the hash
+////////////////////////////////////////////////////////////////////////////////
+
+QString RunGuard::generateKeyHash( const QString& key, const QString& salt )
 {
     QByteArray data;
 
@@ -36,60 +66,78 @@ QString generateKeyHash( const QString& key, const QString& salt )
     return data;
 }
 
-}
 
+//=============================================================================
+//                 Check whether antoher instance is running
+//=============================================================================
 
-RunGuard::RunGuard( const QString& key )
-    : key( key )
-    , memLockKey( generateKeyHash( key, "_memLockKey" ) )
-    , sharedmemKey( generateKeyHash( key, "_sharedmemKey" ) )
-    , sharedMem( sharedmemKey )
-    , memLock( memLockKey, 1 )
-{
-        QSharedMemory fix( sharedmemKey );    // Fix for *nix: http://habrahabr.ru/post/173281/
-        fix.attach();
-}
-
-RunGuard::~RunGuard()
-{
-    release();
-}
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Check whether another instance of the application is running
+///
+/// This function checks first whether the own instance is already running.
+/// Then it checks whether another application has already created the
+/// shared memory, indicating that another instance of the same
+/// applicaiton is running.
+/// \return Boolean indicating whether another instance of the same
+/// application is running.
+///////////////////////////////////////////////////////////////////////////////
 
 bool RunGuard::isAnotherRunning()
 {
-    if ( sharedMem.isAttached() )
-        return false;
+    // If the shared memory is already attached to the own instance
+    // there is certainly no other application running.
+    if (sharedMem.isAttached()) return false;
 
+    // Otherwise, we have to check whether another instance has
+    // already created the shared memory. To find that out we
+    // try to attach ourselves. If this is possible
+    // it indicates that another application has already created the
+    // shared memory. If so, we detach immediately afterwards.
     memLock.acquire();
-    const bool isRunning = sharedMem.attach();
-    if ( isRunning )
-        sharedMem.detach();
+    const bool sharedMemAlreadyExists = sharedMem.attach();
+    if (sharedMemAlreadyExists) sharedMem.detach();
     memLock.release();
-
-    return isRunning;
+    return sharedMemAlreadyExists;
 }
+
+
+//=============================================================================
+//                              Try to run
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Try to run the applicaiton, return false if another instance is running.
+///
+/// This function tries to create the shared memory and attach itself to it,
+/// indicating that this is the running instance of the EPT-
+/// \return True if successful, false if another application is running.
+///////////////////////////////////////////////////////////////////////////////
 
 bool RunGuard::tryToRun()
 {
-    if ( isAnotherRunning() )   // Extra check
-        return false;
+    if (isAnotherRunning()) return false; // Extra check
 
     memLock.acquire();
-    const bool result = sharedMem.create( sizeof( quint64 ) );
+    const bool success = sharedMem.create( sizeof( quint64 ) );
     memLock.release();
-    if ( !result )
-    {
-        release();
-        return false;
-    }
-
-    return true;
+    if (not success) release();
+    return success;
 }
+
+//=============================================================================
+//                              Try to run
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Release the running application.
+///
+/// This function detaches the application from the shared memery.
+/// It has to be called when the application terminates.
+///////////////////////////////////////////////////////////////////////////////
 
 void RunGuard::release()
 {
     memLock.acquire();
-    if ( sharedMem.isAttached() )
-        sharedMem.detach();
+    if (sharedMem.isAttached()) sharedMem.detach();
     memLock.release();
 }

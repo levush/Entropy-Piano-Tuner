@@ -79,6 +79,7 @@ void DrawerBase::redraw(bool force)
 /// If force is set to true the function will always return true.
 /// If returning true the function will automatically reset the timer.
 ///////////////////////////////////////////////////////////////////////////////
+///
 bool DrawerBase::reqestRedraw(bool force)
 {
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimeLastDrawn);

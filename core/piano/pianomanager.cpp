@@ -53,16 +53,38 @@ PianoManager::PianoManager() :
 
 
 //-----------------------------------------------------------------------------
-//			                       Clear
+//			                   Reset recording
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Clear all keys and send a message to clear recording.
+/// \brief Reset all recorded keys and send a message to redraw all elements.
+///
+/// This function is called by selecting the menu entry "Reset recording".
+/// Its action depends on the operation mode: In the idle and recording mode
+/// all key-related data is cancelled. In the calculation the tuning curve
+/// is set to zero (ET). In the tuning mode the measured tuning levels are
+/// cancelled.
 ///////////////////////////////////////////////////////////////////////////////
 
-void PianoManager::clear()
+void PianoManager::resetPitches()
 {
-    mPiano.clearKeys();
+    switch (mOperationMode)
+    {
+    case MODE_IDLE:
+    case MODE_RECORDING:
+        mPiano.getKeyboard().clearAllKeys();
+        break;
+    case MODE_CALCULATION:
+        mPiano.getKeyboard().clearComputedPitches();
+        mPiano.getKeyboard().clearOverpulls();
+        break;
+    case MODE_TUNING:
+        mPiano.getKeyboard().clearTunedPitches();
+        mPiano.getKeyboard().clearOverpulls();
+        break;
+    default:
+        break;
+    }
     MessageHandler::send(Message::MSG_CLEAR_RECORDING);
 }
 
@@ -120,7 +142,6 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageFinalKey>(m));
         auto keyptr = message->getFinalKey(); // get shared pointer to the new key
         int keynumber = message->getKeyNumber();
-        std::cout << "PianoManager: received final key k=" << keynumber << std::endl;
         EptAssert(keynumber >= 0 && keynumber < mPiano.getKeyboard().getNumberOfKeys(),"Range of keynumber");
         handleNewKey(keynumber,keyptr);
     }
@@ -130,8 +151,6 @@ void PianoManager::handleMessage(MessagePtr m)
         auto message(std::static_pointer_cast<MessageChangeTuningCurve>(m));
         int keynumber = message->getKeyNumber();
         double frequency = message->getFrequency();
-//        std::cout << "PianoManager noticed change of tuing curve: k="
-//                  << keynumber << ", f=" << frequency << std::endl;
         EptAssert(keynumber >= 0 and keynumber < mPiano.getKeyboard().getNumberOfKeys(), "range of keynumber");
         mPiano.getKey(keynumber).setComputedFrequency(frequency);
         MessageHandler::send<MessageKeyDataChanged>(keynumber, mPiano.getKeyPtr(keynumber));
@@ -174,13 +193,17 @@ void PianoManager::handleNewKey (int keynumber, std::shared_ptr<Key> keyptr)
 #endif
         }
     }
-    else if (mOperationMode == MODE_TUNING and
-             (keynumber==mSelectedKey or mForcedRecording))
+    else if (mOperationMode == MODE_TUNING)
     {
-        double f = keyptr->getTunedFrequency();
-        Key* ptr = mPiano.getKeyPtr(mSelectedKey);
-        ptr->setTunedFrequency(f);
-        MessageHandler::send<MessageKeyDataChanged>(mSelectedKey, ptr);
+        double frequency = keyptr->getTunedFrequency();
+        double overpull  = keyptr->getOverpull();
+        double tuned  = keyptr->getTunedFrequency();
+        Key* keypointer = mPiano.getKeyPtr(keynumber);
+        if (keynumber==mSelectedKey or mForcedRecording)
+            keypointer->setTunedFrequency(frequency);
+        keypointer->setOverpull(overpull);
+        keypointer->setTunedFrequency(tuned);
+        MessageHandler::send<MessageKeyDataChanged>(keynumber, keypointer);
 
     }
 }

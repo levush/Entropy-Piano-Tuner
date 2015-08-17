@@ -26,8 +26,6 @@
 
 #include <vector>
 #include <map>
-#include <mutex>
-#include <memory>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class describing a single piano key
@@ -54,13 +52,13 @@ public:
     static const double fmin;                       ///< Mimimal frequency of logbinned spectrum in Hz
 
     using SpectrumType = std::vector<double>;       ///< Type of a log-binned spectrum
-    using SpectrumTypePtr = std::shared_ptr<SpectrumType>;     ///< Type of a shared pointer to SpectrumType
     using PeakListType = std::map<double,double>;   ///< Type for a peak map
+
+    // Conversion function in the context of the logarithmically binned spectrum
 
     static int FrequencyToIndex(double f);          ///< Convert frequency to logbin index
     static double FrequencyToRealIndex (double f);  ///< Convert frequency to real-valued logbin index
     static double IndexToFrequency (double m);      ///< Convert continuous slot index to frequency in Hz
-    static double IndexToFrequency (int m);         ///< Convert integer slot index to frequency in Hz
 
 public:
 
@@ -96,18 +94,23 @@ public:
     double  getTunedFrequency () const;             ///< Get tuned frequency
     double &getTunedFrequency ();                   ///< Get tuned frequency
 
-    void setRecorded(bool r) {mRecorded = r;}
-    bool isRecorded() const {return mRecorded;}
-    bool &isRecorded() {return mRecorded;}
+    void    setOverpull (double cents);             ///< Set overpull in cents
+    double  getOverpull () const;                   ///< Get overpull in cents
+    double &getOverpull ();                         ///< Get overpull in cents
+
+    void    setRecorded(bool r) {mRecorded = r;}    ///< Set recorded flag
+    bool    isRecorded() const {return mRecorded;}  ///< Get recorded flag
+    bool   &isRecorded() {return mRecorded;}        ///< Get recorded flag
 
 private:
     SpectrumType mSpectrum;             ///< Logarithmically organized spectrum
     PeakListType mPeaks;                ///< List of identified peaks
-    double mRecordedFrequency;          ///< Recorded frequency of 1st partial
+    double mRecordedFrequency;          ///< Recorded frequency of 1st partial in Hz
     double mMeasuredInharmonicity;      ///< Measured inharmonicity of recorded signal
     double mRecognitionQuality;         ///< Accuracy of higher partials (in cents)
-    double mComputedFrequency;          ///< Computed frequency (tuning curve)
-    double mTunedFrequency;             ///< Tuned frequency
+    double mComputedFrequency;          ///< Computed frequency in Hz (tuning curve)
+    double mTunedFrequency;             ///< Tuned frequency in Hz
+    double mOverpull;                   ///< Overpull in cents
     bool   mRecorded;                   ///< Is the key already recorded?
 };
 

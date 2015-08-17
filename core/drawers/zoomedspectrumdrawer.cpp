@@ -34,6 +34,9 @@
 #include "../messages/messageprojectfile.h"
 #include "../messages/messagetuningdeviation.h"
 #include "../math/mathtools.h"
+#include "../math/mathtools.h"
+#include "../system/log.h"
+#include "../piano/piano.h"
 
 ZoomedSpectrumDrawer::ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics),
@@ -92,7 +95,8 @@ void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
         mGraphics->clear();
         break;
     }
-    case Message::MSG_TUNING_DEVIATION: {
+    case Message::MSG_TUNING_DEVIATION:
+    {
         auto mtd(std::static_pointer_cast<MessageTuningDeviation>(m));
         mFrequencyDetectionResult = mtd->getResult();
         redraw();
@@ -132,14 +136,14 @@ void ZoomedSpectrumDrawer::draw()
     //------- Draw a horizontal and a vertical line separating the field ------
 
 
-    mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
+    mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN);
     mGraphics->drawLine(0,   0.8, 1, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
 
     int keynumber = (mSelectedKey >= 0 ? mSelectedKey : mRecognizedKey);
     if (keynumber<0) return;
 
     if (not mFrequencyDetectionResult) {return;} // we need data
-    if (not mPiano) {return;}           // and a piano
+    if (not mPiano) {return;}                    // and a piano
 
     // show only a quarter of the actual deviation curve
     const int specWindowSize = mFrequencyDetectionResult->tuningDeviationCurve.size() / 4;
@@ -155,7 +159,7 @@ void ZoomedSpectrumDrawer::draw()
 
     if (specWindowSize > 0) {
         double max = *std::max_element(mFrequencyDetectionResult->tuningDeviationCurve.begin(),
-                                      mFrequencyDetectionResult->tuningDeviationCurve.end());
+                                       mFrequencyDetectionResult->tuningDeviationCurve.end());
 
         std::vector<GraphicsViewAdapter::Point> points;
         const int centerIndex = mFrequencyDetectionResult->tuningDeviationCurve.size() / 2;
@@ -174,6 +178,22 @@ void ZoomedSpectrumDrawer::draw()
         mGraphics->drawChart(points, GraphicsViewAdapter::PEN_THIN_RED);
     }
 
+    //---------------------- Draw overpull marker ------------------------
+
+    double overpull = mFrequencyDetectionResult->overpullInCents;
+    if (abs(overpull)>0.2 and abs(overpull<100))
+    {
+        auto overpullColor = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
+        if (abs(overpull) > specWindowSize/2)
+        {
+            overpullColor = GraphicsViewAdapter::PEN_MEDIUM_RED;
+            overpull = specWindowSize/2 * (overpull>0 ? 1:-1);
+        }
+        double x = 0.5 + overpull / specWindowSize;
+        mGraphics->drawLine(x,0,x,0.8,overpullColor);
+    }
+
+
 
     //----------------------- Draw tuning marker -------------------------
 
@@ -191,5 +211,4 @@ void ZoomedSpectrumDrawer::draw()
 
     mGraphics->drawFilledRect(mx, my, markerWidth, markerHeight, borderline, filling);
 }
-
 

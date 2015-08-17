@@ -71,6 +71,7 @@ SignalAnalyzer::SignalAnalyzer(AudioRecorderAdapter *recorder) :
 /// This function will initialize the KeyRecognizer that could take a while if
 /// the fft transform shall be optimized.
 ///////////////////////////////////////////////////////////////////////////////
+
 void SignalAnalyzer::init()
 {
 #if CONFIG_OPTIMIZE_FFT
@@ -78,9 +79,10 @@ void SignalAnalyzer::init()
 #else
     mKeyRecognizer.init(false);
 #endif
-
     mKeyCountStatistics.clear();
 }
+
+
 
 void SignalAnalyzer::stop() {
     mKeyRecognizer.stop();
@@ -106,6 +108,7 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
         this->stop();
         auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
         mPiano = &mpf->getPiano();
+        updateOverpull();
         break;
     }
     case Message::MSG_RECORDING_STARTED:    // start thread
@@ -114,7 +117,8 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
     case Message::MSG_RECORDING_ENDED:
         mRecording = false;            // set a flag to terminate thread
         break;
-    case Message::MSG_KEY_SELECTION_CHANGED: {
+    case Message::MSG_KEY_SELECTION_CHANGED:
+    {
         auto mfkr(std::static_pointer_cast<MessageKeySelectionChanged>(m));
         mSelectedKey = mfkr->getKeyNumber();
         mKeyForced = mfkr->isForced();
@@ -124,12 +128,14 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
     case Message::MSG_MODE_CHANGED:
     {
         auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
-        switch (mmc->getMode()) {
+        switch (mmc->getMode())
+        {
         case MODE_RECORDING:
             changeRole(ROLE_RECORD_KEYSTROKE);
             break;
         case MODE_TUNING:
             changeRole(ROLE_ROLLING_FFT);
+            updateOverpull();
             break;
         default:
             changeRole(ROLE_IDLE);
@@ -143,6 +149,7 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
     }
 }
 
+
 //-----------------------------------------------------------------------------
 //			            Function to handle role changing
 //-----------------------------------------------------------------------------
@@ -153,12 +160,17 @@ void SignalAnalyzer::handleMessage(MessagePtr m)
 /// This will stop all current actions first, and then adjust all parameters.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-void SignalAnalyzer::changeRole(AnalyzerRole role) {
-    stop();
 
+void SignalAnalyzer::changeRole(AnalyzerRole role)
+{
+    stop();
     mAnalyzerRole = role;
     updateDataBufferSize();
 }
+
+
+
+
 
 void SignalAnalyzer::updateDataBufferSize() {
     std::lock_guard<std::mutex> lock(mDataBufferMutex);
@@ -175,7 +187,7 @@ void SignalAnalyzer::updateDataBufferSize() {
     case ROLE_ROLLING_FFT:
     {
         // Initialize the local circular buffer which holds a second of data
-        const int globalKey = mPiano->getKeyboard().convertLocalToGlobal(mSelectedKey);
+        const int globalKey = mSelectedKey + 48 - mPiano->getKeyboard().getKeyNumberOfA4();
         const double timeAtHighest = 0.5;
         const double timeAtLowest = 3;
         const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
@@ -186,6 +198,7 @@ void SignalAnalyzer::updateDataBufferSize() {
 
     mDataBuffer.clear();
 }
+
 
 //-----------------------------------------------------------------------------
 //                      Signal analyzer thread function
@@ -207,19 +220,19 @@ void SignalAnalyzer::workerFunction()
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE or mAnalyzerRole == ROLE_ROLLING_FFT)
     {
         recordSignal();
+
+        // Send message
+        MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_STARTED);
+
+        // stop the KeyRecognizer
+        mKeyRecognizer.stop();
+
+        // post process after recording
+        recordPostprocessing();
+
+        // Send message
+        MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_ENDED);
     }
-
-    // Send message
-    MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_STARTED);
-
-    // stop the KeyRecognizer
-    mKeyRecognizer.stop();
-
-    // post process after recording
-    recordPostprocessing();
-
-    // Send message
-    MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_ENDED);
 }
 
 
@@ -276,7 +289,6 @@ void SignalAnalyzer::recordSignal()
                     LogW("Audio buffer size in SignalAnalyzer reached.");
                 }
             }
-
 
             // If the buffer has accumulated a certain minimum of data
             if (mDataBuffer.size() > (samplingrate * MINIMAL_FFT_INTERVAL_IN_MILLISECONDS) / 1000)
@@ -342,13 +354,15 @@ void SignalAnalyzer::analyzeSignal()
     if (mKeyForced) {keynumber = mSelectedKey;}
 
     // check if a correct key was found
-    if (keynumber < 0) {
+    if (keynumber < 0)
+    {
         LogI("Final key could not be found. Cancel analysis.");
         return;
     }
 
     // check if found key equates the keynumber
-    if (keynumber != mSelectedKey) {
+    if (keynumber != mSelectedKey)
+    {
         LogD("Final detected key does not match the selected key. Cancel analysis.");
         return;
     }
@@ -356,33 +370,31 @@ void SignalAnalyzer::analyzeSignal()
     // If the key was successfully identified start call the FFTAnalyzer
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE)
     {
+        // returns a pair consisting of error code and key-shared-ptr
         auto result = mFFTAnalyser.analyse(mPiano, mPowerspectrum, keynumber);
 
-        if (result.first != FFTAnalyzerErrorTypes::ERR_NONE) {
-            // check for errors only when recording keystroke
-            if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
-                MessageHandler::send<MessageNewFFTCalculated>(result.first);
-            }
-        } else {
+        if (result.first != FFTAnalyzerErrorTypes::ERR_NONE) // if error
+            MessageHandler::send<MessageNewFFTCalculated>(result.first);
+        else
+        {
             // send the result
             MessageHandler::send<MessageFinalKey>(keynumber, result.second);
             MessageHandler::send<MessagePreliminaryKey>(-1,0);
         }
-    } else if (mAnalyzerRole == ROLE_ROLLING_FFT) {
+    }
+    else if (mAnalyzerRole == ROLE_ROLLING_FFT)
+    {
         std::shared_ptr<Key> key = std::make_shared<Key>(mPiano->getKey(keynumber));
-        auto result = mFFTAnalyser.detectFrequencyOfKnownKey(mPowerspectrum, mPiano, *key, keynumber);
+        FrequencyDetectionResult result = mFFTAnalyser.detectFrequencyOfKnownKey(mPowerspectrum, mPiano, *key, keynumber);
 
-        if (result->error != FFTAnalyzerErrorTypes::ERR_NONE) {
-            // check for errors only when recording keystroke
-            if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
-                MessageHandler::send<MessageNewFFTCalculated>(result->error);
-            }
-        } else {
+        if (result->error != FFTAnalyzerErrorTypes::ERR_NONE) // if error
+            MessageHandler::send<MessageNewFFTCalculated>(result->error);
+        else
+        {
             key->setTunedFrequency(result->detectedFrequency);
-
             MessageHandler::send<MessageFinalKey>(keynumber, key);
         }
-
+        result->overpullInCents = key->getOverpull();
         MessageHandler::send<MessageTuningDeviation>(result);
     }
 }
@@ -419,11 +431,37 @@ void SignalAnalyzer::recordPostprocessing()
         WriteFFT   ("2-final-fft.dat",mPowerspectrum.get()->fft);
 #endif  // CONFIG_ENABLE_XMGRACE
 
-        CHECK_CANCEL_THREAD;
-
         // sleep a bit to wait for the synthesizer to finish and to display the quality
         msleep(1500);
     }
+    else if (mAnalyzerRole == ROLE_ROLLING_FFT) updateOverpull();
+}
+
+
+//-----------------------------------------------------------------------------
+//                            Update overpulls
+//-----------------------------------------------------------------------------
+
+void SignalAnalyzer::updateOverpull ()
+{
+    int K = mPiano->getKeyboard().getNumberOfKeys();
+    for (int keynumber=0; keynumber<K; ++keynumber)
+    {
+        double overpull = mOverpull.getOverpull(keynumber,mPiano);
+        double currentoverpull = mPiano->getKey(keynumber).getOverpull();
+        double change = overpull-currentoverpull;
+        if (fabs(change) >= 0.1 or (currentoverpull!=0 and overpull==0))
+        {
+            // set new overpull value
+            std::shared_ptr<Key> key = std::make_shared<Key>(mPiano->getKey(keynumber));
+            double existingtune = key->getTunedFrequency();
+            if (existingtune>20 and currentoverpull!=0)
+                key->setTunedFrequency(existingtune*pow(2,change/1200.0));
+            key->setOverpull(overpull); // this informs the tuning curve window
+            MessageHandler::send<MessageFinalKey>(keynumber, key);
+        }
+    }
+
 }
 
 //-----------------------------------------------------------------------------

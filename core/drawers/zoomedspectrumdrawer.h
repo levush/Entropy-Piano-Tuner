@@ -55,6 +55,7 @@ private:
 
     FFTDataPointer mFFTData;
     FrequencyDetectionResult mFrequencyDetectionResult;
+
 };
 
 #endif // ZOOMEDSPECTRUMDRAWER_H

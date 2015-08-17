@@ -17,12 +17,24 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//      Class describing the piano keyboard, holding a collection of keys
+//=============================================================================
+
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include <string>
 #include "key.h"
 #include "pianodefines.h"
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class describing the piano keyboard, holding a collection of keys
+///
+/// This class describes all data related to the keyboard of the piano. The
+/// most important data is a vector of keys. In addition, this class
+/// tells us where the key A4 is located and how many of the keys belong
+/// to the bass bridge.
+///////////////////////////////////////////////////////////////////////////////
 
 class Keyboard
 {
@@ -30,42 +42,49 @@ public:
     using Keys = std::vector<Key>;
 
 public:
-    Keyboard(size_t initialSize = 88);
-    ~Keyboard(){};
+    Keyboard(size_t initialSize);
+    ~Keyboard(){}
 
-    void resize(size_t s);
-    void clearKeys();
-    size_t size() const {return mKeys.size();}
+    size_t size() const         {return mKeys.size();}
+    void resize(size_t newSize) { mKeys.resize(newSize); };
 
-    const Key &operator[](size_t i) const {return mKeys[i];}
-    Key &operator[](size_t i) {return mKeys[i];}
+    void changeKeyboardConfiguration (int numberOfKeys, int keyNumberOfA);
 
-    const Key &at(size_t i) const {return mKeys[i];}
-    Key &at(size_t i) {return mKeys[i];}
+    void clearAllKeys();            ///< Clear all keys completely
+    void clearComputedPitches();    ///< Set all computed pitches to zero
+    void clearTunedPitches();       ///< Set all tuned pitches to zero
+    void clearOverpulls();          ///< Set all overpull markers to zero
 
-    const Key *getKeyPtr(int i) const {if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;} return &mKeys[i];}
-    Key *getKeyPtr(int i) {if (i < 0 || i >= static_cast<int>(mKeys.size())) {return nullptr;} return &mKeys[i];}
+    // Access operators:
+    const Key &operator[](size_t i) const   {return mKeys[i];}
+    Key &operator[](size_t i)               {return mKeys[i];}
+    const Key &at(size_t i) const           {return mKeys[i];}
+    Key &at(size_t i)                       {return mKeys[i];}
 
+    // get pointer to a particular key
+    const Key *getKeyPtr(int i) const;
+    Key *getKeyPtr(int i);
+
+    // get a reference to the key vector
     Keys &getKeys() {return mKeys;}
 
-    std::string getNoteName(int key) const;
-    piano::KeyColor getKeyColor(int k) const;
+    // access functions
+    int getNumberOfKeys() const     {return static_cast<int>(size());}
+    int getKeyNumberOfA4() const    {return mKeyNumberOfA4;}
+    int &getKeyNumberOfA4()         {return mKeyNumberOfA4;}
+    int getNumberOfBassKeys() const {return mNumberOfBassKeys;}
+    int &getNumberOfBassKeys()      {return mNumberOfBassKeys;}
+    void setNumberOfBassKeys(int keys) {mNumberOfBassKeys = keys;}
 
-    void setNumberOfKeys(int keys, int keyNumberOfA);
-    int getNumberOfKeys() const {return static_cast<int>(size());}
 
-    int getKeyNumberOfA4() const {return mKeyNumberOfA4;}
-    int &getKeyNumberOfA4() {return mKeyNumberOfA4;}
-
-    int getKeyOffset() const {return 48 - mKeyNumberOfA4;}
-
-    int convertLocalToGlobal(int index) const;
+    // compute note name and color
+    std::string getNoteName (int keynumber) const;
+    piano::KeyColor getKeyColor (int keynumber) const;
 
 private:
-    Keys mKeys;
-
-    /// index of the key A (corresponding with the concert pitch)
-    int mKeyNumberOfA4;
+    Keys mKeys;             ///< Vector holding the keys
+    int mKeyNumberOfA4;     ///< Index of the key A4 (440Hz)
+    int mNumberOfBassKeys;  ///< Number of keys on bass bridge
 };
 
 #endif // KEYBOARD_H

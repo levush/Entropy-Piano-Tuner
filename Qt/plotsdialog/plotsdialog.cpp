@@ -50,7 +50,7 @@ PlotsDialog::PlotsDialog(const Piano &piano, QWidget *parent) :
     std::fill(mCurves.begin(), mCurves.end(), nullptr);
     const bool vNav(DisplaySizeDefines::getSingleton()->showPlotNavigationVertical());
 
-    CentralPlotFrame *plot = new CentralPlotFrame(mKeyboard.getNumberOfKeys(), mKeyboard.getKeyOffset());
+    CentralPlotFrame *plot = new CentralPlotFrame(mKeyboard.getNumberOfKeys(), getKeyOffset());
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMargin(0);
@@ -210,6 +210,11 @@ void PlotsDialog::updateTickWidth(double d) {
     }
 }
 
+int PlotsDialog::getKeyOffset()
+{
+    return 48 - mKeyboard.getKeyNumberOfA4();
+}
+
 void PlotsDialog::prepareCurve(Curves curve) {
     if (mCurves[curve]) {delete mCurves[curve];}
 
@@ -225,7 +230,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
             if (mKeyboard[i].getMeasuredInharmonicity() > 0) {
-                points << QPointF(i + 0.5 + mKeyboard.getKeyOffset(), mKeyboard[i].getMeasuredInharmonicity());
+                points << QPointF(i + 0.5 + getKeyOffset(), mKeyboard[i].getMeasuredInharmonicity());
             }
         }
         c->setSamples( points );
@@ -235,7 +240,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5 + mKeyboard.getKeyOffset(), cents(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_COMPUTED) {
@@ -244,7 +249,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5 + mKeyboard.getKeyOffset(), cents(mKeyboard[i].getComputedFrequency() / mPiano.getEqualTempFrequency(i,0,440)));
+            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getComputedFrequency() / mPiano.getEqualTempFrequency(i,0,440)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_TUNED) {
@@ -253,7 +258,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5 + mKeyboard.getKeyOffset(), cents(mKeyboard[i].getTunedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getTunedFrequency() / mPiano.getEqualTempFrequency(i)));
         }
         c->setSamples(points);
     }

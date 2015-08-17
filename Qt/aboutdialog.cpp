@@ -85,14 +85,14 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
 #endif
 
     const QString copyrightText = tr("Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
-    const QString licenseText = tr("This software is licensed unter the terms of the %1. The source code can be accessed at %2.").
+    const QString licenseText = tr("This software is licensed under the terms of the %1. The source code can be accessed at %2.").
             arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
                 "<a href=\"https://gitlab.com/entropytuner/Entropy-Piano-Tuner\">GitLab</a>");
 
     const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
 
     const QString acknowledgementsText = tr("We thank all those who have contributed to the project:") +
-           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich., Dr. J. Um";
+           " Prof. Dr. S. R. Dahmen, A. Frick, A. Heilrath, M. Jiminez, Prof. Dr. W. Kinzel, M. Kohl, L. Kusmierz, Prof. Dr. A. C. Lehmann, B. Olbrich., Dr. J. Um, Zhou Ying";
 
     auto makeParagraphTags = [](const QString &t) {return "<p>" + t + "</p>";};
     QString completeText;

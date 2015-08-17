@@ -48,6 +48,7 @@ const PenType TuningCurveGraphDrawer::frmarkers  = GraphicsViewAdapter::PEN_THIN
 const PenType TuningCurveGraphDrawer::fgmarkers  = GraphicsViewAdapter::PEN_THIN_LIGHT_GRAY;
 const PenType TuningCurveGraphDrawer::fcmarkers  = GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN;
 const PenType TuningCurveGraphDrawer::ftmarkers  = GraphicsViewAdapter::PEN_MEDIUM_RED;
+const PenType TuningCurveGraphDrawer::opmarkers  = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
 const FillType TuningCurveGraphDrawer::allowdAreaFill = GraphicsViewAdapter::FILL_LIGHT_GREEN;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,6 +116,7 @@ void TuningCurveGraphDrawer::handleMessage(MessagePtr m)
             updateMarkerPosition(index, ROLE_INHARMONICITY);
             updateMarkerPosition(index, ROLE_RECORDED_FREQUENCY);
             updateMarkerPosition(index, ROLE_TUNED_FREQUENCY);
+            updateMarkerPosition(index, ROLE_OVERPULL);
             break;
         }
         case Message::MSG_CLEAR_RECORDING:
@@ -256,6 +258,9 @@ void TuningCurveGraphDrawer::drawMarkers(int8_t keynumber)
 
     // Draw tuned frequency levels
     updateMarkerPosition (keynumber, ROLE_TUNED_FREQUENCY);
+
+    // Draw tuned frequency levels
+    updateMarkerPosition (keynumber, ROLE_OVERPULL);
 }
 
 
@@ -353,6 +358,14 @@ double TuningCurveGraphDrawer::getMarkerPosition(int keyindex, RoleType role)
             if (ratio > 0) return convertCentsToY(ratioToCents(ratio));
         }
     }
+    else if (role & ROLE_OVERPULL)
+    {
+        if (mOperationMode == MODE_TUNING)
+        {
+            double overpull = key.getOverpull();
+            if (fabs(overpull)>0.1) return convertCentsToY(overpull);
+        }
+    }
     return -1;
 }
 
@@ -376,6 +389,7 @@ PenType TuningCurveGraphDrawer::getMarkerPenType(RoleType role)
     if      (role & ROLE_INHARMONICITY) return bmarkers;
     else if (role & ROLE_COMPUTED_FREQUENCY) return fcmarkers;
     else if (role & ROLE_TUNED_FREQUENCY) return ftmarkers;
+    else if (role & ROLE_OVERPULL) return opmarkers;
     else if (role & ROLE_RECORDED_FREQUENCY)
         return (mOperationMode == MODE_CALCULATION ? fgmarkers : frmarkers);
     else EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Color type not implemented");

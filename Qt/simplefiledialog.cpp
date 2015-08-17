@@ -142,11 +142,11 @@ QString SimpleFileDialog::getSaveFile(QDir dir) {
 void SimpleFileDialog::accept() {
     const QFileInfo fi(mDir.absoluteFilePath(getFileName()));
     if (mMode == Mode::Save) {
-        // check if the file already exits
+        // check if the file already exists
         if (fi.exists()) {
             if (QMessageBox::warning(this,
                                      tr("File existing"),
-                                     tr("A file with the given name already exits at %1. Do you want to overwrite it?").arg(fi.absoluteFilePath()),
+                                     tr("A file with the given name already exists at %1. Do you want to overwrite it?").arg(fi.absoluteFilePath()),
                                      QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
                 return;
             }

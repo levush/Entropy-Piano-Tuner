@@ -47,6 +47,7 @@ public:
     virtual ~PlotsDialog();
 
 private:
+    int getKeyOffset();
     void prepareCurve(Curves curve);
 
 private slots:

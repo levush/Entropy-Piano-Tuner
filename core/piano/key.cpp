@@ -47,6 +47,7 @@ void Key::clear()
     mRecognitionQuality = 0;
     mComputedFrequency = 0;
     mTunedFrequency = 0;
+    mOverpull = 0;
     mRecorded = false;
 }
 
@@ -86,6 +87,7 @@ double Key::FrequencyToRealIndex (double f)
 int Key::FrequencyToIndex (double f)
 { return MathTools::roundToInteger(FrequencyToRealIndex(f)); }
 
+
 //-----------------------------------------------------------------------------
 //                  map logspec index to frequency
 //-----------------------------------------------------------------------------
@@ -102,18 +104,6 @@ double Key::IndexToFrequency (double m)
     return fmin * pow(2, m / BinsPerOctave);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// Converts a logbin index to the corresponding frequency in Hz.
-/// \param m : Index of the logbin spectrum in the range [0,NumberOfBins]
-/// \return Frequency in Hz
-///////////////////////////////////////////////////////////////////////////////
-
-double Key::IndexToFrequency (int m)
-{
-    EptAssert(m >= 0 && m < NumberOfBins,
-      "The key has to be in the range of the maximum number of slots");
-    return fmin * pow(2, static_cast<double>(m) / BinsPerOctave);
-}
 
 //-----------------------------------------------------------------------------
 //                   set and get recorded frequency
@@ -190,7 +180,7 @@ double &Key::getComputedFrequency ()
 
 void Key::setTunedFrequency (double f)
 {
-    EptAssert(f > 0 && f < 20000, "Freqency must be below 20000 and greater than 0");
+    EptAssert(f >= 0 && f < 20000, "Freqency must be below 20000 and greater than 0");
     mTunedFrequency=f;
 }
 
@@ -202,13 +192,31 @@ double &Key::getTunedFrequency ()
 
 
 //-----------------------------------------------------------------------------
+//                      set and get overpull in cents
+//-----------------------------------------------------------------------------
+
+void Key::setOverpull (double cents)
+{
+    if (cents>25) mOverpull=25;
+    else if (cents<-25) mOverpull=-25;
+    else mOverpull = cents;
+}
+
+double Key::getOverpull () const
+{ return mOverpull; }
+
+double &Key::getOverpull ()
+{ return mOverpull; }
+
+
+//-----------------------------------------------------------------------------
 //                          copy vector to mSpectrum
 //-----------------------------------------------------------------------------
 
 void Key::setSpectrum(const SpectrumType &s)
 {
     EptAssert(s.size() == static_cast<size_t>(NumberOfBins),
-              "Spectrum size must match the total number of slots");
+              "Spectrum size must match the total number of bins");
     mSpectrum = s;
 }
 
@@ -230,7 +238,7 @@ const Key::SpectrumType & Key::getSpectrum () const
 
 void Key::setPeaks(const PeakListType &s)
 {
-    EptAssert(s.size() < 100, "Peak list should not be unreasonably large");
+    EptAssert(s.size() < 200, "Peak list should not be unreasonably large");
     mPeaks = s;
 }
 

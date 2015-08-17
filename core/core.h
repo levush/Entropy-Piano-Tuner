@@ -17,14 +17,14 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                               Core
-//======================================================================
+//=============================================================================
+//                                   Core
+//=============================================================================
 
 #ifndef CORE_H
 #define CORE_H
 
-#include <thread>
+//#include <thread>
 #include "analyzers/signalanalyzer.h"
 #include "calculation/calculationmanager.h"
 #include "audio/audiorecorderadapter.h"

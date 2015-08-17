@@ -9,16 +9,4 @@
         <string>This algorithm generates an approximate tuning which is needed for a pitch raise. For details please refer to the user manual.</string>
         <string lang="de">Dieser Algorithmus erzeugt eine ungefähre Stimmkurve, die man für eine Frequenzanhebung (pitch raise) benötigt. Einzelheiten dazu finden Sie in der Bedienungsanleitung.</string>
     </description>
-
-    <param id="sectionSeparator" type="int" min="20" max="40" default="28">
-        <label>
-            <string>Section-separating key</string>
-            <string lang="de">Sektionentrennende Taste</string>
-        </label>
-        <description>
-            <string>Number of the key separating string sections.</string>
-            <string lang="de">Nummer der Taste, bei der die rechte Saitensektion beginnt.</string>
-        </description>
-    </param>
-
 </algorithm>

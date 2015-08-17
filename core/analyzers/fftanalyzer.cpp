@@ -40,7 +40,7 @@
 
 FFTAnalyzer::FFTAnalyzer() :
     mOptimalSuperposition(),            // Array for peak superposition
-    mCurrentKernelKey(nullptr)          // Currently no kernel
+    mCurrentKernelKey(nullptr)          // Initially no kernel
 {}
 
 //-----------------------------------------------------------------------------
@@ -139,7 +139,9 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
         // %zu is c++ standard, but windows doenst support this... workaround use int
         LogV("FFTAnalyzer: found %i peaks.", static_cast<int>(peaks.size()));
         key->setPeaks(peaks);
-    } else {
+    }
+    else
+    {
         LogW("Frequence %f is out of bounds", f);
         return std::make_pair(FFTAnalyzerErrorTypes::ERR_FREQUENCY_OUT_OF_BOUNDS, key);
     }
@@ -186,8 +188,6 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey (
         result->error = FFTAnalyzerErrorTypes::ERR_NO_COMPUTED_FREQUENCY;
         return result;
     }
-
-
 
     // Define the frequency which corresponds to the middle of the array
     double centerFrequency = key.getRecordedFrequency();

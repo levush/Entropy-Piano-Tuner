@@ -17,9 +17,13 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                            Piano data
-//======================================================================
+//=============================================================================
+//                                Piano class
+//=============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief This class holds the complete information of the instrument.
+///
 
 #ifndef PIANO_H
 #define PIANO_H
@@ -42,6 +46,7 @@ class Piano
 public:
     static const int DEFAULT_NUMBER_OF_KEYS;
     static const int DEFAULT_KEY_NUMBER_OF_A;
+    static const int DEFAULT_KEYS_ON_BASS_BRIDGE;
     static const double DEFAULT_CONCERT_PITCH;    ///< default concert pitch of A
 
 public:
@@ -72,7 +77,7 @@ public:
     const std::string &getTuningLocation() const {return mTuningLocation;}
 
     void setTuningTime(const std::string &time) {mTuningTime = time;}
-    void setNow();
+    void setTuningTimeToActualTime();
     const std::string &getTuningTime() const {return mTuningTime;}
 
     void setConcertPitch(double pitch) {mConcertPitch = pitch;}
@@ -90,9 +95,6 @@ public:
     void setKey (int i, const Key &key) { mKeyboard[i] = key; }
 
     // other:
-
-    void clearKeys();                           ///< clear the data of all keys (needed?)
-
 
     double getExpectedInharmonicity (double f) const;
 
