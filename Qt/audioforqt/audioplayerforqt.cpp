@@ -244,7 +244,7 @@ void QtAudioManager::exit()
         mIODevice = nullptr;
     }
 
-    if (mAudioSource->getWriter()) {
+    if (mAudioSource && mAudioSource->getWriter()) {
         mAudioSource->getWriter()->exit();
     }
     LogI("Qt audio player closed.");
