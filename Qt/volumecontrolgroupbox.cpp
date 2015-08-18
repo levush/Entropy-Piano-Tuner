@@ -106,16 +106,30 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     refreshButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
     QObject::connect(refreshButton, SIGNAL(clicked(bool)), this, SLOT(onRefreshClicked()));
 
-    QToolButton *muteButton = new QToolButton;
-    onLayout->addWidget(muteButton);
-    muteButton->setCheckable(true);
-    QIcon muteIcons;
-    muteIcons.addFile(QStringLiteral(":/media/images/micro_active.png"), QSize(), QIcon::Normal, QIcon::Off);
-    muteIcons.addFile(QStringLiteral(":/media/images/micro_mute.png"), QSize(), QIcon::Normal, QIcon::On);
-    muteButton->setIcon(muteIcons);
-    muteButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
-    QObject::connect(muteButton, SIGNAL(toggled(bool)), this, SLOT(onMuteToggled(bool)));
-    new QShortcut(QKeySequence(Qt::Key_M), muteButton, SLOT(toggle()));
+    QToolButton *muteMicroButton = new QToolButton;
+    onLayout->addWidget(muteMicroButton);
+    muteMicroButton->setCheckable(true);
+    QIcon muteMicroIcons;
+    muteMicroIcons.addFile(QStringLiteral(":/media/images/micro_active.png"), QSize(), QIcon::Normal, QIcon::Off);
+    muteMicroIcons.addFile(QStringLiteral(":/media/images/micro_mute.png"), QSize(), QIcon::Normal, QIcon::On);
+    muteMicroButton->setIcon(muteMicroIcons);
+    muteMicroButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
+    QObject::connect(muteMicroButton, SIGNAL(toggled(bool)), this, SLOT(onMicroMuteToggled(bool)));
+    new QShortcut(QKeySequence(Qt::Key_M), muteMicroButton, SLOT(toggle()));
+
+    if (DisplaySizeDefines::getSingleton()->showMuteOutputButton()) {
+        QToolButton *muteSpeakerButton = new QToolButton;
+        onLayout->addWidget(muteSpeakerButton);
+        muteSpeakerButton->setCheckable(true);
+        QIcon muteSpeakerIcons;
+        muteSpeakerIcons.addFile(QStringLiteral(":/media/images/speaker_active.png"), QSize(), QIcon::Normal, QIcon::Off);
+        muteSpeakerIcons.addFile(QStringLiteral(":/media/images/speaker_mute.png"), QSize(), QIcon::Normal, QIcon::On);
+        muteSpeakerButton->setIcon(muteSpeakerIcons);
+        muteSpeakerButton->setIconSize(QSize(1, 1) * DisplaySizeDefines::getSingleton()->getMediumIconSize());
+        QObject::connect(muteSpeakerButton, SIGNAL(toggled(bool)), this, SLOT(onSpeakerMuteToggled(bool)));
+        new QShortcut(QKeySequence(Qt::Key_S), muteSpeakerButton, SLOT(toggle()));
+        muteSpeakerButton->setWhatsThis(tr("Click this button to mute the speaker or headphone."));
+    }
 
     mainLayout->addStretch();
 
@@ -129,7 +143,7 @@ VolumeControlGroupBox::VolumeControlGroupBox(QWidget *parent) :
     offLabel->setWhatsThis(tr("If the input level drops below this mark the recorder stops and does not process the input signal."));
     onLabel->setWhatsThis(tr("If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the 'Off' mark."));
     refreshButton->setWhatsThis(tr("Click this button to reset the automatic calibration of the input volume."));
-    muteButton->setWhatsThis(tr("Click this button to mute the input device."));
+    muteMicroButton->setWhatsThis(tr("Click this button to mute the input device."));
     offLine->setWhatsThis(offLabel->whatsThis());
     onLine->setWhatsThis(onLabel->whatsThis());
 }
@@ -154,6 +168,10 @@ void VolumeControlGroupBox::onRefreshClicked() {
     emit refreshInputLevels();
 }
 
-void VolumeControlGroupBox::onMuteToggled(bool b) {
-    emit muteToggled(b);
+void VolumeControlGroupBox::onMicroMuteToggled(bool b) {
+    emit muteMicroToggled(b);
+}
+
+void VolumeControlGroupBox::onSpeakerMuteToggled(bool b) {
+    emit muteSpeakerToggled(b);
 }

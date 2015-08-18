@@ -244,7 +244,7 @@ void QtAudioManager::exit()
         mIODevice = nullptr;
     }
 
-    if (mAudioSource->getWriter()) {
+    if (mAudioSource && mAudioSource->getWriter()) {
         mAudioSource->getWriter()->exit();
     }
     LogI("Qt audio player closed.");
@@ -327,7 +327,7 @@ void QtAudioManager::workerFunction()
 
     while (mThreadRunning)
     {
-        if (mPause || !mAudioSource->getWriter()) {
+        if (mPause or not mAudioSource->getWriter() or mAudioSource->isMuted()) {
             QThread::msleep(500);
             continue;
         }

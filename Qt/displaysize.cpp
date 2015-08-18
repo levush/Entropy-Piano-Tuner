@@ -110,3 +110,6 @@ bool DisplaySizeDefines::abbrevPlotLabels() const {
     return mDisplaySize <= DS_XSMALL;
 }
 
+bool DisplaySizeDefines::showMuteOutputButton() const {
+    return mDisplaySize > DS_XSMALL;
+}

@@ -84,7 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->controlLayout->addWidget(mVolumeControlGroup, 1);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mVolumeControlGroup, SLOT(onModeChanged(OperationMode)));
     QObject::connect(mVolumeControlGroup, SIGNAL(refreshInputLevels()), this, SLOT(onResetNoiseLevel()));
-    QObject::connect(mVolumeControlGroup, SIGNAL(muteToggled(bool)), this, SLOT(onToggleMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteMicroToggled(bool)), this, SLOT(onToggleMicroMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteSpeakerToggled(bool)), this, SLOT(onToggleSpeakerMute(bool)));
 
     mSignalAnalyzerGroup = new SignalAnalyzerGroupBox(this);
     ui->controlLayout->addWidget(mSignalAnalyzerGroup, 0);
@@ -186,7 +187,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addAction(iconFromTheme("document-open"), tr("Open"), this, SLOT(onFileOpen()));
     mFileToolBar->addAction(iconFromTheme("document-save"), tr("Save"), this, SLOT(onFileSave()));
     mFileToolBar->addAction(iconFromTheme("document-save-as"), tr("Save as"), this, SLOT(onFileSaveAs()));
-    mFileToolBar->addAction(iconFromTheme("document-properties"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
+    mFileToolBar->addAction(iconFromTheme("accessories-text-editor"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
+    mFileToolBar->addAction(iconFromTheme("edit-clear"), tr("Clear pitch markers"), this, SLOT(onResetRecording()));
+    mFileToolBar->addSeparator();
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
     mFileToolBar->addAction(QIcon(":/media/icons/mathematical_plot.png"), tr("Graphs"), this, SLOT(onOpenPlots()));
 
@@ -204,7 +207,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tbStretch->setVisible(true);
 
     helpToolBar->addAction(iconFromTheme("help-contents"), tr("Tutorial"), this, SLOT(onTutorial()));
-    helpToolBar->addAction(iconFromTheme("accessories-text-editor"), tr("Log"), this, SLOT(onViewLog()));
+    //helpToolBar->addAction(iconFromTheme("accessories-text-editor"), tr("Log"), this, SLOT(onViewLog()));
     helpToolBar->addAction(iconFromTheme("help-about"), tr("About"), this, SLOT(onAbout()));
 
 
@@ -215,8 +218,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionSave->setIcon(iconFromTheme("document-save"));
     ui->actionSave_As->setIcon(iconFromTheme("document-save-as"));
     ui->actionExit->setIcon(iconFromTheme("application-exit"));
-    ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("document-properties"));
-    ui->actionReset_pitches->setIcon(iconFromTheme("edit-clear"));
+    ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("accessories-text-editor"));
+    ui->actionClear_pitches->setIcon(iconFromTheme("edit-clear"));
     ui->actionOptions->setIcon(iconFromTheme("preferences-system"));
     ui->actionTutorial->setIcon(iconFromTheme("help-contents"));
     ui->actionView_log->setIcon(iconFromTheme("accessories-text-editor"));
@@ -570,8 +573,12 @@ void MainWindow::onResetNoiseLevel() {
     mCore->getAudioRecorder()->resetNoiseLevel();
 }
 
-void MainWindow::onToggleMute(bool checked) {
+void MainWindow::onToggleMicroMute(bool checked) {
     mCore->getAudioRecorder()->setMuted(checked);
+}
+
+void MainWindow::onToggleSpeakerMute(bool checked) {
+    mCore->getAudioPlayer()->setMuted(checked);
 }
 
 void MainWindow::onFileNew() {

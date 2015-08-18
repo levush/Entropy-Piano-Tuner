@@ -35,7 +35,9 @@ const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 100;
 //			                    Constructor
 //-----------------------------------------------------------------------------
 
-AudioPlayerAdapter::AudioPlayerAdapter()
+AudioPlayerAdapter::AudioPlayerAdapter() :
+    mPCMWriter(nullptr),
+    mMuted(false)
 {
     setChannelCount(2);
 }
@@ -58,3 +60,19 @@ void AudioPlayerAdapter::setWriter(PCMWriterInterface *interface)
         mPCMWriter->init(getSamplingRate(), getChannelCount());
     }
 }
+
+//-----------------------------------------------------------------------------
+//                           Mutes the input device
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// This will mute the input signal by sending 0 as input signal and
+/// handling an input level of 0.
+/// \param muted : Activate or deactivate the muting
+///////////////////////////////////////////////////////////////////////////////
+
+void AudioPlayerAdapter::setMuted (bool muted)
+{
+    mMuted = muted;
+}
+

@@ -5,6 +5,8 @@
         <file>images/icon_256x256.png</file>
         <file>images/micro_active.png</file>
         <file>images/micro_mute.png</file>
+        <file>images/speaker_active.png</file>
+        <file>images/speaker_mute.png</file>
         <file>images/refresh.png</file>
         <file>images/icon_256x256@2x.png</file>
         <file>icons/accessories-text-editor.png</file>
