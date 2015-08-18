@@ -327,7 +327,7 @@ void QtAudioManager::workerFunction()
 
     while (mThreadRunning)
     {
-        if (mPause || !mAudioSource->getWriter()) {
+        if (mPause or not mAudioSource->getWriter() or mAudioSource->isMuted()) {
             QThread::msleep(500);
             continue;
         }

@@ -84,7 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->controlLayout->addWidget(mVolumeControlGroup, 1);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mVolumeControlGroup, SLOT(onModeChanged(OperationMode)));
     QObject::connect(mVolumeControlGroup, SIGNAL(refreshInputLevels()), this, SLOT(onResetNoiseLevel()));
-    QObject::connect(mVolumeControlGroup, SIGNAL(muteToggled(bool)), this, SLOT(onToggleMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteMicroToggled(bool)), this, SLOT(onToggleMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteSpeakerToggled(bool)), this, SLOT(onToggleMute(bool)));
 
     mSignalAnalyzerGroup = new SignalAnalyzerGroupBox(this);
     ui->controlLayout->addWidget(mSignalAnalyzerGroup, 0);
@@ -572,8 +573,12 @@ void MainWindow::onResetNoiseLevel() {
     mCore->getAudioRecorder()->resetNoiseLevel();
 }
 
-void MainWindow::onToggleMute(bool checked) {
+void MainWindow::onToggleMicroMute(bool checked) {
     mCore->getAudioRecorder()->setMuted(checked);
+}
+
+void MainWindow::onToggleSpeakerMute(bool checked) {
+    mCore->getAudioPlayer()->setMuted(checked);
 }
 
 void MainWindow::onFileNew() {

@@ -79,9 +79,11 @@ void OverpullEstimator::init (const Piano *piano)
 /// is a response matrix R which tells us how many cents the string number k
 /// will fall if we increase string number j by one cent. On average the
 /// response is proprtional to the parameter averagePull and should be of
-/// the order of 20%.
+/// the order of 22%.
 ///
-/// \param averagePull : average pull, of the order of 0.2
+/// This function contains the full overpull theory
+///
+/// \param averagePull : average pull, of the order of 0.22
 ///////////////////////////////////////////////////////////////////////////////
 
 void OverpullEstimator::computeInteractionMatrix (double averagePull)
@@ -177,15 +179,16 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
 
     // NORMALIZATION
     double sum = 0;
+    double p = 0.8; // weight of sound board deformation 80 %
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += (R[j][k] = response(j,k));
     sum /= K;
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k)
-        R[j][k] *= 0.8 * averagePull / sum; // 80% soundboard deformation
+        R[j][k] *= p * averagePull / sum;
 
 
     // BRIDGE TILT
     const double sigma = 20;
-    const double amplitude = averagePull * 0.2; // 20% bridge tilt
+    const double amplitude = averagePull * (1-p);
     double avstring = B/SB;
     for (int k=B; k<K; k++) avstring += 1.0/stringlength(k);
     avstring /= K;

@@ -38,14 +38,16 @@ private:
 
 signals:
     void refreshInputLevels();
-    void muteToggled(bool);
+    void muteMicroToggled(bool);
+    void muteSpeakerToggled(bool);
 
 public slots:
     void updateLevels(double stopLevel, double onLevel);
 
 private slots:
     void onRefreshClicked();
-    void onMuteToggled(bool);
+    void onMicroMuteToggled(bool);
+    void onSpeakerMuteToggled(bool);
 };
 
 #endif // VOLUMECONTROLGROUPBOX_H
