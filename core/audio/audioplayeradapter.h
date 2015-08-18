@@ -56,9 +56,12 @@ public:
 
     void setWriter(PCMWriterInterface *interface);
     PCMWriterInterface *getWriter() {return mPCMWriter;}
+    void setMuted(bool muted);              ///< Mutes the output device
+    bool isMuted() { return mMuted; }
 
 private:
-    PCMWriterInterface *mPCMWriter = 0;
+    PCMWriterInterface *mPCMWriter;
+    bool   mMuted;              ///< Is the ouput device muted
 };
 
 #endif // AUDIOPLAYERADAPTER_H

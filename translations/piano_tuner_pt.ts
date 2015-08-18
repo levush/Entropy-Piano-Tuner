@@ -210,10 +210,18 @@
     </message>
     <message>
         <source>Reset pitch markers</source>
-        <translation>Repor marcadores arremesso</translation>
+        <translation type="vanished">Repor marcadores arremesso</translation>
     </message>
     <message>
         <source>Do you really want to reset all pitch markers? This can not be undone!</source>
+        <translation type="vanished">Você realmente quer para repor todos os marcadores arremesso? Isso não pode ser desfeito!</translation>
+    </message>
+    <message>
+        <source>Clear pitch markers</source>
+        <translation>Repor marcadores arremesso</translation>
+    </message>
+    <message>
+        <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>Você realmente quer para repor todos os marcadores arremesso? Isso não pode ser desfeito!</translation>
     </message>
 </context>
@@ -576,7 +584,7 @@
     </message>
     <message>
         <source>Log</source>
-        <translation>Log</translation>
+        <translation type="vanished">Log</translation>
     </message>
     <message>
         <source>A new update is available!</source>
@@ -620,10 +628,18 @@
     </message>
     <message>
         <source>&amp;Reset pitch markers</source>
-        <translation>&amp;Repor marcadores arremesso</translation>
+        <translation type="vanished">&amp;Repor marcadores arremesso</translation>
     </message>
     <message>
         <source>Reset pitch markers</source>
+        <translation type="vanished">Repor marcadores arremesso</translation>
+    </message>
+    <message>
+        <source>&amp;Clear pitch markers</source>
+        <translation>&amp;Repor marcadores arremesso</translation>
+    </message>
+    <message>
+        <source>Clear pitch markers</source>
         <translation>Repor marcadores arremesso</translation>
     </message>
 </context>

@@ -79,9 +79,11 @@ void OverpullEstimator::init (const Piano *piano)
 /// is a response matrix R which tells us how many cents the string number k
 /// will fall if we increase string number j by one cent. On average the
 /// response is proprtional to the parameter averagePull and should be of
-/// the order of 20%.
+/// the order of 22%.
 ///
-/// \param averagePull : average pull, of the order of 0.2
+/// This function contains the full overpull theory
+///
+/// \param averagePull : average pull, of the order of 0.22
 ///////////////////////////////////////////////////////////////////////////////
 
 void OverpullEstimator::computeInteractionMatrix (double averagePull)
@@ -97,7 +99,7 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
     for (auto &row : R) row.resize(K);
     for (auto &row : R) row.assign(K,0);
 
-    double DL,DR,SL,SR,SB,SN,shift;
+    double DL=0,DR=0,SL=0,SR=0,SB=0,SN=0,shift=0;
 
     switch(mPianoType)
     {
@@ -177,15 +179,16 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
 
     // NORMALIZATION
     double sum = 0;
+    double p = 0.8; // weight of sound board deformation 80 %
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k) sum += (R[j][k] = response(j,k));
     sum /= K;
     for (int j=0; j<K; ++j) for (int k=0; k<K; ++k)
-        R[j][k] *= 0.8 * averagePull / sum; // 80% soundboard deformation
+        R[j][k] *= p * averagePull / sum;
 
 
     // BRIDGE TILT
     const double sigma = 20;
-    const double amplitude = averagePull * 0.2; // 20% bridge tilt
+    const double amplitude = averagePull * (1-p);
     double avstring = B/SB;
     for (int k=B; k<K; k++) avstring += 1.0/stringlength(k);
     avstring /= K;
@@ -232,9 +235,7 @@ void OverpullEstimator::computeInteractionMatrix (double averagePull)
 /// matrix.
 ///
 /// This function first checks whether enough red markers have been set.
-/// If so, it connects the red markers internally by linear interpolation.
-/// This interpolation is then used to feed the interaction matrix, which
-/// returns the required overpull.
+/// Then it computed the overpull according to these markers.
 /// \param keynumber : Number of the key to be tuned
 /// \param piano : Pointer to the piano structure
 /// \return Overpull in cents
@@ -246,84 +247,45 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
     if (not piano) return 0;
     int K = piano->getKeyboard().getNumberOfKeys();
     int B = piano->getKeyboard().getNumberOfBassKeys();
-    double cpitch = piano->getConcertPitch();
+    double cpratio = piano->getConcertPitch() / 440.0;
     if (K<=0 or B<=0 or keynumber<0 or keynumber>=K) return 0;
 
     // IF KEYBOARD PARAMETERS OR PITCH HAS CHANGED RE-INITIALIZE AGAIN
-    if (K != mNumberOfKeys or B != mNumberOfBassKeys or  cpitch != mConcertPitch
+    if (K != mNumberOfKeys or B != mNumberOfBassKeys
+        or   piano->getConcertPitch() != mConcertPitch
         or piano->getPianoType() != mPianoType) init(piano);
 
-    // CHECK WHETHER A GIVEN KEY PROVIDES VALID DATA
-    auto valid = [this] (const Key &key)
-    {return (key.getComputedFrequency() > 20 and key.getTunedFrequency() > 20);};
-    auto isvalid = [this,valid,piano] (int k) { return valid(piano->getKey(k)); };
-
-    // RED MARKERS HAVE TO BE PLACED WITH GAPS SMALLER THAN 7 HALFTONES
-    // OTHERWISE RETURN 0 (DO NOT SHOW OVERPULL)
+    //
+    std::vector<double> weightedRedMarkers (K,0);
     const int maxGapsize = 7;
     int gapsize = 0;
+    int lastkey = 0;
+    double lastchi = 0;
     for (int k=0; k<K; ++k)
     {
-        if (not isvalid(k)) gapsize++;
-        else gapsize=0;
-        if (gapsize > maxGapsize) return 0;
-    }
-
-    // COMPUTE HOW MUCH THE PITCH DEVIATES FROM THE COMPUTED TUNING CURVE
-    auto deviation = [this,piano,cpitch] (int k)
-    {
-        auto key = piano->getKey(k);
-        double computed = key.getComputedFrequency();
-        double tuned = key.getTunedFrequency();
-        double cpratio = cpitch/440.0;
-        if (tuned<=0 or computed<=0 or cpratio<=0) return 0.0;
-        return 1200.0*log2(tuned/computed/cpratio);
-    };
-
-    // FOR THE MISSING RED MARKERS CREATE A LINEAR INTERPOLATION
-    std::vector<double> interpolation (K,0);
-    auto interpolate = [this,isvalid,deviation,&interpolation] (int start, int end)
-    {
-        int leftmost = start, rightmost = end-1;
-        while (not isvalid(leftmost) and leftmost < end) leftmost++;
-        while (not isvalid(rightmost) and rightmost >= start) rightmost--;
-        if (leftmost >= rightmost) return false;
-
-        for (int i=start; i<leftmost; i++) interpolation[i]=deviation(leftmost);
-        int left = leftmost, right;
-        do
+        double computed   = piano->getKey(k).getComputedFrequency();
+        double tuned = piano->getKey(k).getTunedFrequency();
+        if (computed>20 and computed<20000 and tuned>20 and tuned<20000 and cpratio>0)
         {
-            right = left+1;
-            while (not isvalid(right) and right<=rightmost) right++;
-            for (int i=left; i<right; ++i) interpolation[i]=
-                    ((i-left)*deviation(right)+(right-i)*deviation(left))/(right-left);
-            left=right;
+            double chi = 1200.0*log2(tuned/computed/cpratio);
+            weightedRedMarkers[k] = chi*(gapsize+1);
+            lastkey = k; lastchi = chi;
+            gapsize=0;
         }
-        while (right <= rightmost);
-        for (int i=rightmost; i<end; i++) interpolation[i]=deviation(rightmost);
-        return true;
-    };
-
-    // THE INTERPOLATION IS CARRIED OUT SEPARATELY ON BOTH BRIDGES
-    if (not interpolate (0,B-1)) return 0;
-    if (not interpolate (B-1,K-1)) return 0;
+        else gapsize++;
+        if (gapsize > maxGapsize) return 0;
+        if (k==K-1 and gapsize>0)
+            weightedRedMarkers[lastkey] += lastchi*gapsize;
+    }
 
     // COMPUTE CURRENTLY NEEDED OVERPULL
     double overpull = 0, totaldeviation = 0;
-    for (int k=0; k<K; k++) if (k != keynumber)
+    for (int k=0; k<K; k++) if (weightedRedMarkers[k])
     {
-        double delta = interpolation[k];
-        if (delta>-2 and delta<10) delta=0;
-        totaldeviation += delta;
-        overpull -= delta * R[keynumber][k];
+        totaldeviation += weightedRedMarkers[k];
+        overpull -= weightedRedMarkers[k] * R[keynumber][k];
     }
 
-//    // Write to HDD for testing purposes
-//    std::ofstream os("000-overpull.dat");
-//    for (int key=0; key<mNumberOfKeys; key++) if (deviation(key)) os << key << " " << deviation(key) << std::endl;
-//    os << "&" << std::endl;
-//    for (int key=0; key<mNumberOfKeys; key++) os << key << " " << interpolation[key] << std::endl;
-//    os.close();
 
     // THE OVERPULL IS ONLY SHOWN IF THE PIANO IS ON AVERAGE MORE THAN 5 CENTS FLAT
     if (fabs(totaldeviation/K)>5) return overpull;

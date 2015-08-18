@@ -68,7 +68,7 @@
      <x>0</x>
      <y>0</y>
      <width>1111</width>
-     <height>19</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -89,7 +89,7 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionEdit_piano_data_sheet"/>
-    <addaction name="actionReset_pitches"/>
+    <addaction name="actionClear_pitches"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -186,12 +186,12 @@
     <string>&amp;Options</string>
    </property>
   </action>
-  <action name="actionReset_pitches">
+  <action name="actionClear_pitches">
    <property name="text">
-    <string>&amp;Reset pitch markers</string>
+    <string>&amp;Clear pitch markers</string>
    </property>
    <property name="toolTip">
-    <string>Reset pitch markers</string>
+    <string>Clear pitch markers</string>
    </property>
   </action>
   <action name="actionManual">
@@ -399,7 +399,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionReset_pitches</sender>
+   <sender>actionClear_pitches</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>onResetRecording()</slot>

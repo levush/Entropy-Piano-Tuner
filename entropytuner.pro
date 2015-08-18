@@ -33,27 +33,24 @@ Debug:UI_DIR = debug/.ui
 QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 QWT_H = $$HEADERS
+
 HEADERS = \
     Qt/plotsdialog/centralplotframe.h \
     Qt/plotsdialog/keyindexscaleengine.h \
     Qt/plotsdialog/keyindexscaledraw.h \
-    core/audio/pcmwriterinterface.h \
-    core/system/serverinfo.h \
     Qt/preferredtextsizelabel.h \
     Qt/verticalscrollarea.h \
     Qt/options/optionstabcontentsvscrollarea.h \
-    core/analyzers/overpull.h
+
 QWT_S = $$SOURCES
 SOURCES = \
     Qt/plotsdialog/centralplotframe.cpp \
     Qt/plotsdialog/keyindexscaleengine.cpp \
     Qt/plotsdialog/keyindexscaledraw.cpp \
-    core/piano/pianodefines.cpp \
-    core/system/serverinfo.cpp \
     Qt/preferredtextsizelabel.cpp \
     Qt/verticalscrollarea.cpp \
     Qt/options/optionstabcontentsvscrollarea.cpp \
-    core/analyzers/overpull.cpp
+
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt
@@ -358,6 +355,7 @@ CORE_AUDIO_HEADERS = \
     core/audio/soundgeneratormode.h \
     core/audio/waveformgenerator.h \
     core/audio/hammerknock.h \
+    core/audio/pcmwriterinterface.h \
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
@@ -379,7 +377,6 @@ CORE_MIDI_SOURCES = \
     core/midi/RtMidiimplementation.cpp \
     core/midi/NoMidiimplementation.cpp \
 
-
 #------------- Mathematical ----------------
 
 CORE_MATH_HEADERS = \
@@ -387,11 +384,9 @@ CORE_MATH_HEADERS = \
     core/math/fftimplementation.h \
     core/math/mathtools.h \
 
-
 CORE_MATH_SOURCES = \
     core/math/fftimplementation.cpp \
     core/math/mathtools.cpp \
-
 
 #--------------- System --------------------
 
@@ -403,6 +398,7 @@ CORE_SYSTEM_HEADERS = \
     core/system/timer.h \
     core/system/version.h \
     core/system/platformtoolscore.h \
+    core/system/serverinfo.h \
 
 CORE_SYSTEM_SOURCES = \
     core/system/log.cpp \
@@ -410,6 +406,7 @@ CORE_SYSTEM_SOURCES = \
     core/system/eptexception.cpp \
     core/system/timer.cpp \
     core/system/platformtoolscore.cpp \
+    core/system/serverinfo.cpp \
 
 #--------------- Analyzers -----------------
 
@@ -418,11 +415,13 @@ CORE_ANALYZER_HEADERS = \
     core/analyzers/keyrecognizer.h \
     core/analyzers/fftanalyzer.h \
     core/analyzers/fftanalyzererrorcodes.h \
+    core/analyzers/overpull.h \
 
 CORE_ANALYZER_SOURCES = \
     core/analyzers/signalanalyzer.cpp \
     core/analyzers/keyrecognizer.cpp \
     core/analyzers/fftanalyzer.cpp \
+    core/analyzers/overpull.cpp \
 
 #---------------- Piano --------------------
 
@@ -440,6 +439,7 @@ CORE_PIANO_SOURCES = \
     core/piano/key.cpp \
     core/piano/pianomanager.cpp \
     core/piano/keyboard.cpp \
+    core/piano/pianodefines.cpp \
 
 #--------------- Calculation ---------------
 
@@ -569,6 +569,7 @@ TRANSLATIONS = \
 
 
 # -------- algorithms ---------------
+
 algorithmDirs = $$files($$PWD/algorithms/*)
 for(algorithmDir, algorithmDirs) {
     algorithmFiles = $$files($$algorithmDir/*)
@@ -586,6 +587,7 @@ for(algorithmDir, algorithmDirs) {
 }
 
 # ------------- install ------------
+
 target.path = $$PREFIX/bin
 
 pixmaps.path = $$PREFIX/share/pixmaps
