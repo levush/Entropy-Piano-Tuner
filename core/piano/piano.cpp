@@ -24,6 +24,7 @@
 #include "piano.h"
 
 #include <cmath>
+#include <ctime>
 
 #include "../system/eptexception.h"
 
