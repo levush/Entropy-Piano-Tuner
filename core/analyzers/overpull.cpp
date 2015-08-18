@@ -27,6 +27,7 @@
 #include <iostream>
 
 #include "../system/log.h"
+#include "../math/mathtools.h"
 
 //-----------------------------------------------------------------------------
 //                               Constructor
@@ -267,7 +268,7 @@ double OverpullEstimator::getOverpull (int keynumber, const Piano *piano)
         double tuned = piano->getKey(k).getTunedFrequency();
         if (computed>20 and computed<20000 and tuned>20 and tuned<20000 and cpratio>0)
         {
-            double chi = 1200.0*log2(tuned/computed/cpratio);
+            double chi = 1200.0*log(tuned/computed/cpratio)/MathTools::LOG2;
             weightedRedMarkers[k] = chi*(gapsize+1);
             lastkey = k; lastchi = chi;
             gapsize=0;
