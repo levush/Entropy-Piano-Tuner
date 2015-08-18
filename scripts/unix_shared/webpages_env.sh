@@ -1,12 +1,12 @@
 # setup server configuration
 
-export SERVER_USERNAME=u81468700
-export SERVER_ADDRESS=s582786137.online.de
-export _SERVER_ROOT_DIR=download
+#export SERVER_USERNAME=u81468700
+#export SERVER_ADDRESS=s582786137.online.de
+#export _SERVER_ROOT_DIR=download
 
-#export SERVER_USERNAME=hinrichsen
-#export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
-#export _SERVER_ROOT_DIR=public_html/ept
+export SERVER_USERNAME=hinrichsen
+export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
+export _SERVER_ROOT_DIR=public_html/ept
 
 # load version
 . ./loadVersion.sh
@@ -76,8 +76,8 @@ EOF
 function rsync_push_dir {
 	local local_dir=$1
 	local remote_path=$SERVER_USERNAME@$SERVER_ADDRESS:$_SERVER_ROOT_DIR/$2
-	rsync -vh -r $local_dir $remote_path
-	ssh $SERVER_USERNAME@$SERVER_ADDRESS "chmod -R 755 $_SERVER_ROOT_DIR/$2"
+	rsync -vh -r - p $local_dir $remote_path
+	# ssh $SERVER_USERNAME@$SERVER_ADDRESS "chmod -R 755 $_SERVER_ROOT_DIR/$2"
 }
 
 # using sftp
