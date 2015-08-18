@@ -84,8 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->controlLayout->addWidget(mVolumeControlGroup, 1);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mVolumeControlGroup, SLOT(onModeChanged(OperationMode)));
     QObject::connect(mVolumeControlGroup, SIGNAL(refreshInputLevels()), this, SLOT(onResetNoiseLevel()));
-    QObject::connect(mVolumeControlGroup, SIGNAL(muteMicroToggled(bool)), this, SLOT(onToggleMute(bool)));
-    QObject::connect(mVolumeControlGroup, SIGNAL(muteSpeakerToggled(bool)), this, SLOT(onToggleMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteMicroToggled(bool)), this, SLOT(onToggleMicroMute(bool)));
+    QObject::connect(mVolumeControlGroup, SIGNAL(muteSpeakerToggled(bool)), this, SLOT(onToggleSpeakerMute(bool)));
 
     mSignalAnalyzerGroup = new SignalAnalyzerGroupBox(this);
     ui->controlLayout->addWidget(mSignalAnalyzerGroup, 0);
