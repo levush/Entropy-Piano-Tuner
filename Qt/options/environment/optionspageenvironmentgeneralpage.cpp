@@ -28,7 +28,16 @@
 
 namespace options {
 
-PageEnvironmentGeneral::PageEnvironmentGeneral(OptionsDialog *optionsDialog)
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor for the Environment-General registration card
+/// \param optionsDialog : Pointer to the parent options dialog
+///////////////////////////////////////////////////////////////////////////////
+
+PageEnvironmentGeneral::PageEnvironmentGeneral (OptionsDialog *optionsDialog)
 {
     QGridLayout *inputLayout = new QGridLayout;
     this->setLayout(inputLayout);
@@ -43,20 +52,28 @@ PageEnvironmentGeneral::PageEnvironmentGeneral(OptionsDialog *optionsDialog)
 
     mLanguageSelection = new QComboBox;
     userInterfaceLayout->addRow(new QLabel(tr("Language")), mLanguageSelection);
-
     mLanguageSelection->addItem(tr("<System Language>"), QVariant(""));
+
+    //**********************************************************************
+    //
+    //  PLEASE ADD A NEW LANGUAGE HERE:
+    //
     mLanguageSelection->addItem("English", QVariant("en"));
     mLanguageSelection->addItem("Deutsch", QVariant("de"));
     mLanguageSelection->addItem("Español", QVariant("es"));
     mLanguageSelection->addItem("Polski", QVariant("pl"));
     mLanguageSelection->addItem("Português", QVariant("pt"));
+    mLanguageSelection->addItem("Pусский", QVariant("ru"));
     mLanguageSelection->addItem("中国", QVariant("zh"));
     mLanguageSelection->addItem("한국어", QVariant("ko"));
-    //mLanguageSelection->addItem("Pусский", QVariant("ru"));
+    //
+    //**********************************************************************
+
 
     mLanguageSelection->setCurrentIndex(0);
 
-    for (int i = 0; i < mLanguageSelection->count(); i++) {
+    for (int i = 0; i < mLanguageSelection->count(); i++)
+    {
         if (mLanguageSelection->itemData(i).toString().toStdString() == SettingsForQt::getSingleton().getLanguageId()) {
             mLanguageSelection->setCurrentIndex(i);
             break;
@@ -71,21 +88,44 @@ PageEnvironmentGeneral::PageEnvironmentGeneral(OptionsDialog *optionsDialog)
     QObject::connect(mLanguageSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
 
     // buttons
-    QObject::connect(mResetWarningsButton, SIGNAL(clicked()), this, SLOT(onResetWarnings()));
+    QObject::connect(mResetWarningsButton, SIGNAL(clicked()), this, SLOT(onReactivateWarnings()));
 }
 
-void PageEnvironmentGeneral::apply() {
-    if (mLanguageSelection->currentData().toString().toStdString() != SettingsForQt::getSingleton().getLanguageId()) {
-        QMessageBox::information(this, tr("Information"), tr("The language change will take effect after a restart of the entropy piano tuner."));
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function called when the changes are applied
+///
+/// This function checks whether the language has been changed. If this was
+/// the case, a warning is shown that the new language will be visible only
+/// after restarting the application
+///////////////////////////////////////////////////////////////////////////////
+
+void PageEnvironmentGeneral::apply()
+{
+    if (mLanguageSelection->currentData().toString().toStdString() !=
+            SettingsForQt::getSingleton().getLanguageId())
+    {
+        QMessageBox::information(this, tr("Information"),
+                                 tr("The language change will take effect after a restart of the entropy piano tuner."));
         SettingsForQt::getSingleton().setLanguageId(mLanguageSelection->currentData().toString().toStdString());
     }
 }
 
-void PageEnvironmentGeneral::onResetWarnings() {
-    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i) {
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Reactivate warnings
+///
+/// This function reactivates all warnings that have been previously diabled by
+/// checking the box "Do not show this again".
+///////////////////////////////////////////////////////////////////////////////
+
+void PageEnvironmentGeneral::onReactivateWarnings()
+{
+    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i)
+    {
         SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(i, false);
     }
     mResetWarningsButton->setEnabled(false);
 }
+
 
 }  // namespace options

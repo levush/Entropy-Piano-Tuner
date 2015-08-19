@@ -29,6 +29,14 @@
 
 namespace options {
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class for general system settings
+///
+/// This is the class that manages the system setiings in the options dialog.
+/// Options -> Environment -> General
+/// Here you can choose the language and you can reactivate all warnings.
+///////////////////////////////////////////////////////////////////////////////
+
 class PageEnvironmentGeneral : public OptionsTabContentsVScrollArea, public ContentsWidgetInterface
 {
     Q_OBJECT
@@ -38,10 +46,10 @@ public:
     void apply() override final;
 
 private slots:
-    void onResetWarnings();
+    void onReactivateWarnings();
 
 private:
-    QComboBox *mLanguageSelection;
+    QComboBox   *mLanguageSelection;
     QPushButton *mResetWarningsButton;
 };
 
