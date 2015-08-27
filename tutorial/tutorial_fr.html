@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 4.3.7.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2015-07-20T15:09:55.466202060"/>
+	<style type="text/css">
+		td p { color: #000000 }
+		h1 { color: #000000 }
+		p { color: #000000 }
+	</style>
+</head>
+<body lang="fr-FR" text="#000000" dir="ltr" style="background: transparent">
+<h1 lang="fr-FR" align="center"><i>Entropy Piano Tuner</i></h1>
+<p lang="fr-FR" align="center"><font color="#800000"><font size="4" style="font-size: 14pt"><i><b>Guide de démarrage rapide</b></i></font></font></p>
+<p><span lang="fr-FR"><i>Bienvenu à l' Entropy Piano Tuner (EPT).
+Cette application vous permet de tester une <a href="http://www.sbfisica.org.br/rbef/pdf/342301.pdf">nouvelle méthode électronique</a> pour l'accordage des piano qui minimise le désordre (entropie) des spectres de fréquence. Ceci est un petit guide pour débuter. Pour plus d'informations s'il vous plaît téléchargez le <a href="http://download.piano-tuner.org/Resources/Public/Documentation/manual_en.pdf">manuel utilisateur</a>.</i></span></p>
+<hr/>
+
+<table width="100%" cellpadding="8" cellspacing="0">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<tr valign="top">
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="http://www.piano-tuner.org/" target="_top"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">Accueil</span></b></span></span></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="https://www.youtube.com/watch?v=c006U2v4yzY#installation"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">Vidéo</span></b></span></span></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="http://download.piano-tuner.org/Resources/Public/Documentation/manual_en.pdf"><span style="text-decoration: none"><font size="3" style="font-size: 12pt"><span lang="fr-FR"><b><span style="background: transparent">Manuel</span></b></span></font></span></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#license"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">License</span></b></span></span></a></p>
+		</td>
+	</tr>
+</table>
+<hr/>
+
+<table width="100%" cellpadding="4" cellspacing="0">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<col width="64*">
+	<tr valign="top">
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#first steps"><font color="#800000"><span style="text-decoration: none"><font size="3" style="font-size: 12pt"><span lang="fr-FR"><b><span style="background: transparent">Démarrage</span></b></span></font></span></font></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#recording"><font color="#800000"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">Enregistrement</span></b></span></span></font></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#calculating"><font color="#800000"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">Calcul</span></b></span></span></font></a></p>
+		</td>
+		<td width="25%" style="border: none; padding: 0cm">
+			<p align="center" style="margin-top: 0.1cm; background: transparent">
+			<a href="#tuning"><font color="#800000"><span style="text-decoration: none"><span lang="fr-FR"><b><span style="background: transparent">Accord</span></b></span></span></font></a></p>
+		</td>
+	</tr>
+</table>
+<hr/>
+
+<p lang="fr-FR" style="margin-top: 0.42cm"><a name="installation"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b><br>Configuration matérielle et installation</b></font></font></p>
+<p lang="fr-FR"><b>Ordinateur : </b><span style="font-weight: normal">L'EPT fonctionne sur la plupart des ordinateurs portables et les tablettes, et même sur les téléphones portables.</span>
+</p>
+<p lang="fr-FR"><b>Microphone : </b>Pour utiliser l'accordeur on a besoin d'un microphone externe de bonne qualité. Nous recommandons un microphone à condensateur à faible bruit avec une réponse en fréquence linéaire. Les microphones intégrés des tablettes et smartphones peuvent être utilisés pour des essais, mais ils peuvent échouer à basses et hautes fréquences.</p>
+<p lang="fr-FR"><b>Casque : </b>En option, un casque ordinaire sera utile pour vérifier les tonalités enregistrées. Si vous ne l'utilisez un casque, vous devez désactiver le haut-parleur de votre appareil afin d'éviter la rétroaction involontaire par le microphone.</p>
+<p lang="fr-FR"><b>Clavier MIDI : </b>En option, vous pouvez connecter un clavier MIDI sur votre appareil qui vous permet de jouer et d'entendre l'accord calculé à l'avance. Cependant, un clavier MIDI n'est pas nécessaire pour faire l'accord.</p>
+<p><span lang="fr-FR"><b>Installation :</b></span> <span lang="fr-FR">L'EPT est disponible pour Mac OS-X, iOS, Android, Windows et Linux. S'il vous plaît visitez notre <a href="http://piano-tuner.org/download">page de téléchargement</a>.</span></p>
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Premiers pas</b></font></font></p>
+<p><span lang="fr-FR">Connectez votre microphone et démarrez l'EPT. Assurez-vous que le VU-mètre répond au micro et que le niveau d'entrée est automatiquement ajustée. Si vous accorder l'instrument pour la première fois, choisissez <i>Fichier-Nouveau</i>, spécifiez la hauteur de l'accord de concert, et de fournissez les informations nécessaires.
+La barre d'outils à gauche vous permet de basculer entre quatre modes différents de fonctionnement qui peuvent être sélectionnés par clic de souris ou en utilisant la touche TAB. Ces modes d'opération correspondent aux trois principales étapes de la procédure de réglage :</span></p>
+<ul>
+	<li/>
+<p>Enregistrement de toutes les touches du piano.</p>
+	<li/>
+<p>Calcul de l'accord à entropie minimizée.</p>
+	<li/>
+<p>Accord du piano assisté électroniquement.</p>
+</ul>
+
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><a name="recording"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>1.
+Enregistrement</b></font></font></p>
+<p lang="fr-FR">Sélectionnez le mode d'enregistrement et frapper toutes les touches de votre piano à la suite de la gauche vers la droite afin de les enregistrer. L'enregistrement commence dès que le VU-mètre passe sur "On" marque et arrête quand il tombe en dessous de la marque «off». La touche pressée est reconnu automatiquement. Au-dessus des touches, vous verrez le spectre de fréquence avec les partiels comme une ligne rouge.</p>
+<p lang="fr-FR">S'il vous plaît garder la touche de piano enfoncée jusqu'à ce que le rouge symbole d'enregistrement disparaisse et attendre jusqu'à ce que les données ait été traitées. Si vous utilisez un casque un enregistrement réussi sera reconnu par un bref écho de la même hauteur. La touche correspondante sera marquée par un coche vert.</p>
+<p lang="fr-FR">Si vous décidez d'enregistrerà nouveau une certaine note sélectionner la touche correspondante par un clic de souris ou en utilisant les touches fléchées. Si la touche n'est pas correctement reconnue, par exemple dans les basse ou dans les aigus, il est possible de forcer la reconnaissance en cliquant deux fois sur la touche ou en appuyant sur la touche Entrée.</p>
+<p lang="fr-FR">Après chaque enregistrement de l'EPT affiche la qualité du signal enregistré. Il n'y a pas besoin que cette qualité soit maximale, mais elle devrait varier en légèrement d'une touche à l'autre. Pour les notes avec plusieurs cordes, il est recommandé d'enregistrer une seule corde en mettant en sourdine les autres.</p>
+<p lang="fr-FR">Pendant l'enregistrement de deux courbes apparaîtront au-dessus du spectre. Les marqueurs bleus mesurent la hauteur par rapport au tempérament égal. Au contraire, les marqueurs gris quantifient l'inharmonicité tracée à l'envers. Mis à part un saut entre les deux sections de cordes diagonales, les niveaux de inharmonicité devraient varier en douceur. L'inharmonicité ne se mesure pas dans la plus haute octave.</p>
+<p lang="fr-FR">Une fois que toutes les touches sont marquées par un coche vert s'il vous plaît enregistrer votre travail (en utilisant <i> Fichier-Enregistrer sous .... </i>). Avec un clavier MIDI, il est possible de vérifier les touches enregistrées acoustiquement.</p>
+
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><a name="calculating"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>2. Calcul</b></font></font></p>
+<p lang="fr-FR">Passez dans en mode calcul, sélectionnez le minimiseur d'entropie et de commencez le calcul. Dans la fenêtre de courbe d'accord, vous pouvez surveiller la façon dont le processus de réglage évolue. Comme vous pouvez le voir, l'algorithme crée un accordage représenté par marqueurs verts. S'il n'y a plus de grands changements vous pouvez arrêter le processus de calcul.</p>
+<p lang="fr-FR">Maintenant, il est possible de tester l'accord calculé en jouant sur le clavier MIDI. L'EPT synthétise des sons artificiels selon ceux enregistrés, en prenant en compte inharmonicité. Si vous trouvez que certaines touches sont clairement désaccordées, vous pouvez les corriger en déplaçant les marqueurs verts à l'aide de la souris.</p>
+<p lang="fr-FR">Après un calcul réussi, vous devriez à nouveau enregistrer votre projet.</p>
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><a name="tuning"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>3. Accord</b></font></font></p>
+<p lang="fr-FR">Maintenant passez au mode d'accordage. Ici l'EPT fonctionne de la même manière qu'un dispositif d'accord ordinaire. Toutefois, étant donné que l'inharmonicité est prise en compte, il ne fonctionne qu'avec l'instrument qui a été enregistrée.</p>
+<p lang="fr-FR">Pour accorder une corde, simplement essayez d'amener le marqueur rectangulaire au centre dans la fenêtre de l'analyseur. Autrement, essayez de déplacer les marqueurs rouges dans la région du centre qui est mis en évidence par la couleur verte. Pour les touches avec plusieurs cordes par note, il est recommandé de commencer par l'une d'entre elles, puis de régler les autres à l'oreille par rapport à la première.</p>
+<p lang="fr-FR">Dans le mode de réglage de l'EPT reconnaît la touche accordée automatiquement. En même temps, un son de synthèse est généré dans le casque qui devrait coïncider avec le son de la corde. Là encore, il est possible de sélectionner une touche particulière et de forcer sa reconnaissance.</p>
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><a name="license"></a>
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Licence / Avertissement</b></font></font></p>
+<p><span lang="fr-FR">Le Entropy Piano Tuner est complètement <b>gratuit</b> et peut être utilisé pour un usage privé ainsi qu'à des fins professionnelles.
+Il est publié comme un <span style="font-weight: normal">logiciel libre</span> sous la <a href="https://gnu.org/licenses/gpl.html">licence GNU-GPL</a>.</span>
+<font color="#800000"><span lang="fr-FR"><b>Nous tenons à souligner que l'accordage de pianos est une tâche très sophistiqué qui nécessite de nombreuses années de formation professionnelle complète. L'accord incorrect peut causer des dommages graves à votre instrument. S'il vous plaît noter que vous utilisez ce programme à vos propres risques.</b></span></font>
+</p>
+<p lang="fr-FR" style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><b>Commentaires</b></font></font></p>
+<p><span lang="fr-FR">
+Si vous avez des questions ou des commentaires s'il vous plaît envoyez-nous un e-mail à <b>info at piano-tuner.org</b><span style="font-weight: normal"> ou utilisez le <a href="http://piano-tuner.org/contact">formulaire de contact</a> sur notre site web.</span></span></p>
+<br/>
+<br/>
+</body>
+</html>
