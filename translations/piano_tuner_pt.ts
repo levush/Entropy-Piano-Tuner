@@ -837,6 +837,10 @@
         <source>Click this button to mute the input device.</source>
         <translation>Clique nesse botão para silenciar o dispositivo de entrada.</translation>
     </message>
+    <message>
+        <source>Click this button to mute the speaker or headphone.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>VolumeControlLevel</name>
