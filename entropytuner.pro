@@ -124,6 +124,11 @@ winrt {
     LIBS += -lwinmm
 }
 
+win32-g++{
+    LIBS += -L$$PWD/dependencies/lib/win_mingw32 -llibfftw3-3
+    DLLS = $$PWD/dependencies/lib/win_mingw32/libfftw3-3.dll
+}
+
 win32:contains(QT_ARCH, i386):{
     # this library is for static linking
     LIBS += -L$$PWD/dependencies/lib/win_i386 -llibfftw3-3
@@ -138,8 +143,11 @@ win32:contains(QT_ARCH, arm):{
 win32:contains(QT_ARCH, x86_64):{
     LIBS += -L$$PWD/dependencies/lib/win_x86_64 -llibfftw3-3
 
-    # copy external dlls
     DLLS = $$PWD/dependencies/bin/win_x86_64/libfftw3-3.dll
+}
+
+win32|win32-g++ {
+    # copy external dlls
     DLLS ~= s,/,\\,g
     DESTDIR_WIN = $$OUT_PWD/$$DESTDIR
     DESTDIR_WIN ~= s,/,\\,g
