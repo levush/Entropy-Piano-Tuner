@@ -14,5 +14,7 @@
         <file>qt_zh.qm</file>
         <file>piano_tuner_ru.qm</file>
         <file>qt_ru.qm</file>
+        <file>qt_fr.qm</file>
+        <file>piano_tuner_fr.qm</file>
     </qresource>
 </RCC>

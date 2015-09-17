@@ -432,7 +432,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="519"/>
+        <location filename="../Qt/mainwindow.cpp" line="521"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>Entropy piano tuner</translation>
@@ -479,7 +479,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
-        <location filename="../Qt/mainwindow.cpp" line="209"/>
+        <location filename="../Qt/mainwindow.cpp" line="211"/>
         <source>About</source>
         <translation>Información</translation>
     </message>
@@ -525,7 +525,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
-        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Clear pitch markers</source>
         <translation>Eliminar marcadores de tono.</translation>
     </message>
@@ -552,82 +552,82 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="204"/>
-        <location filename="../Qt/mainwindow.cpp" line="207"/>
+        <location filename="../Qt/mainwindow.cpp" line="209"/>
         <source>Tutorial</source>
         <translation>Tutorial</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="143"/>
+        <location filename="../Qt/mainwindow.cpp" line="144"/>
         <source>Idle</source>
         <translation>Inactive</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="149"/>
+        <location filename="../Qt/mainwindow.cpp" line="150"/>
         <source>Record</source>
         <translation>Grabar</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="155"/>
+        <location filename="../Qt/mainwindow.cpp" line="156"/>
         <source>Calculate</source>
         <translation>Calcular</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="161"/>
+        <location filename="../Qt/mainwindow.cpp" line="162"/>
         <source>Tune</source>
         <translation>Afinar</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="145"/>
+        <location filename="../Qt/mainwindow.cpp" line="146"/>
         <source>Press this button to switch to the idle mode.</source>
         <translation>Presionar el botón para cambiar a modo inactivo.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="151"/>
+        <location filename="../Qt/mainwindow.cpp" line="152"/>
         <source>Press this button to switch to the recording mode.</source>
         <translation>Presionar el botón para cambiar a modo de grabación.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="157"/>
+        <location filename="../Qt/mainwindow.cpp" line="158"/>
         <source>Press this button to switch to the calculation mode.</source>
         <translation>Presionar el botón para cambiar a modo de operación.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="163"/>
+        <location filename="../Qt/mainwindow.cpp" line="164"/>
         <source>Press this button to switch to the tuning mode.</source>
         <translation>Presionar el botón para cambiar a modo de afinación.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="179"/>
+        <location filename="../Qt/mainwindow.cpp" line="180"/>
         <source>Documents and tools</source>
         <translation>Documentos y herramientas</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="185"/>
+        <location filename="../Qt/mainwindow.cpp" line="186"/>
         <source>New</source>
         <translation>Nuevo</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="188"/>
+        <location filename="../Qt/mainwindow.cpp" line="189"/>
         <source>Save as</source>
         <translation>Guardar como</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="189"/>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Edit piano data sheet</source>
         <translation>Editar datos del piano</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="191"/>
+        <location filename="../Qt/mainwindow.cpp" line="193"/>
         <source>Options</source>
         <translation>Opciones</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="192"/>
+        <location filename="../Qt/mainwindow.cpp" line="194"/>
         <source>Graphs</source>
         <translation>Gráficos</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="194"/>
+        <location filename="../Qt/mainwindow.cpp" line="196"/>
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
@@ -636,68 +636,68 @@
         <translation type="vanished">Registro (Log)</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="229"/>
+        <location filename="../Qt/mainwindow.cpp" line="231"/>
         <source>Export</source>
         <translation>Exportar datos</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="361"/>
+        <location filename="../Qt/mainwindow.cpp" line="363"/>
         <source>File created</source>
         <translation>Archivo creado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="364"/>
+        <location filename="../Qt/mainwindow.cpp" line="366"/>
         <source>File edited</source>
         <translation>Archivo editado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="367"/>
+        <location filename="../Qt/mainwindow.cpp" line="369"/>
         <source>File opened</source>
         <translation>Archivo abierto</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="370"/>
+        <location filename="../Qt/mainwindow.cpp" line="372"/>
         <source>File saved</source>
         <translation>Archivo guardado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="436"/>
+        <location filename="../Qt/mainwindow.cpp" line="438"/>
         <source>Recording keystroke</source>
         <translation>Grabando tecla</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="444"/>
+        <location filename="../Qt/mainwindow.cpp" line="446"/>
         <source>Signal analysis started</source>
         <translation>Análisis de señal comenzado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="447"/>
+        <location filename="../Qt/mainwindow.cpp" line="449"/>
         <source>Signal analysis ended</source>
         <translation>Análisis de señal finalizado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="476"/>
+        <location filename="../Qt/mainwindow.cpp" line="478"/>
         <source>Calculation failed</source>
         <translation>La operación falló</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="479"/>
+        <location filename="../Qt/mainwindow.cpp" line="481"/>
         <source>Calculation ended</source>
         <translation>Operación finalizada</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="482"/>
+        <location filename="../Qt/mainwindow.cpp" line="484"/>
         <source>Calculation started</source>
         <translation>Operación comenzada</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="552"/>
-        <location filename="../Qt/mainwindow.cpp" line="754"/>
+        <location filename="../Qt/mainwindow.cpp" line="554"/>
+        <location filename="../Qt/mainwindow.cpp" line="760"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="552"/>
+        <location filename="../Qt/mainwindow.cpp" line="554"/>
         <source>Unable to find a supported sound control.</source>
         <translation>Control de sistema no encontrado.</translation>
     </message>
@@ -706,27 +706,27 @@
         <translation type="vanished">Control de sistema no encontrado.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="596"/>
+        <location filename="../Qt/mainwindow.cpp" line="602"/>
         <source>Canceled</source>
         <translation>Cancelado</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="596"/>
+        <location filename="../Qt/mainwindow.cpp" line="602"/>
         <source>You need to save the file before you can share it.</source>
         <translation>Debe guardar el archivo antes de compartirlo.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="735"/>
+        <location filename="../Qt/mainwindow.cpp" line="741"/>
         <source>A new update is available!</source>
         <translation>Una nueva actualización está disponible!</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="736"/>
+        <location filename="../Qt/mainwindow.cpp" line="742"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>La versión de la aplicación en línea es %1. ¿Quieres instalar esta actualización?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="754"/>
+        <location filename="../Qt/mainwindow.cpp" line="760"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>La herramienta de mantenimiento no pudo iniciarse automáticamente. Para actualizar el programa que tiene que comenzar la herramienta de mantenimiento manualmente.</translation>
     </message>
@@ -741,13 +741,13 @@
         <translation>¿Desea guardar los cambios?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="187"/>
+        <location filename="../Qt/mainwindow.cpp" line="188"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="88"/>
         <source>Save</source>
         <translation>Guardar</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="186"/>
+        <location filename="../Qt/mainwindow.cpp" line="187"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="111"/>
         <source>Open</source>
         <translation>Abrir</translation>
@@ -1018,27 +1018,32 @@
         <translation>Volumen</translation>
     </message>
     <message>
-        <location filename="../Qt/volumecontrolgroupbox.cpp" line="128"/>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="131"/>
+        <source>Click this button to mute the speaker or headphone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="142"/>
         <source>This widgets provides settings and information about the input level of the input device.</source>
         <translation>Este widget muestra los ajustes e información del volumen de entrada del dispositivo de entrada.</translation>
     </message>
     <message>
-        <location filename="../Qt/volumecontrolgroupbox.cpp" line="129"/>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="143"/>
         <source>If the input level drops below this mark the recorder stops and does not process the input signal.</source>
         <translation>Si el volumen baja de esta marca, la grabación se interrumpe y la señal de entrada no se procesa.</translation>
     </message>
     <message>
-        <location filename="../Qt/volumecontrolgroupbox.cpp" line="130"/>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="144"/>
         <source>If the input level reaches this threshold the recorder starts analyzing the signal of the input device until the level drops below the &apos;Off&apos; mark.</source>
         <translation>Si el volumen alcanza esta marca, comienza la grabación y se analiza la señal del dispositivo de entrada hasta que el volumen cae por debajo de la marca &apos;Off&apos;.</translation>
     </message>
     <message>
-        <location filename="../Qt/volumecontrolgroupbox.cpp" line="131"/>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="145"/>
         <source>Click this button to reset the automatic calibration of the input volume.</source>
         <translation>Haga clic en este botón para restablecer la calibración automática del volumen de entrada.</translation>
     </message>
     <message>
-        <location filename="../Qt/volumecontrolgroupbox.cpp" line="132"/>
+        <location filename="../Qt/volumecontrolgroupbox.cpp" line="146"/>
         <source>Click this button to mute the input device.</source>
         <translation>Haga clic en este botón para silenciar el dispositivo de entrada.</translation>
     </message>
@@ -1172,7 +1177,7 @@
         <translation>&lt;Idioma del sistema&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="66"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="67"/>
         <source>Reactivate warnings</source>
         <translation>Reactivar advertencias</translation>
     </message>
@@ -1185,12 +1190,12 @@
         <translation type="vanished">Limpiar advertencias</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="80"/>
         <source>Information</source>
         <translation>Información</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="79"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="80"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
         <translation>El cambio de lenguaje se hará efectivo después de reiniciar el programa.</translation>
     </message>

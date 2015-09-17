@@ -53,10 +53,10 @@ if %vcredist% EQU x86 (
 ) else (
 	if %vcredist% EQU x64 (
 		call windows_vars_x64.bat
-) else (
-	echo Platform %vcredist% is not supported.
-	exit /b
-)
+	) else (
+		echo Platform %vcredist% is not supported.
+		exit /b
+	)
 )
 
 call windowsPaths.bat %vcredist%
@@ -85,9 +85,15 @@ if %build%==1 (
 	cd %builddir%
 	
 	:: qmake + jom
-	qmake %tunerdir%\entropytuner.pro -r -spec %msvc_spec% DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
-	:: silent + other options
-	"%QtCreatorPath%\jom.exe" -S %jomargs% || exit /b
+	qmake %tunerdir%\entropytuner.pro -r -spec %msvc_spec% DEFINES+="CONFIG_ENABLE_UPDATE_TOOL" || exit /b
+	
+	if %compiler% EQU msvc (
+		:: silent + other options
+		"%QtCreatorPath%\jom.exe" -S %jomargs% || exit /b
+	) else (
+		:: mingw make
+		"%MinGWPath%\mingw32-make.exe" %jomargs% || exit /b
+	)
 	
 	echo Build finished.
 )
@@ -114,10 +120,15 @@ if %updateDependencies%==1 (
 	
 	copy /Y "%builddir%\release\libfftw3-3.dll" %depsDataDir%
 	
-	:: move vcredist_xxx to vcredist
-	echo Moving vcredist
-	del %depsDataDir%\vcredist.exe
-	move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit /b
+	if %compiler% EQU msvc (
+		:: move vcredist_xxx to vcredist
+		echo Moving vcredist
+		del %depsDataDir%\vcredist.exe
+		move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit /b
+	) else (
+		:: move the mingw runtime done by Qt
+		echo MinGW runtime moved
+	)
 	
 	echo Updating dependencies finished.
 )
@@ -125,6 +136,8 @@ if %updateDependencies%==1 (
 :: if build, then copy new exe
 if %build%==1 (
 	echo Copying built exe and icon started.
+	rd %appDataDir% /s /q
+	mkdir %appDataDir%
 	copy /Y %builddir%\release\entropypianotuner.exe %appDataDir%
 	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir%
 	echo Copying build exe and icon finished.
@@ -143,14 +156,25 @@ if %updatePackages%==1 (
 )
 if %createInstaller%==1 (
 	echo Creating installer started.
+	:: cd to installer
+	cd %tunerdir%\appstore\installer
 	
 	del %relConfigFile%
 	:: create windows config pointing to the correct repository
 	call %tunerdir%\scripts\windows\BatchSubstitute.bat dummy_repository %repository% config\config.xml > %relConfigFile%.tmp
 	:: correct path for windows for default install dir
 	call %tunerdir%\scripts\windows\BatchSubstitute.bat "<TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>" "<TargetDir>@ApplicationsDir@/EntropyPianoTuner</TargetDir>" %relConfigFile%.tmp > %relConfigFile%
+	
+	if %compiler% EQU msvc (
+		:: use correct script
+		copy /Y scripts\deps_installscript_msvc.qs packages\org.entropytuner.deps\meta\installscript.qs || exit /b
+	) else (
+		:: use dummy script
+		copy /Y scripts\deps_installscript_dummy.qs packages\org.entropytuner.deps\meta\installscript.qs || exit /b
+	)
+	
 	:: create online/offline installer
-	binarycreator -v -n -c %relConfigFile% -p packages %setupname%
+	binarycreator --%installer_type% -v -c %relConfigFile% -p packages %setupname%
 
 	:: move installer to publish dir
 	cd %tunerdir%

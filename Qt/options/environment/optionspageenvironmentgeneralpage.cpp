@@ -52,6 +52,7 @@ PageEnvironmentGeneral::PageEnvironmentGeneral (OptionsDialog *optionsDialog)
 
     mLanguageSelection = new QComboBox;
     userInterfaceLayout->addRow(new QLabel(tr("Language")), mLanguageSelection);
+
     mLanguageSelection->addItem(tr("<System Language>"), QVariant(""));
 
     //**********************************************************************
@@ -66,8 +67,7 @@ PageEnvironmentGeneral::PageEnvironmentGeneral (OptionsDialog *optionsDialog)
     mLanguageSelection->addItem("Pусский", QVariant("ru"));
     mLanguageSelection->addItem("中国", QVariant("zh"));
     mLanguageSelection->addItem("한국어", QVariant("ko"));
-    //
-    //**********************************************************************
+    mLanguageSelection->addItem("Français", QVariant("fr"));
 
 
     mLanguageSelection->setCurrentIndex(0);
