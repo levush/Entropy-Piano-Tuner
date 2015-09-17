@@ -30,14 +30,36 @@
 #include "../piano/piano.h"
 #include "../math/mathtools.h"
 
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of a FourierSpectrumGraphDrawer
+/// \param graphics : Pointer to the graphics adapter
+///////////////////////////////////////////////////////////////////////////////
 
 FourierSpectrumGraphDrawer::FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics)
     : DrawerBase(graphics,  1.0),
-      mNumberOfKeys(-1)
+      mConcertPitch(0),
+      mKeyNumberOfA4(0),
+      mNumberOfKeys(-1),
+      mSamplingRate(0),
+      mCurrentOperationMode(MODE_IDLE)
 {
 }
 
 
+//-----------------------------------------------------------------------------
+//                           Draw the spectrum
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Draw the spectrum
+///
+/// This function first draws the background grid and then calls the function
+/// updateSpectrum() which does the actual drawing of the curve.
+///////////////////////////////////////////////////////////////////////////////
 
 void FourierSpectrumGraphDrawer::draw()
 {
@@ -48,11 +70,27 @@ void FourierSpectrumGraphDrawer::draw()
         mGraphics->drawLine (x, 0, x, 1, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
     }
 
-    // draw spectrum
+    // update (draw) the spectrum
     updateSpectrum();
 }
 
-void FourierSpectrumGraphDrawer::updateSpectrum() {
+
+//-----------------------------------------------------------------------------
+//                           Update the spectrum
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function for updating the red curve showing the spectrum
+///
+/// This function actually draws the spectrum. It puts graphic items which
+/// are defined by different roles (global,chart,peak). First the old elements
+/// are removed (one chart, many peaks). The data used for plotting is held by
+/// the shared pointers mKey and mPolygon. Then the peaks are placed and finally
+/// the red line is plotted as a polygon.
+////////////////////////////////////////////////////////////////////////////////
+///
+void FourierSpectrumGraphDrawer::updateSpectrum()
+{
     // delete old peaks and chart
     // ==========================================================================
 
@@ -73,8 +111,8 @@ void FourierSpectrumGraphDrawer::updateSpectrum() {
     // ==========================================================================
 
 
-    // check if data is available
-    if (!mPolygon) return;
+    // check if data is available, otherwise quit
+    if (not mPolygon) return;
 
     // lambda function mapping the frequency to an x-coodinate in [0,1]:
     const double a = (mKeyNumberOfA4+0.5)/mNumberOfKeys;
@@ -109,14 +147,13 @@ void FourierSpectrumGraphDrawer::updateSpectrum() {
                 item = mGraphics->drawFilledRect(x-dx/2,y-dy/2,dx,dy,
                                                  GraphicsViewAdapter::PEN_THIN_TRANSPARENT,
                                                  GraphicsViewAdapter::FILL_BLUE);
-                if (item) {
-                    item->setItemRole(ROLE_PEAK);
-                }
+                if (item) item->setItemRole(ROLE_PEAK);
             }
         }
     }
 
-    // draw spectrum
+    // DRAW SPECTRUM
+
     std::vector<GraphicsViewAdapter::Point> points;
     EptAssert(mConcertPitch > 0,"concert pitch should be positive");
     EptAssert(mNumberOfKeys > 0,"invalid number of keys");
@@ -133,9 +170,25 @@ void FourierSpectrumGraphDrawer::updateSpectrum() {
 }
 
 
+//-----------------------------------------------------------------------------
+//                           Reset the spectrum
+//-----------------------------------------------------------------------------
+
+/// \brief Reset the spectrum
+
 void FourierSpectrumGraphDrawer::reset() {
     DrawerBase::reset();
 }
+
+
+//-----------------------------------------------------------------------------
+//                             Message handler
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message dispatcher for FourierSpectrumGraphDrawer.
+/// \param m : Message pointer
+///////////////////////////////////////////////////////////////////////////////
 
 void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
 {
@@ -143,6 +196,7 @@ void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
     {
     case Message::MSG_PROJECT_FILE:
     {
+        // Update local parameter
         auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
         mConcertPitch = mpf->getPiano().getConcertPitch();
         mNumberOfKeys = mpf->getPiano().getKeyboard().getNumberOfKeys();
@@ -151,26 +205,34 @@ void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
         redraw(true);
         break;
     }
-    case Message::MSG_MODE_CHANGED: {
+    case Message::MSG_MODE_CHANGED:
+    {
+        // Update operation mode
         auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
         mCurrentOperationMode = mmc->getMode();
         break;
     }
-    case Message::MSG_NEW_FFT_CALCULATED: {
+    case Message::MSG_NEW_FFT_CALCULATED:
+    {
+        // Update mPolygon
         auto mnfc(std::static_pointer_cast<MessageNewFFTCalculated>(m));
-        if (mnfc->hasError()) {
+        if (mnfc->hasError())
+        {
             mPolygon.reset();
-        } else {
+        }
+        else
+        {
             mPolygon = mnfc->getPolygon();
             mSamplingRate = mnfc->getData()->samplingRate;
         }
+        // Reset mKey
         mKey.reset();
-        if (reqestRedraw(mnfc->isFinal())) {
-            updateSpectrum();
-        }
+        // Plot curve
+        if (reqestRedraw(mnfc->isFinal())) updateSpectrum();
         break;
     }
     case Message::MSG_CLEAR_RECORDING:
+        // Clear everything, cancel spectrum
         mPolygon.reset();
         mKey.reset();
         redraw(true);
@@ -180,11 +242,10 @@ void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
         break;
     case Message::MSG_FINAL_KEY:
     {
+        // Update mKey
         auto mnfc(std::static_pointer_cast<MessageFinalKey>(m));
         mKey = mnfc->getFinalKey();
-        if (reqestRedraw(true)) {
-            updateSpectrum();
-        }
+        if (reqestRedraw(true)) updateSpectrum();
         break;
     }
     default:

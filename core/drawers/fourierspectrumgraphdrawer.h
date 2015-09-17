@@ -26,10 +26,18 @@
 #include "../messages/messagelistener.h"
 #include "../analyzers/signalanalyzer.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The FourierSpectrumGraphDrawer class
+///
+/// This class is drawing the spectrum (the red line) and if available the
+/// peak markers on top of it.
+///////////////////////////////////////////////////////////////////////////////
+
 class FourierSpectrumGraphDrawer : public DrawerBase, public MessageListener
 {
 public:
-    enum RoleType {
+    enum RoleType
+    {
         ROLE_GLOBAL   = 1,
         ROLE_CHART    = 2,
         ROLE_PEAK     = 4
@@ -47,13 +55,13 @@ protected:
     void updateSpectrum();
 
 private:
-    double mConcertPitch;
-    int mKeyNumberOfA4;
-    int mNumberOfKeys;
-    int mSamplingRate;
-    OperationMode mCurrentOperationMode;
-    std::shared_ptr<FFTPolygon> mPolygon;
-    std::shared_ptr<Key> mKey;
+    double mConcertPitch;                   ///< Target freuqency of A4
+    int mKeyNumberOfA4;                     ///< Index of A4 key
+    int mNumberOfKeys;                      ///< Total number of keys
+    int mSamplingRate;                      ///< copy of sample rate
+    OperationMode mCurrentOperationMode;    ///< Current mode of operation
+    std::shared_ptr<FFTPolygon> mPolygon;   ///< Shared pointer to spectral polygon
+    std::shared_ptr<Key> mKey;              ///< Shared pointer to selected key, holding the peaks
 };
 
 #endif // FOURIERSPECTRUMGRAPHDRAWER_H
