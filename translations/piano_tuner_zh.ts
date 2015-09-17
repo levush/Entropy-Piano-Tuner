@@ -249,7 +249,7 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
         <source>Do you really want to clear all pitch markers? This can not be undone!</source>
-        <translation>你真的要重置所有节距标记？这不能逆转！</translation>
+        <translation type="unfinished">你真的要清除所有音高标记？这不能恢复！</translation>
     </message>
     <message>
         <source>Do you really want to reset all pitch markers? This can not be undone!</source>
@@ -374,7 +374,8 @@
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
         <source>Keys on bass bridge</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>低音琴桥上的键数</translatorcomment>
+        <translation type="unfinished">低音键数</translation>
     </message>
 </context>
 <context>
@@ -523,13 +524,13 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Clear pitch markers</source>
-        <translation>&amp;重置所有节距标记</translation>
+        <translation type="unfinished">&amp;清除所有音高标记</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
         <location filename="../Qt/mainwindow.cpp" line="191"/>
         <source>Clear pitch markers</source>
-        <translation>重置所有节距标记</translation>
+        <translation type="unfinished">清除所有音高标记</translation>
     </message>
     <message>
         <source>&amp;Reset pitch markers</source>
@@ -838,25 +839,25 @@
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="116"/>
         <source>Inh.</source>
         <translatorcomment>失谐系数</translatorcomment>
-        <translation></translation>
+        <translation type="unfinished">失谐系数</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
-        <translatorcomment>录音</translatorcomment>
-        <translation></translation>
+        <translatorcomment>录制的</translatorcomment>
+        <translation type="unfinished">录制的</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
         <source>Comp.</source>
         <translatorcomment>计算</translatorcomment>
-        <translation></translation>
+        <translation type="unfinished">计算的</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="119"/>
         <source>Tun.</source>
         <translatorcomment>调律</translatorcomment>
-        <translation></translation>
+        <translation type="unfinished">已调律</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="124"/>
@@ -868,7 +869,7 @@
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
-        <translation>失谐</translation>
+        <translation type="unfinished">失谐度</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="122"/>
@@ -974,7 +975,7 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation></translation>
+        <translation type="unfinished">给定文件名已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1033,7 +1034,7 @@
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="131"/>
         <source>Click this button to mute the speaker or headphone.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">点击此按钮使扬声器或耳机静音</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="142"/>

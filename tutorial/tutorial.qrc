@@ -4,5 +4,6 @@
         <file>tutorial_en.html</file>
         <file>tutorial_pt.html</file>
         <file>tutorial_fr.html</file>
+        <file>tutorial_zh.html</file>
     </qresource>
 </RCC>
