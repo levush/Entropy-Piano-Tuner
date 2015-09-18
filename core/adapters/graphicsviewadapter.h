@@ -29,7 +29,7 @@
 /// The GraphicsViewAdapter provides pure virtual functions to be implemented
 /// in the actual GUI. The class DrawerBase will use these methods to draw.
 ///
-/// On the core level, all coordinates are relative, that is, they vary
+/// At the core level, all coordinates are relative, that is, they vary
 /// between 0 and 1 and refer to the respective panel in which the object
 /// is drawn.
 ///
@@ -55,7 +55,10 @@ public:
         double y;               ///< y coordinate between 0 and 1
     };
 
-    /// Available pen types for drawing.
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Available pen types for drawing.
+    ///////////////////////////////////////////////////////////////////////////
+
     enum PenType
     {
         PEN_THIN_BLACK,
@@ -78,8 +81,12 @@ public:
         PEN_MEDIUM_DARK_GREEN,
     };
 
-    /// Available filling colors (e.g. to fill rectangles)
-    enum FillTypes {
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Available filling colors (e.g. to fill rectangles)
+    ///////////////////////////////////////////////////////////////////////////
+
+    enum FillTypes
+    {
         FILL_TRANSPARENT,
         FILL_LIGHT_GRAY,
         FILL_RED,
@@ -90,88 +97,21 @@ public:
     };
 
 public:
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Empty default constructor
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicsViewAdapter();
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Destructor that will delete all graphic items in the view
-    ///////////////////////////////////////////////////////////////////////////
-    ~GraphicsViewAdapter();
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Clear all elements in the respective graphics panel.
-    ///
-    /// This function clears the graphics view and deletes all items in
-    /// the respective panel.
-    ///////////////////////////////////////////////////////////////////////////
+    GraphicsViewAdapter() {}            ///< Empty constructor
+    ~GraphicsViewAdapter() {clear();}   ///< Destructor clearing the view
+
     virtual void clear();
 
     ///@{ \name Functions for handling graphics items:
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get the list of the graphic items.
     ///
-    /// Getter function retrieving the complete list of the drawn graphic items.
-    /// \returns mGraphicItems : List of graphics item.
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicItemsList &getGraphicItems() { return mGraphicItems; }
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a constant list of the graphic items
-    ///
-    /// Getter function retreiving the complete list of the drawn graphic items.
-    /// \returns mGraphicItems : Constant list of graphics item.
-    ///////////////////////////////////////////////////////////////////////////
-    const GraphicItemsList &getGraphicItems() const {return mGraphicItems;}
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a single graphic item with the given properties.
-    ///
-    /// Note that the function will return nullptr if no item matched with the
-    /// request. The function will fail if more than one item matches.
-    /// \see getGraphicItems(int, RoleType)
-    /// \param keyIndex : The index of the graphic item
-    /// \param role The " user defined role of the item
-    /// \return Pointer to the item or nullptr
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicsItem *getGraphicItem(int keyIndex, RoleType role);
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a single graphic item with a given role.
-    ///
-    /// Note that the function will return nullptr if no item matches with the
-    /// requested role. The function will fail if more than one item matches.
-    /// \see getGraphicItemsByRole(RoleType)
-    /// \param keyIndex : The index of the graphic item
-    /// \param role The " user defined role of the item
-    /// \return Pointer to the item or nullptr
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicsItem *getGraphicItemByRole(RoleType role);
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a list of graphic items that match with the keyIndex.
-    /// \param keyIndex : The index of the graphic item
-    /// \return List of items that may be empty
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicItemsList getGraphicItems(int keyIndex);
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a list of graphic items that match with the given role.
-    /// \param role : The role of the graphic item
-    /// \return List of items that may be empty
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicItemsList getGraphicItemsByRole(RoleType role);
-
-    ///////////////////////////////////////////////////////////////////////////
-    /// \brief Get a list of graphic items.
-    ///
-    /// The graphic items have to match with the keyIndex and the user defined
-    /// role.
-    /// \param key : Index The index of the graphic item
-    /// \param role : The user defined role of the item
-    /// \return List of items that may be empty
-    ///////////////////////////////////////////////////////////////////////////
-    GraphicItemsList getGraphicItems(int keyIndex, RoleType role);
+    GraphicItemsList        &getGraphicItems();
+    const GraphicItemsList  &getGraphicItems() const;
+    GraphicsItem            *getGraphicItem (int keyIndex, RoleType role);
+    GraphicsItem            *getGraphicItemByRole (RoleType role);
+    GraphicItemsList        getGraphicItems (int keyIndex);
+    GraphicItemsList        getGraphicItemsByRole (RoleType role);
+    GraphicItemsList        getGraphicItems (int keyIndex, RoleType role);
     ///@}
 
     ///@{ \name Functions for drawing:
