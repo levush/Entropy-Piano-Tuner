@@ -21,7 +21,8 @@
 #define ZOOMEDSPECTRUMGRAPHICSVIEW_H
 
 #include "graphicsviewadapterforqt.h"
-#include "../core/drawers/zoomedspectrumdrawer.h"
+//#include "../core/drawers/zoomedspectrumdrawer.h"
+#include "../core/drawers/stroboscope.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The QGraphicsView to display the zoomed fourier spectrum.
@@ -29,7 +30,8 @@
 /// It will displayed the drawings of ZoomedSpectrumDrawer to a
 /// AutoScaledToKeyboardGraphicsView.
 ///////////////////////////////////////////////////////////////////////////////
-class ZoomedSpectrumGraphicsView : public GraphicsViewAdapterForQt, public ZoomedSpectrumDrawer
+//class ZoomedSpectrumGraphicsView : public GraphicsViewAdapterForQt, public ZoomedSpectrumDrawer
+class ZoomedSpectrumGraphicsView : public GraphicsViewAdapterForQt, public Stroboscope
 {
 public:
     ///////////////////////////////////////////////////////////////////////////////

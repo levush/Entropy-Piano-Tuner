@@ -323,6 +323,7 @@ CORE_DRAWER_HEADERS = \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
     core/drawers/graphicsitem.h \
+    core/drawers/stroboscope.h \
 
 CORE_DRAWER_SOURCES = \
     core/drawers/drawerbase.cpp \
@@ -330,6 +331,7 @@ CORE_DRAWER_SOURCES = \
     core/drawers/tuningcurvegraphdrawer.cpp \
     core/drawers/fourierspectrumgraphdrawer.cpp \
     core/drawers/graphicsitem.cpp \
+    core/drawers/stroboscope.cpp \
 
 #------------- Adapters --------------------
 
