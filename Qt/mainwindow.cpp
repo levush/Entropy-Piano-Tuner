@@ -640,22 +640,30 @@ void MainWindow::onTutorial() {
     edit->setReadOnly(true);
     QString languageStr(QLocale().name());
     languageStr = languageStr.left(languageStr.indexOf("_"));
-    QResource manual(":/tutorial/tutorial_" + languageStr + ".html");
+    QFile manual(":/tutorial/tutorial_" + languageStr + ".html");
+
+    // function to read all text from the given file
+    auto readAllFromFile = [](QFile &f) {
+        QTextStream in(&f);
+        return in.readAll();
+    };
+
+    // load manual logic (use english if language not found)
     QString text;
-    if (manual.isValid() == false) {
+    if (!manual.open(QFile::ReadOnly | QFile::Text)) {
         LogW("Manual not found for language %s. Using english as fallback.",
                 languageStr.toStdString().c_str());
 
         // use english as fallback
-        QResource enManual(":/tutorial/tutorial_en.html");
-        if (enManual.isValid() == false) {
+        QFile enManual(":/tutorial/tutorial_en.html");
+        if (!enManual.open(QFile::ReadOnly | QFile::Text)) {
             LogE("Engish manual not found. Maybe the location of the manual changed?");
             text = "No manual found. Please use the online manual instead.";
         } else {
-            text = QByteArray(reinterpret_cast<const char*>(enManual.data()), enManual.size());
+            text = readAllFromFile(enManual);
         }
     } else {
-        text = QByteArray(reinterpret_cast<const char*>(manual.data()), manual.size());
+        text = readAllFromFile(manual);
     }
 
     // replace media content
