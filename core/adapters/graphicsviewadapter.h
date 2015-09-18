@@ -161,6 +161,19 @@ public:
                                 double w, double h,
                                 PenType pen = PEN_THIN_BLACK,
                                 FillTypes fill = FILL_RED) = 0;
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Abstract function: Draw a bar with a continuous colorscale
+    ///
+    /// \param x : Left x coordinate
+    /// \param y : Upper y coordinate
+    /// \param w : Width of the rectangle
+    /// \param h : Height of the rectangle
+    /// \returns The newly created graphics item or nullptr if out of range
+    ///////////////////////////////////////////////////////////////////////////
+
+    virtual GraphicsItem* drawColorBar (double x, double y, double w, double h) = 0;
+
     ///@}
 
 

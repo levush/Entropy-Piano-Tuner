@@ -23,6 +23,8 @@
 
 #include "stroboscope.h"
 
+#include "../messages/messagemodechanged.h"
+
 Stroboscope::Stroboscope(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics)
 {
@@ -44,10 +46,17 @@ void Stroboscope::handleMessage(MessagePtr m)
 {
     switch (m->getType())
     {
-    default:
-    {
+        case Message::MSG_MODE_CHANGED:
+        {
+            auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
+            //mOperationMode = mmc->getMode();
+            redraw(true);
+            break;
+        }
+        default:
+        {
 
-    }
+        }
     }
 }
 
@@ -76,4 +85,5 @@ void Stroboscope::reset()
 
 void Stroboscope::draw()
 {
+    mGraphics->drawColorBar(0.1,0.1,0.8,0.8);
 }

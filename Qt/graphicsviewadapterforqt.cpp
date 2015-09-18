@@ -95,7 +95,7 @@ GraphicsItem *GraphicsViewAdapterForQt::drawChart(const std::vector<Point> &poin
     return new GraphicsItemForQt(this, mScene.addPath(path, getPen(pen)));
 }
 
-GraphicsItem *GraphicsViewAdapterForQt::drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill) {
+GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill) {
     if (x < 0 || x > 1) {return nullptr;}
     if (y < 0 || y > 1) {return nullptr;}
     if (x + w > 1) {return nullptr;}
@@ -105,6 +105,28 @@ GraphicsItem *GraphicsViewAdapterForQt::drawFilledRect(double x, double y, doubl
                                                        convertRelToAbs(QSizeF(w, h))),
                                                 getPen(pen),
                                                 getFill(fill)));
+}
+
+GraphicsItem* GraphicsViewAdapterForQt::drawColorBar (double x, double y, double w, double h)
+{
+    if (x < 0 || x > 1) {return nullptr;}
+    if (y < 0 || y > 1) {return nullptr;}
+    if (x + w > 1) {return nullptr;}
+    if (y + h > 1) {return nullptr;}
+    qreal W=mSceneRect.width(), H=mSceneRect.height();
+    QImage image(W,H,QImage::Format_RGB32);
+    image.fill(QColor(255,2,60));
+    for (int x=0; x<W/2; ++x) for (int y=0; y<H; ++y)
+        image.setPixel(x,y,0x000000+x*100);
+    for (int y=0; y<H/2; y++)
+    {
+        auto line = image.scanLine(y);
+        for (int i=0; i<=3*W/3; ++i) line[i]=0xff;
+    }
+    QPixmap pixmap(W,H);
+    //pixmap.fill(QColor(20,255,60));
+    pixmap.convertFromImage(image);
+    return new GraphicsItemForQt(this,mScene.addPixmap(pixmap));
 }
 
 
