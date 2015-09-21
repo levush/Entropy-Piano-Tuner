@@ -21,9 +21,10 @@
 //                         Stroboscope-Drawer
 //=============================================================================
 
-#include "stroboscopedrawer.h"
+// Test sine waves with: play -n synth sin 440 vol 0.1
+// monitor system input with xoscope
 
-//#include <iostream> // kann weg
+#include "stroboscopedrawer.h"
 
 #include "../messages/messagemodechanged.h"
 #include "../messages/messagestroboscope.h"
@@ -68,6 +69,7 @@ void StroboscopeDrawer::handleMessage(MessagePtr m)
 //                          << std::arg(vector[i]) << std::endl;
 //            }
 //            std::cout << std::endl;
+            redraw(true);
 
 
         }
@@ -102,7 +104,16 @@ void StroboscopeDrawer::reset()
 
 void StroboscopeDrawer::draw()
 {
-    mGraphics->drawColorBar(0.1,0.1,0.8,0.8);
+//    std::vector<GraphicsViewAdapter::StroboscopeData> data;
+//    data.resize(3);
+//    data[0].phase = 0.5;
+//    data[1].phase = 0;
+//    data[2].phase = 0.5;
+//    data[0].intensity=1;
+//    data[1].intensity=0;
+//    data[2].intensity=1;
+//    mGraphics->drawStroboscope(data);
+    mGraphics->drawStroboscope(mDataVector);
 }
 
 

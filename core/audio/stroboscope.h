@@ -39,7 +39,7 @@ class Stroboscope
 {
 private:
     /// Frames per second
-    const double FPS = 2.0;
+    const double FPS = 10.0;
 
     /// Damping factor of the normalizing amplitude level on a single frame (0...1)
     const double AMPLITUDE_DAMPING = 0.95;

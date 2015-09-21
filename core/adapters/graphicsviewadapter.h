@@ -21,6 +21,7 @@
 #define GRAPHICSVIEWADAPTER_H
 
 #include <vector>
+#include <complex>
 #include "../drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,6 +102,8 @@ public:
     GraphicsViewAdapter() {}            ///< Empty constructor
     ~GraphicsViewAdapter() {clear();}   ///< Destructor clearing the view
 
+    using ComplexVector = std::vector<std::complex<double>>;
+
     virtual void clear();
 
     ///@{ \name Functions for handling graphics items:
@@ -172,7 +175,15 @@ public:
     /// \returns The newly created graphics item or nullptr if out of range
     ///////////////////////////////////////////////////////////////////////////
 
-    virtual GraphicsItem* drawColorBar (double x, double y, double w, double h) = 0;
+
+    struct StroboscopeData
+    {
+        double phase;               ///< phase shift
+        double intensity;           ///< intensity
+    };
+
+
+    virtual GraphicsItem* drawStroboscope (const ComplexVector &data) = 0;
 
 
     int convertHsvToRgb (double h, double s, double v=1);

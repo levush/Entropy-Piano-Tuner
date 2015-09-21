@@ -18,8 +18,10 @@
  *****************************************************************************/
 
 #include "graphicsviewadapterforqt.h"
-#include "../core/drawers/drawerbase.h"
+
 #include "graphicsitemforqt.h"
+#include "../core/drawers/drawerbase.h"
+#include "../core/system/eptexception.h"
 
 GraphicsViewAdapterForQt::GraphicsViewAdapterForQt(QWidget *parent, DrawerBase *drawer, QRectF sceneRect)
     : QGraphicsView(parent),
@@ -95,7 +97,8 @@ GraphicsItem *GraphicsViewAdapterForQt::drawChart(const std::vector<Point> &poin
     return new GraphicsItemForQt(this, mScene.addPath(path, getPen(pen)));
 }
 
-GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill) {
+GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill)
+{
     if (x < 0 || x > 1) {return nullptr;}
     if (y < 0 || y > 1) {return nullptr;}
     if (x + w > 1) {return nullptr;}
@@ -107,30 +110,60 @@ GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, doubl
                                                 getFill(fill)));
 }
 
-GraphicsItem* GraphicsViewAdapterForQt::drawColorBar (double x, double y, double w, double h)
+GraphicsItem* GraphicsViewAdapterForQt::drawStroboscope (const ComplexVector &data)
 {
-    if (x < 0 || x > 1) {return nullptr;}
-    if (y < 0 || y > 1) {return nullptr;}
-    if (x + w > 1) {return nullptr;}
-    if (y + h > 1) {return nullptr;}
-    qreal W=mSceneRect.width(), H=mSceneRect.height();
-    QImage image(W,H,QImage::Format_RGB32);
-    //image.fill(QColor(255,2,60));
+    qreal W = mSceneRect.width();
+    qreal H = mSceneRect.height();
+    QImage image (W, H, QImage::Format_RGB32);
 
-    const int N=6;
+    const int N = data.size();
+    std::vector<double> phase(N),saturation(N), value(N);
     for (int n=0; n<N; n++)
     {
-        for (int x=0; x<W; ++x) for (int y=0; y<H/N; ++y)
-            image.setPixel(x,n*H/N+y,convertHsvToRgb((n+1)*x/W,1));
-
+        phase[n]      = std::arg(data[n])/M_PI/2 + 0.5;
+//        saturation[n] = std::abs(data[n]);
+        saturation[n] = 1;
+        value[n]      = 1;
     }
-//    for (int y=0; y<H/2; y++)
-//    {
-//        auto line = image.scanLine(y);
-//        for (int i=0; i<=3*W/3; ++i) line[i]=0xff;
-//    }
+
+    std::vector<std::vector<QColor>> colors(W);
+    for (int x=0; x<W; x++)
+    {
+        colors[x].resize(N+2);
+        colors[x][0]=colors[x][N+1]=Qt::black;
+        for (int n=0; n<N; n++)
+        {
+            double xc = 1.0*(n+1)*(x/W+phase[n]/(n+1));
+            double hue = xc - floor(xc);
+            colors[x][n+1].setHsvF(hue,saturation[n],value[n],1);
+        }
+    }
+
+    for (int y=0; y<H; y++)
+    {
+        // According to the Qt manual, fast access to the pixels requires to
+        // get the pointer to a whole horizontal line (function scalinline).
+        auto line = image.scanLine(y);
+
+        double z = 1.0*y*(N+1)/H;
+        int index = static_cast<int>(z);
+        EptAssert(index >= 0 and index <= N,"The index has to be within the array");
+        double a = z-index;
+        for (int x=0; x<W; x++)
+        {
+            QColor C1 = colors[x][index];
+            QColor C2 = colors[x][index+1];
+            const double margin = 0.05*W;
+            double brightness = std::min(std::min(1.0,x/margin),(W-x)/margin);
+            double lower = brightness*(1-a);
+            double upper = brightness*a;
+            line[4*x]   = lower*C1.red()   + upper*C2.red();
+            line[4*x+1] = lower*C1.green() + upper*C2.green();
+            line[4*x+2] = lower*C1.blue()  + upper*C2.blue();
+            line[4*x+3] = 0;
+        }
+    }
     QPixmap pixmap(W,H);
-    //pixmap.fill(QColor(20,255,60));
     pixmap.convertFromImage(image);
     return new GraphicsItemForQt(this,mScene.addPixmap(pixmap));
 }
