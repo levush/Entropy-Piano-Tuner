@@ -36,13 +36,12 @@
 #include "../messages/messagemodechanged.h"
 #include "../messages/messagehandler.h"
 #include "../math/mathtools.h"
+#include "../system/log.h"
 #include "../system/eptexception.h"
 
 //-----------------------------------------------------------------------------
 //                            Various constants
 //-----------------------------------------------------------------------------
-
-const bool   AudioRecorderAdapter::VERBOSE = true;
 
 /// Capacity of the local circular audio buffer in seconds
 const int    AudioRecorderAdapter::BUFFER_SIZE_IN_SECONDS = 2;
@@ -50,7 +49,7 @@ const int    AudioRecorderAdapter::BUFFER_SIZE_IN_SECONDS = 2;
 /// Update interval in milliseconds, defining the packet size.
 const int    AudioRecorderAdapter::UPDATE_IN_MILLISECONDS = 50;
 
-/// Attack rate at which the sliding level is increased (1=instantly).
+/// Attack rate at which the sliding level goes up (1=instantly).
 const double AudioRecorderAdapter::ATTACKRATE = 0.97;
 
 /// Decay rate at which the sliding level goes down.
@@ -87,34 +86,46 @@ AudioRecorderAdapter::AudioRecorderAdapter() :
       mStandby(SBR_NONE),       // Flag for standby mode
       mPacketCounter(0),        // Counter for the number of packages
       mIntensityHistogram(),    // Histogram of intensities for level control
-      mCurrentPacket(0)         // Local audio buffer
+      mCurrentPacket(0),        // Local audio buffer
+      mStroboscope()
 {
       setSamplingRate(44100);   // Set default sampling rate
+      mStroboscope = std::unique_ptr<Stroboscope>(new Stroboscope(this));
 }
 
-//-----------------------------------------------------------------------------
-//                           Reset noise level
+
+//---------------------------------------------l--------------------------------
+//                        Reset input level control
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// This will clear the intensity histogramm
+/// \brief Reset input level control
+///
+/// This function resets the automatic input level control. It is usually
+/// called when the reset button below the VU meter is pressed. The function
+/// sets the input gain of the impemented input device to 1 by calling the
+/// corresponding virtualmfunction. It also sets the local gain to 1 and
+/// clears the intensity histogram.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::resetNoiseLevel()
+void AudioRecorderAdapter::resetInputLevelControl()
 {
-    setVolume(1);
+    setDeviceInputGain(1);
     mGain = 1;
     mIntensityHistogram.clear();
     mPacketCounter = 0;
 }
+
 
 //-----------------------------------------------------------------------------
 //                           Mutes the input device
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// This will mute the input signal by sending 0 as input signal and
-/// handling an input level of 0.
+/// \brief Set and reset the muting flag.
+///
+/// This will mute the input signal with the effect of sending 0 as input signal
+/// and sending the value 0 to the VU meter.
 /// \param muted : Activate or deactivate the muting
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -122,6 +133,7 @@ void AudioRecorderAdapter::setMuted (bool muted)
 {
     mMuted = muted;
 }
+
 
 //-----------------------------------------------------------------------------
 //                           Set sampling rate
@@ -157,7 +169,7 @@ void AudioRecorderAdapter::setSamplingRate(uint16_t rate)
 
 void AudioRecorderAdapter::readAll(PacketType &packet)
 {
-    std::lock_guard<std::mutex> lock(mPacketAccessMutex);   // lock the function
+    std::lock_guard<std::mutex> lock(mCurrentPacketMutex);   // lock the function
     packet = mCurrentPacket.getOrderedData();               // copy the content
     mCurrentPacket.clear();                                 // clear audio buffer
 }
@@ -169,8 +181,8 @@ void AudioRecorderAdapter::readAll(PacketType &packet)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Convert an intensity (variance) of the signal to a VU level
-/// \param intensity : variance of the PCM signal
-/// \return level to be displayed by the VU meter (not clipped to [0,1])
+/// \param intensity : Variance of the PCM signal
+/// \return Level to be displayed by the VU meter (not clipped to [0,1])
 ///////////////////////////////////////////////////////////////////////////////
 
 double AudioRecorderAdapter::convertIntensityToLevel (double intensity)
@@ -210,11 +222,16 @@ double AudioRecorderAdapter::convertLevelToIntensity (double level)
 /// \param data : Vector containing the raw pcm data to be copied
 ///////////////////////////////////////////////////////////////////////////////
 
-template <class floatingpoint>
-void AudioRecorderAdapter::pushRawData(const std::vector<floatingpoint> &data)
+void AudioRecorderAdapter::pushRawData(const PacketType &data)
 {
-    std::lock_guard<std::mutex> lock(mPacketAccessMutex);
+    if (data.size()==0) return;
 
+    // Forward packet to the stroboscope
+    mStroboscope->pushRawData (data);
+
+    std::lock_guard<std::mutex> lock(mCurrentPacketMutex);
+
+    // loop over all PCM values of the incoming data vector
     for (auto &pcmvalue : data)
     {
         mCurrentPacket.push_back(pcmvalue);
@@ -223,47 +240,36 @@ void AudioRecorderAdapter::pushRawData(const std::vector<floatingpoint> &data)
 
         if (++mCounter > mCounterThreshold) // if packet is complete
         {
-            // Compute the intensity (variance) of the packet
+            // Compute the intensity (variance) of the packet and reset counter
             double intensity = (mPacketM2-mPacketM1*mPacketM1/mCounter)/mCounter;
             mPacketM1 = mPacketM2 = mCounter = 0;
 
             // Convert intensity to the corresponding VU level
-            double level = MathTools::restrictToInterval(
-                        convertIntensityToLevel(intensity),0,1);
+            double level = MathTools::restrictToInterval(convertIntensityToLevel(intensity),0,1);
 
             // Compute a sliding level with fast attack and slow deay
             if (level > mSlidingLevel)
                   mSlidingLevel += (level-mSlidingLevel)*ATTACKRATE;
             else  mSlidingLevel -= (mSlidingLevel-level)*DECAYRATE;
 
-            if (mMuted)
-            {
-                // if muted, only send 0
-                MessageHandler::send<MessageRecorderEnergyChanged>(MessageRecorderEnergyChanged::LevelType::LEVEL_INPUT, 0);
-                controlRecordingState(0);
-            }
-            else
-            {
-                // Send it to the GUI VU meter
-                MessageHandler::send<MessageRecorderEnergyChanged>(MessageRecorderEnergyChanged::LevelType::LEVEL_INPUT, mSlidingLevel);
+            // If muted then the shown level is zero
+            double shownLevel = (mMuted ? 0 : mSlidingLevel);
 
-                // Switch recording process on and off if necessary
-                controlRecordingState(mSlidingLevel);
+            // Send shown (muted) level to the GUI VU meter
+            MessageHandler::send<MessageRecorderEnergyChanged>(MessageRecorderEnergyChanged::LevelType::LEVEL_INPUT, shownLevel);
 
-                // Adjust the input gain and noise cutoff automatically
-                automaticControl (intensity,level);
-            }
+            // Switch recording process on and off according to the shown (muted) level
+            controlRecordingState (shownLevel);
+
+            // Control the input level shown at the VU meter automaticall
+            if (not mMuted) automaticControl (intensity,level);
         }
     }
 }
 
-// The above template function shall be realized for double and float
-template void AudioRecorderAdapter::pushRawData(const std::vector<double> &data);
-template void AudioRecorderAdapter::pushRawData(const std::vector<float> &data);
-
 
 //-----------------------------------------------------------------------------
-//                               Manage standby
+//                             Manage standby
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -283,11 +289,16 @@ void AudioRecorderAdapter::handleMessage(MessagePtr m)
             auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
             switch (mmc->getMode())
             {
-                case MODE_RECORDING:
                 case MODE_TUNING:
+                    mStroboscope->start();
                     mStandby -= mStandby & SBR_DEACTIVATED_BY_OPERATION_MODE;
-                    break;
+                break;
+                case MODE_RECORDING:
+                    mStroboscope->stop();
+                    mStandby -= mStandby & SBR_DEACTIVATED_BY_OPERATION_MODE;
+                break;
                 default:
+                    mStroboscope->stop();
                     mStandby |= SBR_DEACTIVATED_BY_OPERATION_MODE;
                 break;
             }
@@ -324,7 +335,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
     // A sine wave with maximal amplitude +/- 1 has the integrated intensity 1/2.
     // Therefore, we reduce the hardware input level whenever this value
     // is surpassed. This down-regulation is irreversible.
-    if (intensity > 0.45) setVolume(getVolume() * 0.9);
+    if (intensity > 0.45) setDeviceInputGain(getDeviceInputGain() * 0.9);
 
     // The level (passed as parameter) is a power law funtion of the intensity
     // scaled with the parameter mGain. The parameter mGain controls the overall
@@ -400,8 +411,7 @@ void AudioRecorderAdapter::controlRecordingState (double level)
         mRecording   = false;
         mRestartable = true;
         MessageHandler::send(Message::MSG_RECORDING_ENDED);
-        if (VERBOSE) std::cout << "AudioRecorderAdapter: Recording stopped"
-                               << std::endl;
+        LogI("Recording stopped");
     }
 
     // check for recording start (only if not in standby mode)
@@ -419,13 +429,8 @@ void AudioRecorderAdapter::controlRecordingState (double level)
     // If the adapter is restartable or crosses the trigger recording starts
     if (level>LEVEL_TRIGGER and mRestartable)
     {
-        if (VERBOSE)
-        {
-            if (mRecording) std::cout <<
-            "AudioRecorderAdapter: Recording retriggered" << std::endl;
-            else std::cout <<
-            "AudioRecorderAdapter: Recording started" << std::endl;
-        }
+        if (mRecording) LogI("Recording retriggered")
+        else            LogI("Recording started");
         mRecording   = true;
         mRestartable = false;
         mStandby |= SBR_WAITING_FOR_ANALYISIS;

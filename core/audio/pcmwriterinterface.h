@@ -22,34 +22,39 @@
 
 #include "audiobase.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Abstract class to write data into the AudioPlayerAdapter.
 ///
-/// \brief Abstract class to write data into the AudioPlayerAdapter
-///
-class PCMWriterInterface {
+/// This class is the base class for any derived class that produces sound
+/// and sends it to the audio device. In the EPT the Synthesizer is the only
+/// class that produces sound. This is a header file only without implementation.
+///////////////////////////////////////////////////////////////////////////////
+
+class PCMWriterInterface
+{
 public:
-    ///
-    /// \brief Init the interface with given channesl and sample rates
-    /// \param sampleRate The sample rate
-    /// \param channels The number of channels
-    ///
-    virtual void init(const int sampleRate, const int channels) {mSampleRate = sampleRate; mChannels = channels;}
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Initialize the PCM-Writer with given sample rate and channel number
+    /// \param sampleRate : The sample rate
+    /// \param channels : The number of channels
+    ///////////////////////////////////////////////////////////////////////////
 
-    ///
-    /// \brief Exit the interface
-    ///
-    virtual void exit() {}
+    virtual void init(const int sampleRate, const int channels)
+    { mSampleRate = sampleRate; mChannels = channels; }
 
-    ///
-    /// \brief Generate new samples and write them into the outputPacket
-    /// \param outputPacket The output packet (write there)
+    virtual void exit() {}      ///< Exit function, shut down writer interface
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Generate a sound and copy it to the outputPacket
+    /// \param outputPacket The output packet (newly generated sound)
     /// \returns true on success, false if the player should pause
-    ///
-    virtual bool generateAudioSignal(AudioBase::PacketType &outputPacket) = 0;
+    ///////////////////////////////////////////////////////////////////////////
+
+    virtual bool generateAudioSignal (AudioBase::PacketType &outputPacket) = 0;
 
 protected:
-    int mSampleRate = 0;
-    int mChannels = 0;
+    int mSampleRate = 0;    ///< Sample rate
+    int mChannels = 0;      ///< Number of channels
 };
 
 #endif // PCMWRITERINTERFACE
-

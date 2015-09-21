@@ -137,13 +137,13 @@ void AudioRecorderForQt::stop() {
     }
 }
 
-void AudioRecorderForQt::setVolume(double volume) {
+void AudioRecorderForQt::setDeviceInputGain(double volume) {
     if (mAudioInput) {
         mAudioInput->setVolume(volume);
     }
 }
 
-double AudioRecorderForQt::getVolume() const {
+double AudioRecorderForQt::getDeviceInputGain() const {
     if (mAudioInput) {
         return mAudioInput->volume();
     }

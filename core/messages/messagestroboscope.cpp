@@ -17,17 +17,20 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "zoomedspectrumgraphicsview.h"
+#include "messagestroboscope.h"
 
-ZoomedSpectrumGraphicsView::ZoomedSpectrumGraphicsView(QWidget *parent)
-    : GraphicsViewAdapterForQt(parent, this, QRect(0, 0, 200, 200)),
-      //ZoomedSpectrumDrawer(this) {
-      StroboscopeDrawer(this) {
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setWhatsThis(tr("This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center."));
-}
-
-ZoomedSpectrumGraphicsView::~ZoomedSpectrumGraphicsView()
+MessageStroboscope::MessageStroboscope (const Stroboscope::ComplexVector &data)
+: Message(MSG_STROBOSCOPE_EVENT) , data(data)
 {
-
 }
+
+MessageStroboscope::~MessageStroboscope()
+{
+}
+
+const Stroboscope::ComplexVector &MessageStroboscope::getData () const
+{
+    return data;
+}
+
+

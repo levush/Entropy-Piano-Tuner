@@ -172,30 +172,32 @@ void SignalAnalyzer::changeRole(AnalyzerRole role)
 
 
 
-void SignalAnalyzer::updateDataBufferSize() {
+void SignalAnalyzer::updateDataBufferSize()
+{
     std::lock_guard<std::mutex> lock(mDataBufferMutex);
 
     switch (mAnalyzerRole.load())
     {
-    case ROLE_IDLE:
-        break;
-    case ROLE_RECORD_KEYSTROKE:
-        // Initialize the local circular buffer which holds about a minute of data
-        mDataBuffer.resize(mAudioRecorder->getSamplingRate() *
-                           AUDIO_BUFFER_SIZE_IN_SECONDS);
-        break;
-    case ROLE_ROLLING_FFT:
-    {
-        // Initialize the local circular buffer which holds a second of data
-        const int globalKey = mSelectedKey + 48 - mPiano->getKeyboard().getKeyNumberOfA4();
-        const double timeAtHighest = 0.5;
-        const double timeAtLowest = 3;
-        const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
-        mDataBuffer.resize(static_cast<size_t>(mAudioRecorder->getSamplingRate() * time));
-        break;
+        case ROLE_IDLE:
+            break;
+        case ROLE_RECORD_KEYSTROKE:
+        {
+            // Initialize the local circular buffer which holds about a minute of data
+            mDataBuffer.resize(mAudioRecorder->getSamplingRate() *
+                               AUDIO_BUFFER_SIZE_IN_SECONDS);
+            break;
+        }
+        case ROLE_ROLLING_FFT:
+        {
+            // Initialize the local circular buffer which holds 0.5...3 seconds of data
+            const int globalKey = mSelectedKey + 48 - mPiano->getKeyboard().getKeyNumberOfA4();
+            const double timeAtHighest = 0.5;
+            const double timeAtLowest = 3;
+            const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
+            mDataBuffer.resize(static_cast<size_t>(mAudioRecorder->getSamplingRate() * time));
+            break;
+        }
     }
-    }
-
     mDataBuffer.clear();
 }
 
@@ -254,6 +256,7 @@ void SignalAnalyzer::recordSignal()
     mDataBuffer.clear();
     mDataBufferMutex.unlock();
 
+    // Reset the statistics for the majority of recognized keys
     mKeyCountStatistics.clear();
 
     // Create a shared pointer to a vector containing the powerspectrum

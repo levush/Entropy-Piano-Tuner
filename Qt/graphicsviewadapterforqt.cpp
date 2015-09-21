@@ -115,14 +115,20 @@ GraphicsItem* GraphicsViewAdapterForQt::drawColorBar (double x, double y, double
     if (y + h > 1) {return nullptr;}
     qreal W=mSceneRect.width(), H=mSceneRect.height();
     QImage image(W,H,QImage::Format_RGB32);
-    image.fill(QColor(255,2,60));
-    for (int x=0; x<W/2; ++x) for (int y=0; y<H; ++y)
-        image.setPixel(x,y,0x000000+x*100);
-    for (int y=0; y<H/2; y++)
+    //image.fill(QColor(255,2,60));
+
+    const int N=6;
+    for (int n=0; n<N; n++)
     {
-        auto line = image.scanLine(y);
-        for (int i=0; i<=3*W/3; ++i) line[i]=0xff;
+        for (int x=0; x<W; ++x) for (int y=0; y<H/N; ++y)
+            image.setPixel(x,n*H/N+y,convertHsvToRgb((n+1)*x/W,1));
+
     }
+//    for (int y=0; y<H/2; y++)
+//    {
+//        auto line = image.scanLine(y);
+//        for (int i=0; i<=3*W/3; ++i) line[i]=0xff;
+//    }
     QPixmap pixmap(W,H);
     //pixmap.fill(QColor(20,255,60));
     pixmap.convertFromImage(image);

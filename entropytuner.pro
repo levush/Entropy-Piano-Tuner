@@ -295,6 +295,7 @@ CORE_MESSAGE_SYSTEM_HEADERS = \
     core/messages/messagechangetuningcurve.h \
     core/messages/messagetuningdeviation.h \
     core/messages/messagekeydatachanged.h \
+    core/messages/messagestroboscope.h \
 
 CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagelistener.cpp \
@@ -312,6 +313,7 @@ CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagechangetuningcurve.cpp \
     core/messages/messagetuningdeviation.cpp \
     core/messages/messagekeydatachanged.cpp \
+    core/messages/messagestroboscope.cpp \
 
 #------------- Drawers --------------------
 
@@ -323,7 +325,7 @@ CORE_DRAWER_HEADERS = \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
     core/drawers/graphicsitem.h \
-    core/drawers/stroboscope.h \
+    core/drawers/stroboscopedrawer.h \
 
 CORE_DRAWER_SOURCES = \
     core/drawers/drawerbase.cpp \
@@ -331,7 +333,7 @@ CORE_DRAWER_SOURCES = \
     core/drawers/tuningcurvegraphdrawer.cpp \
     core/drawers/fourierspectrumgraphdrawer.cpp \
     core/drawers/graphicsitem.cpp \
-    core/drawers/stroboscope.cpp \
+    core/drawers/stroboscopedrawer.cpp \
 
 #------------- Adapters --------------------
 
@@ -366,6 +368,8 @@ CORE_AUDIO_HEADERS = \
     core/audio/waveformgenerator.h \
     core/audio/hammerknock.h \
     core/audio/pcmwriterinterface.h \
+    core/audio/stroboscope.h \
+
 
 CORE_AUDIO_SOURCES = \
     core/audio/audiorecorderadapter.cpp \
@@ -373,7 +377,8 @@ CORE_AUDIO_SOURCES = \
     core/audio/audioplayeradapter.cpp \
     core/audio/synthesizer.cpp \
     core/audio/soundgenerator.cpp \
-    core/audio/waveformgenerator.cpp
+    core/audio/waveformgenerator.cpp \
+    core/audio/stroboscope.cpp \
 
 #----------------- Midi ------------------
 

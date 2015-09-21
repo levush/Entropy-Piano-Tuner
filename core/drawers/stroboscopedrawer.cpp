@@ -18,15 +18,19 @@
  *****************************************************************************/
 
 //=============================================================================
-//                               Stroboscope
+//                         Stroboscope-Drawer
 //=============================================================================
 
-#include "stroboscope.h"
+#include "stroboscopedrawer.h"
+
+//#include <iostream> // kann weg
 
 #include "../messages/messagemodechanged.h"
+#include "../messages/messagestroboscope.h"
 
-Stroboscope::Stroboscope(GraphicsViewAdapter *graphics) :
-    DrawerBase(graphics)
+StroboscopeDrawer::StroboscopeDrawer (GraphicsViewAdapter *graphics) :
+    DrawerBase(graphics),
+    mDataVector()
 {
 if (graphics) {};
 }
@@ -42,7 +46,7 @@ if (graphics) {};
 /// \param m : Pointer to the incoming message
 ///////////////////////////////////////////////////////////////////////////////
 
-void Stroboscope::handleMessage(MessagePtr m)
+void StroboscopeDrawer::handleMessage(MessagePtr m)
 {
     switch (m->getType())
     {
@@ -53,9 +57,22 @@ void Stroboscope::handleMessage(MessagePtr m)
             redraw(true);
             break;
         }
+    case Message::MSG_STROBOSCOPE_EVENT:
+        {
+            auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
+            mDataVector = mmc->getData();
+//            std::cout << "and here is the data:" << std::endl;
+//            for (uint i=0; i<vector.size(); ++i)
+//            {
+//                std::cout << i << " " << std::abs(vector[i]) << "\t"
+//                          << std::arg(vector[i]) << std::endl;
+//            }
+//            std::cout << std::endl;
+
+
+        }
         default:
         {
-
         }
     }
 }
@@ -69,7 +86,7 @@ void Stroboscope::handleMessage(MessagePtr m)
 /// \brief Reset
 ///////////////////////////////////////////////////////////////////////////////
 
-void Stroboscope::reset()
+void StroboscopeDrawer::reset()
 {
 }
 
@@ -83,7 +100,11 @@ void Stroboscope::reset()
 ///////////////////////////////////////////////////////////////////////////////
 
 
-void Stroboscope::draw()
+void StroboscopeDrawer::draw()
 {
     mGraphics->drawColorBar(0.1,0.1,0.8,0.8);
 }
+
+
+
+

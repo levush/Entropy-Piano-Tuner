@@ -32,9 +32,10 @@
 #include <cstdint>
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Abstract adapter class for playing audio signals
+/// \brief Abstract adapter class for playing audio signals.
 ///
-/// This class has to be implemented by the actual sound device implementation.
+/// This class has to be implemented by the actual sound device implementation
+/// \see AudioPlayerForQt
 ///
 /// The sound device implementation tells the adapter how large the available
 /// buffer size is. Depending on the implementation this may vary with time.
@@ -56,12 +57,13 @@ public:
 
     void setWriter(PCMWriterInterface *interface);
     PCMWriterInterface *getWriter() {return mPCMWriter;}
-    void setMuted(bool muted);              ///< Mutes the output device
+
+    void setMuted (bool muted);
     bool isMuted() { return mMuted; }
 
 private:
-    PCMWriterInterface *mPCMWriter;
-    bool   mMuted;              ///< Is the ouput device muted
+    PCMWriterInterface *mPCMWriter;     ///< Pointer to PCM writer
+    bool   mMuted;                      ///< Is the ouput device muted
 };
 
 #endif // AUDIOPLAYERADAPTER_H

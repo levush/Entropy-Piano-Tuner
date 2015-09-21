@@ -174,6 +174,10 @@ public:
 
     virtual GraphicsItem* drawColorBar (double x, double y, double w, double h) = 0;
 
+
+    int convertHsvToRgb (double h, double s, double v=1);
+
+
     ///@}
 
 

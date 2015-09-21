@@ -18,8 +18,8 @@
  *****************************************************************************/
 
 #include "graphicsviewadapter.h"
+#include <cmath>
 #include "../system/eptexception.h"
-
 
 
 //-----------------------------------------------------------------------------
@@ -171,4 +171,70 @@ GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex, RoleType rol
         if (item->getKeyIndex() == keyIndex and (role & item->getItemRole()) == role)
             list.push_back(item);
     return list;
+}
+
+
+//-----------------------------------------------------------------------------
+//                  Convert HSV colorscale to RGB value
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////
+/// \brief GraphicsViewAdapter::convertHsvToRgb
+/// \param h : Hue [0...inf], periodic in 1
+/// \param s : Saturation [0...1]
+/// \param v : Value [0...1]
+/// \return RGB code 0xrrggbb
+//////////////////////////////////////////////////////////////////////////
+
+int GraphicsViewAdapter::convertHsvToRgb (double h, double s, double v)
+{
+    if (h<0 or s<0 or s>1 or v<0 or v>1) return 0;
+    float i, f, p, q, t, r, g, b;
+
+    if (s==0) r = g = b = v;
+    else
+    {
+        i = std::floor(6*h);
+        f = 6*h - i;
+        p = v * ( 1 - s );
+        q = v * ( 1 - s * f );
+        t = v * ( 1 - s * ( 1 - f ) );
+
+        switch(static_cast<int>(i) % 6)
+        {
+            case 0:
+                r = v;
+                g = t;
+                b = p;
+                break;
+            case 1:
+                r = q;
+                g = v;
+                b = p;
+                break;
+            case 2:
+                r = p;
+                g = v;
+                b = t;
+                break;
+            case 3:
+                r = p;
+                g = q;
+                b = v;
+                break;
+            case 4:
+                r = t;
+                g = p;
+                b = v;
+                break;
+            default:		// case 5:
+                r = v;
+                g = p;
+                b = q;
+                break;
+        }
+    }
+    return ((static_cast<int>(r*255))%256<<16) +
+           ((static_cast<int>(g*255))%256<<8) +
+            (static_cast<int>(b*255))%256;
 }

@@ -1324,7 +1324,7 @@ GENERATE_QHP           = YES
 # the HTML output folder.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QCH_FILE               = ./ept.qch
+QCH_FILE               = ../ept.qch
 
 # The QHP_NAMESPACE tag specifies the namespace to use when generating Qt Help
 # Project output. For more information please see Qt Help Project / Namespace
@@ -1371,7 +1371,7 @@ QHP_SECT_FILTER_ATTRS  =
 # generated .qhp file.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QHG_LOCATION           = /software/Qt/5.4/gcc_64/bin/qhelpgenerator
+QHG_LOCATION           = /home/hinrichsen/Software/Qt/5.5/gcc_64/bin/qhelpgenerator
 
 # If the GENERATE_ECLIPSEHELP tag is set to YES, additional index files will be
 # generated, together with the HTML files, they form an Eclipse help plugin. To

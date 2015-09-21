@@ -1,7 +1,7 @@
 # Entropy Piano Tuner
 
 ## Information
-For information about the program have a look at the [homepage](http://piano-tuner.org/).
+For general information about the software have a look at the [homepage](http://piano-tuner.org/) of the project.
 
 ## Building
-Please have a look at the [developer page](http://develop.piano-tuner.org) for further information.
+Regarding development please have a look at the [developer pages](http://develop.piano-tuner.org) for further information.

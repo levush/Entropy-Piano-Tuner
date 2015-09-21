@@ -121,28 +121,3 @@ uint8_t AudioBase::getChannelCount() const
 void AudioBase::setChannelCount(uint8_t c)
 { mChannelCount = c; }
 
-
-//-----------------------------------------------------------------------------
-//                         Set the device volume
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Sets the system volume of the audio device. Default is 1.
-/// \param volume The volume
-///////////////////////////////////////////////////////////////////////////////
-
-void AudioBase::setVolume(double volume)
-{ (void)volume; }
-
-
-//-----------------------------------------------------------------------------
-//                         Get the device volume
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Gets the system volume of the audio device. Default is 1.
-/// \returns The volume
-///////////////////////////////////////////////////////////////////////////////
-
-double AudioBase::getVolume() const
-{ return 1; }

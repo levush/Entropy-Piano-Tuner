@@ -570,7 +570,7 @@ bool MainWindow::isSoundControlSupported() {
 }
 
 void MainWindow::onResetNoiseLevel() {
-    mCore->getAudioRecorder()->resetNoiseLevel();
+    mCore->getAudioRecorder()->resetInputLevelControl();
 }
 
 void MainWindow::onToggleMicroMute(bool checked) {

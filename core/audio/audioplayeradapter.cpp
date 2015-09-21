@@ -26,8 +26,6 @@
 #include <assert.h>
 #include <vector>
 
-#include <iostream> // kann weg
-
 const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 100;
 
 
@@ -66,8 +64,8 @@ void AudioPlayerAdapter::setWriter(PCMWriterInterface *interface)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// This will mute the input signal by sending 0 as input signal and
-/// handling an input level of 0.
+/// \brief This function mutes the input signal by sending zeroes as input
+/// signal and handling an input level of 0.
 /// \param muted : Activate or deactivate the muting
 ///////////////////////////////////////////////////////////////////////////////
 

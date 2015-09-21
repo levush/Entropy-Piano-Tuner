@@ -18,27 +18,34 @@
  *****************************************************************************/
 
 //=============================================================================
-//                               Stroboscope
+//                           Stroboscope-Drawer
 //=============================================================================
 
-#ifndef STROBOSCOPE_H
-#define STROBOSCOPE_H
+#ifndef STROBOSCOPEDRAWER_H
+#define STROBOSCOPEDRAWER_H
+
+#include <complex>
 
 #include "drawerbase.h"
 #include "../messages/messagelistener.h"
 
 
-class Stroboscope  : public DrawerBase, public MessageListener
+class StroboscopeDrawer  : public DrawerBase, public MessageListener
 {
 public:
-    Stroboscope(GraphicsViewAdapter *graphics);
-    ~Stroboscope() {}
+    StroboscopeDrawer(GraphicsViewAdapter *graphics);
+    ~StroboscopeDrawer() {}
 
 protected:
     virtual void draw() override final;
     virtual void reset() override final;
     virtual void handleMessage(MessagePtr m) override;
 
+private:
+    using ComplexVector = std::vector<std::complex<double>>;
+    ComplexVector mDataVector;
+    int convertHsvToRgb (double h, double s, double v=1);
+
 };
 
-#endif // STROBOSCOPE_H
+#endif // STROBOSCOPEDRAWER_H

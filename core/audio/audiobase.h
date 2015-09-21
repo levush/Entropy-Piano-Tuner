@@ -27,6 +27,7 @@
 #include <vector>
 #include <cstdint>
 #include <string>
+
 #include "../system/prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,13 +43,12 @@ public:
     /// Data type for a packet: floating point PCM value in [0,1].
     typedef double PacketDataType;
 
-    /// Type definition for a packet.
+    /// Type definition for a PCM packet.
     typedef std::vector<PacketDataType> PacketType;
 
 public:
     AudioBase();                        ///< Constructor
     virtual ~AudioBase() {}             ///< Destructor (no functionality).
-
 
     virtual void init() = 0;            ///< Inizialize the audio device.
     virtual void exit() = 0;            ///< Destroy the audio device.
@@ -59,16 +59,12 @@ public:
     const std::string &getDeviceName() const;     // get the device name
     void setDeviceName(const std::string &n);     // set the device name
     uint16_t getSamplingRate() const;             // get actual sampling rate
-    virtual void setSamplingRate(uint16_t rate);  // set sampling rate
+    virtual void setSamplingRate(uint16_t rate);  // set actual sampling rate
     uint8_t  getChannelCount() const;             // get number of channels
     virtual void setChannelCount(uint8_t c);      // set number of channels
 
-    // Adjust the volume of the audio device.
-    virtual void setVolume(double volume);         // set the volume
-    virtual double getVolume() const;              // get the volume
-
 private:
-    std::string mAudioDeviceName;       ///< User readable string of the used audio device
+    std::string mAudioDeviceName;       ///< User-readable string of the used audio device
     uint16_t mSamplingRate;             ///< Current sampling rate
     uint8_t mChannelCount;              ///< Current channel count
 };
