@@ -26,21 +26,11 @@
 
 #include "audiorecorderadapter.h"
 
-#include <cmath>
-#include <algorithm>
-#include <iostream>
-
-#include "../../settings.h"
-#include "../../system/log.h"
 #include "../../messages/messagerecorderenergychanged.h"
 #include "../../messages/messagemodechanged.h"
-#include "../../messages/messagekeyselectionchanged.h"
-#include "../../messages/messageprojectfile.h"
 #include "../../messages/messagehandler.h"
 #include "../../math/mathtools.h"
 #include "../../system/log.h"
-#include "../../system/eptexception.h"
-#include "../../core/piano/piano.h"
 
 //-----------------------------------------------------------------------------
 //                            Various constants
@@ -86,14 +76,14 @@ AudioRecorderAdapter::AudioRecorderAdapter() :
       mStopLevel(0.1),          // Level at which recording stops
       mRecording(false),        // Flag for recording
       mRestartable(true),       // Flag if recorder is restartable (retrigger)
-      mStandby(SBR_NONE),       // Flag for standby mode
+      mWaiting(false),          // Wait for analysis to be completed
+      mStandby(false),          // Flag for standby mode
       mPacketCounter(0),        // Counter for the number of packages
       mIntensityHistogram(),    // Histogram of intensities for level control
       mCurrentPacket(0),        // Local audio buffer
-      mStroboscope()
+      mStroboscope(this)
 {
       setSamplingRate(44100);   // Set default sampling rate
-      mStroboscope = std::unique_ptr<Stroboscope>(new Stroboscope(this));
 }
 
 
@@ -226,7 +216,7 @@ void AudioRecorderAdapter::pushRawData(const PacketType &data)
     if (data.size()==0) return;
 
     // Forward packet to the stroboscope
-    mStroboscope->pushRawData (data);
+    mStroboscope.pushRawData (data);
 
     std::lock_guard<std::mutex> lock(mCurrentPacketMutex);
 
@@ -263,77 +253,6 @@ void AudioRecorderAdapter::pushRawData(const PacketType &data)
             // Control the input level shown at the VU meter automaticall
             if (not mMuted) automaticControl (intensity,level);
         }
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-//               Message handler  (for standby and stroboscope)
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Manage standby mode
-/// \param m Message from the message handler
-///////////////////////////////////////////////////////////////////////////////
-
-void AudioRecorderAdapter::handleMessage(MessagePtr m)
-{
-    switch (m->getType())
-    {
-        case Message::MSG_PROJECT_FILE:
-        {
-            auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
-            mPiano = &mpf->getPiano();
-            break;
-        }
-        case Message::MSG_SIGNAL_ANALYSIS_ENDED:
-            mStandby -= mStandby & SBR_WAITING_FOR_ANALYISIS;
-            break;
-        case Message::MSG_MODE_CHANGED:
-        {
-            auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
-            switch (mmc->getMode())
-            {
-                case MODE_TUNING:
-                    mStroboscope->start();
-                    mStandby -= mStandby & SBR_DEACTIVATED_BY_OPERATION_MODE;
-                break;
-                case MODE_RECORDING:
-                    mStroboscope->stop();
-                    mStandby -= mStandby & SBR_DEACTIVATED_BY_OPERATION_MODE;
-                break;
-                default:
-                    mStroboscope->stop();
-                    mStandby |= SBR_DEACTIVATED_BY_OPERATION_MODE;
-                break;
-            }
-            break;
-        }
-    case Message::MSG_KEY_SELECTION_CHANGED:
-        {
-            auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
-            const Key* key = message->getKey();
-            if (key)
-            {
-                const Key::PeakListType peaks = key->getPeaks();
-                if (peaks.size()>0)
-                {
-                    double f1 = peaks.begin()->first;
-                    int N = 0;
-                    std::vector<double> ftab;
-
-                    if (f1>0) for (auto &e : peaks)
-                    {
-                        if (++N > 7) break;
-                        ftab.push_back(e.first/f1*mPiano->getConcertPitch()/440.0*key->getComputedFrequency());
-                    }
-                    mStroboscope->setFrequencies(ftab);
-
-                }
-            }
-        }
-        default:
-            break;
     }
 }
 
@@ -445,10 +364,7 @@ void AudioRecorderAdapter::controlRecordingState (double level)
     // check for recording start (only if not in standby mode)
     // ------------------------------------------------------------------------
 
-    if (mStandby != SBR_NONE) {
-        // the analyzer is still working, dont do anything here
-        return;
-    }
+    if (mStandby or mWaiting) return;
 
     // If the level falls below LEVEL_RETRIGGER, the status of
     // the adapter is declared as restartable:
@@ -461,7 +377,7 @@ void AudioRecorderAdapter::controlRecordingState (double level)
         else            LogI("Recording started");
         mRecording   = true;
         mRestartable = false;
-        mStandby |= SBR_WAITING_FOR_ANALYISIS;
+        mWaiting = true;
         MessageHandler::send(Message::MSG_RECORDING_STARTED);
     }
 }

@@ -24,12 +24,7 @@
 #ifndef AUDIOPLAYERADAPTER_H
 #define AUDIOPLAYERADAPTER_H
 
-#include "../audiobase.h"
-#include "../circularbuffer.h"
 #include "pcmwriterinterface.h"
-
-#include <mutex>
-#include <cstdint>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract adapter class for playing audio signals.

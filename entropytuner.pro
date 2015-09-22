@@ -371,6 +371,7 @@ CORE_AUDIO_HEADERS = \
     core/audio/midi/NoMidiimplementation.h \
     core/audio/recorder/audiorecorderadapter.h \
     core/audio/recorder/stroboscope.h \
+    core/audio/recorder/recordingmanager.h \
 
 
 CORE_AUDIO_SOURCES = \
@@ -384,6 +385,7 @@ CORE_AUDIO_SOURCES = \
     core/audio/midi/NoMidiimplementation.cpp \
     core/audio/recorder/audiorecorderadapter.cpp \
     core/audio/recorder/stroboscope.cpp \
+    core/audio/recorder/recordingmanager.cpp \
 
 #------------- Mathematical ----------------
 

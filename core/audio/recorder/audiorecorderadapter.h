@@ -24,10 +24,10 @@
 #ifndef AUDIORECORDERADAPTER_H
 #define AUDIORECORDERADAPTER_H
 
-#include "../audiobase.h"
+//#include "../audiobase.h"
 #include "../circularbuffer.h"
 #include "stroboscope.h"
-#include "../../messages/messagelistener.h"
+//#include "../../messages/messagelistener.h"
 #include "../../piano/piano.h"
 
 #include <vector>
@@ -48,7 +48,7 @@
 /// The adapter incorporates an autonomous fully automatic level control.
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioRecorderAdapter : public AudioBase, public MessageListener
+class AudioRecorderAdapter : public AudioBase
 {
 public:
     // Static constants, explained in the source file:
@@ -62,15 +62,6 @@ public:
     static const double LEVEL_CUTOFF;               // highest allowed level
     static const double DB_OFF;                     // dB shift for off mark
 
-    /// \brief Reasons for beeing in a stand by modus.
-    /// These are flags that may be combined by a logical or.
-    enum StandByReason
-    {
-        SBR_NONE                            = 0,     ///< Not in stand by mode
-        SBR_WAITING_FOR_ANALYISIS           = 1,     ///< signal is recorded and sent to the analyizer, waiting for finishing the analysis
-        SBR_DEACTIVATED_BY_OPERATION_MODE   = 2,     ///< the current operation mode is not tuning or recording
-    };
-
 public:
     AudioRecorderAdapter();                 ///< Constructor
     virtual ~AudioRecorderAdapter() {}      ///< Empty destructor
@@ -83,6 +74,10 @@ public:
 
     double getStopLevel() const { return mStopLevel; }
 
+    void setStandby (bool flag) { mStandby = flag; }
+    void setWaitingFlag (bool flag) { mWaiting = flag; }
+
+    Stroboscope* getStroboscope() { return &mStroboscope; }
 
 protected:
     // The implementation calls the following functions:
@@ -93,7 +88,7 @@ protected:
     virtual void setDeviceInputGain(double volume) = 0;
     virtual double getDeviceInputGain() const = 0;
 
-    virtual void handleMessage(MessagePtr m);
+
 
 private:
     bool   mMuted;              ///< Is the input device muted
@@ -106,17 +101,16 @@ private:
     double mStopLevel;          ///< Level at which recording stops
     bool   mRecording;          ///< Flag true if recording is on
     bool   mRestartable;        ///< Flag true if start/retriggering possible
-    int    mStandby;            ///< Flag of StandByReasons
+    bool   mWaiting;            ///< Wait for the data analysis to be completed
+    bool   mStandby;            ///< Standby flag
     int    mPacketCounter;      ///< Counter for the number of packages
-
-    const Piano* mPiano;
 
     std::map <int,double> mIntensityHistogram;      ///< Histogram of intensities
 
     CircularBuffer<PacketDataType> mCurrentPacket;  ///< Local audio buffer
     mutable std::mutex mCurrentPacketMutex;         ///< Buffer access mutexbo
 
-    std::unique_ptr<Stroboscope> mStroboscope;           ///< Pointer to stroboscope
+    Stroboscope mStroboscope;           ///< Instance of stroboscope
 
     double convertIntensityToLevel (double intensity);          // map for VU meter
     double convertLevelToIntensity (double level);              // inverse map VU meter

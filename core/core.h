@@ -28,6 +28,7 @@
 #include "analyzers/signalanalyzer.h"
 #include "calculation/calculationmanager.h"
 #include "audio/recorder/audiorecorderadapter.h"
+#include "audio/recorder/recordingmanager.h"
 #include "audio/player/soundgenerator.h"
 #include "messages/messagelistener.h"
 #include "system/log.h"
@@ -72,8 +73,9 @@ private:
     std::unique_ptr<ProjectManagerAdapter> mProjectManager;
     AudioRecorderAdapter *mRecorderAdapter;
     AudioPlayerAdapter *mPlayerAdapter;
-    SignalAnalyzer mSignalAnalyzer;
     SoundGenerator mSoundGenerator;
+    RecordingManager mRecordingManager;
+    SignalAnalyzer mSignalAnalyzer;
     std::shared_ptr<MidiAdapter> mMidi;
 
     PianoManager mPianoManager;
