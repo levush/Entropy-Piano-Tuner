@@ -39,9 +39,6 @@ class AudioRecorderAdapter;
 class Stroboscope
 {
 private:
-    /// Frames per second
-    const double FPS = 25;
-
     /// Damping factor of the normalizing amplitude level on a single frame (0...1)
     const double AMPLITUDE_DAMPING = 0.95;
 
@@ -58,6 +55,7 @@ public:
 
     void pushRawData (const AudioBase::PacketType &data);
     void setFrequencies (const std::vector<double> &frequencies);
+    void setFramesPerSecond (double fps);
 
 private:
     AudioRecorderAdapter *mRecorder;

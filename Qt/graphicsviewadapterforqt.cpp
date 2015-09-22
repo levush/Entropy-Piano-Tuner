@@ -123,7 +123,7 @@ GraphicsItem* GraphicsViewAdapterForQt::drawStroboscope (const ComplexVector &da
         for (int n=0; n<N; n++)
         {
             phase[n]      = std::arg(data[n])/M_PI/2 + 0.5;
-            saturation[n] = pow(std::min(1.0,std::abs(data[n])*(n+1)),0.3);
+            saturation[n] = pow(std::min(1.0,1.1*std::abs(data[n])*(n+1)),0.3);
             value[n]      = saturation[n];
         }
 

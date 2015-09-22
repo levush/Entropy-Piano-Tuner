@@ -33,11 +33,15 @@
 Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
     mRecorder(recorder),
     mActive(false),
-    mSamplesPerFrame(44100),
+    mSamplesPerFrame(22050),
     mSampleCounter(0),
     mMaxAmplitude(1E-21)
 {
 }
+
+
+int counter=0;
+
 
 void Stroboscope::pushRawData (const AudioBase::PacketType &data)
 {
@@ -54,37 +58,37 @@ void Stroboscope::pushRawData (const AudioBase::PacketType &data)
             mComplexPhase[i] *= mComplexIncrement[i];
             mMeanComplexPhase[i] += mComplexPhase[i] * pcm / mMaxAmplitude;
         }
-        mSampleCounter++;
-        if (mSampleCounter >= mSamplesPerFrame)
+        if (mSampleCounter-- <= 0)
         {
             for (auto &c : mComplexPhase) c /= std::abs(c);
             ComplexVector normalizedPhases (mMeanComplexPhase);
             for (auto &c : normalizedPhases) c /= 0.5*mSamplesPerFrame/(1-FRAME_DAMPING);
+            std::cout << "send strobo " << counter++ << std::endl;
             MessageHandler::send<MessageStroboscope>(normalizedPhases);
 
             for (auto &c : mMeanComplexPhase) c *= FRAME_DAMPING;
             mMaxAmplitude *= AMPLITUDE_DAMPING;
-            mSampleCounter = 0;
+            mSampleCounter = mSamplesPerFrame;
         }
     }
 }
 
 
 
+void Stroboscope::setFramesPerSecond (double fps)
+{
+    mSamplesPerFrame = mRecorder->getSamplingRate() / fps;
+}
+
 void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
 {
     std::lock_guard<std::mutex> lock (mMutex);
-
     mComplexPhase.resize(frequencies.size());
     mComplexPhase.assign(frequencies.size(),1);
     mMeanComplexPhase.resize(frequencies.size());
     mMeanComplexPhase.assign(frequencies.size(),0);
-
     mComplexIncrement.clear();
-    int sr = mRecorder->getSamplingRate();
-    mSamplesPerFrame = sr / FPS;
-    const Complex I (0,1);
     for (auto &f : frequencies)
-        mComplexIncrement.push_back(std::exp(2.0*M_PI*I*(f/sr)));
+        mComplexIncrement.push_back(std::exp(Complex(0,2.0*M_PI)*(f/mRecorder->getSamplingRate())));
 }
 

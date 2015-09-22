@@ -34,17 +34,21 @@ public:
     RecordingManager (AudioRecorderAdapter *audioRecorder);
 
     void init () {};
-    void exit () {}
-    void start() {};
-    void stop () {};
 
 private:
     virtual void handleMessage(MessagePtr m);
 
-    AudioRecorderAdapter *mAudioRecorder;    ///< Pointer to the audio device
-    const Piano* mPiano;
+    AudioRecorderAdapter *mAudioRecorder;   ///< Pointer to the audio device
+    const Piano* mPiano;                    ///< Poitner to the actual piano
+    OperationMode mOperationMode;           ///< Current operation mode
+    const Key* mSelectedKey;                ///< Currently selected key
+    int mNumberOfKeys;                      ///< Total number of keys
+    int mNumberOfSelectedKey;               ///< Number of actually selected key
 
+    const double FPS_FAST = 30;             ///< Stroboscopic fps during recording
+    const double FPS_SLOW = 10;             ///< Stroboscopic fps during non-recording
 
+    void updateStroboscopicFrequencies();
 };
 
 #endif // RECORDINGMANAGER_H
