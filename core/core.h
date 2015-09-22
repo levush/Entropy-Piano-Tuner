@@ -27,15 +27,15 @@
 //#include <thread>
 #include "analyzers/signalanalyzer.h"
 #include "calculation/calculationmanager.h"
-#include "audio/audiorecorderadapter.h"
-#include "audio/soundgenerator.h"
+#include "audio/recorder/audiorecorderadapter.h"
+#include "audio/player/soundgenerator.h"
 #include "messages/messagelistener.h"
 #include "system/log.h"
 #include "adapters/coreinitialisationadapter.h"
 #include "adapters/projectmanageradapter.h"
 #include "piano/pianomanager.h"
 
-#include "midi/midiadapter.h"
+#include "audio/midi/midiadapter.h"
 
 ////////////////////////////////////////////////////////////////////////
 /// \brief class for initialising the core

@@ -26,9 +26,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "../system/prerequisites.h"
-#include "../messages/messagehandler.h"
-#include "../messages/messagemidievent.h"
+#include "../../system/prerequisites.h"
+#include "../../messages/messagehandler.h"
+#include "../../messages/messagemidievent.h"
 
 MidiAdapter::Event MidiAdapter::byteToEvent(int byte)
 {

@@ -24,11 +24,11 @@
 #ifndef AUDIORECORDERADAPTER_H
 #define AUDIORECORDERADAPTER_H
 
-#include "audiobase.h"
-#include "circularbuffer.h"
+#include "../audiobase.h"
+#include "../circularbuffer.h"
 #include "stroboscope.h"
-#include "../messages/messagelistener.h"
-#include "../piano/piano.h"
+#include "../../messages/messagelistener.h"
+#include "../../piano/piano.h"
 
 #include <vector>
 #include <map>

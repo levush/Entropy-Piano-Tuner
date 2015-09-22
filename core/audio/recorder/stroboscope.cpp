@@ -23,8 +23,8 @@
 
 #include "audiorecorderadapter.h"
 #include "stroboscope.h"
-#include "../messages/messagehandler.h"
-#include "../messages/messagestroboscope.h"
+#include "../../messages/messagehandler.h"
+#include "../../messages/messagestroboscope.h"
 
 #include <iostream>
 

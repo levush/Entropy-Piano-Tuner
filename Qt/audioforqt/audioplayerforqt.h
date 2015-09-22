@@ -20,7 +20,7 @@
 #ifndef AUDIOPLAYERFORQT_H
 #define AUDIOPLAYERFORQT_H
 
-#include "../../core/audio/audioplayeradapter.h"
+#include "../../core/audio/player/audioplayeradapter.h"
 #include <QAudioOutput>
 #include <mutex>
 #include <atomic>

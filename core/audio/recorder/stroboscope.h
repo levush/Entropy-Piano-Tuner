@@ -31,7 +31,7 @@
 #include <vector>
 #include <mutex>
 
-#include "audiobase.h"
+#include "../audiobase.h"
 
 class AudioRecorderAdapter;
 

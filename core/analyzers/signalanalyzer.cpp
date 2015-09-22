@@ -35,7 +35,7 @@
 #include "../messages/messagepreliminarykey.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagetuningdeviation.h"
-#include "../audio/audiorecorderadapter.h"
+#include "../audio/recorder/audiorecorderadapter.h"
 #include "../math/mathtools.h"
 
 #include <cmath>

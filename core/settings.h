@@ -23,7 +23,7 @@
 #include <memory>
 #include <string>
 
-#include "audio/soundgeneratormode.h"
+#include "audio/player/soundgenerator.h"
 
 class Settings
 {
@@ -52,8 +52,8 @@ public:
     const std::string &getLastUsedAlgorithm() const {return mLastUsedAlgorithm;}
     virtual void setLastUsedAlgorithm(const std::string &name) {mLastUsedAlgorithm = name;}
 
-    SoundGeneratorMode getSoundGeneratorMode() const {return mSoundGeneratorMode;}
-    virtual void setSoundGeneratorMode(SoundGeneratorMode mode) {mSoundGeneratorMode = mode;}
+    SoundGenerator::SoundGeneratorMode getSoundGeneratorMode() const {return mSoundGeneratorMode;}
+    virtual void setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) {mSoundGeneratorMode = mode;}
 
     bool isSoundGeneratorVolumeDynamic() const {return mSoundGeneratorVolumeDynamic;}
     virtual void setSoundGeneratorVolumeDynamic(bool dynamic) {mSoundGeneratorVolumeDynamic = dynamic;}
@@ -71,7 +71,7 @@ protected:
     std::string mLanguageId;
 
     std::string mLastUsedAlgorithm;
-    SoundGeneratorMode mSoundGeneratorMode;
+    SoundGenerator::SoundGeneratorMode mSoundGeneratorMode;
     bool mSoundGeneratorVolumeDynamic;
     bool mDisableAutomaticKeySelection;
 

@@ -23,7 +23,7 @@
 
 #include "recorderlevel.h"
 #include "../messages/messagerecorderenergychanged.h"
-#include "../audio/audiorecorderadapter.h"
+#include "../audio/recorder/audiorecorderadapter.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Message handler.

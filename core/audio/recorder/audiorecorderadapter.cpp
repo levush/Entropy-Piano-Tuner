@@ -30,17 +30,17 @@
 #include <algorithm>
 #include <iostream>
 
-#include "../settings.h"
-#include "../system/log.h"
-#include "../messages/messagerecorderenergychanged.h"
-#include "../messages/messagemodechanged.h"
-#include "../messages/messagekeyselectionchanged.h"
-#include "../messages/messageprojectfile.h"
-#include "../messages/messagehandler.h"
-#include "../math/mathtools.h"
-#include "../system/log.h"
-#include "../system/eptexception.h"
-#include "../core/piano/piano.h"
+#include "../../settings.h"
+#include "../../system/log.h"
+#include "../../messages/messagerecorderenergychanged.h"
+#include "../../messages/messagemodechanged.h"
+#include "../../messages/messagekeyselectionchanged.h"
+#include "../../messages/messageprojectfile.h"
+#include "../../messages/messagehandler.h"
+#include "../../math/mathtools.h"
+#include "../../system/log.h"
+#include "../../system/eptexception.h"
+#include "../../core/piano/piano.h"
 
 //-----------------------------------------------------------------------------
 //                            Various constants

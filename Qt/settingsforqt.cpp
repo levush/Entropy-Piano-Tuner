@@ -19,7 +19,7 @@
 
 #include "settingsforqt.h"
 #include <assert.h>
-#include "../core/audio/audiorecorderadapter.h"
+#include "../core/audio/recorder/audiorecorderadapter.h"
 #include "donotshowagainmessagebox.h"
 #include "options/optionsdialog.h"
 
@@ -62,8 +62,8 @@ void SettingsForQt::load() {
 
 
     mLastUsedAlgorithm = mSettings.value("core/lastUsedAlgorithm", QString()).toString().toStdString();
-    mSoundGeneratorMode = static_cast<SoundGeneratorMode>(
-                mSettings.value("core/soundGeneratorMode", static_cast<int>(SGM_SYNTHESIZE_KEY)).toInt());
+    mSoundGeneratorMode = static_cast<SoundGenerator::SoundGeneratorMode>(
+                mSettings.value("core/soundGeneratorMode", static_cast<int>(SoundGenerator::SGM_SYNTHESIZE_KEY)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
     mDisableAutomaticKeySelection = mSettings.value("core/disableAutomaticKeySelection", false).toBool();
 }
@@ -135,7 +135,7 @@ void SettingsForQt::setLastUsedAlgorithm(const std::string &name) {
     mSettings.setValue("core/lastUsedAlgorithm", QString::fromStdString(name));
 }
 
-void SettingsForQt::setSoundGeneratorMode(SoundGeneratorMode mode) {
+void SettingsForQt::setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) {
     Settings::setSoundGeneratorMode(mode);
     mSettings.setValue("core/soundGeneratorMode", static_cast<int>(mode));
 }

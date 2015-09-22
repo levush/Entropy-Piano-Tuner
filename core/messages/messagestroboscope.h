@@ -23,7 +23,7 @@
 #include "../config.h"
 
 #include "message.h"
-#include "../audio/stroboscope.h"
+#include "../audio/recorder/stroboscope.h"
 
 
 class MessageStroboscope : public Message

@@ -23,7 +23,7 @@
 
 #ifndef RTMIDIIMPLEMENTATION_H
 #define RTMIDIIMPLEMENTATION_H
-#include "../config.h"
+#include "../../config.h"
 #include "midiadapter.h"
 #include <memory>
 

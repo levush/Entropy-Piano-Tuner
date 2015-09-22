@@ -23,7 +23,7 @@
 #include "../config.h"
 
 #include "message.h"
-#include "../midi/midiadapter.h"
+#include "../audio/midi/midiadapter.h"
 
 
 class MessageMidiEvent : public Message

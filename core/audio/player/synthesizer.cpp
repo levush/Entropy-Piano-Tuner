@@ -20,8 +20,8 @@
 #include "synthesizer.h"
 #include "hammerknock.h"
 
-#include "../system/log.h"
-#include "../math/mathtools.h"
+#include "../../system/log.h"
+#include "../../math/mathtools.h"
 
 #include <random>
 #include <iostream>

@@ -20,7 +20,7 @@
 #include "settings.h"
 #include <assert.h>
 #include <locale>
-#include "audio/audiorecorderadapter.h"
+#include "audio/recorder/audiorecorderadapter.h"
 
 std::unique_ptr<Settings> Settings::mSingleton;
 

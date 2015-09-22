@@ -20,7 +20,7 @@
 #ifndef PCMWRITERINTERFACE
 #define PCMWRITERINTERFACE
 
-#include "audiobase.h"
+#include "../audiobase.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract class to write data into the AudioPlayerAdapter.

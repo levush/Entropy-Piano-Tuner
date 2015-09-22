@@ -20,8 +20,8 @@
 #include "platformtoolscore.h"
 #include "core/config.h"
 #include "core/system/eptexception.h"
-#include "core/midi/NoMidiimplementation.h"
-#include "core/midi/RtMidiimplementation.h"
+#include "core/audio/midi/NoMidiimplementation.h"
+#include "core/audio/midi/RtMidiimplementation.h"
 
 PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
 

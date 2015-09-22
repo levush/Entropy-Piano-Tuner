@@ -22,7 +22,7 @@
 
 #include <memory>
 
-#include "core/midi/midiadapter.h"
+#include "core/audio/midi/midiadapter.h"
 
 class PlatformToolsCore
 {
