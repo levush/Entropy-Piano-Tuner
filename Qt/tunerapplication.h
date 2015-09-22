@@ -216,17 +216,11 @@ private:
     /// Shared pointer of the MainWindow.
     std::shared_ptr<MainWindow> mMainWindow;
 
-#if CONFIG_ENABLE_PULSEAUDIO
-    /// Instance of the pulse audio recorder.
-    PulseAudioRecorder mAudioRecorder;
-    /// Instance of the pulse audio player.
-    PulseAudioPlayer mAudioPlayer;
-#else
     /// Instance of the Qt audio recorder.
     AudioRecorderForQt mAudioRecorder;
+
     /// Instance of the Qt audio player.
     AudioPlayerForQt mAudioPlayer;
-#endif
 };
 
 #endif // TUNERAPPLICATION_H

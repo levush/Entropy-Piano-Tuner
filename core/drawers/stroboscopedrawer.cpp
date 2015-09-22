@@ -26,6 +26,8 @@
 
 #include "stroboscopedrawer.h"
 
+#include <iostream>
+
 #include "../messages/messagemodechanged.h"
 #include "../messages/messagestroboscope.h"
 
@@ -62,16 +64,7 @@ void StroboscopeDrawer::handleMessage(MessagePtr m)
         {
             auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
             mDataVector = mmc->getData();
-//            std::cout << "and here is the data:" << std::endl;
-//            for (uint i=0; i<vector.size(); ++i)
-//            {
-//                std::cout << i << " " << std::abs(vector[i]) << "\t"
-//                          << std::arg(vector[i]) << std::endl;
-//            }
-//            std::cout << std::endl;
-            redraw(true);
-
-
+            redraw(true); // may be false is also okay
         }
         default:
         {
@@ -104,16 +97,7 @@ void StroboscopeDrawer::reset()
 
 void StroboscopeDrawer::draw()
 {
-//    std::vector<GraphicsViewAdapter::StroboscopeData> data;
-//    data.resize(3);
-//    data[0].phase = 0.5;
-//    data[1].phase = 0;
-//    data[2].phase = 0.5;
-//    data[0].intensity=1;
-//    data[1].intensity=0;
-//    data[2].intensity=1;
-//    mGraphics->drawStroboscope(data);
-    mGraphics->drawStroboscope(mDataVector);
+     mGraphics->drawStroboscope(mDataVector);
 }
 
 

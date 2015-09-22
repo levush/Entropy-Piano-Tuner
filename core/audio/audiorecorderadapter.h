@@ -28,6 +28,8 @@
 #include "circularbuffer.h"
 #include "stroboscope.h"
 #include "../messages/messagelistener.h"
+#include "../piano/piano.h"
+
 #include <vector>
 #include <map>
 #include <mutex>
@@ -106,6 +108,8 @@ private:
     bool   mRestartable;        ///< Flag true if start/retriggering possible
     int    mStandby;            ///< Flag of StandByReasons
     int    mPacketCounter;      ///< Counter for the number of packages
+
+    const Piano* mPiano;
 
     std::map <int,double> mIntensityHistogram;      ///< Histogram of intensities
 

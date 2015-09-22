@@ -72,7 +72,7 @@ public:
         MSG_CALCULATION_PROGRESS,               ///< Message that progress of any kind was made by the calculator
 
         MSG_MIDI_EVENT,                         ///< new event from MIDI keyboard received
-        MSG_STROBOSCOPE_EVENT,
+        MSG_STROBOSCOPE_EVENT,                  ///< stroboscope message
 
     };
 

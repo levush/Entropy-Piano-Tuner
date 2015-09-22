@@ -33,21 +33,16 @@
 Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
     mRecorder(recorder),
     mActive(false),
-    mSamplesPerFrame(1),
+    mSamplesPerFrame(44100),
     mSampleCounter(0),
     mMaxAmplitude(1E-21)
 {
-    std::vector<double> f0 = {440,880,1320,1760};
-    setFrequencies(f0);
 }
-
-
-
 
 void Stroboscope::pushRawData (const AudioBase::PacketType &data)
 {
+    std::lock_guard<std::mutex> lock (mMutex);
     // data packet size is typically 1100, can be 0.
-
     if (mActive) for (auto &pcm : data)
     {
         if (fabs(pcm)>mMaxAmplitude) mMaxAmplitude=fabs(pcm);
@@ -62,6 +57,7 @@ void Stroboscope::pushRawData (const AudioBase::PacketType &data)
         mSampleCounter++;
         if (mSampleCounter >= mSamplesPerFrame)
         {
+            for (auto &c : mComplexPhase) c /= std::abs(c);
             ComplexVector normalizedPhases (mMeanComplexPhase);
             for (auto &c : normalizedPhases) c /= 0.5*mSamplesPerFrame/(1-FRAME_DAMPING);
             MessageHandler::send<MessageStroboscope>(normalizedPhases);
@@ -77,6 +73,8 @@ void Stroboscope::pushRawData (const AudioBase::PacketType &data)
 
 void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
 {
+    std::lock_guard<std::mutex> lock (mMutex);
+
     mComplexPhase.resize(frequencies.size());
     mComplexPhase.assign(frequencies.size(),1);
     mMeanComplexPhase.resize(frequencies.size());
@@ -86,7 +84,7 @@ void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
     int sr = mRecorder->getSamplingRate();
     mSamplesPerFrame = sr / FPS;
     const Complex I (0,1);
-    for (auto &f : frequencies) if (f>20 and f<sr/4)
+    for (auto &f : frequencies)
         mComplexIncrement.push_back(std::exp(2.0*M_PI*I*(f/sr)));
 }
 

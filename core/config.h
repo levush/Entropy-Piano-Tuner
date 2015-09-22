@@ -68,7 +68,6 @@
 //=============================================================================
 
 #define CONFIG_ENABLE_RTMIDI           1
-#define CONFIG_ENABLE_PULSEAUDIO       0
 #define CONFIG_ENABLE_XMGRACE          0
 #define CONFIG_OPTIMIZE_FFT            1
 #define CONFIG_USE_SIMPLE_FILE_DIALOG  0
@@ -81,7 +80,6 @@
 #include "TargetConditionals.h"
 
 #define CONFIG_OPTIMIZE_FFT            0
-#define CONFIG_ENABLE_PULSEAUDIO       0
 #define CONFIG_ENABLE_XMGRACE          0
 
 #   if TARGET_IPHONE_SIMULATOR

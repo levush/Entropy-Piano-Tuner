@@ -34,10 +34,13 @@
 #include "../system/log.h"
 #include "../messages/messagerecorderenergychanged.h"
 #include "../messages/messagemodechanged.h"
+#include "../messages/messagekeyselectionchanged.h"
+#include "../messages/messageprojectfile.h"
 #include "../messages/messagehandler.h"
 #include "../math/mathtools.h"
 #include "../system/log.h"
 #include "../system/eptexception.h"
+#include "../core/piano/piano.h"
 
 //-----------------------------------------------------------------------------
 //                            Various constants
@@ -215,10 +218,6 @@ double AudioRecorderAdapter::convertLevelToIntensity (double level)
 /// The raw signal is multiplied by a gain factor mGain which is adjusted
 /// dynamically during the recording process.
 ///
-/// Since the PacketDataType defined in AudioBase (e.g. double) may differ
-/// from the preferred data type in the implementation (e.g. float in
-/// pulse audio), we define the function as a template for float or double.
-///
 /// \param data : Vector containing the raw pcm data to be copied
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -269,7 +268,7 @@ void AudioRecorderAdapter::pushRawData(const PacketType &data)
 
 
 //-----------------------------------------------------------------------------
-//                             Manage standby
+//               Message handler  (for standby and stroboscope)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -281,6 +280,12 @@ void AudioRecorderAdapter::handleMessage(MessagePtr m)
 {
     switch (m->getType())
     {
+        case Message::MSG_PROJECT_FILE:
+        {
+            auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
+            mPiano = &mpf->getPiano();
+            break;
+        }
         case Message::MSG_SIGNAL_ANALYSIS_ENDED:
             mStandby -= mStandby & SBR_WAITING_FOR_ANALYISIS;
             break;
@@ -303,6 +308,29 @@ void AudioRecorderAdapter::handleMessage(MessagePtr m)
                 break;
             }
             break;
+        }
+    case Message::MSG_KEY_SELECTION_CHANGED:
+        {
+            auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
+            const Key* key = message->getKey();
+            if (key)
+            {
+                const Key::PeakListType peaks = key->getPeaks();
+                if (peaks.size()>0)
+                {
+                    double f1 = peaks.begin()->first;
+                    int N = 0;
+                    std::vector<double> ftab;
+
+                    if (f1>0) for (auto &e : peaks)
+                    {
+                        if (++N > 7) break;
+                        ftab.push_back(e.first/f1*mPiano->getConcertPitch()/440.0*key->getComputedFrequency());
+                    }
+                    mStroboscope->setFrequencies(ftab);
+
+                }
+            }
         }
         default:
             break;

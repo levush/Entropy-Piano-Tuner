@@ -38,7 +38,7 @@ PROJECT_NAME           = "Entropy Piano Tuner"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = "1.1.2 (documentation not yet complete)"
+PROJECT_NUMBER         = "1.1.2  (documentation not yet complete)"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -1324,7 +1324,7 @@ GENERATE_QHP           = YES
 # the HTML output folder.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QCH_FILE               = ../ept.qch
+QCH_FILE               = /home/hinrichsen/Software/Qt/ept.qch
 
 # The QHP_NAMESPACE tag specifies the namespace to use when generating Qt Help
 # Project output. For more information please see Qt Help Project / Namespace

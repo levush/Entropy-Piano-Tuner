@@ -44,8 +44,6 @@ protected:
 private:
     using ComplexVector = std::vector<std::complex<double>>;
     ComplexVector mDataVector;
-    int convertHsvToRgb (double h, double s, double v=1);
-
 };
 
 #endif // STROBOSCOPEDRAWER_H
