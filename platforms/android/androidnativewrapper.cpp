@@ -49,7 +49,7 @@ static void java_openFile(JNIEnv *env, jobject thiz, jstring string, jboolean ca
 static void java_sendMidiMessage(JNIEnv *env, jobject thiz, jint event, jint byte1, jint byte2, jdouble deltaTime) {
     Q_UNUSED(env);
     Q_UNUSED(thiz);
-    MidiAdapter::Data data = {static_cast<MidiAdapter::Event>(event), byte1, byte2, deltaTime};
+    MidiAdapter::Data data = {static_cast<MidiAdapter::MidiEvent>(event), byte1, byte2, deltaTime};
     MessageHandler::send<MessageMidiEvent>(data);
 }
 

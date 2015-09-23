@@ -2,7 +2,7 @@
 # requrires to install xdotools
 #
 echo "running doxygen and opening firefox browser"
-doxygen Doxyfile
+doxygen Doxyfile > doxy.log
 SERVICE='firefox'
 if ps ax | grep -v grep | grep $SERVICE > /dev/null
 then

@@ -17,9 +17,9 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//              MIDI implementaion for various platforms
-//======================================================================
+//=============================================================================
+//                MIDI implementaion for various platforms
+//=============================================================================
 
 #ifndef RTMIDIIMPLEMENTATION_H
 #define RTMIDIIMPLEMENTATION_H
@@ -35,8 +35,9 @@
 /// \brief Interface for reading an externally connected MIDI keyboard.
 ///
 /// This class provides a simplified interface for reading external
-/// midi keyboards.
-/// It uses the third-party sofrware RtMidi 2.1.0 .
+/// MIDI keyboards.
+/// It uses the third-party software RtMidi 2.1.0 which is published
+/// under the same license:
 /// Source: http://www.music.mcgill.ca/~gary/rtmidi/
 ///
 /// Requirements for Linux:

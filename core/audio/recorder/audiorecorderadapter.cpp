@@ -140,7 +140,7 @@ void AudioRecorderAdapter::setMuted (bool muted)
 /// \param rate : New sampling rate
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::setSamplingRate(uint16_t rate)
+void AudioRecorderAdapter::setSamplingRate(int rate)
 {
     AudioBase::setSamplingRate(rate);
     mCurrentPacket.resize(rate * BUFFER_SIZE_IN_SECONDS);

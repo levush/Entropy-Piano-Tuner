@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //=============================================================================
-//                              Audio base class
+//                             Audio base class
 //=============================================================================
 
 #include "audiobase.h"
@@ -29,18 +29,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 /// The constructor initializes the default values for the
-/// default sampling rate and the channels count for the sound device
+/// default sampling rate (44100) and the channels count (1).
+/// The device name is set to "unknown".
 ///////////////////////////////////////////////////////////////////////////////
 
 AudioBase::AudioBase()
-    : mAudioDeviceName(),
+    : mAudioDeviceName("unknown"),
       mSamplingRate(44100),
       mChannelCount(1)
 {}
 
 
 //-----------------------------------------------------------------------------
-//                          Get the device name
+//                           Get the device name
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,7 +54,7 @@ const std::string &AudioBase::getDeviceName() const
 
 
 //-----------------------------------------------------------------------------
-//                          Set the device name
+//                           Set the device name
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,7 +75,7 @@ void AudioBase::setDeviceName(const std::string &n)
 /// \returns mSamplingRate
 ///////////////////////////////////////////////////////////////////////////////
 
-uint16_t AudioBase::getSamplingRate() const
+int AudioBase::getSamplingRate() const
 { return mSamplingRate; }
 
 
@@ -92,7 +93,7 @@ uint16_t AudioBase::getSamplingRate() const
 /// \param rate : New sampling rate to be used.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioBase::setSamplingRate(uint16_t rate)
+void AudioBase::setSamplingRate(int rate)
 { mSamplingRate = rate; }
 
 
@@ -105,7 +106,7 @@ void AudioBase::setSamplingRate(uint16_t rate)
 /// \returns mChannelCount
 ///////////////////////////////////////////////////////////////////////////////
 
-uint8_t AudioBase::getChannelCount() const
+int AudioBase::getChannelCount() const
 { return mChannelCount; }
 
 
@@ -114,10 +115,10 @@ uint8_t AudioBase::getChannelCount() const
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Set number of channels (1=mono, 2=stereo).
-/// \param c : number of channels
+/// \brief Set the number of channels (1=mono, 2=stereo).
+/// \param cnt : number of channels
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioBase::setChannelCount(uint8_t c)
-{ mChannelCount = c; }
+void AudioBase::setChannelCount(int cnt)
+{ mChannelCount = cnt; }
 

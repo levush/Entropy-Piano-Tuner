@@ -17,20 +17,50 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                           Midi adapter
-//======================================================================
+//=============================================================================
+//                               Midi adapter
+//=============================================================================
 
 #include "midiadapter.h"
 
-#include <iostream>
 #include <sstream>
 
-#include "../../system/prerequisites.h"
+#include "../../system/log.h"
 #include "../../messages/messagehandler.h"
 #include "../../messages/messagemidievent.h"
 
-MidiAdapter::Event MidiAdapter::byteToEvent(int byte)
+
+//-----------------------------------------------------------------------------
+//                Return a list of all available Midi devices
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \return List all available Midi devices in a single string
+///////////////////////////////////////////////////////////////////////////////
+
+std::string MidiAdapter::GetPortNames()
+{
+    const int ports = GetNumberOfPorts();
+    std::stringstream s;
+    if (ports > 0)
+    {
+        s << GetPortName(0);
+        for (int i = 1; i < GetNumberOfPorts(); ++i) s << ", " << GetPortName(i);
+        return s.str();
+    }
+    else return "No MIDI ports available.";
+}
+
+
+//-----------------------------------------------------------------------------
+//                Convert the MIDI command byte to a MidiEvent
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \return MidiEvent code, MIDI_UNDEFINED if not recognized
+///////////////////////////////////////////////////////////////////////////////
+
+MidiAdapter::MidiEvent MidiAdapter::byteToEvent(int byte)
 {
     switch (byte & 0xF0)
     {
@@ -38,40 +68,22 @@ MidiAdapter::Event MidiAdapter::byteToEvent(int byte)
         case 0x90:  return MIDI_KEY_PRESS;
         case 0xB0:  return MIDI_CONTROL_CHANGE;
     }
-
     return MIDI_UNDEFINED;
 }
 
-//---------------- Return a list of all available Midi devices ---------
 
-////////////////////////////////////////////////////////////////////////
-/// \return List of all available Midi devices as a single string
-////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
+//                            Send MIDI message
+//-----------------------------------------------------------------------------
 
-std::string MidiAdapter::GetPortNames()
-{
-    const int ports = GetNumberOfPorts();
-    std::stringstream s;
-    if (ports > 0) {
-        s << GetPortName(0);
-        for (int i = 1; i < GetNumberOfPorts(); ++i) {
-            s << ", " << GetPortName(i);
-        }
-        return s.str();
-    }
-    else
-    {
-        return "Midi system not available.";
-    }
-}
-
-//-------------------------send MIDI message ---------------------------
-
+///////////////////////////////////////////////////////////////////////////////
 /// This function sends a new data set received from the MIDI implementation
 /// as a message to the message handler.
+///////////////////////////////////////////////////////////////////////////////
 
 void MidiAdapter::send (Data &data)
 {
-    std::cout << "MidiAdapter::MidiEvent: " << (int)(data.event) << " " << data.byte1 << " " << data.byte2 << "\t" << data.deltatime << std::endl;
+    LogI("Midi event with data %d %d %d %lf",
+         (int)(data.event), data.byte1, data.byte2, data.deltatime);
     MessageHandler::send<MessageMidiEvent>(data);
 }

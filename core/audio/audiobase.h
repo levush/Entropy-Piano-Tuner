@@ -31,20 +31,24 @@
 #include "../system/prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Abstract base class for handling audio signals
+/// \brief Abstract base class for audio interfaces
 ///
-/// This class defines the basics properties of an audio input or output stream.
-/// It defines the basic samling rate, the used channels and the audio format.
+/// This class defines the basics properties of an audio input or output
+/// interface. It defines the sampling rate, the number of used channels
+/// and the name of the audio device. Moreover, it defines the basic
+/// data type used by the EPT to represent PCM audio signals.
+/// \see AudioRecorderAdapter and AudioPlayerAdapter
 ///////////////////////////////////////////////////////////////////////////////
 
 class AudioBase
 {
 public:
-    /// Data type for a packet: floating point PCM value in [0,1].
-    typedef double PacketDataType;
+    /// Floating point data type for a single PCM Value. The PCM values are
+    /// assumed to be in [-1,1].
+    typedef double PCMDataType;
 
-    /// Type definition for a PCM packet.
-    typedef std::vector<PacketDataType> PacketType;
+    /// Type definition of a PCM packet (vector of PCM values).
+    typedef std::vector<PCMDataType> PacketType;
 
 public:
     AudioBase();                        ///< Constructor
@@ -56,17 +60,17 @@ public:
     virtual void start() = 0;           ///< Start/restart the audio device.
     virtual void stop()  = 0;           ///< Stop the audio device.
 
-    const std::string &getDeviceName() const;     // get the device name
-    void setDeviceName(const std::string &n);     // set the device name
-    uint16_t getSamplingRate() const;             // get actual sampling rate
-    virtual void setSamplingRate(uint16_t rate);  // set actual sampling rate
-    uint8_t  getChannelCount() const;             // get number of channels
-    virtual void setChannelCount(uint8_t c);      // set number of channels
+    const std::string &getDeviceName() const;   // get the device name
+    void setDeviceName(const std::string &n);   // set the device name
+    int getSamplingRate() const;                // get actual sampling rate
+    virtual void setSamplingRate(int rate);     // set actual sampling rate
+    int getChannelCount() const;                // get number of channels
+    virtual void setChannelCount(int cnt);      // set number of channels
 
 private:
     std::string mAudioDeviceName;       ///< User-readable string of the used audio device
-    uint16_t mSamplingRate;             ///< Current sampling rate
-    uint8_t mChannelCount;              ///< Current channel count
+    int mSamplingRate;                  ///< Current sampling rate
+    int mChannelCount;                  ///< Current channel count
 };
 
 #endif // AUDIOBASE_H

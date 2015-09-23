@@ -421,12 +421,12 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
         // write data to buffer
         if (channels==1)
         {
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>((left+right)/2);
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PCMDataType>((left+right)/2);
         }
         else // if stereo
         {
-            outputBuffer[bufferIndex - 1] = static_cast<AudioBase::PacketDataType>(left);
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PacketDataType>(right);
+            outputBuffer[bufferIndex - 1] = static_cast<AudioBase::PCMDataType>(left);
+            outputBuffer[bufferIndex] = static_cast<AudioBase::PCMDataType>(right);
         }
 
     }

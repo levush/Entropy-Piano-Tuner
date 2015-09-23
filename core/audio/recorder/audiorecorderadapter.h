@@ -82,7 +82,7 @@ public:
 protected:
     // The implementation calls the following functions:
     void pushRawData (const PacketType &data);
-    void setSamplingRate (uint16_t rate) override;
+    void setSamplingRate (int rate) override;
 
     // This class controls the input gain of the implementation
     virtual void setDeviceInputGain(double volume) = 0;
@@ -107,7 +107,7 @@ private:
 
     std::map <int,double> mIntensityHistogram;      ///< Histogram of intensities
 
-    CircularBuffer<PacketDataType> mCurrentPacket;  ///< Local audio buffer
+    CircularBuffer<PCMDataType> mCurrentPacket;  ///< Local audio buffer
     mutable std::mutex mCurrentPacketMutex;         ///< Buffer access mutexbo
 
     Stroboscope mStroboscope;           ///< Instance of stroboscope
