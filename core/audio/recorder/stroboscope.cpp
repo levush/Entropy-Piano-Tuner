@@ -25,6 +25,7 @@
 #include "stroboscope.h"
 #include "../../messages/messagehandler.h"
 #include "../../messages/messagestroboscope.h"
+#include "../../math/mathtools.h"
 
 #include <iostream>
 
@@ -89,6 +90,6 @@ void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
     mMeanComplexPhase.assign(frequencies.size(),0);
     mComplexIncrement.clear();
     for (auto &f : frequencies)
-        mComplexIncrement.push_back(std::exp(Complex(0,2.0*M_PI)*(f/mRecorder->getSamplingRate())));
+        mComplexIncrement.push_back(std::exp(Complex(0,MathTools::TWO_PI)*(f/mRecorder->getSamplingRate())));
 }
 

@@ -22,6 +22,7 @@
 #include "graphicsitemforqt.h"
 #include "../core/drawers/drawerbase.h"
 #include "../core/system/eptexception.h"
+#include "../core/math/mathtools.h"
 
 GraphicsViewAdapterForQt::GraphicsViewAdapterForQt(QWidget *parent, DrawerBase *drawer, QRectF sceneRect)
     : QGraphicsView(parent),
@@ -122,7 +123,7 @@ GraphicsItem* GraphicsViewAdapterForQt::drawStroboscope (const ComplexVector &da
         std::vector<double> phase(N),saturation(N), value(N);
         for (int n=0; n<N; n++)
         {
-            phase[n]      = std::arg(data[n])/M_PI/2 + 0.5;
+            phase[n]      = std::arg(data[n])/MathTools::TWO_PI + 0.5;
             saturation[n] = pow(std::min(1.0,1.1*std::abs(data[n])*(n+1)),0.3);
             value[n]      = saturation[n];
         }
