@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "volumecontrollevel.h"
-#include "../core/audio/audiorecorderadapter.h"
+#include "../core/audio/recorder/audiorecorderadapter.h"
 #include <QLabel>
 #include <QDebug>
 

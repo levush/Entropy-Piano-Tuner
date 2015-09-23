@@ -17,32 +17,20 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "settings.h"
-#include <assert.h>
-#include <locale>
-#include "audio/recorder/audiorecorderadapter.h"
+#include "messagestroboscope.h"
 
-std::unique_ptr<Settings> Settings::mSingleton;
-
-Settings::Settings()
+MessageStroboscope::MessageStroboscope (const Stroboscope::ComplexVector &data)
+: Message(MSG_STROBOSCOPE_EVENT) , data(data)
 {
-    mSingleton.reset(this);
 }
 
-Settings::~Settings()
+MessageStroboscope::~MessageStroboscope()
 {
-
 }
 
-Settings &Settings::getSingleton() {
-    assert(mSingleton);
-    return *mSingleton;
+const Stroboscope::ComplexVector &MessageStroboscope::getData () const
+{
+    return data;
 }
 
-std::string Settings::getUserLanguageId() const {
-    if (mLanguageId.size() > 0) {
-        return mLanguageId;
-    } else {
-        return std::locale("").name().substr(0, 2);
-    }
-}
+

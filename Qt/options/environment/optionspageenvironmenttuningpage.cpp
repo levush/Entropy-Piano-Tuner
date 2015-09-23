@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "optionspageenvironmenttuningpage.h"
-#include "core/audio/soundgeneratormode.h"
+#include "core/audio/player/soundgenerator.h"
 #include "../../settingsforqt.h"
 #include "preferredtextsizelabel.h"
 #include <QGridLayout>
@@ -33,9 +33,9 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
 
     mSynthesizerMode = new QComboBox;
 
-    mSynthesizerMode->addItem(tr("Disabled"), QVariant(SGM_DEACTIVATED));
-    mSynthesizerMode->addItem(tr("Synthesized key sound"), QVariant(SGM_SYNTHESIZE_KEY));
-    mSynthesizerMode->addItem(tr("Reference key"), QVariant(SGM_REFERENCE_TONE));
+    mSynthesizerMode->addItem(tr("Disabled"), QVariant(SoundGenerator::SGM_DEACTIVATED));
+    mSynthesizerMode->addItem(tr("Synthesized key sound"), QVariant(SoundGenerator::SGM_SYNTHESIZE_KEY));
+    mSynthesizerMode->addItem(tr("Reference key"), QVariant(SoundGenerator::SGM_REFERENCE_TONE));
 
     layout->addWidget(new QLabel(tr("Synthesizer mode")), 0, 0);
     layout->addWidget(mSynthesizerMode, 0, 1);
@@ -65,7 +65,7 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
 
 void PageEnvironmentTuning::apply() {
     SettingsForQt::getSingleton().setSoundGeneratorMode(
-                static_cast<SoundGeneratorMode>(mSynthesizerMode->currentData().toInt()));
+                static_cast<SoundGenerator::SoundGeneratorMode>(mSynthesizerMode->currentData().toInt()));
     SettingsForQt::getSingleton().setSoundGeneratorVolumeDynamic(mSynthesizerVolumeDynamic->isChecked());
     SettingsForQt::getSingleton().setDisableAutomaticKeySelection(mDisableAutomaticKeySelecetion->isChecked());
 }

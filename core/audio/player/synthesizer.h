@@ -27,7 +27,7 @@
 #include "audioplayeradapter.h"
 #include "waveformgenerator.h"
 #include "pcmwriterinterface.h"
-#include "../system/simplethreadhandler.h"
+#include "../../system/simplethreadhandler.h"
 
 
 //=============================================================================

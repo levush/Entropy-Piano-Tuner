@@ -18,70 +18,223 @@
  *****************************************************************************/
 
 #include "graphicsviewadapter.h"
+#include <cmath>
 #include "../system/eptexception.h"
 
 
-GraphicsViewAdapter::GraphicsViewAdapter() {
+//-----------------------------------------------------------------------------
+//                          Clear graphics panel
+//-----------------------------------------------------------------------------
 
-}
-
-GraphicsViewAdapter::~GraphicsViewAdapter() {
-    while (mGraphicItems.size() > 0) {
+void GraphicsViewAdapter::clear()
+{
+    while (mGraphicItems.size() > 0)
+    {
         delete mGraphicItems.front();
+        // note that the destructor of the graphics item calls this function
     }
 }
 
-void GraphicsViewAdapter::clear() {
-    while (mGraphicItems.size() > 0) {
-        delete mGraphicItems.front();
-        // not that the destructor of the graphics item already removes the item
-    }
-}
 
-GraphicsItem *GraphicsViewAdapter::getGraphicItem(int keyIndex, RoleType role) {
-    GraphicItemsList list(getGraphicItems(keyIndex, role));
+
+//-----------------------------------------------------------------------------
+//                     Get the list of the graphic items.
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////
+/// \brief Get the list of the graphic items.
+///
+/// Getter function retrieving the complete list of the drawn graphic items.
+/// \returns mGraphicItems : List of graphics item.
+///////////////////////////////////////////////////////////////////////////
+
+GraphicItemsList &GraphicsViewAdapter::getGraphicItems()
+{ return mGraphicItems; }
+
+
+//-----------------------------------------------------------------------------
+//                 Get a constant list of the graphic items.
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////
+/// \brief Get a constant list of the graphic items
+///
+/// Getter function retreiving the complete list of the drawn graphic items.
+/// \returns mGraphicItems : Constant list of graphics item.
+///////////////////////////////////////////////////////////////////////////
+///
+const GraphicItemsList &GraphicsViewAdapter::getGraphicItems() const
+{ return mGraphicItems; }
+
+
+//-----------------------------------------------------------------------------
+//              Get a pointer to a single graphics element
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get a single graphics element specified by its index
+///
+/// This function returns the pointer to a single graphics element which
+/// is specified by its index and its role.
+/// Note that the function will return nullptr if no item matched with the
+/// request. The function will fail if more than one item matches.
+/// \see getGraphicItems(int, RoleType)
+/// \param keyIndex : Index of the graphics element
+/// \param role : User-defined role of the graphics element
+/// \return Pointer to the graphics item or nullptr
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicsItem *GraphicsViewAdapter::getGraphicItem (int keyIndex, RoleType role)
+{
+    GraphicItemsList list(getGraphicItems (keyIndex, role));
     EptAssert(list.size() <= 1, "Either the item is unique or does not exist at all");
-    if (list.size() > 0) {
-        return list.front();
-    }
-    return nullptr;
+    if (list.size() > 0) return list.front();
+    else return nullptr;
 }
 
-GraphicsItem *GraphicsViewAdapter::getGraphicItemByRole(RoleType role) {
+
+//-----------------------------------------------------------------------------
+//          Get the first of all graphics elements with a given role
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get the first of all graphics elements with a given role
+///
+/// Note that the function will return nullptr if no item matches with the
+/// requested role. The function will fail if more than one item matches.
+/// \param role : The role of the searched graphics element
+/// \return Pointer to the first graphics element in the list or nullptr
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicsItem *GraphicsViewAdapter::getGraphicItemByRole (RoleType role)
+{
     GraphicItemsList list(getGraphicItemsByRole(role));
     EptAssert(list.size() <= 1, "Either the item is unique or does not exist at all");
-    if (list.size() > 0) {
-        return list.front();
-    }
-    return nullptr;
+    if (list.size() > 0) return list.front();
+    else return nullptr;
 }
 
-GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex) {
+
+//-----------------------------------------------------------------------------
+//      Get a list of graphic items that match with the keyIndex.
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get a list of graphic items that match with the keyIndex.
+/// \param keyIndex : Index of the key used as a filter
+/// \return List of graphics items that may be empty
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex)
+{
     GraphicItemsList list;
-    for (GraphicsItem *item : mGraphicItems) {
-        if (item->getKeyIndex() == keyIndex) {
-            list.push_back(item);
-        }
-    }
+    for (GraphicsItem *item : mGraphicItems)
+        if (item->getKeyIndex() == keyIndex) list.push_back(item);
     return list;
 }
 
-GraphicItemsList GraphicsViewAdapter::getGraphicItemsByRole(RoleType role) {
+
+//-----------------------------------------------------------------------------
+//      Get the list of all graphics elements that match with a given role.
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////
+/// \brief Get a list of graphic items that match with the given role.
+/// \param role : Role of the graphics item used as a filter
+/// \return List of graphics items that may be empty
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicItemsList GraphicsViewAdapter::getGraphicItemsByRole(RoleType role)
+{
     GraphicItemsList list;
-    for (GraphicsItem *item : mGraphicItems) {
-        if ((role & item->getItemRole()) == role) {
-            list.push_back(item);
-        }
-    }
+    for (GraphicsItem *item : mGraphicItems)
+        if ((role & item->getItemRole()) == role) list.push_back(item);
     return list;
 }
 
-GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex, RoleType role) {
+
+//-----------------------------------------------------------------------------
+//      Get the list of all graphics elements of a given key index
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get the list of all graphics elements of a given key and role
+/// \param keyIndex : Index of the key used as a filter
+/// \param role : Role of the graphics item used as a filter
+/// \return List of graphics items
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex, RoleType role)
+{
     GraphicItemsList list;
-    for (GraphicsItem *item : mGraphicItems) {
-        if (item->getKeyIndex() == keyIndex && (role & item->getItemRole()) == role) {
+    for (GraphicsItem *item : mGraphicItems)
+        if (item->getKeyIndex() == keyIndex and (role & item->getItemRole()) == role)
             list.push_back(item);
+    return list;
+}
+
+
+//-----------------------------------------------------------------------------
+//                  Convert HSV colorscale to RGB value
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////
+/// \brief GraphicsViewAdapter::convertHsvToRgb
+/// \param h : Hue [0...inf], periodic in 1
+/// \param s : Saturation [0...1]
+/// \param v : Value [0...1]
+/// \return RGB code 0xrrggbb
+//////////////////////////////////////////////////////////////////////////
+
+int GraphicsViewAdapter::convertHsvToRgb (double h, double s, double v)
+{
+    if (h<0 or s<0 or s>1 or v<0 or v>1) return 0;
+    float i, f, p, q, t, r, g, b;
+
+    if (s==0) r = g = b = v;
+    else
+    {
+        i = std::floor(6*h);
+        f = 6*h - i;
+        p = v * ( 1 - s );
+        q = v * ( 1 - s * f );
+        t = v * ( 1 - s * ( 1 - f ) );
+
+        switch(static_cast<int>(i) % 6)
+        {
+            case 0:
+                r = v;
+                g = t;
+                b = p;
+                break;
+            case 1:
+                r = q;
+                g = v;
+                b = p;
+                break;
+            case 2:
+                r = p;
+                g = v;
+                b = t;
+                break;
+            case 3:
+                r = p;
+                g = q;
+                b = v;
+                break;
+            case 4:
+                r = t;
+                g = p;
+                b = v;
+                break;
+            default:		// case 5:
+                r = v;
+                g = p;
+                b = q;
+                break;
         }
     }
-    return list;
+    return ((static_cast<int>(r*255))%256<<16) +
+           ((static_cast<int>(g*255))%256<<8) +
+            (static_cast<int>(b*255))%256;
 }

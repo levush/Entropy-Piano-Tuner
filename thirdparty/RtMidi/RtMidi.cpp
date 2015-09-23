@@ -1,9 +1,12 @@
-// The following three lines have been added to include RtMidi
-// into the project and to suppress some warning during compilation.
+// The following lines have been added to include RtMidi
+// into the EPT project and to suppress some warnings during compilation.
+
 #include "../../core/config.h"
 #if CONFIG_ENABLE_RTMIDI
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
+
+//------------ Original RTMidi source starts below this line------------
 
 /**********************************************************************/
 /*! \class RtMidi

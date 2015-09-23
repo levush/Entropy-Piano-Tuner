@@ -25,22 +25,22 @@
 
 #include <algorithm>
 
-#include "../system/log.h"
-#include "../system/eptexception.h"
-#include "../system/simplethreadhandler.h"
-#include "../messages/messagechangetuningcurve.h"
-#include "../messages/messagekeyselectionchanged.h"
-#include "../messages/messagerecorderenergychanged.h"
-#include "../messages/messagepreliminarykey.h"
-#include "../messages/messagehandler.h"
-#include "../messages/messagemidievent.h"
-#include "../messages/messagemodechanged.h"
-#include "../messages/messageprojectfile.h"
-#include "../messages/messagefinalkey.h"
-#include "../piano/piano.h"
-#include "../piano/key.h"
-#include "../math/mathtools.h"
-#include "../settings.h"
+#include "../../system/log.h"
+#include "../../system/eptexception.h"
+#include "../../system/simplethreadhandler.h"
+#include "../../messages/messagechangetuningcurve.h"
+#include "../../messages/messagekeyselectionchanged.h"
+#include "../../messages/messagerecorderenergychanged.h"
+#include "../../messages/messagepreliminarykey.h"
+#include "../../messages/messagehandler.h"
+#include "../../messages/messagemidievent.h"
+#include "../../messages/messagemodechanged.h"
+#include "../../messages/messageprojectfile.h"
+#include "../../messages/messagefinalkey.h"
+#include "../../piano/piano.h"
+#include "../../piano/key.h"
+#include "../../math/mathtools.h"
+#include "../../settings.h"
 
 //-----------------------------------------------------------------------------
 //			                    Constructor

@@ -20,7 +20,7 @@
 #ifndef AUDIORECORDERFORQT_H
 #define AUDIORECORDERFORQT_H
 
-#include "../../core/audio/audiorecorderadapter.h"
+#include "../../core/audio/recorder/audiorecorderadapter.h"
 #include <QAudioInput>
 #include <QTimer>
 #include <mutex>
@@ -50,8 +50,8 @@ public:
     void start() override;
     void stop() override;
 
-    virtual void setVolume(double volume) override final;
-    virtual double getVolume() const override final;
+    virtual void setDeviceInputGain(double volume) override final;
+    virtual double getDeviceInputGain() const override final;
 
 public slots:
     void onReadPacket();

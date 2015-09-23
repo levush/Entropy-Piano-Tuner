@@ -20,8 +20,8 @@
 #include "platformtoolscore.h"
 #include "core/config.h"
 #include "core/system/eptexception.h"
-#include "core/midi/NoMidiimplementation.h"
-#include "core/midi/RtMidiimplementation.h"
+#include "core/audio/midi/NoMidiimplementation.h"
+#include "core/audio/midi/RtMidiimplementation.h"
 
 PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
 
@@ -34,7 +34,8 @@ PlatformToolsCore *PlatformToolsCore::getSingleton() {
     return mSingletonPtr;
 }
 
-std::shared_ptr<MidiAdapter> PlatformToolsCore::createMidiAdapter() const {
+std::shared_ptr<MidiAdapter> PlatformToolsCore::createMidiAdapter() const
+{
 #if CONFIG_ENABLE_RTMIDI
     return std::make_shared<RtMidiImplementation>();
 #else

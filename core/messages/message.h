@@ -44,7 +44,8 @@ class Message
 {
 public:
     /// Available message types:
-    enum MessageTypes {
+    enum MessageTypes
+    {
         MSG_INITIALIZE,                         ///< sent to initialize various modules
         MSG_TERMINATE,                          ///< terminate the tuner application
         MSG_CLEAR_RECORDING,                    ///< called when the recording was cleared
@@ -71,6 +72,7 @@ public:
         MSG_CALCULATION_PROGRESS,               ///< Message that progress of any kind was made by the calculator
 
         MSG_MIDI_EVENT,                         ///< new event from MIDI keyboard received
+        MSG_STROBOSCOPE_EVENT,                  ///< stroboscope message
 
     };
 

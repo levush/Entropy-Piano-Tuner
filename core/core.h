@@ -27,15 +27,16 @@
 //#include <thread>
 #include "analyzers/signalanalyzer.h"
 #include "calculation/calculationmanager.h"
-#include "audio/audiorecorderadapter.h"
-#include "audio/soundgenerator.h"
+#include "audio/recorder/audiorecorderadapter.h"
+#include "audio/recorder/recordingmanager.h"
+#include "audio/player/soundgenerator.h"
 #include "messages/messagelistener.h"
 #include "system/log.h"
 #include "adapters/coreinitialisationadapter.h"
 #include "adapters/projectmanageradapter.h"
 #include "piano/pianomanager.h"
 
-#include "midi/midiadapter.h"
+#include "audio/midi/midiadapter.h"
 
 ////////////////////////////////////////////////////////////////////////
 /// \brief class for initialising the core
@@ -64,7 +65,6 @@ public:
     ProjectManagerAdapter *getProjectManager() {return mProjectManager.get();}
     AudioRecorderAdapter *getAudioRecorder() {return mRecorderAdapter;}
     AudioPlayerAdapter *getAudioPlayer() {return mPlayerAdapter;}
-    //SignalAnalyzer *getSingalAnalyzer() {return &mSignalAnalyzer;}
     MidiAdapter *getMidiInterface() {return mMidi.get();}
     PianoManager *getPianoManager() {return &mPianoManager;}
 
@@ -73,8 +73,9 @@ private:
     std::unique_ptr<ProjectManagerAdapter> mProjectManager;
     AudioRecorderAdapter *mRecorderAdapter;
     AudioPlayerAdapter *mPlayerAdapter;
-    SignalAnalyzer mSignalAnalyzer;
     SoundGenerator mSoundGenerator;
+    RecordingManager mRecordingManager;
+    SignalAnalyzer mSignalAnalyzer;
     std::shared_ptr<MidiAdapter> mMidi;
 
     PianoManager mPianoManager;

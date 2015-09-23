@@ -295,6 +295,7 @@ CORE_MESSAGE_SYSTEM_HEADERS = \
     core/messages/messagechangetuningcurve.h \
     core/messages/messagetuningdeviation.h \
     core/messages/messagekeydatachanged.h \
+    core/messages/messagestroboscope.h \
 
 CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagelistener.cpp \
@@ -312,6 +313,7 @@ CORE_MESSAGE_SYSTEM_SOURCES = \
     core/messages/messagechangetuningcurve.cpp \
     core/messages/messagetuningdeviation.cpp \
     core/messages/messagekeydatachanged.cpp \
+    core/messages/messagestroboscope.cpp \
 
 #------------- Drawers --------------------
 
@@ -323,6 +325,7 @@ CORE_DRAWER_HEADERS = \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
     core/drawers/graphicsitem.h \
+    core/drawers/stroboscopedrawer.h \
 
 CORE_DRAWER_SOURCES = \
     core/drawers/drawerbase.cpp \
@@ -330,6 +333,7 @@ CORE_DRAWER_SOURCES = \
     core/drawers/tuningcurvegraphdrawer.cpp \
     core/drawers/fourierspectrumgraphdrawer.cpp \
     core/drawers/graphicsitem.cpp \
+    core/drawers/stroboscopedrawer.cpp \
 
 #------------- Adapters --------------------
 
@@ -355,35 +359,33 @@ CORE_ADAPTER_SOURCES = \
 
 CORE_AUDIO_HEADERS = \
     core/audio/audiobase.h \
-    core/audio/audiorecorderadapter.h \
-    core/audio/audioplayeradapter.h \
-    core/audio/synthesizer.h \
     core/audio/circularbuffer.h \
-    core/audio/soundgenerator.h \
-    core/audio/soundgeneratormode.h \
-    core/audio/waveformgenerator.h \
-    core/audio/hammerknock.h \
-    core/audio/pcmwriterinterface.h \
+    core/audio/player/audioplayeradapter.h \
+    core/audio/player/hammerknock.h \
+    core/audio/player/pcmwriterinterface.h \
+    core/audio/player/soundgenerator.h \
+    core/audio/player/synthesizer.h \
+    core/audio/player/waveformgenerator.h \
+    core/audio/midi/midiadapter.h \
+    core/audio/midi/RtMidiimplementation.h \
+    core/audio/midi/NoMidiimplementation.h \
+    core/audio/recorder/audiorecorderadapter.h \
+    core/audio/recorder/stroboscope.h \
+    core/audio/recorder/recordingmanager.h \
+
 
 CORE_AUDIO_SOURCES = \
-    core/audio/audiorecorderadapter.cpp \
     core/audio/audiobase.cpp \
-    core/audio/audioplayeradapter.cpp \
-    core/audio/synthesizer.cpp \
-    core/audio/soundgenerator.cpp \
-    core/audio/waveformgenerator.cpp
-
-#----------------- Midi ------------------
-
-CORE_MIDI_HEADERS = \
-    core/midi/midiadapter.h \
-    core/midi/RtMidiimplementation.h \
-    core/midi/NoMidiimplementation.h \
-
-CORE_MIDI_SOURCES = \
-    core/midi/midiadapter.cpp \
-    core/midi/RtMidiimplementation.cpp \
-    core/midi/NoMidiimplementation.cpp \
+    core/audio/player/audioplayeradapter.cpp \
+    core/audio/player/soundgenerator.cpp \
+    core/audio/player/synthesizer.cpp \
+    core/audio/player/waveformgenerator.cpp \
+    core/audio/midi/midiadapter.cpp \
+    core/audio/midi/RtMidiimplementation.cpp \
+    core/audio/midi/NoMidiimplementation.cpp \
+    core/audio/recorder/audiorecorderadapter.cpp \
+    core/audio/recorder/stroboscope.cpp \
+    core/audio/recorder/recordingmanager.cpp \
 
 #------------- Mathematical ----------------
 

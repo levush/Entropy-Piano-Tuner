@@ -54,7 +54,7 @@ protected:
     virtual void reset();
 
     GraphicsViewAdapter *mGraphics;     ///< Pointer to the graphics view adapter
-    system_time_point mTimeLastDrawn;         ///< Timeposition when last drawn
+    system_time_point mTimeLastDrawn;   ///< Timeposition when last drawn
     double mRedrawIntervalInSecs;       ///< Update time
 };
 

@@ -38,8 +38,9 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mProjectManager(projectManager),
       mRecorderAdapter(recorderAdapter),
       mPlayerAdapter(playerAdapter),
-      mSignalAnalyzer(recorderAdapter),
-      mSoundGenerator (playerAdapter)
+      mSoundGenerator (playerAdapter),
+      mRecordingManager (recorderAdapter),
+      mSignalAnalyzer(recorderAdapter)
 {
     mMidi = PlatformToolsCore::getSingleton()->createMidiAdapter();
     EptAssert(log, "A log has to be specified during creation of the core");
@@ -72,8 +73,11 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
     initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 30);
     mSignalAnalyzer.init();
 
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 60);
+    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 50);
     mSoundGenerator.init();
+
+    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 65);
+    mRecordingManager.init();
 
     initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_MIDI, 75);
     mMidi->init();

@@ -24,8 +24,8 @@
 #ifndef WAVEFORMGENERATOR_H
 #define WAVEFORMGENERATOR_H
 
-#include "../system/simplethreadhandler.h"
-#include "../math/fftimplementation.h"
+#include "../../system/simplethreadhandler.h"
+#include "../../math/fftimplementation.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief The WaveformGenerator class

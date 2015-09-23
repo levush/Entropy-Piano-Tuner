@@ -89,7 +89,7 @@ protected:
     virtual GraphicsItem* drawLine(double x1, double y1, double x2, double y2, PenType pen) override;
     virtual GraphicsItem* drawChart(const std::vector<Point> &points, PenType pen) override;
     virtual GraphicsItem* drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill) override;
-
+    virtual GraphicsItem* drawStroboscope (const ComplexVector &data) override;
 
 private:
     ///////////////////////////////////////////////////////////////////////////////

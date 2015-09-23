@@ -24,12 +24,12 @@
 #ifndef SOUNDGENERATOR_H
 #define SOUNDGENERATOR_H
 
-#include "soundgeneratormode.h"
 
-#include "../audio/synthesizer.h"
+#include "synthesizer.h"
+#include "soundgenerator.h"
 #include "../midi/midiadapter.h"
-#include "../piano/piano.h"
-#include "../messages/messagelistener.h"
+#include "../../piano/piano.h"
+#include "../../messages/messagelistener.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for managing the arrangement of sounds.
@@ -49,6 +49,13 @@ public:
 
     void start() { }
     void stop()  { }
+
+    enum SoundGeneratorMode
+    {
+        SGM_DEACTIVATED,
+        SGM_SYNTHESIZE_KEY,
+        SGM_REFERENCE_TONE,
+    };
 
 private:
     void handleMessage(MessagePtr m) override final;

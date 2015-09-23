@@ -17,15 +17,33 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef SOUNDGENERATORMODE_H
-#define SOUNDGENERATORMODE_H
+//=============================================================================
+//                           Stroboscope-Drawer
+//=============================================================================
 
-enum SoundGeneratorMode
+#ifndef STROBOSCOPEDRAWER_H
+#define STROBOSCOPEDRAWER_H
+
+#include <complex>
+
+#include "drawerbase.h"
+#include "../messages/messagelistener.h"
+
+
+class StroboscopeDrawer  : public DrawerBase, public MessageListener
 {
-    SGM_DEACTIVATED,
-    SGM_SYNTHESIZE_KEY,
-    SGM_REFERENCE_TONE,
+public:
+    StroboscopeDrawer(GraphicsViewAdapter *graphics);
+    ~StroboscopeDrawer() {}
+
+protected:
+    virtual void draw() override final;
+    virtual void reset() override final;
+    virtual void handleMessage(MessagePtr m) override;
+
+private:
+    using ComplexVector = std::vector<std::complex<double>>;
+    ComplexVector mDataVector;
 };
 
-#endif // SOUNDGENERATORMODE_H
-
+#endif // STROBOSCOPEDRAWER_H
