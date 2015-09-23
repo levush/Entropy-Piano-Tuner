@@ -117,7 +117,6 @@ void Core::exit() {
 }
 
 void Core::start() {
-    mSoundGenerator.start();
     mRecorderAdapter->start();
     mPlayerAdapter->start();
 }
@@ -127,7 +126,6 @@ void Core::stop() {
     mSignalAnalyzer.stop();
 
     // stop audio
-    mSoundGenerator.stop();
     mRecorderAdapter->stop();
     mPlayerAdapter->stop();
 }

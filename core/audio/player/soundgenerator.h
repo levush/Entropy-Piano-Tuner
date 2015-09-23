@@ -32,10 +32,10 @@
 #include "../../messages/messagelistener.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for managing the arrangement of sounds.
+/// \brief Class for managing the sound generation in the EPT.
 ///
 /// This class manages and composes the sound to be played by the synthesizer.
-/// It is completely driven by messages.
+/// It is completely driven by messages. It is some kind of SoundGenerationManager.
 ///////////////////////////////////////////////////////////////////////////////
 
 class SoundGenerator : public MessageListener
@@ -44,17 +44,15 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioAdapter);
     ~SoundGenerator(){}
 
-    void init () { }
-    void exit () { mSynthesizer.exit(); }
+    void init () { }                        ///< Initialize (no functionality)
+    void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
 
-    void start() { }
-    void stop()  { }
-
+    /// \brief Mode for sound generation
     enum SoundGeneratorMode
     {
-        SGM_DEACTIVATED,
-        SGM_SYNTHESIZE_KEY,
-        SGM_REFERENCE_TONE,
+        SGM_DEACTIVATED,        ///< No sound generation
+        SGM_SYNTHESIZE_KEY,     ///< Produce a sound which imitates the string
+        SGM_REFERENCE_TONE,     ///< Produce a simple sine wave as reference
     };
 
 private:
@@ -76,7 +74,7 @@ private:
     int mNumberOfKeys;                          ///< Copy of the number of keys.
     int mKeyNumberOfA4;                         ///< Copy of A-key position.
     int mSelectedKey;                           ///< Copy of selected key.
-    int mResonatingKey;                         ///< Key of the resonating sound
+    int mResonatingKey;                         ///< Keynumber of the resonating sound
     double mResonatingVolume;                   ///< Volume of the resonating sound
 };
 

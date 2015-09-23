@@ -47,7 +47,7 @@
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor, intiailizes the member variables.
+/// \brief Constructor, initializes the member variables.
 /// \param audioadapter : Pointer to the audio output implementation
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -438,8 +438,9 @@ void SoundGenerator::playResonatingSineWave (int keynumber, double frequency, do
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Calculate the sound of a given key in advance
-/// \param keynumber
+/// \brief Calculate the sound of a given key in advance, using the spectrum
+/// of the given key.
+/// \param keynumber : Number of the key
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
@@ -453,7 +454,8 @@ void SoundGenerator::preCalculateSoundOfKey (const int keynumber)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Calculate the sound of a given key in advance
+/// \brief Calculate the sound of a given key in advance, using an explicit
+/// spectrum passed as a parameter.
 /// \param keynumber : Number of the key
 /// \param spectrum : The explicit spectrum
 ///////////////////////////////////////////////////////////////////////////////

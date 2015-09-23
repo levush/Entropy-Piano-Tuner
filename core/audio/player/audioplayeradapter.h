@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //=============================================================================
-//                         Adapter for audio output
+//                        Adapter for audio playback
 //=============================================================================
 
 #ifndef AUDIOPLAYERADAPTER_H
@@ -27,38 +27,40 @@
 #include "pcmwriterinterface.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Abstract adapter class for playing audio signals.
+/// \brief Abstract adapter class for PCM-based audio output drivers.
 ///
-/// This class has to be implemented by the actual sound device implementation
+/// This class has to be implemented by the actual sound system. In the
+/// EPT this is the AudioPlayerForQt
+///
+/// Note that the sound-producing component (the EPT synthesizer) does not call
+/// the audio player by itself to deliver data, instead the AudioPlayer
+/// manages the workflow and requests data from the sound-producing component.
+///
+/// To establish this mechanism the sound-producing component (the synthesizer)
+/// has to be derived from an abstract class called PCMWriterInterface.
+/// The request is carried out by calling a function named generateAudioPacket
+/// which is defined virtually in the PCMWriterInterface.
 /// \see AudioPlayerForQt
+/// \see PCMWriterInterface
 ///
-/// The sound device implementation tells the adapter how large the available
-/// buffer size is. Depending on the implementation this may vary with time.
-///
-/// With the function 'write' it is possible to write a raw audio data
-/// to the stream. You are only write a packet with a size that does not
-/// exceed mFreeBufferSize.
+/// The present class does nothing but holding a pointer to the
+/// PCMWriterInterface. In addition it handels a mute flag.
 ///////////////////////////////////////////////////////////////////////////////
 
 class AudioPlayerAdapter : public AudioBase
 {
 public:
-    /// Minimal buffer size in milliseconds:
-    static const uint64_t MIN_BUFFER_SIZE_IN_MSECS;
+    AudioPlayerAdapter();                           ///< Constructor, resetting default values
+    virtual ~AudioPlayerAdapter() {}                ///< Destructor without functionality
 
-public:
-    AudioPlayerAdapter();
-    virtual ~AudioPlayerAdapter() {};
+    void setWriter (PCMWriterInterface *interface);
+    PCMWriterInterface *getWriter() {return mPCMWriter;} ///< Get pointer to the PCM writer
 
-    void setWriter(PCMWriterInterface *interface);
-    PCMWriterInterface *getWriter() {return mPCMWriter;}
-
-    void setMuted (bool muted);
-    bool isMuted() { return mMuted; }
-
+    void setMuted (bool muted) { mMuted = muted; }  ///< Mute the audio player.
+    bool isMuted() { return mMuted; }               ///< Returns true if the player is muted
 private:
-    PCMWriterInterface *mPCMWriter;     ///< Pointer to PCM writer
-    bool   mMuted;                      ///< Is the ouput device muted
+    PCMWriterInterface *mPCMWriter;                 ///< Pointer to PCM writer
+    bool   mMuted;                                  ///< Flag which is true if the ouput device muted
 };
 
 #endif // AUDIOPLAYERADAPTER_H

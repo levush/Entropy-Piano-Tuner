@@ -23,11 +23,15 @@
 #include "../audiobase.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Abstract class to write data into the AudioPlayerAdapter.
+/// \brief Abstract base class for sound-producing software components which
+/// transmit data to the AudioPlayerAdapter.
 ///
 /// This class is the base class for any derived class that produces sound
 /// and sends it to the audio device. In the EPT the Synthesizer is the only
-/// class that produces sound. This is a header file only without implementation.
+/// class that produces sound. This is a header file only without
+/// implementation (cpp) file.
+/// \see AudioPlayerAdapter
+/// \see AudioPlayerForQt
 ///////////////////////////////////////////////////////////////////////////////
 
 class PCMWriterInterface
@@ -42,12 +46,17 @@ public:
     virtual void init(const int sampleRate, const int channels)
     { mSampleRate = sampleRate; mChannels = channels; }
 
-    virtual void exit() {}      ///< Exit function, shut down writer interface
+    virtual void exit() {}      ///< Exit, shut down writer interface
 
     ///////////////////////////////////////////////////////////////////////////
-    /// \brief Generate a sound and copy it to the outputPacket
-    /// \param outputPacket The output packet (newly generated sound)
-    /// \returns true on success, false if the player should pause
+    /// \brief Function that generates new sound and copies it to the outputPacket
+    ///
+    /// This function is called by the implementation of the AudioPlayer
+    /// as a request to generate new sound and to copy it to the
+    /// outputPacket passed by reference.
+    /// \param outputPacket The output packet (newly generated sound) to be filled.
+    /// The length of the packet can be chosen freely.
+    /// \returns True on success, false if the player should pause.
     ///////////////////////////////////////////////////////////////////////////
 
     virtual bool generateAudioSignal (AudioBase::PacketType &outputPacket) = 0;

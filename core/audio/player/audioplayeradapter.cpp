@@ -23,12 +23,6 @@
 
 #include "audioplayeradapter.h"
 
-#include <assert.h>
-#include <vector>
-
-const uint64_t AudioPlayerAdapter::MIN_BUFFER_SIZE_IN_MSECS = 100;
-
-
 //-----------------------------------------------------------------------------
 //			                    Constructor
 //-----------------------------------------------------------------------------
@@ -37,7 +31,7 @@ AudioPlayerAdapter::AudioPlayerAdapter() :
     mPCMWriter(nullptr),
     mMuted(false)
 {
-    setChannelCount(2);
+    setChannelCount(2); // Ouput stereo per default
 }
 
 //-----------------------------------------------------------------------------
@@ -45,32 +39,24 @@ AudioPlayerAdapter::AudioPlayerAdapter() :
 //               The old one will be exited, the new one initialized
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Connect the audio adapter to a PCM writer interface
+///
+/// The writer interface is a software component that produces sound.
+/// In the EPT, the only component producing sound is the Synthesizer.
+/// \param interface : Pointer to the PCM writer interface to be connected.
+///////////////////////////////////////////////////////////////////////////////
+
 void AudioPlayerAdapter::setWriter(PCMWriterInterface *interface)
 {
-    if (mPCMWriter)
-    {
-        mPCMWriter->exit();
-    }
+    // If another writer already exists destroy it
+    if (mPCMWriter) mPCMWriter->exit();
 
+    // Set the pointer to the new writer interface
     mPCMWriter = interface;
 
-    if (mPCMWriter) {
-        mPCMWriter->init(getSamplingRate(), getChannelCount());
-    }
+    // Copy sampling rate and channel count and initialize the writer
+    if (mPCMWriter) mPCMWriter->init(getSamplingRate(), getChannelCount());
 }
 
-//-----------------------------------------------------------------------------
-//                           Mutes the input device
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief This function mutes the input signal by sending zeroes as input
-/// signal and handling an input level of 0.
-/// \param muted : Activate or deactivate the muting
-///////////////////////////////////////////////////////////////////////////////
-
-void AudioPlayerAdapter::setMuted (bool muted)
-{
-    mMuted = muted;
-}
 

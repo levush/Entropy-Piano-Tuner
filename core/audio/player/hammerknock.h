@@ -17,8 +17,8 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-////////////////////////////////////////////////////////////////////
-///	\brief Hammer knock Fourier data
+///////////////////////////////////////////////////////////////////////////////
+///	\brief Hammerknock Fourier data
 ///
 /// This file contains the Fourier transformation of a hammer knock
 /// over a length of one second. The list contains four sublists:
@@ -27,8 +27,10 @@
 /// 3. real part right channel
 /// 4. imag part right channel
 /// Apply an FFT to this data to get the waveform according
-/// to the chosen sample rate
-////////////////////////////////////////////////////////////////////
+/// to the chosen sample rate.
+///
+/// This variable is part of Synthesizer but defined externally in hammerknock.h
+///////////////////////////////////////////////////////////////////////////////
 
 const std::vector<std::vector<int>>Synthesizer::mHammerKnockFFT=
 {{4,4,3,0,-2,-2,-2,0,1,2,0,-2,0,0,-4,-6,-6,-4,-5,-7,-6,
