@@ -26,61 +26,68 @@
 #if CONFIG_ENABLE_RTMIDI
 
 #include <sstream>
-#include <chrono>
 #include <thread>
 
 #include "../../system/log.h"
 
-//-------------------------- Constructor -------------------------------
-
+//-----------------------------------------------------------------------------
+//                    Constructor without functionality
+//-----------------------------------------------------------------------------
 
 RtMidiImplementation::RtMidiImplementation () :
-    MidiAdapter() {}
+    MidiAdapter(),
+    mRtMidi(nullptr),
+    mCurrentPort(0)
+{}
 
 
-//---------------------------- init ------------------------------------
+//-----------------------------------------------------------------------------
+//                   Initialize the RtMidi-Implementation
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
-/// Initialize the RtMidi implementation by calling the creating a
-/// new instance. Exception errors are caught and converted into
-/// conventional error messages.
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// Initializes the RtMidi implementation by trying to create a new instance.
+/// Exception errors are caught and converted into conventional error messages.
+///////////////////////////////////////////////////////////////////////////////
 
-void RtMidiImplementation::init() {
-    try {
-        // try to create the instance
-        mRtMidi.reset(new RtMidiIn());
-    }
-    catch (const RtMidiError &error) {
-        LogE("%s", error.getMessage().c_str());
-    }
+void RtMidiImplementation::init()
+{
+    try { mRtMidi.reset(new RtMidiIn()); }  // try to create the instance
+    catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
 }
 
 
-//------------------------------ exit ----------------------------------
+//-----------------------------------------------------------------------------
+//                       Exit from RtMidi-Implementation
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
-/// Destroys the RtMidi instance.
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// Destroys the RtMidi instance, resetting the pointer mRtMidi.
+///////////////////////////////////////////////////////////////////////////////
 
-void RtMidiImplementation::exit() {
+void RtMidiImplementation::exit()
+{
     mRtMidi.reset();
 }
 
-//-------------- Return the number of available Midi devices ------------
 
-////////////////////////////////////////////////////////////////////////
-/// \return Number of available Midi ports (0=none).
-////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
+//                 Return the number of available Midi ports
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \return Number of available MIDI ports (0=none).
+///////////////////////////////////////////////////////////////////////////////
 
 int RtMidiImplementation::GetNumberOfPorts ()
 {
-    if (!mRtMidi) {
+    if (not mRtMidi)
+    {
         LogW("Midi has not been initialized");
         return 0;
     }
 
-    int cnt=0;
+    int cnt = 0;
     try { cnt = mRtMidi->getPortCount(); }
     catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
     return cnt;
@@ -88,12 +95,14 @@ int RtMidiImplementation::GetNumberOfPorts ()
 
 
 
-//------------------------Get the Midi device name ----------------------
+//-----------------------------------------------------------------------------
+//                 Get the MIDI device name for a given port
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \param i : Number of the port starting with 0
-/// \return Name of the Midi device connected to port i
-////////////////////////////////////////////////////////////////////////
+/// \return Name of the MIDI device connected to port \e i
+///////////////////////////////////////////////////////////////////////////////
 
 std::string RtMidiImplementation::GetPortName (int i)
 {
@@ -109,15 +118,18 @@ std::string RtMidiImplementation::GetPortName (int i)
 }
 
 
-//---------------- Return a list of all available Midi devices ---------
+//-----------------------------------------------------------------------------
+//               Return a list of all available Midi devices
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
-/// \return List of all available Midi devices as a single string
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// \return List of all available MIDI devices as a single string
+///////////////////////////////////////////////////////////////////////////////
 
 std::string RtMidiImplementation::GetPortNames()
 {
-    if (!mRtMidi) {
+    if (not mRtMidi)
+    {
         LogW("Midi has not been initialized");
         return std::string();
     }
@@ -134,14 +146,16 @@ std::string RtMidiImplementation::GetPortNames()
 }
 
 
-//------------------------ Open a particular port -----------------------
+//-----------------------------------------------------------------------------
+//                             Open port number i
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
-/// \param i : Number of the Midi port to be opened.
-/// \param AppName : Name of the application. Shows up in the list
-///                         Midi input devices
-/// \return true if successful.
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// \param i : Number of the MIDI port to be opened.
+/// \param AppName : Name of the application (e.g. Entropy Piano Tuner Midi in).
+///                  Shows up in the list MIDI input devices.
+/// \return True if successful.
+///////////////////////////////////////////////////////////////////////////////
 
 bool RtMidiImplementation::OpenPort (int i, std::string AppName)
 {
@@ -154,9 +168,6 @@ bool RtMidiImplementation::OpenPort (int i, std::string AppName)
         }
         else
         {
-            // mRtMidi->closePort();
-            // we only need to listen to keypress event, so we can ignore most of the events
-            // mRtMidi->ignoreTypes (false,false,false);  // this line would activate all midi messages
             mRtMidi->openPort (i,AppName);
             ClearQueue ();
             mRtMidi->setCallback (&StaticCallback,this);
@@ -168,39 +179,42 @@ bool RtMidiImplementation::OpenPort (int i, std::string AppName)
 }
 
 
-//--------------------- Open the port with the highest number ------------
+//-----------------------------------------------------------------------------
+//                   Open the port with the highest number
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
-/// If Midi devices are connected this function opens the port with the
-/// highest number (usually the last one that has been connected to the
+///////////////////////////////////////////////////////////////////////////////
+/// If MIDI devices are connected, this function opens the port with the
+/// highest number (usually this is the last one that has been connected to the
 /// computer).
 ///
-/// \param AppName : Name of the application. Shows up in the list
-///                  Midi input devices
-/// \return true if successful.
-////////////////////////////////////////////////////////////////////////
+/// \param AppName : Name of the application (e.g. Entropy Piano Tuner Midi in).
+///                  Shows up in the list MIDI input devices.
+/// \return True if successful.
+///////////////////////////////////////////////////////////////////////////////
 
 bool RtMidiImplementation::OpenPort (std::string AppName)
 {
-    (void)AppName; // suppresses warning
     int n = GetNumberOfPorts();
-    if (n>0) return OpenPort(n-1);
+    if (n>0) return OpenPort(n-1,AppName);
     else return false;
 }
 
 
-//-------------------------- Clear the Midi input queue ----------------
+//-----------------------------------------------------------------------------
+//                        Clear the MIDI input queue
+//-----------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// This functions polls data from the queue until it is empty.
 /// Here the timing is crucial.
-////////////////////////////////////////////////////////////////////////
-
-// Clearing the queue in RtMidi requires some effort. The queue is
-// read via getMessage in intervals of 2 us. Unfortunately this
-// function does not really tell us wether the queue is empty, rather
-// it may respond after some time. To circumvent this problem we
-// decalare the queue as empty if 1024 request do not render an event.
+///
+/// Details: Clearing the queue in RtMidi requires some effort. The queue is
+/// read via getMessage in intervals of 2 us. Unfortunately this
+/// function does not really tell us wether the queue is empty, rather
+/// it may respond after some time. To circumvent this problem we
+/// decalare the queue as empty if 1024 request do not render an event.
+///////////////////////////////////////////////////////////////////////////////
 
 void RtMidiImplementation::ClearQueue ()
 {
@@ -225,19 +239,29 @@ void RtMidiImplementation::ClearQueue ()
     catch (const RtMidiError &error) LogE("%s", error.getMessage().c_str());
 }
 
-////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------
+//                           STATIC CALLBACK FUNCTION
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Static callback function (private)
 ///
 /// The RtMidi package does not admit member functions for callback.
 /// To circumvent this restriction, we define a static callback function
-/// to which all Midi events are passed. The third user-specific parameter
+/// to which all MIDI events are passed. The third user-specific parameter
 /// void pointer passes the address of the object. The purpose of the
 /// callback function is to send off the received data to the
 /// messaging system.
-//////////////////////////////////////////////////////////////////////////
+/// \param deltatime : passes the elapsed time since the last callback
+/// \param message : Pointer to a vector containing the MIDI event data.
+/// \param obj : Pointer to the instance of this class. See also:
+///              RtMidiImplementation::OpenPort
+///////////////////////////////////////////////////////////////////////////////
 
-
-void RtMidiImplementation::StaticCallback (double deltatime, std::vector< unsigned char > *message, void* obj)
+void RtMidiImplementation::StaticCallback (double deltatime,
+                                           std::vector< unsigned char > *message,
+                                           void* obj)
 {
     RtMidiImplementation* myself = (RtMidiImplementation*)obj;
 

@@ -27,42 +27,48 @@
 #include "midiadapter.h"
 #include <memory>
 
+// so not forget to set PREDEFINED = CONFIG_ENABLE_RTMIDI in Doxyfile
+// in order to include this class in the doxygen documentation.
+
 #if CONFIG_ENABLE_RTMIDI
 
 #include "../../thirdparty/RtMidi/RtMidi.h"
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Interface for reading an externally connected MIDI keyboard.
 ///
 /// This class provides a simplified interface for reading external
 /// MIDI keyboards.
-/// It uses the third-party software RtMidi 2.1.0 which is published
-/// under the same license:
-/// Source: http://www.music.mcgill.ca/~gary/rtmidi/
+/// It uses the third-party software \b RtMidi \b 2.1.0 which is published
+/// under the same license.
+/// \see Source: http://www.music.mcgill.ca/~gary/rtmidi/
+/// A documentation of RtMidi is not included here. If you need more
+/// information please refer to the above website.
 ///
 /// Requirements for Linux:
 /// alsa_devel, library asound, #define __LINUX_ALSA__
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 class RtMidiImplementation : public MidiAdapter
 {
 public:
-    RtMidiImplementation ();
+    RtMidiImplementation ();                                        ///< Constructor without functionality
+    ~RtMidiImplementation () {}                                     ///< Destructor without functionality
 
-    void init() override final;
-    void exit() override final;
+    void init() override final;                                     ///< Initialize RtMidi implementation
+    void exit() override final;                                     ///< Shut down RtMidi implementation
 
-    int GetNumberOfPorts() override final;                          ///< Get the number of available input devices
-    std::string GetPortName(int i) override final;                  ///< Get the name of device i (starting with zero)
+    int GetNumberOfPorts() override final;                          ///< Get the number of available MIDI input ports
+    std::string GetPortName(int i) override final;                  ///< Get the name of device number \e  i (starting with zero)
     std::string GetPortNames() override final;                      ///< Get a list of all available input devices
-    bool OpenPort (int i, std::string AppName="") override final;   ///< Open Midi input device number i
-    bool OpenPort (std::string AppName="")override final;           ///< Open Midi device with the highest port number
+    bool OpenPort (int i, std::string AppName="") override final;   ///< Open MIDI input device number \e i
+    bool OpenPort (std::string AppName="")override final;           ///< Open MIDI device with the highest port number
      int getCurrentPort() const {return mCurrentPort;}              ///< Get the current port number
 
 private:
-    void ClearQueue ();                 ///< Clear the Midi input queue
+    void ClearQueue ();                 ///< Clear the MIDI input queue
     std::unique_ptr<RtMidiIn> mRtMidi;  ///< Instance of the third-party MIDI interface
-    int mCurrentPort;                   ///< the current port that is used or -1 of none
+    int mCurrentPort;                   ///< The current port that is used or -1 of none
 
     ///< Static callback function, required by RtMidi.
     static void StaticCallback (double deltatime, std::vector< unsigned char > *message, void *);
