@@ -14,7 +14,7 @@ TARGET = entropypianotuner
 TEMPLATE = app
 CONFIG += c++11
 
-INCLUDEPATH += dependencies/include
+INCLUDEPATH += $$PWD/dependencies/include
 INCLUDEPATH += Qt
 
 Release:DESTDIR = release
