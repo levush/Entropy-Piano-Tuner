@@ -34,8 +34,9 @@ QtCoreInitialisation::~QtCoreInitialisation() {
     }
 }
 
-void QtCoreInitialisation::updateProgress(CoreStatusTypes type, int percentage) {
-    mInitializeDialog->updateProgress(type, percentage);
+void QtCoreInitialisation::updateProgress (int percentage)
+{
+    mInitializeDialog->updateProgress(percentage);
 
     // process the message loop
     MessageHandler::getSingleton().process();
@@ -44,14 +45,14 @@ void QtCoreInitialisation::updateProgress(CoreStatusTypes type, int percentage) 
 }
 
 
-void QtCoreInitialisation::create_impl()
+void QtCoreInitialisation::create()
 {
     EptAssert(!mInitializeDialog, "init dialog already created");
     mInitializeDialog = new InitializeDialog(mParent);
 }
 
 
-void QtCoreInitialisation::destroy_impl()
+void QtCoreInitialisation::destroy()
 {
     EptAssert(mInitializeDialog, "init dialog already destroyed");
     delete mInitializeDialog;
@@ -90,23 +91,11 @@ InitializeDialog::~InitializeDialog()
 {
 }
 
-void InitializeDialog::updateProgress(QtCoreInitialisation::CoreStatusTypes type, int percentage) {
+void InitializeDialog::updateProgress (int percentage)
+{
     // update values
    setValue(percentage);
-    switch (type) {
-    case QtCoreInitialisation::CORE_INIT_START:
-        setLabelText(tr("Preparing"));
-        break;
-    case QtCoreInitialisation::CORE_INIT_PROGRESS:
-        setLabelText(tr("Initializing, please wait"));
-        break;
-    case QtCoreInitialisation::CORE_INIT_MIDI:
-        setLabelText(tr("Initializing the midi component"));
-        break;
-    case QtCoreInitialisation::CORE_INIT_END:
-        setLabelText(tr("Finished"));
-        break;
-    }
+   setLabelText(tr("Initializing, please wait"));
 }
 
 void InitializeDialog::paintEvent(QPaintEvent *p) {

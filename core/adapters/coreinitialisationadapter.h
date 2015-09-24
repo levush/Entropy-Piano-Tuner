@@ -42,38 +42,27 @@
 /// The core itself calls create(), performs the initialization and calls
 /// the function updateProgress between all the steps. Finally the core calls
 /// destroy().
+///
+/// \see QtCoreInitialisation
 ///////////////////////////////////////////////////////////////////////////////
 
 class CoreInitialisationAdapter
 {
-public:
-    /// \brief Enumeration of different phases of the intitialization procedure.
-    enum CoreStatusTypes {
-        CORE_INIT_START,
-        CORE_INIT_PROGRESS,
-        CORE_INIT_MIDI,
-        CORE_INIT_END,
-    };
 private:
     static std::unique_ptr<CoreInitialisationAdapter> mSingleton;
 
 public:
     CoreInitialisationAdapter();
 
-    void create()  { create_impl();  }  ///< Create the message box for initialization
-    void destroy() { destroy_impl(); }  ///< Destroy the message box for initialization
+    virtual void create()=0;       ///< Create the initialization dialog box
+    virtual void destroy()=0;      ///< Destroy the initialization dialog box
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Show the current progress as a progress bar
-    /// in the initialization message box.
-    /// \param type : Type of the progress (see enum CoreStatusTypes defined above)
+    ///        in the initialization message box.
     /// \param percentage : Percentage of progress between 0 and 100
     ///////////////////////////////////////////////////////////////////////////////
-    virtual void updateProgress (CoreStatusTypes type, int percentage) = 0;
-
-private:
-    virtual void create_impl()  {}      ///< Implementation of 'create'
-    virtual void destroy_impl() {}      ///< Implementation of 'destroy'
+    virtual void updateProgress (int percentage) = 0;
 };
 
 #endif // COREINITIALISATIONADAPTER_H

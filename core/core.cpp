@@ -53,7 +53,8 @@ Core::~Core()
     exit();  // just to be sure
 }
 
-void Core::init(CoreInitialisationAdapter *initAdapter) {
+void Core::init(CoreInitialisationAdapter *initAdapter)
+{
     EptAssert(initAdapter, "At least the default adapter has to be provided");
 
     if (mInitialized) {
@@ -61,25 +62,25 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
     }
 
     initAdapter->create();
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_START, 0);
+    initAdapter->updateProgress (0);
     mRecorderAdapter->init();
     mPlayerAdapter->init();
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 25);
+    initAdapter->updateProgress (25);
 
     // start the player, so that the startup sound is played
     mPlayerAdapter->start();
 
     // the signal analyzer
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 30);
+    initAdapter->updateProgress (30);
     mSignalAnalyzer.init();
 
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 50);
+    initAdapter->updateProgress (50);
     mSoundGenerator.init();
 
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_PROGRESS, 65);
+    initAdapter->updateProgress (65);
     mRecordingManager.init();
 
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_MIDI, 75);
+    initAdapter->updateProgress (75);
     mMidi->init();
 
     std::stringstream ss;
@@ -87,7 +88,7 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
     LogI("%s", ss.str().c_str());
     mMidi->OpenPort(); // Open default midi port
 
-    initAdapter->updateProgress(CoreInitialisationAdapter::CORE_INIT_END, 100);
+    initAdapter->updateProgress (100);
 
     MessageHandler::send(Message::MSG_INITIALIZE);  // send a message to initialize various modules in indpendent threads
 
@@ -99,7 +100,8 @@ void Core::init(CoreInitialisationAdapter *initAdapter) {
 
 
 
-void Core::exit() {
+void Core::exit()
+{
     if (!mInitialized) {
         return;  // already exited
     }

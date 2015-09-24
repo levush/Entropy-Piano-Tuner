@@ -24,7 +24,11 @@
 #include <QProgressDialog>
 #include "../core/adapters/coreinitialisationadapter.h"
 
+
 class InitializeDialog;
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Implementation of the core initializ
 
 class QtCoreInitialisation : public CoreInitialisationAdapter {
 public:
@@ -32,10 +36,10 @@ public:
     ~QtCoreInitialisation();
 
 private:
-    virtual void updateProgress (CoreStatusTypes type, int percentage);
+    virtual void updateProgress (int percentage);
 
-    virtual void create_impl() override;
-    virtual void destroy_impl() override;
+    virtual void create() override;
+    virtual void destroy() override;
 
 
 private:
@@ -53,7 +57,7 @@ public:
     ~InitializeDialog();
 
     bool onceDrawn() const {return mOnceDrawn;}
-    void updateProgress(QtCoreInitialisation::CoreStatusTypes type, int percentage);
+    void updateProgress (int percentage);
 
 protected:
     virtual void paintEvent(QPaintEvent *p) override;
