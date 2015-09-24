@@ -150,7 +150,7 @@ GraphicsItem* GraphicsViewAdapterForQt::drawStroboscope (const ComplexVector &da
             double z = 1.0*y*(N+1)/H;
             int index = static_cast<int>(z);
             EptAssert(index >= 0 and index <= N,"The index has to be within the array");
-            double a = z-index;
+            double a = (z-index)*(z-index);
             for (int x=0; x<W; x++)
             {
                 QColor C1 = colors[x][index];

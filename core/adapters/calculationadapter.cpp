@@ -23,15 +23,12 @@
 
 #include "calculationadapter.h"
 
-#include <algorithm>
-
 #include "../core.h"
 #include "../settings.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor, copies a pointer to the core.
-///
+/// \brief Constructor, copies a pointer pointing to the core.
 /// \param core : Pointer to the instance of the core.
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,22 +44,21 @@ CalculationAdapter::CalculationAdapter(Core *core)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Function called by the GUI to start the calculation of the
-/// tuning curve
+/// tuning curve.
 ///////////////////////////////////////////////////////////////////////////////
 
 void CalculationAdapter::startCalculation(const std::string &algorithmName)
 {
-    PianoManager *pianomanager = mCore->getPianoManager();
     CalculationManager *calculator = &CalculationManager::getSingleton();
-    Piano &piano = pianomanager->getPiano();
+    Piano &piano = mCore->getPianoManager()->getPiano();
     calculator->start (algorithmName, piano);
 
-    Settings::getSingleton().setLastUsedAlgorithm(algorithmName);
+    Settings::getSingleton().setLastUsedAlgorithm (algorithmName);
 }
 
 
 //-----------------------------------------------------------------------------
-//                               stop calccuation
+//                               Stop calccuation
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,10 +71,20 @@ void CalculationAdapter::cancelCalculation()
     CalculationManager::getSingleton().stop();
 }
 
-std::vector<std::string> CalculationAdapter::getAvailableAlgorithms() const {
+
+//-----------------------------------------------------------------------------
+//                      Get a list of available algorithms
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get a list of available tuning algorithms.
+/// \return Vector of strings with the names of the algorithms
+///////////////////////////////////////////////////////////////////////////////
+
+std::vector<std::string> CalculationAdapter::getAvailableAlgorithms() const
+{
     std::vector<std::string> out;
-    for (auto src : CalculationManager::getSingleton().getAlgorithms()) {
+    for (auto src : CalculationManager::getSingleton().getAlgorithms())
         out.push_back(src.first);
-    }
     return out;
 }

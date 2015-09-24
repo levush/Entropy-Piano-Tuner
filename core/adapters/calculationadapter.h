@@ -34,8 +34,13 @@ class Core;
 ///
 /// This adapter is part of the interface between the core and the GUI.
 /// It allows the GUI to start and to interrupt (stop) the calculation process.
-/// The adapter is reimplemented in Qt as CalculationProgressGroup, see
-/// calculationprogressgroup.h.
+/// The adapter is reimplemented in Qt as CalculationProgressGroup.
+///
+/// \see CalculationProgressGroup
+///
+/// The adapter calls several functions of the Singleton-Calculationmanager.
+///
+/// \see CalculationManager
 ///////////////////////////////////////////////////////////////////////////////
 
 class CalculationAdapter
@@ -44,8 +49,8 @@ public:
     CalculationAdapter(Core *core);         // Constructor
     virtual ~CalculationAdapter() {}        ///< Empty virtual destructor
 
-    virtual void startCalculation(const std::string &algorithmName);        // start the calculation
-    virtual void cancelCalculation();       // stop the calculation
+    virtual void startCalculation(const std::string &algorithmName);
+    virtual void cancelCalculation();
 
     std::vector<std::string> getAvailableAlgorithms() const;
 
