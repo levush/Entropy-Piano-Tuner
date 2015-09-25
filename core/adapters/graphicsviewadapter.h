@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//============================================================================
+//               Adapter for viewing graphical elements
+//============================================================================
+
 #ifndef GRAPHICSVIEWADAPTER_H
 #define GRAPHICSVIEWADAPTER_H
 
@@ -102,9 +106,7 @@ public:
     GraphicsViewAdapter() {}            ///< Empty constructor
     ~GraphicsViewAdapter() {clear();}   ///< Destructor clearing the view
 
-    using ComplexVector = std::vector<std::complex<double>>;
-
-    virtual void clear();
+    virtual void clear();               ///< Clear graphics panel
 
     ///@{ \name Functions for handling graphics items:
     ///
@@ -118,8 +120,9 @@ public:
     ///@}
 
     ///@{ \name Functions for drawing:
+
     ///////////////////////////////////////////////////////////////////////////
-    /// \brief Draw a line.
+    /// \brief Abstract function: Draw a line.
     /// \param x1 : Starting point x coordinate between 0 and 1
     /// \param y1 : Starting point y coordinate between 0 and 1
     /// \param x2 : Ending point x coordinate between 0 and 1
@@ -133,7 +136,7 @@ public:
                           PenType pen = PEN_THIN_BLACK) = 0;
 
     ///////////////////////////////////////////////////////////////////////////
-    /// \brief Abstact function: Draw a chart.
+    /// \brief Abstract function: Draw a chart.
     ///
     /// This function draws a chart, i.e., a polygon of points connected by
     /// straight lines. The points are passed to the function as a vector.
@@ -145,6 +148,7 @@ public:
 
     virtual GraphicsItem* drawChart(const std::vector<Point> &points,
                            PenType pen = PEN_THIN_BLACK) = 0;
+
 
     //////////////////////////////////////////////////////////////////////////
     /// \brief Abstract function: Draw a filled rectangle
@@ -165,29 +169,26 @@ public:
                                 PenType pen = PEN_THIN_BLACK,
                                 FillTypes fill = FILL_RED) = 0;
 
+
     ///////////////////////////////////////////////////////////////////////////
-    /// \brief Abstract function: Draw a bar with a continuous colorscale
-    ///
-    /// \param x : Left x coordinate
-    /// \param y : Upper y coordinate
-    /// \param w : Width of the rectangle
-    /// \param h : Height of the rectangle
-    /// \returns The newly created graphics item or nullptr if out of range
+    /// \brief Abstract function: Draw stroboscope
+    ////
+    /// A stroboscope is a tuning indicator which displays interference
+    /// patterns of the incoming PCM data with respect to the target
+    /// frequency. In the EPT the stroboscopic display is simplified in that
+    /// it only gets the amplitudes and complex phases of the first
+    /// few partials. Nevertheless the data should be displayed immediately.
+    /// Therefore, the whole drawing is done in the implementation of this
+    /// adapter.
+    /// \see GraphicsViewAdapterForQt
+    /// \see GraphicsItem
+    /// \param data : Vector of complex numbers, encoding the amplitudes
+    /// and the phase shifts of the partials.
+    /// \return Pointer to the created GraphicsItem.
     ///////////////////////////////////////////////////////////////////////////
 
-
-    struct StroboscopeData
-    {
-        double phase;               ///< phase shift
-        double intensity;           ///< intensity
-    };
-
-
+    using ComplexVector = std::vector<std::complex<double>>;
     virtual GraphicsItem* drawStroboscope (const ComplexVector &data) = 0;
-
-
-    int convertHsvToRgb (double h, double s, double v=1);
-
 
     ///@}
 
