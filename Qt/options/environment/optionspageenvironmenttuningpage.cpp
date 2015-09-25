@@ -32,11 +32,9 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
     layout->setColumnStretch(1, 1);
 
     mSynthesizerMode = new QComboBox;
-
     mSynthesizerMode->addItem(tr("Disabled"), QVariant(SoundGenerator::SGM_DEACTIVATED));
     mSynthesizerMode->addItem(tr("Synthesized key sound"), QVariant(SoundGenerator::SGM_SYNTHESIZE_KEY));
     mSynthesizerMode->addItem(tr("Reference key"), QVariant(SoundGenerator::SGM_REFERENCE_TONE));
-
     layout->addWidget(new QLabel(tr("Synthesizer mode")), 0, 0);
     layout->addWidget(mSynthesizerMode, 0, 1);
 
@@ -46,27 +44,37 @@ PageEnvironmentTuning::PageEnvironmentTuning(OptionsDialog *optionsDialog)
     layout->addWidget(synthesizerVolumeDynamicLabel, 1, 0);
     layout->addWidget(mSynthesizerVolumeDynamic, 1, 1);
 
+    mStroboscope = new QCheckBox;
+    QLabel *stroboscopeLabel = new PreferredTextSizeLabel(tr("Stroboscopic tuning indicator"));
+    stroboscopeLabel->setWordWrap(true);
+    layout->addWidget(stroboscopeLabel, 2, 0);
+    layout->addWidget(mStroboscope, 2, 1);
+
     mDisableAutomaticKeySelecetion = new QCheckBox;
     QLabel *disableAutomaticKeySelectionLabel = new PreferredTextSizeLabel(tr("Disable automatic key selection"));
     disableAutomaticKeySelectionLabel->setWordWrap(true);
-    layout->addWidget(disableAutomaticKeySelectionLabel, 2, 0);
-    layout->addWidget(mDisableAutomaticKeySelecetion, 2, 1);
+    layout->addWidget(disableAutomaticKeySelectionLabel, 3, 0);
+    layout->addWidget(mDisableAutomaticKeySelecetion, 3, 1);
 
     layout->setRowStretch(5, 1);
 
     mSynthesizerMode->setCurrentIndex(mSynthesizerMode->findData(QVariant(SettingsForQt::getSingleton().getSoundGeneratorMode())));
     mSynthesizerVolumeDynamic->setChecked(SettingsForQt::getSingleton().isSoundGeneratorVolumeDynamic());
+    mStroboscope->setChecked(SettingsForQt::getSingleton().isStroboscopeActive());
     mDisableAutomaticKeySelecetion->setChecked(SettingsForQt::getSingleton().isAutomaticKeySelectionDisabled());
 
     QObject::connect(mSynthesizerMode, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
     QObject::connect(mSynthesizerVolumeDynamic, SIGNAL(toggled(bool)), optionsDialog, SLOT(onChangesMade()));
+    QObject::connect(mStroboscope, SIGNAL(toggled(bool)), optionsDialog, SLOT(onChangesMade()));
     QObject::connect(mDisableAutomaticKeySelecetion, SIGNAL(toggled(bool)), optionsDialog, SLOT(onChangesMade()));
 }
 
-void PageEnvironmentTuning::apply() {
+void PageEnvironmentTuning::apply()
+{
     SettingsForQt::getSingleton().setSoundGeneratorMode(
                 static_cast<SoundGenerator::SoundGeneratorMode>(mSynthesizerMode->currentData().toInt()));
     SettingsForQt::getSingleton().setSoundGeneratorVolumeDynamic(mSynthesizerVolumeDynamic->isChecked());
+    SettingsForQt::getSingleton().setStroboscopeMode(mStroboscope->isChecked());
     SettingsForQt::getSingleton().setDisableAutomaticKeySelection(mDisableAutomaticKeySelecetion->isChecked());
 }
 

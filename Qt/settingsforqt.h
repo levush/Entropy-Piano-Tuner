@@ -181,6 +181,7 @@ public:
     virtual void setLastUsedAlgorithm(const std::string &name) override final;
     virtual void setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) override final;
     virtual void setSoundGeneratorVolumeDynamic(bool dynamic) override final;
+    virtual void setStroboscopeMode(bool enable) override final;
     virtual void setDisableAutomaticKeySelection(bool disable) override final;
 
 private:

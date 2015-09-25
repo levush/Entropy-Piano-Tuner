@@ -26,10 +26,16 @@
 #include "../../messages/messagehandler.h"
 #include "../../messages/messagestroboscope.h"
 #include "../../math/mathtools.h"
+#include "core/settings.h"
 
-#include <iostream>
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
 
-
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stroboscope::Stroboscope
+/// \param recorder
+///////////////////////////////////////////////////////////////////////////////
 
 Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
     mRecorder(recorder),
@@ -41,45 +47,71 @@ Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
 }
 
 
-int counter=0;
+//-----------------------------------------------------------------------------
+//   push raw PCM data to the stroboscope (called by AudioRecorderAdapter)
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stroboscope::pushRawData
+/// \param data
+///////////////////////////////////////////////////////////////////////////////
 
 void Stroboscope::pushRawData (const AudioBase::PacketType &data)
 {
-    std::lock_guard<std::mutex> lock (mMutex);
     // data packet size is typically 1100, can be 0.
-    if (mActive) for (auto &pcm : data)
+    if (mActive) if (Settings::getSingleton().isStroboscopeActive())
     {
-        if (fabs(pcm)>mMaxAmplitude) mMaxAmplitude=fabs(pcm);
-        if (mMaxAmplitude < 1E-20) continue;
-
-        int N = mComplexPhase.size();
-        for (int i=0; i<N; ++i)
+        std::lock_guard<std::mutex> lock (mMutex);
+        for (auto &pcm : data)
         {
-            mComplexPhase[i] *= mComplexIncrement[i];
-            mMeanComplexPhase[i] += mComplexPhase[i] * pcm / mMaxAmplitude;
-        }
-        if (mSampleCounter-- <= 0)
-        {
-            for (auto &c : mComplexPhase) c /= std::abs(c);
-            ComplexVector normalizedPhases (mMeanComplexPhase);
-            for (auto &c : normalizedPhases) c /= 0.5*mSamplesPerFrame/(1-FRAME_DAMPING);
-            std::cout << "send strobo " << counter++ << std::endl;
-            MessageHandler::send<MessageStroboscope>(normalizedPhases);
+            if (fabs(pcm)>mMaxAmplitude) mMaxAmplitude=fabs(pcm);
+            if (mMaxAmplitude < 1E-20) continue;
 
-            for (auto &c : mMeanComplexPhase) c *= FRAME_DAMPING;
-            mMaxAmplitude *= AMPLITUDE_DAMPING;
-            mSampleCounter = mSamplesPerFrame;
+            int N = mComplexPhase.size();
+            for (int i=0; i<N; ++i)
+            {
+                mComplexPhase[i] *= mComplexIncrement[i];
+                mMeanComplexPhase[i] += mComplexPhase[i] * pcm / mMaxAmplitude;
+            }
+            if (mSampleCounter-- <= 0)
+            {
+                for (auto &c : mComplexPhase) c /= std::abs(c);
+                ComplexVector normalizedPhases (mMeanComplexPhase);
+                for (auto &c : normalizedPhases) c /= 0.5*mSamplesPerFrame/(1-FRAME_DAMPING);
+                MessageHandler::send<MessageStroboscope>(normalizedPhases);
+
+                for (auto &c : mMeanComplexPhase) c *= FRAME_DAMPING;
+                mMaxAmplitude *= AMPLITUDE_DAMPING;
+                mSampleCounter = mSamplesPerFrame;
+            }
         }
     }
 }
 
 
+//-----------------------------------------------------------------------------
+//                          Set frames per second
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stroboscope::setFramesPerSecond
+/// \param fps
+///////////////////////////////////////////////////////////////////////////////
 
 void Stroboscope::setFramesPerSecond (double fps)
 {
     mSamplesPerFrame = mRecorder->getSamplingRate() / fps;
 }
+
+
+//-----------------------------------------------------------------------------
+//              Set frequencies of the partials to be analyzed
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stroboscope::setFrequencies
+/// \param frequencies
+///////////////////////////////////////////////////////////////////////////////
 
 void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
 {
@@ -90,6 +122,7 @@ void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
     mMeanComplexPhase.assign(frequencies.size(),0);
     mComplexIncrement.clear();
     for (auto &f : frequencies)
-        mComplexIncrement.push_back(std::exp(Complex(0,MathTools::TWO_PI)*(f/mRecorder->getSamplingRate())));
+        mComplexIncrement.push_back(std::exp(Complex(0,MathTools::TWO_PI) *
+                                    (f/mRecorder->getSamplingRate())));
 }
 

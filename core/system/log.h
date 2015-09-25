@@ -104,6 +104,7 @@ private:
 private:
     static std::shared_ptr<Log> mLog;
     std::ofstream mLogStream;
+    static const char* simplify (const char* filename);
 };
 
 #endif // LOG_H

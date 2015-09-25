@@ -227,7 +227,9 @@ void TuningCurveGraphDrawer::drawGrid ()
     if (mOperationMode == MODE_TUNING) {
         const double allowedDeviationInCents = 3;
         double allowedStartCents = convertCentsToY(allowedDeviationInCents);
-        GraphicsItem *item = mGraphics->drawFilledRect(0, allowedStartCents, 1, convertCentsToY(-allowedDeviationInCents) - allowedStartCents, GraphicsViewAdapter::PEN_THIN_TRANSPARENT, allowdAreaFill);
+        GraphicsItem *item = mGraphics->drawFilledRect(0, allowedStartCents, 1,
+                             convertCentsToY(-allowedDeviationInCents) - allowedStartCents,
+                             GraphicsViewAdapter::PEN_THIN_TRANSPARENT, allowdAreaFill);
         item->setItemRole(ROLE_GRID);
         item->setZOrder(-1);
     }

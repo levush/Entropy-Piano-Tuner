@@ -17,67 +17,49 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//          Qt implementation of the tuning curve graph drawer
+//=============================================================================
+
 #ifndef TUNINGCURVEGRAPH_H
 #define TUNINGCURVEGRAPH_H
 
-#include "keyboard/autoscaledtokeyboardgraphicsview.h"
 #include <QGraphicsPathItem>
+
+#include "keyboard/autoscaledtokeyboardgraphicsview.h"
 #include "../core/drawers/tuningcurvegraphdrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The QGraphicsView to display the tuning curve and the inharmonicity.
 ///
-/// It will displayed the drawings of TuningCurveGraphDrawer to a
+/// This is the Qt implementation of the TuningCurveGraphDrawer.
+/// It forwards the drawings of TuningCurveGraphDrawer to a
 /// AutoScaledToKeyboardGraphicsView.
+///
 /// The user can change the computed tuning curve with a mouse click on the
-/// bars.
+/// bars. This class is basically managing these mouse clicks.
 /// A click selects the corresponding key on the keyboard by sending a
 /// MSG_KEY_SELECTION_CHANGED message.
+///
+/// \see AutoScaledToKeyboardGraphicsView
+/// \see TuningCurveGraphDrawer
 ///////////////////////////////////////////////////////////////////////////////
-class TuningCurveGraph :
-        public AutoScaledToKeyboardGraphicsView,
-        public TuningCurveGraphDrawer
+
+class TuningCurveGraph : public AutoScaledToKeyboardGraphicsView,
+                         public TuningCurveGraphDrawer
 {
 public:
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor to link AutoScaledToKeyboardGraphicsView with
-    ///        the TuningCurveGraphDrawer
-    /// \param parent : The parent widget.
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit TuningCurveGraph(QWidget *parent);
+    explicit TuningCurveGraph (QWidget *parent);
+    virtual ~TuningCurveGraph() {}               ///< Empty virtual destructor
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Empty virtual destructor.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    virtual ~TuningCurveGraph();
 protected:
-    virtual QSize sizeHint() const override final {return QSize(0, 400);}
+    virtual QSize sizeHint()        const override final {return QSize(0, 400);}
     virtual QSize minimumSizeHint() const override final {return QSize(0, 100);}
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Mouse press event to select the manually edit the tuning curve.
-    /// \param event : The QMouseEvent
-    ///
-    /// It will set mPressed to true and set mPressedX to the mouse x position.
-    ///////////////////////////////////////////////////////////////////////////////
     void mousePressEvent(QMouseEvent *event) override;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Mouse move will change the tuning curve.
-    /// \param event : The QMouseEvent
-    ///
-    /// The function is only active if mPressed is true.
-    /// It will use mPressedX as x value and the QMouseEvent's y coordinate.
-    ///////////////////////////////////////////////////////////////////////////////
     void mouseMoveEvent(QMouseEvent *event) override;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Mouse release event to stop the change of the tuning curve.
-    /// \param event : The QMouseEvent
-    ///
-    /// This will set mPressed to false.
-    ///////////////////////////////////////////////////////////////////////////////
     void mouseReleaseEvent(QMouseEvent *event) override;
 
     void handleMouseInteraction(double relX, double relY);

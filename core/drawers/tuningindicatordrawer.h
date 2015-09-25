@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 //=============================================================================
-//                          Draw zoomed spectrum
+//                            Tuning indicator
 //=============================================================================
 
-#ifndef ZOOMEDSPECTRUMDRAWER_H
-#define ZOOMEDSPECTRUMDRAWER_H
+#ifndef TUNINGINDICATORDRAWER_H
+#define TUNINGINDICATORDRAWER_H
 
 #include "drawerbase.h"
 #include "../messages/messagelistener.h"
@@ -30,16 +30,25 @@
 #include "../piano/piano.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief The ZoomedSpectrumDrawer class
+/// \brief Drawer for the tuning indicator
 ///
-/// This class draws the zoomed spectrum in the tuning mode
+/// This class draws the content of the tuning indicator in the tuning mode.
+/// It is completely driven by messages. There are two operation modes
+/// depending on the settings: (a) the spectral mode, where a zoomed part of
+/// the spectrum is displayed which has to be brought to the center, and
+/// (b) the stroboscopic mode, where a stroboscopic interference pattern is
+/// shown in rainbow colors.
+/// \see Stroboscope
+/// \see TuningIndicatorView
 ///////////////////////////////////////////////////////////////////////////////
 
-class ZoomedSpectrumDrawer : public DrawerBase, public MessageListener
+class TuningIndicatorDrawer : public DrawerBase, public MessageListener
 {
 public:
-    ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics);
-    ~ZoomedSpectrumDrawer() {}
+    TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
+    ~TuningIndicatorDrawer() {}
+
+    static void toggleSpectralAndStroboscopeMode();
 
 protected:
     virtual void draw() override final;
@@ -47,15 +56,17 @@ protected:
     virtual void handleMessage(MessagePtr m) override;
 
 private:
-    const Piano *mPiano;
-    int mNumberOfKeys;
-    int mSelectedKey;
-    int mRecognizedKey;
-    OperationMode mOperationMode;
+    const Piano *mPiano;            ///< Pointer to the piano
+    int mNumberOfKeys;              ///< Total number of keys
+    int mSelectedKey;               ///< Number of selected key, -1 if none
+    int mRecognizedKey;             ///< Number of recognized key, -1 if none
+    OperationMode mOperationMode;   ///< Current operation mode of the EPT
 
-    FFTDataPointer mFFTData;
-    FrequencyDetectionResult mFrequencyDetectionResult;
+    FFTDataPointer mFFTData;        ///< Pointer to the Fourier transform data
+    FrequencyDetectionResult mFrequencyDetectionResult; ///< Copy of frequency detection result
 
+    using ComplexVector = std::vector<std::complex<double>>;
+    ComplexVector mDataVector;      ///< Data vector holding complex phases for stroboscope
 };
 
-#endif // ZOOMEDSPECTRUMDRAWER_H
+#endif // TUNINGINDICATORDRAWER_H

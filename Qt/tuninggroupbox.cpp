@@ -20,7 +20,7 @@
 #include "tuninggroupbox.h"
 #include <QHBoxLayout>
 
-#include "zoomedspectrumgraphicsview.h"
+#include "tuningindicatorview.h"
 
 TuningGroupBox::TuningGroupBox(QWidget *parent) :
     DisplaySizeDependingGroupBox(parent, new QHBoxLayout, toFlag(MODE_TUNING))
@@ -30,7 +30,7 @@ TuningGroupBox::TuningGroupBox(QWidget *parent) :
 
     QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout*>(mMainWidgetContainer->layout());
 
-    ZoomedSpectrumGraphicsView *graph = new ZoomedSpectrumGraphicsView(this);
+    TuningIndicatorView *graph = new TuningIndicatorView(this);
     mainLayout->addWidget(graph);
 }
 

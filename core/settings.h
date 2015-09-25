@@ -61,6 +61,9 @@ public:
     bool isAutomaticKeySelectionDisabled() const {return mDisableAutomaticKeySelection;}
     virtual void setDisableAutomaticKeySelection(bool disable) {mDisableAutomaticKeySelection = disable;}
 
+    bool isStroboscopeActive() const {return mStroboscopeActive;}
+    virtual void setStroboscopeMode(bool enable) {mStroboscopeActive = enable;}
+
 protected:
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +77,7 @@ protected:
     SoundGenerator::SoundGeneratorMode mSoundGeneratorMode;
     bool mSoundGeneratorVolumeDynamic;
     bool mDisableAutomaticKeySelection;
+    bool mStroboscopeActive;
 
 private:
     static std::unique_ptr<Settings> mSingleton;

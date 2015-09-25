@@ -41,6 +41,7 @@ HEADERS = \
     Qt/preferredtextsizelabel.h \
     Qt/verticalscrollarea.h \
     Qt/options/optionstabcontentsvscrollarea.h \
+    Qt/tuningindicatorview.h
 
 QWT_S = $$SOURCES
 SOURCES = \
@@ -50,6 +51,7 @@ SOURCES = \
     Qt/preferredtextsizelabel.cpp \
     Qt/verticalscrollarea.cpp \
     Qt/options/optionstabcontentsvscrollarea.cpp \
+    Qt/tuningindicatorview.cpp
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -182,7 +184,6 @@ HEADERS  += \
     Qt/fourierspectrumgraph.h \
     Qt/tuningcurvegraph.h \
     Qt/keyboard/autoscaledtokeyboardgraphicsview.h \
-    Qt/zoomedspectrumgraphicsview.h \
     Qt/graphicsviewadapterforqt.h \
     Qt/projectmanagerforqt.h \
     Qt/logforqt.h \
@@ -234,7 +235,6 @@ SOURCES +=  \
     Qt/fourierspectrumgraph.cpp \
     Qt/tuningcurvegraph.cpp \
     Qt/keyboard/autoscaledtokeyboardgraphicsview.cpp \
-    Qt/zoomedspectrumgraphicsview.cpp \
     Qt/graphicsviewadapterforqt.cpp \
     Qt/projectmanagerforqt.cpp \
     Qt/logforqt.cpp \
@@ -321,19 +321,17 @@ CORE_DRAWER_HEADERS = \
     core/drawers/drawerbase.h \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
-    core/drawers/zoomedspectrumdrawer.h \
+    core/drawers/tuningindicatordrawer.h \
     core/drawers/tuningcurvegraphdrawer.h \
     core/drawers/fourierspectrumgraphdrawer.h \
     core/drawers/graphicsitem.h \
-    core/drawers/stroboscopedrawer.h \
 
 CORE_DRAWER_SOURCES = \
     core/drawers/drawerbase.cpp \
-    core/drawers/zoomedspectrumdrawer.cpp \
+    core/drawers/tuningindicatordrawer.cpp \
     core/drawers/tuningcurvegraphdrawer.cpp \
     core/drawers/fourierspectrumgraphdrawer.cpp \
     core/drawers/graphicsitem.cpp \
-    core/drawers/stroboscopedrawer.cpp \
 
 #------------- Adapters --------------------
 

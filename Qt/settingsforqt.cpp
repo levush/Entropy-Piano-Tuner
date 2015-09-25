@@ -65,6 +65,7 @@ void SettingsForQt::load() {
     mSoundGeneratorMode = static_cast<SoundGenerator::SoundGeneratorMode>(
                 mSettings.value("core/soundGeneratorMode", static_cast<int>(SoundGenerator::SGM_SYNTHESIZE_KEY)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
+    mStroboscopeActive = mSettings.value("core/stroboscopeMode", true).toBool();
     mDisableAutomaticKeySelection = mSettings.value("core/disableAutomaticKeySelection", false).toBool();
 }
 
@@ -143,6 +144,11 @@ void SettingsForQt::setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mod
 void SettingsForQt::setSoundGeneratorVolumeDynamic(bool dynamic) {
     Settings::setSoundGeneratorVolumeDynamic(dynamic);
     mSettings.setValue("core/soundGeneratorVolumeDynamic", dynamic);
+}
+
+void SettingsForQt::setStroboscopeMode(bool enable) {
+    Settings::setStroboscopeMode(enable);
+    mSettings.setValue("core/stroboscopeMode", enable);
 }
 
 void SettingsForQt::setDisableAutomaticKeySelection(bool disable) {

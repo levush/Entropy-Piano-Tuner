@@ -20,6 +20,7 @@
 #include "log.h"
 #include <iostream>
 #include <stdio.h>
+#include <string.h>
 #include <stdarg.h>
 #include <ctime>
 #include <time.h>
@@ -45,37 +46,50 @@ Log::~Log()
     mLogStream.close();
 }
 
+const char* Log::simplify (const char* filename)
+{
+    const char* pattern = "Entropy-Piano-Tuner/";
+    int patternsize = strlen(pattern);
+    int len = strlen(filename);
+    if (len > 0)
+    {
+        const char *substring = strstr(filename, pattern);
+        if (substring != NULL) filename = substring + patternsize;
+    }
+    return filename;
+}
+
 void Log::verbose(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (line %d in file %s in function %s)", text, line, simplify(file), function);
     mLog->impl_verbose(buffer);
     mLog->writeToLogfile(LEVEL_VERBOSE, text, line, file, function);
 }
 
 void Log::debug(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (line %d in file %s in function %s)", text, line, simplify(file), function);
     mLog->impl_debug(buffer);
     mLog->writeToLogfile(LEVEL_DEBUG, text, line, file, function);
 }
 
 void Log::information(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (line %d in file %s in function %s)", text, line, simplify(file), function);
     mLog->impl_information(buffer);
     mLog->writeToLogfile(LEVEL_INFORMATION, text, line, file, function);
 }
 
 void Log::warning(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (line %d in file %s in function %s)", text, line, simplify(file), function);
     mLog->impl_warning(buffer);
     mLog->writeToLogfile(LEVEL_WARNING, text, line, file, function);
 }
 
 void Log::error(const char *text, int line, const char *file, const char *function) {
     char buffer[ERROR_BUFFER_SIZE];
-    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (at line %d in file %s in function %s)", text, line, file, function);
+    snprintf(buffer, ERROR_BUFFER_SIZE, "%s (line %d in file %s in function %s)", text, line, file, function);
     mLog->impl_error(buffer);
     mLog->writeToLogfile(LEVEL_ERROR, text, line, file, function);
 }
@@ -100,11 +114,9 @@ void Log::impl_error(const char *l) {
     std::cout << "Error: " << l << std::endl;
 }
 
-void Log::writeToLogfile(ELevel level, const char *text, int line, const char *file, const char *function) {
-    if (mLogStream.is_open() == false) {
-        // no log output
-        return;
-    }
+void Log::writeToLogfile(ELevel level, const char *text, int line, const char *file, const char *function)
+{
+    if (mLogStream.is_open() == false) return;
 
     // current time
     std::time_t t = std::time(0); //obtain the current time_t value
@@ -140,7 +152,7 @@ void Log::writeToLogfile(ELevel level, const char *text, int line, const char *f
     // write time to log file:
     mLogStream << tmdescr << ":\t";
 
-    mLogStream << "In file " << file << " in function " << function << " at line " << line << std::endl;
+    mLogStream << "In file " << simplify(file) << " in function " << function << " at line " << line << std::endl;
 
     // write to the log file
     mLogStream << "\t\t" << text << std::endl << std::endl;

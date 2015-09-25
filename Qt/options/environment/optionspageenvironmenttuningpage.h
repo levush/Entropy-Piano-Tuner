@@ -32,13 +32,14 @@ class PageEnvironmentTuning : public OptionsTabContentsVScrollArea, public Conte
 {
     Q_OBJECT
 public:
-    PageEnvironmentTuning(OptionsDialog *optionsDialog);
+    PageEnvironmentTuning (OptionsDialog *optionsDialog);
 
     void apply() override final;
 
 private:
     QComboBox *mSynthesizerMode;
     QCheckBox *mSynthesizerVolumeDynamic;
+    QCheckBox *mStroboscope;
     QCheckBox *mDisableAutomaticKeySelecetion;
 };
 

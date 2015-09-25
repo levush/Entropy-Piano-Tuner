@@ -18,10 +18,10 @@
  *****************************************************************************/
 
 //=============================================================================
-//                          Draw zoomed spectrum
+//                            Tuning indicator
 //=============================================================================
 
-#include "zoomedspectrumdrawer.h"
+#include "tuningindicatordrawer.h"
 
 #include <cstdint>
 #include <iostream>
@@ -33,18 +33,21 @@
 #include "../messages/messagemodechanged.h"
 #include "../messages/messageprojectfile.h"
 #include "../messages/messagetuningdeviation.h"
+#include "../messages/messagestroboscope.h"
 #include "../math/mathtools.h"
 #include "../math/mathtools.h"
 #include "../system/log.h"
+#include "../settings.h"
 #include "../piano/piano.h"
 
-ZoomedSpectrumDrawer::ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics) :
+TuningIndicatorDrawer::TuningIndicatorDrawer(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics),
     mPiano(nullptr),
     mNumberOfKeys(0),
     mSelectedKey(-1),
     mRecognizedKey(-1),
-    mOperationMode(MODE_COUNT)
+    mOperationMode(MODE_COUNT),
+    mDataVector()
 {
 }
 
@@ -54,58 +57,91 @@ ZoomedSpectrumDrawer::ZoomedSpectrumDrawer(GraphicsViewAdapter *graphics) :
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Message listener
+///
+/// The message listener handles the incoming messages and takes the
+/// corresponding action.
 /// \param m : Pointer to the incoming message
 ///////////////////////////////////////////////////////////////////////////////
 
-void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
+void TuningIndicatorDrawer::handleMessage(MessagePtr m)
 {
     switch (m->getType())
     {
     case Message::MSG_MODE_CHANGED:
-    {
-        auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
-        mOperationMode = mmc->getMode();
-        redraw(true);
-        break;
-    }
-    case Message::MSG_PRELIMINARY_KEY:
-    {
-        if (mOperationMode==MODE_TUNING)
         {
-            auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
-            mRecognizedKey = message->getKeyNumber();
+            auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
+            mOperationMode = mmc->getMode();
             redraw(true);
+            break;
         }
-        else mRecognizedKey=-1;
-        break;
-    }
+    case Message::MSG_PRELIMINARY_KEY:
+        {
+            if (mOperationMode==MODE_TUNING)
+            {
+                auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
+                mRecognizedKey = message->getKeyNumber();
+                redraw(true);
+            }
+            else mRecognizedKey=-1;
+            break;
+        }
     case Message::MSG_KEY_SELECTION_CHANGED:
-    {
-        auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
-        mSelectedKey = mksc->getKeyNumber();
-        redraw(true);
-        break;
-    }
+        {
+            auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
+            mSelectedKey = mksc->getKeyNumber();
+            redraw(true);
+            break;
+        }
     case Message::MSG_PROJECT_FILE:
-    {
-        auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
-        mPiano = &mpf->getPiano();
-        mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
-        mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
-        mGraphics->clear();
-        break;
-    }
+        {
+            auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
+            mPiano = &mpf->getPiano();
+            mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
+            mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
+            mGraphics->clear();
+            redraw(true);
+            break;
+        }
     case Message::MSG_TUNING_DEVIATION:
-    {
-        auto mtd(std::static_pointer_cast<MessageTuningDeviation>(m));
-        mFrequencyDetectionResult = mtd->getResult();
-        redraw();
-        break;
-    }
+        {
+            auto mtd(std::static_pointer_cast<MessageTuningDeviation>(m));
+            mFrequencyDetectionResult = mtd->getResult();
+            redraw();
+            break;
+        }
+    case Message::MSG_STROBOSCOPE_EVENT:
+        {
+            if (Settings::getSingleton().isStroboscopeActive())
+            {
+                auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
+                mDataVector = mmc->getData();
+                redraw();
+            }
+            break;
+        }
     default:
-        break;
+        {
+            break;
+        }
     }
 }
+
+
+//-----------------------------------------------------------------------------
+//          Toggle between spectral and stroboscopic operation mode
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Toggle between spectral and stroboscopic operation mode
+///////////////////////////////////////////////////////////////////////////////
+
+void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
+{
+    LogI("Toggle between needle and stroboscopic tuning indicator by mouse click");
+    bool stroboscope = Settings::getSingleton().isStroboscopeActive();
+    Settings::getSingleton().setStroboscopeMode (not stroboscope);
+}
+
 
 //-----------------------------------------------------------------------------
 //                                  Reset
@@ -115,7 +151,7 @@ void ZoomedSpectrumDrawer::handleMessage(MessagePtr m)
 /// \brief Reset: Clear the shared pointer to the FFT
 ///////////////////////////////////////////////////////////////////////////////
 
-void ZoomedSpectrumDrawer::reset()
+void TuningIndicatorDrawer::reset()
 {
     mFFTData.reset();
     DrawerBase::reset();
@@ -128,13 +164,29 @@ void ZoomedSpectrumDrawer::reset()
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Main drawing function
+///
+/// This is the main drawing function for the tuning indicator. In the
+/// stroboscopic mode the complex phases of the partials are simply fowarded
+/// to the function drawStroboscope of the GraphicsViewAdapter. This means
+/// that the drawing of the stroboscope is done by the implementation for
+/// the sake of fast response. In the spectral mode the drawing is carried
+/// out by the present function.
 ///////////////////////////////////////////////////////////////////////////////
 
 
-void ZoomedSpectrumDrawer::draw()
+void TuningIndicatorDrawer::draw()
 {
-    //------- Draw a horizontal and a vertical line separating the field ------
+    //-- If stroboscopic mode forward the data to the GraphicsViewAdapter ----
 
+    if (Settings::getSingleton().isStroboscopeActive())
+    {
+        mGraphics->drawStroboscope(mDataVector);
+        return;
+    }
+
+    //---------------------- Handle the spectral mode -------------------------
+
+    //------- Draw a horizontal and a vertical line separating the field ------
 
     mGraphics->drawLine(0.5, 0, 0.5, 0.8, GraphicsViewAdapter::PEN_MEDIUM_DARK_GREEN);
     mGraphics->drawLine(0,   0.8, 1, 0.8, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
@@ -157,7 +209,8 @@ void ZoomedSpectrumDrawer::draw()
 
     //---------------------- Draw tuning deviation curve -----------------
 
-    if (specWindowSize > 0) {
+    if (specWindowSize > 0)
+    {
         double max = *std::max_element(mFrequencyDetectionResult->tuningDeviationCurve.begin(),
                                        mFrequencyDetectionResult->tuningDeviationCurve.end());
 
@@ -193,8 +246,6 @@ void ZoomedSpectrumDrawer::draw()
         mGraphics->drawLine(x,0,x,0.8,overpullColor);
     }
 
-
-
     //----------------------- Draw tuning marker -------------------------
 
     double markerWidth = 0.1;
@@ -202,7 +253,6 @@ void ZoomedSpectrumDrawer::draw()
     double deviation = mFrequencyDetectionResult->deviationInCents;
     double mx = 0.5 - markerWidth / 2 + deviation / specWindowSize;
     double my = 0.9 - markerHeight / 2;
-
 
     auto borderline = GraphicsViewAdapter::PEN_THIN_DARK_GRAY;
     auto filling = GraphicsViewAdapter::FILL_RED;

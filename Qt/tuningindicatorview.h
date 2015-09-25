@@ -18,32 +18,33 @@
  *****************************************************************************/
 
 //=============================================================================
-//                           Stroboscope-Drawer
+//             Graphical Qt interface for the tuning indicator
 //=============================================================================
 
-#ifndef STROBOSCOPEDRAWER_H
-#define STROBOSCOPEDRAWER_H
+#ifndef TUNINGINDICATORVIEW_H
+#define TUNINGINDICATORVIEW_H
 
-#include <complex>
+#include "graphicsviewadapterforqt.h"
+#include "../core/drawers/tuningindicatordrawer.h"
 
-#include "drawerbase.h"
-#include "../messages/messagelistener.h"
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class for the Qt implementation of the tuning indicator
+///
+/// It forwards the drawings of the TuningIndicatorDrawer to a
+/// AutoScaledToKeyboardGraphicsView.
+///////////////////////////////////////////////////////////////////////////////
 
-
-class StroboscopeDrawer  : public DrawerBase, public MessageListener
+class TuningIndicatorView : public GraphicsViewAdapterForQt,
+                            public TuningIndicatorDrawer
 {
 public:
-    StroboscopeDrawer(GraphicsViewAdapter *graphics);
-    ~StroboscopeDrawer() {}
-
-protected:
-    virtual void draw() override final;
-    virtual void reset() override final;
-    virtual void handleMessage(MessagePtr m) override;
+    TuningIndicatorView(QWidget *parent);
+    virtual ~TuningIndicatorView() {}      ///< Empty virtual destructor.
 
 private:
-    using ComplexVector = std::vector<std::complex<double>>;
-    ComplexVector mDataVector;
+    void mousePressEvent (QMouseEvent *event) override final;
+    void mouseDoubleClickEvent (QMouseEvent * event) override final;
+    virtual QSize sizeHint() const override final { return QSize(0, 0);}
 };
 
-#endif // STROBOSCOPEDRAWER_H
+#endif // TUNINGINDICATORVIEW_H
