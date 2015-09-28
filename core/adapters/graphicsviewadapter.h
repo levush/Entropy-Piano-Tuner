@@ -24,8 +24,6 @@
 #ifndef GRAPHICSVIEWADAPTER_H
 #define GRAPHICSVIEWADAPTER_H
 
-#include <vector> // kann weg
-#include <complex> // kann weg
 #include "../drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
