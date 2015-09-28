@@ -34,6 +34,7 @@
 
 std::unique_ptr<FileManager> FileManager::mSingleton;
 
+
 //-----------------------------------------------------------------------------
 //                    Get a reference to the singleton
 //-----------------------------------------------------------------------------
@@ -56,6 +57,11 @@ FileManager &FileManager::getSingleton()
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Open an input stream
+///
+/// This function opens an input stream. If the stream can be opened successfully
+/// an information message is sent. If it cannot be opened a warning
+/// is displayed. The function may be overwritten in the implementation.
+/// \see FileManagerForQt
 /// \param stream : Reference to standard C11 stream
 /// \param absolute : Absolute path and file name
 /// \param mode : Standard C11 reading mode
@@ -67,7 +73,7 @@ bool FileManager::open(std::ifstream &stream,
                        std::ios_base::openmode mode)
 {
     stream.open(absolute, mode);
-    if (!stream)
+    if (not stream)
     {
         LogW("Stream at '%s' could not be opened.", absolute.c_str());
         return false;
@@ -86,6 +92,11 @@ bool FileManager::open(std::ifstream &stream,
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Open an output file stream.
+///
+/// This function opens an output stream. If the stream can be opened successfully
+/// an information message is sent. If it cannot be opened a warning
+/// is displayed. The function may be overwritten in the implementation.
+/// \see FileManagerForQt
 /// \param Reference to the C11 standard output stream.
 /// \param Absolute path and filename.
 /// \param Standard C11 output mode.
@@ -97,12 +108,14 @@ bool FileManager::open(std::ofstream &stream,
                        std::ios_base::openmode mode)
 {
     stream.open(absolute, mode);
-    if (!stream) {
+    if (not stream)
+    {
         LogW("Stream at '%s' could not be opened.", absolute.c_str());
         return false;
-    } else {
+    }
+    else
+    {
         LogI("Stream at '%s' is open.", absolute.c_str());
         return true;
     }
 }
-

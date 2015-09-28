@@ -35,7 +35,7 @@
 /// locations, depending on the platform of the implementation. For example,
 /// Windows and Android applications provide different standard locations for
 /// writing and reading files. These differences are accounted for in the
-/// derived implemenationas
+/// derived implemenations.
 ///
 /// The FileManager is a singleton class, i.e., there is only a single instance.
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,16 +65,29 @@ public:
     /// This abstract function has to be overridden accordingly in the
     /// respective implementation. The tuner software allows for different
     /// logs labelled by certain names passed here as an argument.
+    /// \see FileManagerForQt
     /// \param logname : The name of the log
     /// \returns Absolute path to the log
     ///////////////////////////////////////////////////////////////////////////
 
     virtual std::string getLogFilePath(const std::string &logname) const = 0;
 
-    virtual std::string getAlgorithmInformationFileContent(const std::string &algorithmId) const = 0;
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief Abstract function: Get the file content for an algorithm
+    ///
+    /// In the EPT each tuning algorithm comes with its own xml file. This
+    /// function opens the xml file and returns its content in form of a
+    /// single string. The only parameter is the ID of the algorithm.
+    /// This function has to be implemented in the derived class.
+    /// \see FileManagerForQt
+    /// \param algorithID : Identification string of the algorithm
+    /// \return String containing the information of the corresponding XML file
+    ///////////////////////////////////////////////////////////////////////////
+
+    virtual std::string getAlgorithmInformationFileContent (const std::string &algorithmId) const = 0;
 
 private:
-    static std::unique_ptr<FileManager> mSingleton;
+    static std::unique_ptr<FileManager> mSingleton; ///< Singleton unique pointer
 };
 
 #endif // FILEMANAGER_H

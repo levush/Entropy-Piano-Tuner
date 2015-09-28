@@ -41,7 +41,9 @@ HEADERS = \
     Qt/preferredtextsizelabel.h \
     Qt/verticalscrollarea.h \
     Qt/options/optionstabcontentsvscrollarea.h \
-    Qt/tuningindicatorview.h
+    Qt/tuningindicatorview.h \
+    Qt/stroboscopicviewadapterforqt.h \
+    Qt/tuningindicatorgroupbox.h
 
 QWT_S = $$SOURCES
 SOURCES = \
@@ -51,7 +53,9 @@ SOURCES = \
     Qt/preferredtextsizelabel.cpp \
     Qt/verticalscrollarea.cpp \
     Qt/options/optionstabcontentsvscrollarea.cpp \
-    Qt/tuningindicatorview.cpp
+    Qt/tuningindicatorview.cpp \
+    Qt/stroboscopicviewadapterforqt.cpp \
+    Qt/tuningindicatorgroupbox.cpp
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -221,7 +225,6 @@ HEADERS  += \
     Qt/versioncheck.h \
     Qt/runguard.h \
     Qt/displaysize.h \
-    Qt/tuninggroupbox.h \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h \
@@ -271,7 +274,6 @@ SOURCES +=  \
     Qt/versioncheck.cpp \
     Qt/runguard.cpp \
     Qt/displaysize.cpp \
-    Qt/tuninggroupbox.cpp \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp \
@@ -343,6 +345,7 @@ CORE_ADAPTER_HEADERS = \
     core/adapters/graphicsviewadapter.h \
     core/adapters/filemanager.h \
     core/adapters/coreinitialisationadapter.h \
+    core/adapters/stroboscopicviewadapter.h \
 
 CORE_ADAPTER_SOURCES = \
     core/adapters/calculationadapter.cpp \

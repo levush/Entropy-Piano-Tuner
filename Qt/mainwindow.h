@@ -33,6 +33,7 @@
 #include "calculationprogressgroup.h"
 #include "signalanalyzergroupbox.h"
 #include "volumecontrolgroupbox.h"
+#include "tuningindicatorgroupbox.h"
 #include "versioncheck.h"
 
 class KeyboardGraphicsView;
@@ -155,6 +156,9 @@ private:
 
     /// Pointer to the SignalAnalyzerGroupBox
     SignalAnalyzerGroupBox *mSignalAnalyzerGroup;
+
+    /// Pointer to the TuningIndicatorGroupBox
+    TuningIndicatorGroupBox *mTuningIndicatorGroup;
 
     /// Pointer to the VolumeControlGroupBox
     VolumeControlGroupBox *mVolumeControlGroup;
@@ -315,6 +319,12 @@ public slots:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void onToggleFullscreen();
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Slot to toggle between the two tuning indicator modes
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void onToggleTuningIndictator();
 
     /// \brief Slot to open the export dialog
     void onExport();

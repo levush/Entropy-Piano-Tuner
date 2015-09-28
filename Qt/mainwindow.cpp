@@ -60,7 +60,6 @@
 #include "donotshowagainmessagebox.h"
 #include "autoclosingmessagebox.h"
 #include "aboutdialog.h"
-#include "tuninggroupbox.h"
 #include "displaysize.h"
 #include "plotsdialog/plotsdialog.h"
 
@@ -91,9 +90,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->controlLayout->addWidget(mSignalAnalyzerGroup, 0);
     QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mSignalAnalyzerGroup, SLOT(onModeChanged(OperationMode)));
 
-    TuningGroupBox *tuningGroupBox = new TuningGroupBox(this);
-    ui->controlLayout->addWidget(tuningGroupBox, 1);
-    QObject::connect(this, SIGNAL(modeChanged(OperationMode)), tuningGroupBox, SLOT(onModeChanged(OperationMode)));
+    mTuningIndicatorGroup = new TuningIndicatorGroupBox(this);
+    ui->controlLayout->addWidget(mTuningIndicatorGroup, 1);
+    QObject::connect(this, SIGNAL(modeChanged(OperationMode)), mTuningIndicatorGroup, SLOT(onModeChanged(OperationMode)));
 
     mKeyboardGraphicsView = new KeyboardGraphicsView(this);
     qobject_cast<QBoxLayout*>(ui->centralWidget->layout())->addWidget(mKeyboardGraphicsView);
@@ -259,6 +258,8 @@ MainWindow::MainWindow(QWidget *parent) :
     new QShortcut(QKeySequence(Qt::Key_F11), this, SLOT(onToggleFullscreen()));
     new QShortcut(QKeySequence(Qt::Key_F), this, SLOT(onToggleFullscreen()));
     new QShortcut(QKeySequence::FullScreen, this, SLOT(onToggleFullscreen()));
+    new QShortcut(QKeySequence(Qt::Key_Space), this, SLOT(onToggleTuningIndictator()));
+
     ui->action_New->setShortcut(QKeySequence::New);
     ui->actionOpen->setShortcut(QKeySequence::Open);
     ui->actionSave->setShortcut(QKeySequence::Save);
@@ -739,6 +740,14 @@ void MainWindow::onToggleFullscreen() {
         showFullScreen();
     }
 }
+
+
+void MainWindow::onToggleTuningIndictator()
+{
+    if (mTuningIndicatorGroup)
+         mTuningIndicatorGroup->getTunincIndicatorView()->toggleSpectralAndStroboscopeMode();
+}
+
 
 void MainWindow::onExport() {
     mCore->getProjectManager()->onExport();

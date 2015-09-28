@@ -24,7 +24,6 @@
 #include "tuningindicatordrawer.h"
 
 #include <cstdint>
-#include <iostream>
 #include <algorithm>
 
 #include "../messages/messagenewfftcalculated.h"
@@ -40,16 +39,20 @@
 #include "../settings.h"
 #include "../piano/piano.h"
 
-TuningIndicatorDrawer::TuningIndicatorDrawer(GraphicsViewAdapter *graphics) :
+TuningIndicatorDrawer::TuningIndicatorDrawer(
+        GraphicsViewAdapter *graphics,
+        StroboscopicViewAdapter *stroboscope) :
     DrawerBase(graphics),
     mPiano(nullptr),
     mNumberOfKeys(0),
     mSelectedKey(-1),
     mRecognizedKey(-1),
     mOperationMode(MODE_COUNT),
+    mStroboscope(stroboscope),
     mDataVector()
 {
 }
+
 
 //-----------------------------------------------------------------------------
 //                            Message listener
@@ -71,7 +74,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         {
             auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = mmc->getMode();
-            redraw(true);
+            if (mOperationMode == MODE_TUNING) redraw(true);
             break;
         }
     case Message::MSG_PRELIMINARY_KEY:
@@ -89,7 +92,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         {
             auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
             mSelectedKey = mksc->getKeyNumber();
-            redraw(true);
+            if (mOperationMode == MODE_TUNING) redraw(true);
             break;
         }
     case Message::MSG_PROJECT_FILE:
@@ -98,8 +101,11 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
             mPiano = &mpf->getPiano();
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
             mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
-            mGraphics->clear();
-            redraw(true);
+            if (mOperationMode == MODE_TUNING)
+            {
+                mGraphics->clear();
+                redraw(true);
+            }
             break;
         }
     case Message::MSG_TUNING_DEVIATION:
@@ -111,11 +117,11 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_STROBOSCOPE_EVENT:
         {
-            if (Settings::getSingleton().isStroboscopeActive())
+            if (mOperationMode == MODE_TUNING) if (Settings::getSingleton().isStroboscopeActive())
             {
                 auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
                 mDataVector = mmc->getData();
-                redraw();
+                draw();
             }
             break;
         }
@@ -140,6 +146,7 @@ void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
     LogI("Toggle between needle and stroboscopic tuning indicator by mouse click");
     bool stroboscope = Settings::getSingleton().isStroboscopeActive();
     Settings::getSingleton().setStroboscopeMode (not stroboscope);
+    redraw(true);
 }
 
 
@@ -180,7 +187,7 @@ void TuningIndicatorDrawer::draw()
 
     if (Settings::getSingleton().isStroboscopeActive())
     {
-        mGraphics->drawStroboscope(mDataVector);
+        mStroboscope->drawStroboscope(mDataVector);
         return;
     }
 

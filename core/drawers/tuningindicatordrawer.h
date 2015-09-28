@@ -25,6 +25,7 @@
 #define TUNINGINDICATORDRAWER_H
 
 #include "drawerbase.h"
+#include "../adapters/stroboscopicviewadapter.h"
 #include "../messages/messagelistener.h"
 #include "../analyzers/signalanalyzer.h"
 #include "../piano/piano.h"
@@ -45,10 +46,10 @@
 class TuningIndicatorDrawer : public DrawerBase, public MessageListener
 {
 public:
-    TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
+    TuningIndicatorDrawer(GraphicsViewAdapter *graphics, StroboscopicViewAdapter *stroboscope);
     ~TuningIndicatorDrawer() {}
 
-    static void toggleSpectralAndStroboscopeMode();
+    void toggleSpectralAndStroboscopeMode();
 
 protected:
     virtual void draw() override final;
@@ -64,6 +65,8 @@ private:
 
     FFTDataPointer mFFTData;        ///< Pointer to the Fourier transform data
     FrequencyDetectionResult mFrequencyDetectionResult; ///< Copy of frequency detection result
+
+    StroboscopicViewAdapter *mStroboscope;     ///< Pointer to the stroboscope
 
     using ComplexVector = std::vector<std::complex<double>>;
     ComplexVector mDataVector;      ///< Data vector holding complex phases for stroboscope

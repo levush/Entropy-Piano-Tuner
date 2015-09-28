@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//           Qt file manager implemenation: Open and close files
+//=============================================================================
+
 #ifndef FILEMANAGERFORQT_H
 #define FILEMANAGERFORQT_H
 
@@ -25,30 +29,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Implementation of the FileManager for Qt
 ///////////////////////////////////////////////////////////////////////////////
+
 class FileManagerForQt : public FileManager
 {
 public:
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor.
-    ///
-    /// The constructor will create all paths where files will be written to.
-    ///////////////////////////////////////////////////////////////////////////////
-    FileManagerForQt();
+    FileManagerForQt();                 ///< Constructor, creating directories
+    ~FileManagerForQt() {}              ///< Empty destructor
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Empty destructor.
-    ///////////////////////////////////////////////////////////////////////////////
-    ~FileManagerForQt();
+    // Return the path of the log file with the given logname.
+    virtual std::string getLogFilePath (const std::string &logname) const override final;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Returns the path of the log file with the given logname.
-    /// \param logname : Name of the log
-    /// \return Absolute path to the log file
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    virtual std::string getLogFilePath(const std::string &logname) const override final;
-
-    virtual std::string getAlgorithmInformationFileContent(const std::string &algorithmId) const override final;
+    // Read the content of the XML file of an algorithm with the given ID
+    virtual std::string getAlgorithmInformationFileContent (const std::string &algorithmId) const override final;
 };
 
 #endif // FILEMANAGERFORQT_H

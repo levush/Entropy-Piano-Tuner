@@ -18,34 +18,43 @@
  *****************************************************************************/
 
 //=============================================================================
-//             Graphical Qt interface for the tuning indicator
+//                  Stroboscopic view adapter for Qt
 //=============================================================================
 
-#ifndef TUNINGINDICATORVIEW_H
-#define TUNINGINDICATORVIEW_H
+#ifndef STROBOSCOPICVIEWADAPTERFORQT_H
+#define STROBOSCOPICVIEWADAPTERFORQT_H
 
+#include "../core/adapters/stroboscopicviewadapter.h"
 #include "graphicsviewadapterforqt.h"
-#include "stroboscopicviewadapterforqt.h"
-#include "../core/drawers/tuningindicatordrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Class for the Qt implementation of the tuning indicator
+/// \brief Stroboscopic view adapter for Qt
 ///
-/// It forwards the drawings of the TuningIndicatorDrawer to a
-/// AutoScaledToKeyboardGraphicsView.
+/// This is the implementation of the stroboscopic view adapter for Qt.
+/// The essential function is drawStroboscope, which depends on a vector of
+/// complex numbers. The stroboscope shows stripes of rainbow colorscales with an
+/// intensity proportional to the absolute values of the complex numbers
+/// and a horizontal shift proportional to the phase of the complex numbers.
+/// This function is time-critical and uses direct memory access.
+///
+/// This class is derived from GraphicsViewAdapterForQt. It is therefore a
+/// special type of GraphicsView which is able to display a stroboscope.
 ///////////////////////////////////////////////////////////////////////////////
 
-class TuningIndicatorView : public StroboscopicViewAdapterForQt,
-                            public TuningIndicatorDrawer
+class StroboscopicViewAdapterForQt : public GraphicsViewAdapterForQt, public StroboscopicViewAdapter
 {
 public:
-    TuningIndicatorView (QWidget *parent);
-    virtual ~TuningIndicatorView() {}      ///< Empty virtual destructor.
+
+    StroboscopicViewAdapterForQt (QWidget *parent, DrawerBase *drawer, QRectF sceneRect);
+    ~StroboscopicViewAdapterForQt();
+
+    virtual void drawStroboscope (const ComplexVector &data) override final;
+    void clear() override final;
 
 private:
-    void mousePressEvent (QMouseEvent *event) override final;
-    void mouseDoubleClickEvent (QMouseEvent * event) override final;
-    virtual QSize sizeHint() const override final { return QSize(0, 0);}
+
+    QGraphicsPixmapItem *mStroboscopeItem;      ///< Pointer to the stroboscope
+
 };
 
-#endif // TUNINGINDICATORVIEW_H
+#endif // STROBOSCOPICVIEWADAPTERFORQT_H

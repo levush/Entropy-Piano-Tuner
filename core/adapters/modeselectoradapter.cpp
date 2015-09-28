@@ -17,15 +17,12 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-
 //=============================================================================
 //                        Adapter for mode selection
 //=============================================================================
 
 
 #include "modeselectoradapter.h"
-
-#include <memory>
 
 #include "../messages/messagemodechanged.h"
 #include "../messages/messagehandler.h"
