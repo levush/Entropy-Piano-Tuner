@@ -24,6 +24,8 @@
 #ifndef GRAPHICSVIEWADAPTER_H
 #define GRAPHICSVIEWADAPTER_H
 
+#include <vector>
+
 #include "../drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
