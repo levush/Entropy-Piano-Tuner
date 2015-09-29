@@ -24,47 +24,131 @@
 #include "../core/system/eptexception.h"
 #include "../core/math/mathtools.h"
 
-GraphicsViewAdapterForQt::GraphicsViewAdapterForQt(QWidget *parent, DrawerBase *drawer, QRectF sceneRect)
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor.
+/// \param parent : The parent widget
+/// \param drawer : The drawer that draws into this graphics view
+/// \param sceneRect : The scene rectange for QGraphicsView
+///
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicsViewAdapterForQt::GraphicsViewAdapterForQt (QWidget *parent,
+                                                    DrawerBase *drawer,
+                                                    QRectF sceneRect)
     : QGraphicsView(parent),
       GraphicsViewAdapter(),
       mDrawer(drawer),
       mScene(sceneRect),
-      mSceneRect(sceneRect) {
+      mSceneRect(sceneRect)
+{
     setScene(&mScene);
 
     // antialiasing for nice lines
-    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+    setRenderHints(QPainter::Antialiasing |
+                   QPainter::SmoothPixmapTransform |
+                   QPainter::HighQualityAntialiasing);
 }
+
+
+//-----------------------------------------------------------------------------
+//                                Destructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Destructor, removing all graphics items from the list
+///////////////////////////////////////////////////////////////////////////////
 
 GraphicsViewAdapterForQt::~GraphicsViewAdapterForQt()
 {
-    // upon delete the QGraphicItems may not be deleted, this was already dont by the QGraphicsView
-    for (GraphicsItem *item : getGraphicItems()) {
+    // upon delete the QGraphicItems may not be deleted,
+    // this was already done by the QGraphicsView
+    for (GraphicsItem *item : getGraphicItems())
+    {
         // so set them to 0
         static_cast<GraphicsItemForQt*>(item)->setItem(nullptr);
     }
 }
 
-void GraphicsViewAdapterForQt::setSceneRect(const QRectF &rect) {
+
+//-----------------------------------------------------------------------------
+//                        Modify the scene rectangle
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Setter function for the scene rectangle.
+/// \param rect : The new scene rect of QGraphicsView
+///
+/// Changing the scene rect will also force the drawer to redraw.
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsViewAdapterForQt::setSceneRect(const QRectF &rect)
+{
     mSceneRect = rect;
-    // force redraw
-    mDrawer->redraw(true);
+    mDrawer->redraw(true);  // force redraw
 }
 
-void GraphicsViewAdapterForQt::showEvent(QShowEvent *event) {
+
+//-----------------------------------------------------------------------------
+//                              Show the scene
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Show the scene (reimplemented show event).
+/// \param event : The QShowEvent event
+///
+/// This function fits the mSceneRect into the view of the QGraphicsViewer.
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsViewAdapterForQt::showEvent(QShowEvent *event)
+{
     fitInView(mScene.sceneRect());
     QGraphicsView::showEvent(event);
 }
 
-void GraphicsViewAdapterForQt::resizeEvent(QResizeEvent *event) {
+
+//-----------------------------------------------------------------------------
+//                            Resize the scene
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Resize the scene (reimplemented resize event).
+/// \param event : The QResizeEvent event
+///
+/// This function resizes the existing mSceneRect in the QGraphicsViewer.
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsViewAdapterForQt::resizeEvent(QResizeEvent *event)
+{
     fitInView(mScene.sceneRect());
     QGraphicsView::resizeEvent(event);
 }
 
-void GraphicsViewAdapterForQt::clear() {
+
+//-----------------------------------------------------------------------------
+//                              Clear the scene
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Clear the scene.
+///
+/// This function clears the QGraphicsScene and calls
+/// GraphicsViewAdapter::clear()
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsViewAdapterForQt::clear()
+{
     GraphicsViewAdapter::clear();
     mScene.clear();
 }
+
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
 
 GraphicsItem *GraphicsViewAdapterForQt::drawLine(double x1, double y1, double x2, double y2, PenType pen) {
     if (x1 < 0 || x1 > 1) {return nullptr;}
@@ -75,6 +159,10 @@ GraphicsItem *GraphicsViewAdapterForQt::drawLine(double x1, double y1, double x2
     line->setPos(convertRelToAbs(QPointF(x1, y1)));
     return new GraphicsItemForQt(this, line);
 }
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
 
 GraphicsItem *GraphicsViewAdapterForQt::drawChart(const std::vector<Point> &points, PenType pen) {
     if (points.size() <= 1) {
@@ -98,6 +186,10 @@ GraphicsItem *GraphicsViewAdapterForQt::drawChart(const std::vector<Point> &poin
     return new GraphicsItemForQt(this, mScene.addPath(path, getPen(pen)));
 }
 
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+
 GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill)
 {
     if (x < 0 || x > 1) {return nullptr;}
@@ -111,6 +203,10 @@ GraphicsItem* GraphicsViewAdapterForQt::drawFilledRect(double x, double y, doubl
                                                 getFill(fill)));
 }
 
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
 
 QPen GraphicsViewAdapterForQt::getPen(PenType penType, bool cosmetic) const {
     QPen pen;
@@ -177,6 +273,10 @@ QPen GraphicsViewAdapterForQt::getPen(PenType penType, bool cosmetic) const {
     return pen;
 }
 
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+
 QBrush GraphicsViewAdapterForQt::getFill(FillTypes fill) const {
     switch (fill) {
     case FILL_TRANSPARENT:
@@ -198,19 +298,36 @@ QBrush GraphicsViewAdapterForQt::getFill(FillTypes fill) const {
     return QBrush();
 }
 
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+
 QPointF GraphicsViewAdapterForQt::convertRelToAbs(const QPointF &p) const {
     return QPointF(p.x() * mSceneRect.width(), p.y() * mSceneRect.height());
 }
 
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+
 QSizeF GraphicsViewAdapterForQt::convertRelToAbs(const QSizeF &s) const {
     return QSizeF(s.width() * mSceneRect.width(), s.height() * mSceneRect.height());
 }
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+
 QLineF GraphicsViewAdapterForQt::convertRelToAbsLine(qreal x1, qreal y1, qreal x2, qreal y2) const {
     return QLineF(x1 * mSceneRect.width(),
                  y1 * mSceneRect.height(),
                  x2 * mSceneRect.width(),
                  y2 * mSceneRect.height());
 }
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
 
 QPointF GraphicsViewAdapterForQt::convertAbsToRel(const QPointF &p) const {
     return QPointF(p.x() / mSceneRect.width(), p.y() / mSceneRect.height());

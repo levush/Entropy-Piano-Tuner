@@ -33,6 +33,7 @@
 
 using PenType = GraphicsViewAdapter::PenType;
 using FillType = GraphicsViewAdapter::FillTypes;
+using RoleType = GraphicsItem::RoleType;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for drawing various tuning curves

@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//============================================================================
+//                     Graphics Item implementaiton for Qt
+//============================================================================
+
 #ifndef GRAPHICSITEMFORQT_H
 #define GRAPHICSITEMFORQT_H
 
@@ -29,7 +33,7 @@ public:
     GraphicsItemForQt(GraphicsViewAdapter *graphicsView, QGraphicsItem *item);
     ~GraphicsItemForQt();
 
-    void setItem(QGraphicsItem *item) {mItem = item;}
+    void setItem(QGraphicsItem *item);
     virtual void setPosition(double x, double y) override final;
     virtual void setZOrder(double z) override final;
 

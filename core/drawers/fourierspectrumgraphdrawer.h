@@ -49,7 +49,7 @@ public:
 
 protected:
     virtual void draw() override final;
-    virtual void reset() override final;
+    virtual void clear() override final;
     virtual void handleMessage(MessagePtr m) override;
 
     void updateSpectrum();

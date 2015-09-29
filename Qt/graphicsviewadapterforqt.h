@@ -36,59 +36,29 @@ class DrawerBase;
 /// The mSceneRect is used for converting relative to absolute coordinates.
 /// It will always be fully displayed in the QGraphicsView.
 ///////////////////////////////////////////////////////////////////////////////
+
 class GraphicsViewAdapterForQt : public QGraphicsView, public GraphicsViewAdapter
 {
 public:
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor.
-    /// \param parent : The parent widget
-    /// \param drawer : The drawer that draws into this graphics view
-    /// \param sceneRect : The scene rectange for QGraphicsView
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     GraphicsViewAdapterForQt(QWidget *parent, DrawerBase *drawer, QRectF sceneRect);
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Destructor.
-    ///////////////////////////////////////////////////////////////////////////////
     ~GraphicsViewAdapterForQt();
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for the scene rect.
-    /// \param rect : The new scene rect of QGraphicsView
-    ///
-    /// Changing this will also force the drawer to redraw.
-    ///////////////////////////////////////////////////////////////////////////////
     void setSceneRect(const QRectF &rect);
 
 protected:
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Reimplemented show event.
-    /// \param event : The event
-    ///
-    /// This function will fit the mSceneRect into the view of the QGraphicsViewer.
-    ///////////////////////////////////////////////////////////////////////////////
-    void showEvent(QShowEvent *event) override;
+    ///@{ \name Reimplemented functions for managing the scene (panel):
+    void showEvent(QShowEvent *event) override;       // Show the scene
+    void resizeEvent(QResizeEvent *event) override;   // Resize the scene
+    virtual void clear() override;                    // Clear the scene
+    ///@}
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Reimplemented resize event.
-    /// \param event : The event
-    ///
-    /// This function will fit the mSceneRect into the view of the QGraphicsViewer.
-    ///////////////////////////////////////////////////////////////////////////////
-    void resizeEvent(QResizeEvent *event) override;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Clears the scene.
-    ///
-    /// It will clear the QGraphicsScene and call GraphicsViewAdapter::clear()
-    ///////////////////////////////////////////////////////////////////////////////
-    virtual void clear() override;
-
-    // reimplemented functions for drawing
+    ///@{ \name Reimplemented functions for drawing:
     virtual GraphicsItem* drawLine(double x1, double y1, double x2, double y2, PenType pen) override;
     virtual GraphicsItem* drawChart(const std::vector<Point> &points, PenType pen) override;
     virtual GraphicsItem* drawFilledRect(double x, double y, double w, double h, PenType pen, FillTypes fill) override;
+    virtual void drawStroboscope (const ComplexVector &data) { if (data.size()) {}} // not implemented
+    ///@}
 
 private:
     ///////////////////////////////////////////////////////////////////////////////
@@ -145,14 +115,10 @@ public:
     QPointF convertAbsToRel(const QPointF &p) const;
 
 protected:
-    /// The drawer of this GraphicsViewAdapterForQt
-    DrawerBase *mDrawer;
 
-    /// The QGraphicsScene
-    QGraphicsScene mScene;
-
-    /// The scene rect
-    QRectF mSceneRect;
+    DrawerBase *mDrawer;        ///< The drawer of this GraphicsViewAdapterForQt
+    QGraphicsScene mScene;      ///< The QGraphicsScene
+    QRectF mSceneRect;          ///< The scene rect
 };
 
 #endif // GRAPHICSVIEWADAPTERFORQT_H

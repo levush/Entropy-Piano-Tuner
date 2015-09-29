@@ -27,7 +27,6 @@
 #include <ctime>
 #include <chrono>
 
-#include "../system/prerequisites.h"
 #include "../adapters/graphicsviewadapter.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,21 +40,22 @@
 class DrawerBase
 {
 public:
-    using system_time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
-public:
     DrawerBase(GraphicsViewAdapter *graphics, double intervall = 1.0/24.0);
     ~DrawerBase() {}
 
     void redraw(bool force = false);
-    bool reqestRedraw(bool force = false);
+    bool requestRedraw(bool force = false);
 
 protected:
-    virtual void draw() = 0;
-    virtual void reset();
+    virtual void draw() = 0;                    ///< Abstract function : draw the content
+    virtual void clear() {mGraphics->clear();}  ///< Clear the whole view
 
-    GraphicsViewAdapter *mGraphics;     ///< Pointer to the graphics view adapter
-    system_time_point mTimeLastDrawn;   ///< Timeposition when last drawn
-    double mRedrawIntervalInSecs;       ///< Update time
+    GraphicsViewAdapter *mGraphics;             ///< Pointer to the graphics view adapter
+
+private:
+    using system_time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    system_time_point mTimeLastDrawn;           ///< Timeposition when last drawn
+    double mRedrawIntervalInSecs;               ///< Update time
 };
 
 #endif // DRAWERBASE_H

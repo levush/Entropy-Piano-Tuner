@@ -24,11 +24,27 @@
 /// University of Würzburg<br> 97074 Würzburg, Germany
 /// \author e-mail: info at piano-tuner.org
 ///
-/// The Entropy-Piano-Tuner (EPT) is an experimental software for piano
+/// The Entropy-Piano-Tuner (EPT) is a free experimental software for piano
 /// tuning.
+///
 /// The source code of the EPT consists mainly of two parts, namely, the
-/// graphical user interface, which is implemented here by using Qt,
-/// and a GUI-independent part called 'core'.
+/// graphical user interface, which is implemented by using Qt,
+/// and a GUI-independent part called 'core'. The tuning algorithms and
+/// third-party components can be found in separate folders.
+///
+/// To download and compile the EPT source on your system please install
+/// the open-source version of Qt and the version management sytsem git.
+/// Then create a local clone of the source by typing
+///
+/// git clone https://gitlab.com/entropytuner/Entropy-Piano-Tuner.git
+///
+/// Alternatively you can also download the project without using git.
+/// Go to https://gitlab.com/entropytuner/Entropy-Piano-Tuner/tree/master
+/// and choose one of the download options in the upper right corner of
+/// the window.
+///
+/// More details can be found on our development web pages at
+/// http://develop.piano-tuner.org
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QTranslator>

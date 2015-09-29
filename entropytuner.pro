@@ -345,7 +345,6 @@ CORE_ADAPTER_HEADERS = \
     core/adapters/graphicsviewadapter.h \
     core/adapters/filemanager.h \
     core/adapters/coreinitialisationadapter.h \
-    core/adapters/stroboscopicviewadapter.h \
 
 CORE_ADAPTER_SOURCES = \
     core/adapters/calculationadapter.cpp \

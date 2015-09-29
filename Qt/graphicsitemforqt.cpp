@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//============================================================================
+//                     Graphics Item implementaiton for Qt
+//============================================================================
+
 #include "graphicsitemforqt.h"
 #include "../core/system/eptexception.h"
 #include "graphicsviewadapterforqt.h"
@@ -29,19 +33,29 @@ GraphicsItemForQt::GraphicsItemForQt(GraphicsViewAdapter *graphicsView, QGraphic
     EptAssert(item, "The item must exist");
 }
 
+
 GraphicsItemForQt::~GraphicsItemForQt()
 {
-    if (mItem) {
+    if (mItem)
+    {
         delete mItem;
         mItem = nullptr;
     }
 }
 
-void GraphicsItemForQt::setPosition(double x, double y) {
+
+void GraphicsItemForQt::setItem(QGraphicsItem *item)
+{
+    mItem = item;
+}
+
+void GraphicsItemForQt::setPosition(double x, double y)
+{
     QPointF pos(static_cast<GraphicsViewAdapterForQt*>(mGraphicsView)->convertRelToAbs(QPointF(x, y)));
     mItem->setPos(pos);
 }
 
-void GraphicsItemForQt::setZOrder(double z) {
+void GraphicsItemForQt::setZOrder(double z)
+{
     mItem->setZValue(z);
 }

@@ -23,9 +23,6 @@
 
 #include "tuningindicatordrawer.h"
 
-#include <cstdint>
-#include <algorithm>
-
 #include "../messages/messagenewfftcalculated.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagepreliminarykey.h"
@@ -34,21 +31,16 @@
 #include "../messages/messagetuningdeviation.h"
 #include "../messages/messagestroboscope.h"
 #include "../math/mathtools.h"
-#include "../math/mathtools.h"
 #include "../system/log.h"
 #include "../settings.h"
-#include "../piano/piano.h"
 
-TuningIndicatorDrawer::TuningIndicatorDrawer(
-        GraphicsViewAdapter *graphics,
-        StroboscopicViewAdapter *stroboscope) :
+TuningIndicatorDrawer::TuningIndicatorDrawer(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics),
     mPiano(nullptr),
     mNumberOfKeys(0),
     mSelectedKey(-1),
     mRecognizedKey(-1),
     mOperationMode(MODE_COUNT),
-    mStroboscope(stroboscope),
     mDataVector()
 {
 }
@@ -72,6 +64,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
     {
     case Message::MSG_MODE_CHANGED:
         {
+            // Copy the operation mode and redraw when switched to tuning
             auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = mmc->getMode();
             if (mOperationMode == MODE_TUNING) redraw(true);
@@ -79,6 +72,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_PRELIMINARY_KEY:
         {
+            // Store the recognized key and redraw in tuning mode
             if (mOperationMode==MODE_TUNING)
             {
                 auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
@@ -90,9 +84,10 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_KEY_SELECTION_CHANGED:
         {
+            // Store the selcted key and redraw in tuning mode
             auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
             mSelectedKey = mksc->getKeyNumber();
-            if (mOperationMode == MODE_TUNING) redraw(true);
+            if (mOperationMode == MODE_TUNING) redraw();
             break;
         }
     case Message::MSG_PROJECT_FILE:
@@ -100,12 +95,8 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
             auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
             mPiano = &mpf->getPiano();
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
-            mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
-            if (mOperationMode == MODE_TUNING)
-            {
-                mGraphics->clear();
-                redraw(true);
-            }
+            mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys); // ??
+            if (mOperationMode == MODE_TUNING) redraw(true);
             break;
         }
     case Message::MSG_TUNING_DEVIATION:
@@ -117,7 +108,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_STROBOSCOPE_EVENT:
         {
-            if (mOperationMode == MODE_TUNING) if (Settings::getSingleton().isStroboscopeActive())
+            if (mOperationMode == MODE_TUNING and Settings::getSingleton().isStroboscopeActive())
             {
                 auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
                 mDataVector = mmc->getData();
@@ -155,13 +146,13 @@ void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Reset: Clear the shared pointer to the FFT
+/// \brief Clear the shared pointer to the FFT
 ///////////////////////////////////////////////////////////////////////////////
 
-void TuningIndicatorDrawer::reset()
+void TuningIndicatorDrawer::clear()
 {
     mFFTData.reset();
-    DrawerBase::reset();
+    clear();
 }
 
 
@@ -187,7 +178,7 @@ void TuningIndicatorDrawer::draw()
 
     if (Settings::getSingleton().isStroboscopeActive())
     {
-        mStroboscope->drawStroboscope(mDataVector);
+        mGraphics->drawStroboscope(mDataVector);
         return;
     }
 

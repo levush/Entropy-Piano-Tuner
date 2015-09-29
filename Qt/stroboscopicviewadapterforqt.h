@@ -23,8 +23,7 @@
 
 #ifndef STROBOSCOPICVIEWADAPTERFORQT_H
 #define STROBOSCOPICVIEWADAPTERFORQT_H
-
-#include "../core/adapters/stroboscopicviewadapter.h"
+#include "../core/adapters/graphicsviewadapter.h"
 #include "graphicsviewadapterforqt.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@
 /// special type of GraphicsView which is able to display a stroboscope.
 ///////////////////////////////////////////////////////////////////////////////
 
-class StroboscopicViewAdapterForQt : public GraphicsViewAdapterForQt, public StroboscopicViewAdapter
+class StroboscopicViewAdapterForQt : public GraphicsViewAdapterForQt
 {
 public:
 

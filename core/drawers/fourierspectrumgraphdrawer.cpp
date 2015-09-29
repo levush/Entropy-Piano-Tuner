@@ -176,8 +176,8 @@ void FourierSpectrumGraphDrawer::updateSpectrum()
 
 /// \brief Reset the spectrum
 
-void FourierSpectrumGraphDrawer::reset() {
-    DrawerBase::reset();
+void FourierSpectrumGraphDrawer::clear() {
+    DrawerBase::clear();
 }
 
 
@@ -228,7 +228,7 @@ void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
         // Reset mKey
         mKey.reset();
         // Plot curve
-        if (reqestRedraw(mnfc->isFinal())) updateSpectrum();
+        if (requestRedraw(mnfc->isFinal())) updateSpectrum();
         break;
     }
     case Message::MSG_CLEAR_RECORDING:
@@ -245,7 +245,7 @@ void FourierSpectrumGraphDrawer::handleMessage(MessagePtr m)
         // Update mKey
         auto mnfc(std::static_pointer_cast<MessageFinalKey>(m));
         mKey = mnfc->getFinalKey();
-        if (reqestRedraw(true)) updateSpectrum();
+        if (requestRedraw(true)) updateSpectrum();
         break;
     }
     default:

@@ -57,7 +57,11 @@ StroboscopicViewAdapterForQt::StroboscopicViewAdapterForQt(QWidget *parent,
 
 StroboscopicViewAdapterForQt::~StroboscopicViewAdapterForQt()
 {
-    if (mStroboscopeItem) delete mStroboscopeItem;
+    if (mStroboscopeItem)
+    {
+        delete mStroboscopeItem;
+        mStroboscopeItem = nullptr;
+    }
 }
 
 
