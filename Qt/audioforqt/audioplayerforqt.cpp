@@ -93,6 +93,8 @@ void AudioPlayerForQt::exit()
     // deleted automatically upon finished
     mQtAudioManager = nullptr;
     mQtThread = nullptr;
+
+    AudioPlayerAdapter::exit();
 }
 
 
