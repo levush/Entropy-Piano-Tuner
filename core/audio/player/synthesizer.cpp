@@ -53,7 +53,7 @@ Envelope::Envelope(double attack, double decay,
     sustain(sustain),
     release(release),
     hammer(hammer)
-{};
+{}
 
 
 //=============================================================================

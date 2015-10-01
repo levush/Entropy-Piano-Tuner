@@ -68,7 +68,6 @@ private:
 
 private:
     Synthesizer mSynthesizer;                   ///< Instance of the synthesizer.
-    const AudioPlayerAdapter *mAudioAdapter;    ///< Pointer to the audio device
     const Piano *mPiano;                        ///< Pointer to the piano.
     OperationMode mOperationMode;               ///< Copy of the operation mode.
     int mNumberOfKeys;                          ///< Copy of the number of keys.

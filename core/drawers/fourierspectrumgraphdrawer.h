@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Drawer for drawing the spectrum with the peak markers
+//=============================================================================
+
 #ifndef FOURIERSPECTRUMGRAPHDRAWER_H
 #define FOURIERSPECTRUMGRAPHDRAWER_H
 
@@ -31,21 +35,25 @@
 ///
 /// This class is drawing the spectrum (the red line) and if available the
 /// peak markers on top of it.
+///
+/// The FourierSpectrumGraphDrawer is completely driven by messages.
 ///////////////////////////////////////////////////////////////////////////////
 
 class FourierSpectrumGraphDrawer : public DrawerBase, public MessageListener
 {
 public:
-    enum RoleType
+    const double updateInterval = 1.0;      ///< Update interval at least 1 sec
+
+    enum RoleType                           ///< Roles of the items used here
     {
-        ROLE_GLOBAL   = 1,
-        ROLE_CHART    = 2,
-        ROLE_PEAK     = 4
+        ROLE_GLOBAL   = 1,                  ///< Global elements
+        ROLE_CHART    = 2,                  ///< Chart items (polygons)
+        ROLE_PEAK     = 4                   ///< Peak markers
     };
 
 public:
     FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics);
-    ~FourierSpectrumGraphDrawer() {}
+    ~FourierSpectrumGraphDrawer() {}        ///< Empty destructor
 
 protected:
     virtual void draw() override final;

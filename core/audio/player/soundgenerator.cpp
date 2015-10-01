@@ -52,7 +52,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioAdapter) :
-    mAudioAdapter (audioAdapter),
     mPiano(nullptr),
     mOperationMode(OperationMode::MODE_IDLE),
     mNumberOfKeys(0),

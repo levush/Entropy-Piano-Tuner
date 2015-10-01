@@ -232,10 +232,10 @@ void TuningIndicatorDrawer::draw()
     //---------------------- Draw overpull marker ------------------------
 
     double overpull = mFrequencyDetectionResult->overpullInCents;
-    if (abs(overpull)>0.2 and abs(overpull<100))
+    if (std::abs(overpull)>0.2 and std::abs(overpull)<100)
     {
         auto overpullColor = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
-        if (abs(overpull) > specWindowSize/2)
+        if (std::abs(overpull) > specWindowSize/2)
         {
             overpullColor = GraphicsViewAdapter::PEN_MEDIUM_RED;
             overpull = specWindowSize/2 * (overpull>0 ? 1:-1);

@@ -36,7 +36,8 @@
 /// the open-source version of Qt and the version management sytsem git.
 /// Then create a local clone of the source by typing
 ///
-/// git clone https://gitlab.com/entropytuner/Entropy-Piano-Tuner.git
+/// \code git clone https://gitlab.com/entropytuner/Entropy-Piano-Tuner.git
+/// \endcode
 ///
 /// Alternatively you can also download the project without using git.
 /// Go to https://gitlab.com/entropytuner/Entropy-Piano-Tuner/tree/master

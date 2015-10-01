@@ -36,7 +36,7 @@ public:
     ~QtCoreInitialisation();
 
 private:
-    virtual void updateProgress (int percentage);
+    virtual void updateProgress (int percentage) override;
 
     virtual void create() override;
     virtual void destroy() override;

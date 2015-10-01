@@ -18,21 +18,38 @@
  *****************************************************************************/
 
 //============================================================================
-//                     Graphics Item implementaiton for Qt
+//                     Graphics Item implementation for Qt
 //============================================================================
 
 #include "graphicsitemforqt.h"
+
 #include "../core/system/eptexception.h"
 #include "graphicsviewadapterforqt.h"
-#include <QGraphicsScene>
 
-GraphicsItemForQt::GraphicsItemForQt(GraphicsViewAdapter *graphicsView, QGraphicsItem *item) :
+
+//-----------------------------------------------------------------------------
+//                               Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor, initializing the pointer mItem
+///////////////////////////////////////////////////////////////////////////////
+GraphicsItemForQt::GraphicsItemForQt (GraphicsViewAdapter *graphicsView,
+                                      QGraphicsItem *item) :
     GraphicsItem(graphicsView),
     mItem(item)
 {
     EptAssert(item, "The item must exist");
 }
 
+
+//-----------------------------------------------------------------------------
+//                               Destructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Destructor, deletes the item and sets mItem to nullptr.
+///////////////////////////////////////////////////////////////////////////////
 
 GraphicsItemForQt::~GraphicsItemForQt()
 {
@@ -44,18 +61,49 @@ GraphicsItemForQt::~GraphicsItemForQt()
 }
 
 
-void GraphicsItemForQt::setItem(QGraphicsItem *item)
+//-----------------------------------------------------------------------------
+//                  Set the associated QGraphicsItem pointer
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Set the associated QGraphicsItem pointer
+/// \param item : Pointer to the QGraphicsItem
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsItemForQt::setItem (QGraphicsItem *item)
 {
     mItem = item;
 }
 
-void GraphicsItemForQt::setPosition(double x, double y)
+
+//-----------------------------------------------------------------------------
+//              Set or change the position of the graphical item
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Set or change the position of the graphical item
+/// \param x : Horizontal position varying from 0 to 1
+/// \param y : Vertical position varying from 0 to 1
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsItemForQt::setPosition (double x, double y)
 {
-    QPointF pos(static_cast<GraphicsViewAdapterForQt*>(mGraphicsView)->convertRelToAbs(QPointF(x, y)));
+    QPointF pos(static_cast<GraphicsViewAdapterForQt*>(mGraphicsView)->
+                convertRelToAbs(QPointF(x, y)));
     mItem->setPos(pos);
 }
 
-void GraphicsItemForQt::setZOrder(double z)
+
+//-----------------------------------------------------------------------------
+//              Set or change the z-order of the graphical item
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Set or change the z-order of the graphical item
+/// \param z
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicsItemForQt::setZOrder (double z)
 {
     mItem->setZValue(z);
 }

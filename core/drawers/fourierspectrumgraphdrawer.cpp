@@ -17,18 +17,18 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "fourierspectrumgraphdrawer.h"
+//=============================================================================
+//            Drawer for drawing the spectrum with the peak markers
+//=============================================================================
 
-#include <cstdint>
-#include <iostream>
-#include <algorithm>
+#include "fourierspectrumgraphdrawer.h"
 
 #include "../messages/messagenewfftcalculated.h"
 #include "../messages/messagefinalkey.h"
 #include "../messages/messageprojectfile.h"
 #include "../messages/messagemodechanged.h"
-#include "../piano/piano.h"
 #include "../math/mathtools.h"
+
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -40,7 +40,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 FourierSpectrumGraphDrawer::FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics)
-    : DrawerBase(graphics,  1.0),
+    : DrawerBase(graphics, updateInterval),
       mConcertPitch(0),
       mKeyNumberOfA4(0),
       mNumberOfKeys(-1),
@@ -55,7 +55,7 @@ FourierSpectrumGraphDrawer::FourierSpectrumGraphDrawer(GraphicsViewAdapter *grap
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Draw the spectrum
+/// \brief Draw the spectrum.
 ///
 /// This function first draws the background grid and then calls the function
 /// updateSpectrum() which does the actual drawing of the curve.
@@ -64,7 +64,7 @@ FourierSpectrumGraphDrawer::FourierSpectrumGraphDrawer(GraphicsViewAdapter *grap
 void FourierSpectrumGraphDrawer::draw()
 {
     // draw gray vertical background grid
-    for (int8_t i = 0; i <= mNumberOfKeys; i++)
+    for (int i = 0; i <= mNumberOfKeys; i++)
     {
         double x = static_cast<double>(i)/mNumberOfKeys;
         mGraphics->drawLine (x, 0, x, 1, GraphicsViewAdapter::PEN_THIN_DARK_GRAY);
@@ -80,7 +80,7 @@ void FourierSpectrumGraphDrawer::draw()
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Function for updating the red curve showing the spectrum
+/// \brief Function for updating the red curve showing the spectrum.
 ///
 /// This function actually draws the spectrum. It puts graphic items which
 /// are defined by different roles (global,chart,peak). First the old elements
@@ -88,7 +88,7 @@ void FourierSpectrumGraphDrawer::draw()
 /// the shared pointers mKey and mPolygon. Then the peaks are placed and finally
 /// the red line is plotted as a polygon.
 ////////////////////////////////////////////////////////////////////////////////
-///
+
 void FourierSpectrumGraphDrawer::updateSpectrum()
 {
     // delete old peaks and chart
@@ -131,7 +131,7 @@ void FourierSpectrumGraphDrawer::updateSpectrum()
         {
             double x = xposition(p.first);
 
-            // Search for the corresponding peak in the polygon:
+            // Search for the corresponding peaks in the polygon:
             auto pos1 = mPolygon->begin();
             while (pos1!=mPolygon->end() and pos1->first < p.first*0.995) pos1++;
             auto pos2 = pos1;
@@ -164,21 +164,18 @@ void FourierSpectrumGraphDrawer::updateSpectrum()
         if (x>=0 and x<=1) points.push_back({x, 1-0.95*pow(p.second,exponent)});
     }
     item = mGraphics->drawChart(points, GraphicsViewAdapter::PEN_THIN_RED);
-    if (item) {
-        item->setItemRole(ROLE_CHART);
-    }
+    if (item) item->setItemRole(ROLE_CHART);
 }
 
 
 //-----------------------------------------------------------------------------
-//                           Reset the spectrum
+//                           Clear the spectrum
 //-----------------------------------------------------------------------------
 
-/// \brief Reset the spectrum
+/// \brief Clear the spectrum
 
-void FourierSpectrumGraphDrawer::clear() {
-    DrawerBase::clear();
-}
+void FourierSpectrumGraphDrawer::clear()
+{ DrawerBase::clear(); }
 
 
 //-----------------------------------------------------------------------------

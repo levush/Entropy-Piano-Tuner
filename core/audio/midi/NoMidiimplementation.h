@@ -40,11 +40,11 @@ public:
     void init() override final;
     void exit() override final;
 
-    int GetNumberOfPorts ();                    ///< Get the number of available input devices
-    std::string GetPortName   (int i);               ///< Get the name of device i (starting with zero)
-    bool OpenPort (int i, std::string AppName="");   ///< Open Midi input device number i
-    bool OpenPort (std::string AppName="");          ///< Open Midi device with the highest port number
-    int getCurrentPort() const;
+    int GetNumberOfPorts () override final;                         ///< Get the number of available input devices
+    std::string GetPortName (int i) override final;                 ///< Get the name of device i (starting with zero)
+    bool OpenPort (int i, std::string AppName="") override final;   ///< Open Midi input device number i
+    bool OpenPort (std::string AppName="") override final;          ///< Open Midi device with the highest port number
+    int getCurrentPort() const override final;
 };
 
 #endif // NOMIDIIMPLEMENTATION_H

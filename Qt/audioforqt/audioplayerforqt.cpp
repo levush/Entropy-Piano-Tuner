@@ -315,6 +315,8 @@ void QtAudioManager::setPause(bool pause) {
 
 void QtAudioManager::workerFunction()
 {
+    setThreadName("QtAudioManager");
+
     // Determine the scaling constant
     const auto scaling = std::numeric_limits<QtAudioManager::DataFormat>::max();
 

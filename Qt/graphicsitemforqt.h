@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 //============================================================================
-//                     Graphics Item implementaiton for Qt
+//                     Graphics Item implementation for Qt
 //============================================================================
 
 #ifndef GRAPHICSITEMFORQT_H
@@ -27,10 +27,18 @@
 #include "../core/drawers/graphicsitem.h"
 #include <QGraphicsItem>
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Implementation class for the GraphicsItem in Qt
+///
+/// This implementation class holds and manages a pointer pointing to the
+/// corresponding QGraphicsItem
+///////////////////////////////////////////////////////////////////////////////
+
 class GraphicsItemForQt : public GraphicsItem
 {
 public:
-    GraphicsItemForQt(GraphicsViewAdapter *graphicsView, QGraphicsItem *item);
+    GraphicsItemForQt(GraphicsViewAdapter *graphicsView,
+                      QGraphicsItem *item);
     ~GraphicsItemForQt();
 
     void setItem(QGraphicsItem *item);
@@ -38,7 +46,7 @@ public:
     virtual void setZOrder(double z) override final;
 
 private:
-    QGraphicsItem *mItem;
+    QGraphicsItem *mItem;  ///< Pointer pointing to the QGraphicsItem
 };
 
 #endif // GRAPHICSITEMFORQT_H
