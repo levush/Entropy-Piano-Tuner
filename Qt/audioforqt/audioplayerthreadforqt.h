@@ -17,45 +17,57 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef AUDIOPLAYERFORQT_H
-#define AUDIOPLAYERFORQT_H
+#ifndef AUDIOPLAYERTHREADFORQT_H
+#define AUDIOPLAYERTHREADFORQT_H
 
-#include "../../core/audio/player/audioplayeradapter.h"
+#include "audioplayerforqt.h"
 #include <QAudioOutput>
+#include <mutex>
+#include <atomic>
+#include <QThread>
 
-class AudioPlayerThreadForQt;
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief The AudioPlayerForQt class
+/// \brief The AudioPlayerThreadForQt class
 ///
-/// This class implements the audio player for Qt. Its main purpose is to
-/// start an indpendent Qt-compatible thread because the Qt audio player must
-/// be operated from a single Qt-thread only.
+/// This class serves as a container for the workerFunction in which the
+/// thread is running.
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
+class AudioPlayerThreadForQt : public QObject
 {
     Q_OBJECT
 
 public:
-    AudioPlayerForQt(QObject *parent);
-    ~AudioPlayerForQt() {}
+    static const double BufferMilliseconds;
+    typedef int16_t DataFormat;
+    AudioPlayerThreadForQt(AudioPlayerForQt *audio);
+    ~AudioPlayerThreadForQt() {}
 
-    void init() override final;     // Initialize, start thread
-    void exit() override final;     // Exit, stop thread
+    void registerForTermination() { mThreadRunning=false; }
+    void setPause(bool pause);
+    bool isRunning () { return mThreadRunning; }
 
-    void start() override final;
-    void stop() override final;
+public slots:
+    void workerFunction();
 
-private slots:
-    void errorString(QString);
 private:
-    QThread* mQtThread;
-    AudioPlayerThreadForQt* mQtAudioManager;
+    void init();
+    void exit();
+    void start();
+    void stop();
+
+signals:
+    void finished();
+    void error(QString err);
+
+private:
+    AudioPlayerForQt *mAudioSource;
+    std::atomic<bool> mThreadRunning;
+    std::atomic<bool> mPause;
+    QAudioOutput *mAudioSink;
+    QIODevice *mIODevice;
 };
 
 
-
-
-
-#endif // AUDIOPLAYERFORQT_H
+#endif // AUDIOPLAYERTHREADFORQT_H

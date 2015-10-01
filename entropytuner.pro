@@ -32,30 +32,12 @@ Debug:UI_DIR = debug/.ui
 # add qwt
 QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
-QWT_H = $$HEADERS
 
-HEADERS = \
-    Qt/plotsdialog/centralplotframe.h \
-    Qt/plotsdialog/keyindexscaleengine.h \
-    Qt/plotsdialog/keyindexscaledraw.h \
-    Qt/preferredtextsizelabel.h \
-    Qt/verticalscrollarea.h \
-    Qt/options/optionstabcontentsvscrollarea.h \
-    Qt/tuningindicatorview.h \
-    Qt/stroboscopicviewadapterforqt.h \
-    Qt/tuningindicatorgroupbox.h
+QWT_H = $$HEADERS
+HEADERS =
 
 QWT_S = $$SOURCES
-SOURCES = \
-    Qt/plotsdialog/centralplotframe.cpp \
-    Qt/plotsdialog/keyindexscaleengine.cpp \
-    Qt/plotsdialog/keyindexscaledraw.cpp \
-    Qt/preferredtextsizelabel.cpp \
-    Qt/verticalscrollarea.cpp \
-    Qt/options/optionstabcontentsvscrollarea.cpp \
-    Qt/tuningindicatorview.cpp \
-    Qt/stroboscopicviewadapterforqt.cpp \
-    Qt/tuningindicatorgroupbox.cpp
+SOURCES =
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -182,6 +164,16 @@ android {
 #------------------- Qt -----------------------
 
 HEADERS  += \
+    Qt/plotsdialog/centralplotframe.h \
+    Qt/plotsdialog/keyindexscaleengine.h \
+    Qt/plotsdialog/keyindexscaledraw.h \
+    Qt/preferredtextsizelabel.h \
+    Qt/verticalscrollarea.h \
+    Qt/options/optionstabcontentsvscrollarea.h \
+    Qt/tuningindicatorview.h \
+    Qt/stroboscopicviewadapterforqt.h \
+    Qt/tuningindicatorgroupbox.h \
+    Qt/audioforqt/audioplayerthreadforqt.h \
     Qt/mainwindow.h \
     Qt/volumecontrollevel.h \
     Qt/tunerapplication.h \
@@ -277,7 +269,18 @@ SOURCES +=  \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp \
-    Qt/plotsdialog/plotsdialog.cpp
+    Qt/plotsdialog/plotsdialog.cpp \
+    Qt/plotsdialog/centralplotframe.cpp \
+    Qt/plotsdialog/keyindexscaleengine.cpp \
+    Qt/plotsdialog/keyindexscaledraw.cpp \
+    Qt/preferredtextsizelabel.cpp \
+    Qt/verticalscrollarea.cpp \
+    Qt/options/optionstabcontentsvscrollarea.cpp \
+    Qt/tuningindicatorview.cpp \
+    Qt/stroboscopicviewadapterforqt.cpp \
+    Qt/tuningindicatorgroupbox.cpp \
+    Qt/audioforqt/audioplayerthreadforqt.cpp \
+
 
 #------------- Message system --------------------
 
