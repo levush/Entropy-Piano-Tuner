@@ -74,6 +74,7 @@ public:
     ~SignalAnalyzer() {}
 
     void init();
+    void exit() {}
 
     virtual void stop() override;
 

@@ -116,6 +116,11 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
             }
             break;
         }
+    case Message::MSG_OPTIONS_CHANGED:
+        {
+            redraw();
+            break;
+        }
     default:
         {
             break;
@@ -152,7 +157,7 @@ void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
 void TuningIndicatorDrawer::clear()
 {
     mFFTData.reset();
-    clear();
+    DrawerBase::clear();
 }
 
 

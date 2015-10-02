@@ -34,6 +34,7 @@ public:
     RecordingManager (AudioRecorderAdapter *audioRecorder);
 
     void init () {};
+    void exit () {};
 
 private:
     virtual void handleMessage(MessagePtr m);

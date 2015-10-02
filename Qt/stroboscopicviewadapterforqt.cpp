@@ -99,10 +99,10 @@ void StroboscopicViewAdapterForQt::clear()
 
 void StroboscopicViewAdapterForQt::drawStroboscope (const ComplexVector &data)
 {
-    // if no sroboscope exists we clear the scene and create it
+    // if no stroboscope exists we clear the scene and create it
     if (not mStroboscopeItem)
     {
-        mScene.clear();
+        clear();
         mStroboscopeItem = new QGraphicsPixmapItem;
         mScene.addItem(mStroboscopeItem);
     }

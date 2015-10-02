@@ -24,24 +24,23 @@
 #ifndef CORE_H
 #define CORE_H
 
-//#include <thread>
-#include "analyzers/signalanalyzer.h"
-#include "calculation/calculationmanager.h"
+#include "audio/player/soundgenerator.h"
 #include "audio/recorder/audiorecorderadapter.h"
 #include "audio/recorder/recordingmanager.h"
-#include "audio/player/soundgenerator.h"
-#include "messages/messagelistener.h"
-#include "system/log.h"
+#include "audio/midi/midiadapter.h"
+#include "analyzers/signalanalyzer.h"
+#include "calculation/calculationmanager.h"
 #include "adapters/coreinitialisationadapter.h"
 #include "adapters/projectmanageradapter.h"
 #include "piano/pianomanager.h"
+#include "system/log.h"
 
-#include "audio/midi/midiadapter.h"
-
-////////////////////////////////////////////////////////////////////////
-/// \brief class for initialising the core
+///////////////////////////////////////////////////////////////////////////////
+/// \brief CORE : Class managing the core
 ///
-////////////////////////////////////////////////////////////////////////
+/// The core comprises all components of the EPT which are independent of the
+/// GUI. The GUI is connected by impementing a number of virtual adapters.
+///////////////////////////////////////////////////////////////////////////////
 
 class Core
 {
@@ -53,20 +52,20 @@ public:
     ~Core();
 
 
-    void init(CoreInitialisationAdapter *initAdapter);
+    void init (CoreInitialisationAdapter *initAdapter);
     void exit();
+    void start();
+    void stop();
 
-
-    void start();                           ///< function to start the threads
-    void stop();                            ///< function to stop all threads
-
+    /// Function telling wether the core is already initialized.
     bool isInitialized() const {return mInitialized;}
 
-    ProjectManagerAdapter *getProjectManager() {return mProjectManager.get();}
-    AudioRecorderAdapter *getAudioRecorder() {return mRecorderAdapter;}
-    AudioPlayerAdapter *getAudioPlayer() {return mPlayerAdapter;}
-    MidiAdapter *getMidiInterface() {return mMidi.get();}
-    PianoManager *getPianoManager() {return &mPianoManager;}
+    // Getter functions
+    ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
+    AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
+    AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
+    PianoManager *getPianoManager()             {return &mPianoManager;}
+    MidiAdapter *getMidiInterface()             {return mMidi.get();}
 
 private:
     bool mInitialized;
@@ -76,10 +75,8 @@ private:
     SoundGenerator mSoundGenerator;
     RecordingManager mRecordingManager;
     SignalAnalyzer mSignalAnalyzer;
-    std::shared_ptr<MidiAdapter> mMidi;
-
     PianoManager mPianoManager;
-
+    std::shared_ptr<MidiAdapter> mMidi;
 };
 
 #endif // CORE_H
