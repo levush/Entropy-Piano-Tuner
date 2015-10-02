@@ -93,8 +93,9 @@ public:
         double deltatime;   ///< Time elapsed since the last MIDI event.
     };
 
-protected:
+public:
 
+    // The following functions have to be public because of access from iosnativewrapper
     static MidiEvent byteToEvent (int byte); ///< Convert MIDI code to MidiEvent
     void send (Data &data); ///< Send new MIDI data to the messaging system
 };

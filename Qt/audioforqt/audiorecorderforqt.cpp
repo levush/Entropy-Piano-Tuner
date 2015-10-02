@@ -72,12 +72,12 @@ void AudioRecorderForQt::init() {
             LogW("Raw audio format not supported by backend, falling back to nearest supported");
             format = device.nearestFormat(format);
             // update sampling rate, buffer type has to stay the same!
-            setSamplingRate(format.sampleRate());
             if (not device.isFormatSupported(format))
             {
                 LogW("Fallback failed. Probably there is no input device available. Did you connect your microphone?");
                 return;
             }
+            setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8) {
                 LogW("Sample size not supported");
                 return;

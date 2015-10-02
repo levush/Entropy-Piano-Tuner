@@ -104,7 +104,7 @@ bool iosMidiOpenPort() {
     EptAssert(pgMidiController, "Midi controller not initialized");
 
     int midiPort = 0;
-    for (int i = 0; i < [pgMidiInterface.sources count]; i++)
+    for (uint i = 0; i < [pgMidiInterface.sources count]; i++)
     {
         PGMidiSource *source = pgMidiInterface.sources[i];
         if (!source.isNetworkSession) {
@@ -153,6 +153,8 @@ return TRUE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    (void)application; // unused parameter
+    (void)lauchOptions; // unused parameter
     IF_IOS_HAS_COREMIDI
     (
         // We only create a MidiInput object on iOS versions that support CoreMIDI
@@ -177,8 +179,9 @@ return TRUE;
 @implementation MidiMonitorViewController
 - (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
 {
+    (void) midi; // unused parameter
     LogI("Source added.");
-    for (int i = 0; i < [pgMidiInterface.sources count]; i++)
+    for (uint i = 0; i < [pgMidiInterface.sources count]; i++)
     {
         if (pgMidiInterface.sources[i] == source) {
             iosMidiOpenPort(i);
@@ -189,21 +192,28 @@ return TRUE;
 
 - (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
 {
+    (void)midi; // unused parameter
+    (void)source; // unused parameter
     LogI("Source removed");
 }
 
 - (void) midi:(PGMidi*)midi destinationAdded:(PGMidiDestination *)destination
 {
+    (void)midi; // unused parameter
+    (void)destination; // unused parameter
 }
 
 - (void) midi:(PGMidi*)midi destinationRemoved:(PGMidiDestination *)destination
 {
+    (void)midi; // unused parameter
+    (void)destination; // unused parameter
 }
 
 - (void) midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
 {
+    (void)midi; // unused parameter
     const MIDIPacket *packet = &packetList->packet[0];
-    for (int i = 0; i < packetList->numPackets; ++i)
+    for (uint i = 0; i < packetList->numPackets; ++i)
     {
         // handle the packet:
         // only handle packets of length 3, because keypress/release have length 3

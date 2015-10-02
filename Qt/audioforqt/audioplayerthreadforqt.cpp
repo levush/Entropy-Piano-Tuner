@@ -93,12 +93,12 @@ void AudioPlayerThreadForQt::init()
             LogW("Raw audio format not supported by backend, falling back to default supported");
             format = device.preferredFormat();
             // update sampling rate, buffer type has to stay the same!
-            mAudioSource->setSamplingRate(format.sampleRate());
             if (not device.isFormatSupported(format))
             {
                 LogW("Fallback failed. Probably there is no output device available.");
                 return;
             }
+            mAudioSource->setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8)
             {
                 LogW("Sample size not supported");
