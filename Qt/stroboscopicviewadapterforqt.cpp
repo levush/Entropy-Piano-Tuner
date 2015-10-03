@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Graphics implementation of the stroboscope for Qt
+//=============================================================================
+
 #include "stroboscopicviewadapterforqt.h"
 
 #include <QGraphicsPixmapItem>
@@ -124,7 +128,7 @@ void StroboscopicViewAdapterForQt::drawStroboscope (const ComplexVector &data)
         for (int n=0; n<N; n++)
         {
             phase[n]      = std::arg(data[n])/MathTools::TWO_PI + 0.5;
-            saturation[n] = pow(std::min(1.0,1.1*std::abs(data[n])*(n+1)),0.3);
+            saturation[n] = pow(std::min(1.0,25.0/N*std::abs(data[n])*(n+1)),0.3);
             value[n]      = saturation[n];
         }
 
@@ -132,14 +136,21 @@ void StroboscopicViewAdapterForQt::drawStroboscope (const ComplexVector &data)
         // These values are stored in a NxW matrix organized as a vector:
         std::vector<uint32_t> rgbColors(N*W);
         QColor color;
-        int xMargin = W/100;
+        const int xMargin = W/100;
+
+        // For keys with 4 partials and more the first partial covers
+        // the phase 2pi over the whole display. For very high keys
+        // the wave number is increased to 4pi, 6pi etc
+        const double wavenumber = std::max(1,5-N);
+
+        // Before drawing the colors are computed
         for (int n=0; n<N; n++) for (int x=0; x<W; x++)
         {
             // The margins are black
             if (x<xMargin or x>=W-xMargin) rgbColors[W*n+x]=0;
             else // otherwise they are set to a phase-shifted rainbow
             {
-                double xc = (x/W*(n+1)+phase[n]);
+                double xc = (wavenumber*x/W*(n+1)+phase[n]);
                 double hue = xc - floor(xc);
                 // This function generates a rainbow-like color scale:
                 color.setHsvF(hue,saturation[n],value[n],1);
@@ -155,6 +166,8 @@ void StroboscopicViewAdapterForQt::drawStroboscope (const ComplexVector &data)
         int stripWidth = (H-2*yMargin)/N;
         int actualMargin = (H-N*stripWidth)/2;
         int upperBound = N*stripWidth+actualMargin;
+
+        // Main drawing loop
         for (int y=0; y<H; ++y)
         {
             auto line = image.scanLine(H-1-y);

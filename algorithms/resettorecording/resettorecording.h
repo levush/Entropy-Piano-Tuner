@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                         Reset to recorded pitches
+//=============================================================================
+
 #ifndef RESETTORECORDING_H
 #define RESETTORECORDING_H
 
@@ -24,6 +28,13 @@
 
 namespace resettorecording
 {
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Reset to recording algorithm
+///
+/// This algorith simply copies the recorded pitches. This works also
+/// in the case where the keys were only partially recorded.
+///////////////////////////////////////////////////////////////////////////////
 
 class ResetToRecording : public Algorithm
 {

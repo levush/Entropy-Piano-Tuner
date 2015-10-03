@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//============================================================================
+//        RunGuard, preventing multiple instances of the application
+//============================================================================
+
 #ifndef RUNGUARD_H
 #define RUNGUARD_H
 

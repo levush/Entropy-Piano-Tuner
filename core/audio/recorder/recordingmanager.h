@@ -43,7 +43,7 @@ private:
     const Piano* mPiano;                    ///< Poitner to the actual piano
     OperationMode mOperationMode;           ///< Current operation mode
     const Key* mSelectedKey;                ///< Currently selected key
-    int mNumberOfKeys;                      ///< Total number of keys
+    int mKeyNumberOfA4;                      ///< Total number of keys
     int mNumberOfSelectedKey;               ///< Number of actually selected key
 
     const double FPS_FAST = 30;             ///< Stroboscopic fps during recording

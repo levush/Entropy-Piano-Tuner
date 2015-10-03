@@ -18,11 +18,12 @@
  *****************************************************************************/
 
 //=============================================================================
-//                  Stroboscopic view adapter for Qt
+//            Graphics implementation of the stroboscope for Qt
 //=============================================================================
 
 #ifndef STROBOSCOPICVIEWADAPTERFORQT_H
 #define STROBOSCOPICVIEWADAPTERFORQT_H
+
 #include "../core/adapters/graphicsviewadapter.h"
 #include "graphicsviewadapterforqt.h"
 
@@ -38,6 +39,7 @@
 ///
 /// This class is derived from GraphicsViewAdapterForQt. It is therefore a
 /// special type of GraphicsView which is able to display a stroboscope.
+/// \see GraphicsViewAdapterForQt
 ///////////////////////////////////////////////////////////////////////////////
 
 class StroboscopicViewAdapterForQt : public GraphicsViewAdapterForQt

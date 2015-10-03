@@ -32,7 +32,7 @@ RecordingManager::RecordingManager  (AudioRecorderAdapter *audioRecorder)
    mPiano(nullptr),
    mOperationMode(MODE_IDLE),
    mSelectedKey(nullptr),
-   mNumberOfKeys(88),
+   mKeyNumberOfA4(88),
    mNumberOfSelectedKey(-1)
 {
    mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_SLOW);
@@ -56,7 +56,7 @@ void RecordingManager::handleMessage(MessagePtr m)
         {
             auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
             mPiano = &mpf->getPiano();
-            mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
+            mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
             updateStroboscopicFrequencies();
             break;
         }
@@ -119,6 +119,7 @@ void RecordingManager::updateStroboscopicFrequencies()
         if (fc > 0)
         {
             const Key::PeakListType peaks = mSelectedKey->getPeaks();
+            const int numberOfStroboscopicPartials = std::max(1,1+(mKeyNumberOfA4+6+24-mNumberOfSelectedKey)/6);
             if (peaks.size()>0)
             {
                 const double f1 = peaks.begin()->first;
@@ -126,7 +127,7 @@ void RecordingManager::updateStroboscopicFrequencies()
 
                 if (f1>0) for (auto &e : peaks)
                 {
-                    if (++N > 1 + (mNumberOfKeys-mNumberOfSelectedKey)/8) break;
+                    if (++N > numberOfStroboscopicPartials) break;
                     ftab.push_back(e.first/f1*mPiano->getConcertPitch()/440.0*fc);
                 }
             }

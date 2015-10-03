@@ -17,7 +17,12 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                      Calculation progress group
+//=============================================================================
+
 #include "calculationprogressgroup.h"
+
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QFormLayout>
@@ -27,13 +32,28 @@
 #include <QScrollArea>
 #include <QSlider>
 #include <QFontMetrics>
-#include "../core/messages/messagecaluclationprogress.h"
 #include "../core/system/log.h"
 #include "../core/calculation/calculationmanager.h"
 #include "../core/calculation/algorithmfactorydescription.h"
+#include "../core/messages/messagecaluclationprogress.h"
 #include "settingsforqt.h"
 #include "algorithmdialog.h"
 #include "displaysize.h"
+
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief CalculationProgressGroup::CalculationProgressGroup
+///
+/// The constructor creates the graphics elements shown in the Calculation
+/// progress group window. It uses a small progress bar and a small push
+/// button which are included here as local classes overriding the
+/// Qt standard classes.
+/// \param core : Pointer to the core, needed to initialize the adapter
+/// \param parent : Pointer to the parent widget
+///////////////////////////////////////////////////////////////////////////////
 
 CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     : DisplaySizeDependingGroupBox(parent, new QVBoxLayout, toFlag(MODE_CALCULATION)),
@@ -42,7 +62,6 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
       mCalculationInProgress(false)
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout*>(mMainWidgetContainer->layout());
-
     QHBoxLayout *statusTextLayout = new QHBoxLayout;
     mainLayout->addLayout(statusTextLayout);
 
@@ -55,47 +74,57 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     QHBoxLayout *progressLayout = new QHBoxLayout;
     mainLayout->addLayout(progressLayout);
 
-    class MinSizePushButton : public QPushButton {
+    // Local class for a small push button
+    class MinSizePushButton : public QPushButton
+    {
     public:
         MinSizePushButton(QString text = QString()) :
-            QPushButton(text) {
+            QPushButton(text)
+        {
             setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
         }
 
     private:
-        virtual QSize minimumSizeHint() const override {
+        virtual QSize minimumSizeHint() const override
+        {
             QFontMetrics f(fontMetrics());
             // add also some extra spacing of 2 chars (x)
             return f.size(Qt::TextSingleLine, text() + "xx");
         }
-        virtual QSize sizeHint() const override {
+        virtual QSize sizeHint() const override
+        {
             QSize sh(QPushButton::sizeHint());
             sh.setWidth(std::max(minimumSizeHint().width(), sh.width()));
             return sh;
         }
     };
 
-    class MinSizeProgressBar : public QProgressBar{
+    // Local class for a small progress bar
+    class MinSizeProgressBar : public QProgressBar
+    {
     private:
         virtual QSize sizeHint() const override {return QSize(0, 0);}
     };
 
+    // Add the progress bar
     progressLayout->addWidget(mCalculationProgressBar = new MinSizeProgressBar);
     mCalculationProgressBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     progressLayout->addWidget(mStartCancelButton = new MinSizePushButton);
 
+    // Add the push button
     QPushButton *showAlgorithmInfo = new MinSizePushButton(tr("Info"));
     progressLayout->addWidget(showAlgorithmInfo);
     QObject::connect(showAlgorithmInfo, SIGNAL(clicked()), this, SLOT(showAlgorithmInfo()));
 
-
     mainLayout->addStretch();
 
+    // Reset the calculation
     onResetCalculation();
 
-    std::string lastUsedAlgorithm(SettingsForQt::getSingleton().getLastUsedAlgorithm());
     // check if algorithm exists
-    if (CalculationManager::getSingleton().hasAlgorithm(lastUsedAlgorithm) == false) {
+    std::string lastUsedAlgorithm(SettingsForQt::getSingleton().getLastUsedAlgorithm());
+    if (CalculationManager::getSingleton().hasAlgorithm(lastUsedAlgorithm) == false)
+    {
         // select default algorithm
         lastUsedAlgorithm = CalculationManager::getSingleton().getDefaultAlgorithmId();
     }
@@ -103,55 +132,33 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     // load algorithm information
     mAlgorithmSelection = CalculationManager::getSingleton().loadAlgorithmInformation(lastUsedAlgorithm);
 
+    // show algorithm information in the title
     updateTitle();
 
+    // connect the start/cancel button with the cancel slot
     QObject::connect(mStartCancelButton, SIGNAL(clicked()), this, SLOT(startCancelPressed()));
 }
 
-CalculationProgressGroup::~CalculationProgressGroup()
+
+//-----------------------------------------------------------------------------
+//                  Message listener and dispatcher
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message handling.
+///
+/// This function controls the incoming messages about the calculation status
+/// of the algorithm and takes action accordingly.
+/// \param m : The incoming message
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::handleMessage(MessagePtr m)
 {
-
-}
-
-void CalculationProgressGroup::handleMessage(MessagePtr m) {
-    switch (m->getType()) {
-    case Message::MSG_CALCULATION_PROGRESS: {
+    if (m->getType() == Message::MSG_CALCULATION_PROGRESS)
+    {
         auto mcp(std::static_pointer_cast<MessageCaluclationProgress>(m));
-        switch (mcp->getCalculationType()) {
-        case MessageCaluclationProgress::CALCULATION_FAILED: {
-            QString errorText;
-            switch (mcp->getErrorCode())
-            {
-            case MessageCaluclationProgress::CALCULATION_ERROR_NONE:
-                LogW("Calculation error message was sent but no error code was set");
-                errorText = tr("An unknown error occured during the calculation.");
-                break;
-            case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA:
-                errorText = tr("No data available.");
-                break;
-            case MessageCaluclationProgress::CALCULATION_ERROR_NOT_ALL_KEYS_RECORDED:
-                errorText = tr("Not all keys recorded");
-                break;
-            case MessageCaluclationProgress::CALCULATION_ERROR_KEY_DATA_INCONSISTENT:
-                errorText = tr("Key data inconsistent.");
-                break;
-            case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_LEFTSECTION:
-                errorText = tr("Not enough keys recorded in left section.");
-                break;
-            case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_RIGHTSECTION:
-                errorText = tr("Not enough keys recorded in right section.");
-                break;
-            default:
-                errorText = tr("Undefined error message.");
-                LogI("Undefined error message");
-                break;
-            }
-
-            QMessageBox::critical(this, tr("Calculation error"), QString("%1<br><br><b>%2: %3</b>").arg(errorText, tr("Error code"), QString("%1").arg(mcp->getErrorCode())));
-
-            onCancelCalculation();
-            break;
-        }
+        switch (mcp->getCalculationType())
+        {
         case MessageCaluclationProgress::CALCULATION_STARTED:
             mCalculationInProgress = true;
             // we started this calculation
@@ -167,31 +174,100 @@ void CalculationProgressGroup::handleMessage(MessagePtr m) {
             mCalculationProgressBar->setValue(mcp->getValue() * 100);
             break;
         case MessageCaluclationProgress::CALCULATION_ENTROPY_REDUCTION_STARTED:
-            //mCalculationProgressBar->setDisabled(true);
             mStatusLabel->setText(tr("Minimizing the entropy"));
             break;
+        case MessageCaluclationProgress::CALCULATION_FAILED:
+            {
+                QString errorText;
+                switch (mcp->getErrorCode())
+                {
+                case MessageCaluclationProgress::CALCULATION_ERROR_NONE:
+                    LogW("Calculation error message was sent but no error code was set");
+                    errorText = tr("An unknown error occured during the calculation.");
+                    break;
+                case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA:
+                    errorText = tr("No data available.");
+                    break;
+                case MessageCaluclationProgress::CALCULATION_ERROR_NOT_ALL_KEYS_RECORDED:
+                    errorText = tr("Not all keys recorded");
+                    break;
+                case MessageCaluclationProgress::CALCULATION_ERROR_KEY_DATA_INCONSISTENT:
+                    errorText = tr("Key data inconsistent.");
+                    break;
+                case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_LEFTSECTION:
+                    errorText = tr("Not enough keys recorded in left section.");
+                    break;
+                case MessageCaluclationProgress::CALCULATION_ERROR_NO_DATA_RIGHTSECTION:
+                    errorText = tr("Not enough keys recorded in right section.");
+                    break;
+                default:
+                    errorText = tr("Undefined error message.");
+                    LogI("Undefined error message");
+                    break;
+                }
+
+                QMessageBox::critical(this, tr("Calculation error"),
+                                      QString("%1<br><br><b>%2: %3</b>").arg(errorText, tr("Error code"),
+                                                               QString("%1").arg(mcp->getErrorCode())));
+
+                onCancelCalculation();
+                break;
+            }
+        default:
+            break;
         }
-        break;
-    }
-    default:
-        break;
     }
 }
 
-void CalculationProgressGroup::updateTitle() {
+
+//-----------------------------------------------------------------------------
+//                         Update algorithm title
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function to update the title of the algorithm in use
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::updateTitle()
+{
     EptAssert(mAlgorithmSelection, "Algorithm has to be selected");
-    if (mGroupBox) {
+    if (mGroupBox)
+    {
         mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdString(mAlgorithmSelection->getName())));
     }
 }
 
-void CalculationProgressGroup::onStartCalculation() {
+
+//-----------------------------------------------------------------------------
+//                            Start calculation
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function called to start the calculation.
+///
+/// The function will also change the displayed text of the start button.
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::onStartCalculation()
+{
     CalculationAdapter::startCalculation(mAlgorithmSelection->getId());
 
     activateMessageListener();
 }
 
-void CalculationProgressGroup::onCancelCalculation() {
+
+//-----------------------------------------------------------------------------
+//                           Cancel calculation
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function called to cancel the calculation.
+///
+/// The function will also change the displayed text of the start button.
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::onCancelCalculation()
+{
     mStatusLabel->setText(tr("Calculation canceled"));
     mCalculationProgressBar->setValue(0);
     mStartCancelButton->setText(tr("Start calculation"));
@@ -201,10 +277,25 @@ void CalculationProgressGroup::onCancelCalculation() {
     mCalculationInProgress = false;
 }
 
-void CalculationProgressGroup::onResetCalculation() {
-    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
+
+//-----------------------------------------------------------------------------
+//                          Reset calculation
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Function called to reset the calculation.
+///
+/// The function will also change the displayed text of the start button.
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::onResetCalculation()
+{
+    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL))
+    {
         mStatusLabel->setText(QString());  // not enough space for the text
-    } else {
+    }
+    else
+    {
         mStatusLabel->setText(tr("Press the button to start the calculation"));
     }
 
@@ -215,15 +306,32 @@ void CalculationProgressGroup::onResetCalculation() {
     mCalculationInProgress = false;
 }
 
-void CalculationProgressGroup::startCancelPressed() {
-    if (mCalculationInProgress) {
-        onCancelCalculation();
-    } else {
-        onStartCalculation();
-    }
+
+//-----------------------------------------------------------------------------
+//                      Start/Cancel button pressed
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Slot called when the start and stop button was pressed
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::startCancelPressed()
+{
+    if (mCalculationInProgress) onCancelCalculation();
+    else onStartCalculation();
 }
 
-void CalculationProgressGroup::showAlgorithmInfo() {
+
+//-----------------------------------------------------------------------------
+//                           Show algorithm info
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Show information about the algorithm
+///////////////////////////////////////////////////////////////////////////////
+
+void CalculationProgressGroup::showAlgorithmInfo()
+{
     AlgorithmDialog dialog(mAlgorithmSelection, parentWidget());
     dialog.exec();
     mAlgorithmSelection = dialog.getAlgorithmInformation();

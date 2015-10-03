@@ -45,6 +45,8 @@ class Algorithm;
 /// but it does not return it directly. Instead the whole communication with
 /// the tuner is realized in terms of messages. In particular, each change of
 /// the tuning curve is communicated by a message.
+///
+/// The calculation manager is a singleton class.
 ///////////////////////////////////////////////////////////////////////////////
 
 class CalculationManager
