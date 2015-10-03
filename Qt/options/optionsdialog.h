@@ -35,14 +35,13 @@
 #include <QButtonGroup>
 
 class Core;
-
 class AudioBase;
 class AudioRecorderAdapter;
 class AudioPlayerAdapter;
-
 class MainWindow;
 
-namespace options {
+namespace options
+{
 
 class CentralWidgetInterface;
 
@@ -50,7 +49,8 @@ class OptionsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    enum OptionPages {
+    enum OptionPages
+    {
         PAGE_ENVIRONMENT = 0,
         PAGE_AUDIO,
     };
@@ -74,7 +74,7 @@ protected slots:
 private:
     bool checkForChanges(bool allowCancel);
     void clearPages();
-    void addPageButton(QIcon icon, QString text, QButtonGroup *group, QToolBar *tb, OptionPages page);
+    void addPageButton (QIcon icon, QString text, QButtonGroup *group, QToolBar *tb, OptionPages page);
 
 private:
     MainWindow *mMainWindow;

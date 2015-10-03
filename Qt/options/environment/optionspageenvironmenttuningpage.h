@@ -37,10 +37,10 @@ public:
     void apply() override final;
 
 private:
-    QComboBox *mSynthesizerMode;
-    QCheckBox *mSynthesizerVolumeDynamic;
-    QCheckBox *mStroboscope;
-    QCheckBox *mDisableAutomaticKeySelecetion;
+    QComboBox *mSynthesizerModeComboBox;
+    QCheckBox *mSynthesizerVolumeDynamicCheckBox;
+    QCheckBox *mStroboscopeCheckBox;
+    QCheckBox *mDisableAutomaticKeySelecetionCheckBox;
 };
 
 }  // namespace options

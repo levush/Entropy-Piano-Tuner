@@ -93,7 +93,7 @@ private:
     /// \param event : The QPaintEvent.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override final;
 };
 
 #endif // RECORDINGQUALITYBAR_H

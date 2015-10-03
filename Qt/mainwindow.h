@@ -33,6 +33,7 @@
 #include "calculationprogressgroup.h"
 #include "signalanalyzergroupbox.h"
 #include "volumecontrolgroupbox.h"
+#include "tuningindicatorgroupbox.h"
 #include "versioncheck.h"
 
 class KeyboardGraphicsView;
@@ -95,14 +96,14 @@ protected:
     ///
     /// This will store the current geometry.
     ///////////////////////////////////////////////////////////////////////////////
-    void closeEvent ( QCloseEvent * event );
+    void closeEvent ( QCloseEvent * event ) override;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Message handling.
     /// \param m : The Message
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void handleMessage(MessagePtr m);
+    void handleMessage(MessagePtr m) override;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Called if changed in file are made to update the window title.
@@ -155,6 +156,9 @@ private:
 
     /// Pointer to the SignalAnalyzerGroupBox
     SignalAnalyzerGroupBox *mSignalAnalyzerGroup;
+
+    /// Pointer to the TuningIndicatorGroupBox
+    TuningIndicatorGroupBox *mTuningIndicatorGroup;
 
     /// Pointer to the VolumeControlGroupBox
     VolumeControlGroupBox *mVolumeControlGroup;
@@ -315,6 +319,12 @@ public slots:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void onToggleFullscreen();
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Slot to toggle between the two tuning indicator modes
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void onToggleTuningIndictator();
 
     /// \brief Slot to open the export dialog
     void onExport();

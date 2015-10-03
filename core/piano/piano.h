@@ -21,10 +21,6 @@
 //                                Piano class
 //=============================================================================
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief This class holds the complete information of the instrument.
-///
-
 #ifndef PIANO_H
 #define PIANO_H
 

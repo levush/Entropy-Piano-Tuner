@@ -63,7 +63,7 @@ public:
     std::string GetPortNames() override final;                      ///< Get a list of all available input devices
     bool OpenPort (int i, std::string AppName="") override final;   ///< Open MIDI input device number \e i
     bool OpenPort (std::string AppName="")override final;           ///< Open MIDI device with the highest port number
-     int getCurrentPort() const {return mCurrentPort;}              ///< Get the current port number
+     int getCurrentPort() const override final {return mCurrentPort;}///< Get the current port number
 
 private:
     void ClearQueue ();                 ///< Clear the MIDI input queue

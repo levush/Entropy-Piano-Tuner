@@ -17,28 +17,42 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "graphicsitem.h"
-#include <algorithm>
-#include "../system/eptexception.h"
-#include "drawerbase.h"
-#include "../adapters/graphicsviewadapter.h"
+//============================================================================
+//                    Abstract class of a Graphics Item
+//============================================================================
 
-GraphicsItem::GraphicsItem(GraphicsViewAdapter *graphicsView) :
+#include "graphicsitem.h"
+#include "drawerbase.h"
+
+//-----------------------------------------------------------------------------
+//                                Constructor
+//-----------------------------------------------------------------------------
+
+GraphicsItem::GraphicsItem (GraphicsViewAdapter *graphicsView) :
     mGraphicsView(graphicsView),
     mKeyIndex(-1),
-    mRole(0) {
+    mRole(0)
+{
     mGraphicsView->getGraphicItems().push_back(this);
 }
+
+
+//-----------------------------------------------------------------------------
+//                                Destructor
+//-----------------------------------------------------------------------------
 
 GraphicsItem::~GraphicsItem() {
     mGraphicsView->getGraphicItems().remove(this);
 }
 
-void GraphicsItem::setKeyIndexAndItemRole(int index, RoleType role) {
+
+//-----------------------------------------------------------------------------
+//                             Set index and role
+//-----------------------------------------------------------------------------
+
+void GraphicsItem::setKeyIndexAndItemRole(int index, RoleType role)
+{
     setItemRole(role);
     setKeyIndex(index);
 }
 
-void GraphicsItem::setZOrder(double z) {
-    (void) z;
-}

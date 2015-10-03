@@ -27,7 +27,6 @@
 #include "drawerbase.h"
 #include "../messages/messagelistener.h"
 #include "../analyzers/signalanalyzer.h"
-#include "../piano/piano.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Drawer for the tuning indicator
@@ -48,11 +47,11 @@ public:
     TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
     ~TuningIndicatorDrawer() {}
 
-    static void toggleSpectralAndStroboscopeMode();
+    void toggleSpectralAndStroboscopeMode();
 
 protected:
     virtual void draw() override final;
-    virtual void reset() override final;
+    virtual void clear() override final;
     virtual void handleMessage(MessagePtr m) override;
 
 private:

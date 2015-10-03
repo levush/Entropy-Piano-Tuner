@@ -35,6 +35,7 @@
 #include "../settingsforqt.h"
 #include "qtconfig.h"
 #include "displaysize.h"
+#include "../core/messages/messagehandler.h"
 
 namespace options {
 
@@ -137,6 +138,8 @@ void OptionsDialog::onApply() {
     if (mChangesMade) {
         mCentralWidget->apply();
         mChangesMade = false;
+        MessageHandler::send(Message::MSG_OPTIONS_CHANGED);  // send a message
+
     }
 }
 

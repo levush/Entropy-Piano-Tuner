@@ -17,36 +17,57 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//============================================================================
-//                     Graphics Item implementation for Qt
-//============================================================================
+#ifndef AUDIOPLAYERTHREADFORQT_H
+#define AUDIOPLAYERTHREADFORQT_H
 
-#ifndef GRAPHICSITEMFORQT_H
-#define GRAPHICSITEMFORQT_H
+#include "audioplayerforqt.h"
+#include <QAudioOutput>
+#include <mutex>
+#include <atomic>
+#include <QThread>
 
-#include "../core/drawers/graphicsitem.h"
-#include <QGraphicsItem>
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Implementation class for the GraphicsItem in Qt
+/// \brief The AudioPlayerThreadForQt class
 ///
-/// This implementation class holds and manages a pointer pointing to the
-/// corresponding QGraphicsItem
+/// This class serves as a container for the workerFunction in which the
+/// thread is running.
 ///////////////////////////////////////////////////////////////////////////////
 
-class GraphicsItemForQt : public GraphicsItem
+class AudioPlayerThreadForQt : public QObject
 {
-public:
-    GraphicsItemForQt(GraphicsViewAdapter *graphicsView,
-                      QGraphicsItem *item);
-    ~GraphicsItemForQt();
+    Q_OBJECT
 
-    void setItem(QGraphicsItem *item);
-    virtual void setPosition(double x, double y) override final;
-    virtual void setZOrder(double z) override final;
+public:
+    static const double BufferMilliseconds;
+    typedef int16_t DataFormat;
+    AudioPlayerThreadForQt(AudioPlayerForQt *audio);
+    ~AudioPlayerThreadForQt() {}
+
+    void registerForTermination() { mThreadRunning=false; }
+    void setPause(bool pause);
+    bool isRunning () { return mThreadRunning; }
+
+public slots:
+    void workerFunction();
 
 private:
-    QGraphicsItem *mItem;  ///< Pointer pointing to the QGraphicsItem
+    void init();
+    void exit();
+    void start();
+    void stop();
+
+signals:
+    void finished();
+    void error(QString err);
+
+private:
+    AudioPlayerForQt *mAudioSource;
+    std::atomic<bool> mThreadRunning;
+    std::atomic<bool> mPause;
+    QAudioOutput *mAudioSink;
+    QIODevice *mIODevice;
 };
 
-#endif // GRAPHICSITEMFORQT_H
+
+#endif // AUDIOPLAYERTHREADFORQT_H

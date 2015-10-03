@@ -23,6 +23,7 @@
 #include <assert.h>
 #include "../core/system/log.h"
 #include "settingsforqt.h"
+#include "donotshowagainmessagebox.h"
 
 const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING = std::numeric_limits<AudioRecorderForQt::DataFormat>::max();
 // const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING  = 1;
@@ -71,6 +72,11 @@ void AudioRecorderForQt::init() {
             LogW("Raw audio format not supported by backend, falling back to nearest supported");
             format = device.nearestFormat(format);
             // update sampling rate, buffer type has to stay the same!
+            if (not device.isFormatSupported(format))
+            {
+                LogW("Fallback failed. Probably there is no input device available. Did you connect your microphone?");
+                return;
+            }
             setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8) {
                 LogW("Sample size not supported");

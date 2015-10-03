@@ -22,15 +22,17 @@
 //============================================================================
 
 #include "graphicsviewadapter.h"
-
-#include <cmath>
-
 #include "../system/eptexception.h"
-
 
 //-----------------------------------------------------------------------------
 //                          Clear graphics panel
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Clear the graphics panel
+///
+/// This function deletes all graphics items helt in the private list.
+///////////////////////////////////////////////////////////////////////////////
 
 void GraphicsViewAdapter::clear()
 {
@@ -44,12 +46,12 @@ void GraphicsViewAdapter::clear()
 //                     Get the list of the graphic items.
 //-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Get the list of the graphic items.
 ///
 /// Getter function retrieving the complete list of the drawn graphic items.
 /// \returns mGraphicItems : List of graphics item.
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 GraphicItemsList &GraphicsViewAdapter::getGraphicItems()
 { return mGraphicItems; }
@@ -59,13 +61,13 @@ GraphicItemsList &GraphicsViewAdapter::getGraphicItems()
 //                 Get a constant list of the graphic items.
 //-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Get a constant list of the graphic items
 ///
 /// Getter function retreiving the complete list of the drawn graphic items.
 /// \returns mGraphicItems : Constant list of graphics item.
-///////////////////////////////////////////////////////////////////////////
-///
+///////////////////////////////////////////////////////////////////////////////
+
 const GraphicItemsList &GraphicsViewAdapter::getGraphicItems() const
 { return mGraphicItems; }
 
@@ -75,13 +77,13 @@ const GraphicItemsList &GraphicsViewAdapter::getGraphicItems() const
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Get a single graphics element specified by its index
+/// \brief Get a single graphics element specified by its index and its role.
 ///
 /// This function returns the pointer to a single graphics element which
 /// is specified by its index and its role.
-/// Note that the function will return nullptr if no item matched with the
-/// request. The function will fail if more than one item matches.
-/// \see getGraphicItems(int, RoleType)
+/// Note that the function will return nullptr if no item in the list matches
+/// with the request. The function will fail if more than one item matches.
+/// \see getGraphicItems(RoleType)
 /// \param keyIndex : Index of the graphics element
 /// \param role : User-defined role of the graphics element
 /// \return Pointer to the graphics item or nullptr
@@ -105,6 +107,7 @@ GraphicsItem *GraphicsViewAdapter::getGraphicItem (int keyIndex, RoleType role)
 ///
 /// Note that the function will return nullptr if no item matches with the
 /// requested role. The function will fail if more than one item matches.
+/// \see getGraphicItems(int, RoleType)
 /// \param role : The role of the searched graphics element
 /// \return Pointer to the first graphics element in the list or nullptr
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,7 +144,7 @@ GraphicItemsList GraphicsViewAdapter::getGraphicItems(int keyIndex)
 //      Get the list of all graphics elements that match with a given role.
 //-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Get a list of graphic items that match with the given role.
 /// \param role : Role of the graphics item used as a filter
 /// \return List of graphics items that may be empty

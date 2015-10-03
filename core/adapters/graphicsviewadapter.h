@@ -26,38 +26,44 @@
 
 #include <vector>
 #include <complex>
+
 #include "../drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract base class for implementations rendering graphics.
 ///
 /// The GraphicsViewAdapter provides pure virtual functions to be implemented
-/// in the actual GUI. The class DrawerBase will use these methods to draw.
+/// in the actual GUI. Drawers derived from DrawerBase will use these
+/// methods to draw.
 ///
 /// At the core level, all coordinates are relative, that is, they vary
 /// between 0 and 1 and refer to the respective panel in which the object
 /// is drawn.
 ///
-/// The GraphicsViewAdapter cooperations closely with the class GraphicsItem,
+/// The GraphicsViewAdapter holds a list of GraphicsItem,
 /// which allows individual elements of the panel to be redrawn separately.
+/// Moreover, it provides a system of flags to mark certain classes of items
+/// such as lines, tuning markers etc., and to access them selectively.
 ///////////////////////////////////////////////////////////////////////////////
 
 class GraphicsViewAdapter
 {
 public:
+    using RoleType = GraphicsItem::RoleType;
+
     ///////////////////////////////////////////////////////////////////////////
     /// \brief Structure holding the coordinates of a single point.
     ///
     /// This structure describes the coordinates of a simple point in 2D.
-    /// The coordinates are relative to the respective panel in which the
+    /// The coordinates are defined relative to the respective panel
     /// in which the object is drawn and are supposed to lie in the
     /// range between 0 and 1.
     ///////////////////////////////////////////////////////////////////////////
 
     struct Point
     {
-        double x;               ///< x coordinate between 0 and 1
-        double y;               ///< y coordinate between 0 and 1
+        double x;               ///< Real-valued x coordinate between 0 and 1
+        double y;               ///< Real-valued y coordinate between 0 and 1
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -106,10 +112,10 @@ public:
     GraphicsViewAdapter() {}            ///< Empty constructor
     ~GraphicsViewAdapter() {clear();}   ///< Destructor clearing the view
 
-    virtual void clear();               ///< Clear graphics panel
+    virtual void clear();               // Clear graphics panel
 
     ///@{ \name Functions for handling graphics items:
-    ///
+
     GraphicItemsList        &getGraphicItems();
     const GraphicItemsList  &getGraphicItems() const;
     GraphicsItem            *getGraphicItem (int keyIndex, RoleType role);
@@ -128,7 +134,7 @@ public:
     /// \param x2 : Ending point x coordinate between 0 and 1
     /// \param y2 : Ending point y coordinate between 0 and 1
     /// \param pen : The pen to be used
-    /// \returns The newly created graphics item or nullptr if out of range
+    /// \returns The newly created graphics item or nullptr if out of range.
     ///////////////////////////////////////////////////////////////////////////
 
     virtual GraphicsItem* drawLine(double x1, double y1,
@@ -136,14 +142,14 @@ public:
                           PenType pen = PEN_THIN_BLACK) = 0;
 
     ///////////////////////////////////////////////////////////////////////////
-    /// \brief Abstract function: Draw a chart.
+    /// \brief Abstract function: Draw a chart (polygon).
     ///
-    /// This function draws a chart, i.e., a polygon of points connected by
+    /// This function draws a chart (polygon) of points connected by
     /// straight lines. The points are passed to the function as a vector.
     /// The function is abstract and has to be overridden in the implementation.
     /// \param points : Vector of points.
     /// \param pen : The pen used to draw the polygon.
-    /// \returns The newly created graphics item or nullptr if out of range
+    /// \returns The newly created graphics item or nullptr if out of range.
     ///////////////////////////////////////////////////////////////////////////
 
     virtual GraphicsItem* drawChart(const std::vector<Point> &points,
@@ -160,8 +166,8 @@ public:
     /// \param w : Width of the rectangle
     /// \param h : Height of the rectangle
     /// \param pen : The pen used to draw the border
-    /// \param fill : The filling used to fill the rectangle
-    /// \returns The newly created graphics item or nullptr if out of range
+    /// \param fill : The filling color used to fill the rectangle.
+    /// \returns The newly created graphics item or nullptr if out of range.
     ///////////////////////////////////////////////////////////////////////////
 
     virtual GraphicsItem* drawFilledRect(double x, double y,
@@ -180,7 +186,7 @@ public:
     /// few partials. Nevertheless the data should be displayed immediately.
     /// Therefore, the whole drawing is done in the implementation of this
     /// adapter.
-    /// \see GraphicsViewAdapterForQt
+    /// \see StroboscopicViewAdapterForQt
     /// \see GraphicsItem
     /// \param data : Vector of complex numbers, encoding the amplitudes
     /// and the phase shifts of the partials.
@@ -188,10 +194,9 @@ public:
     ///////////////////////////////////////////////////////////////////////////
 
     using ComplexVector = std::vector<std::complex<double>>;
-    virtual GraphicsItem* drawStroboscope (const ComplexVector &data) = 0;
+    virtual void drawStroboscope (const ComplexVector &data) = 0;
 
     ///@}
-
 
 private:
     GraphicItemsList mGraphicItems; ///< List of all graphic items in the view

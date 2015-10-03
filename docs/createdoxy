@@ -1,5 +1,5 @@
 #!/bin/bash
-# requrires to install xdotools
+# requrires to install xdotool
 #
 echo "running doxygen and opening firefox browser"
 doxygen Doxyfile > doxy.log

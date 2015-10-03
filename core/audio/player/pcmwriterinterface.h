@@ -46,7 +46,7 @@ public:
     virtual void init(const int sampleRate, const int channels)
     { mSampleRate = sampleRate; mChannels = channels; }
 
-    virtual void exit() {}      ///< Exit, shut down writer interface
+    virtual void exit()=0;      ///< Exit, shut down writer interface
 
     ///////////////////////////////////////////////////////////////////////////
     /// \brief Function that generates new sound and copies it to the outputPacket

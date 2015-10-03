@@ -29,33 +29,32 @@ Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
-# add qwt
+#-------------------------------------------------
+#                    Add Qwt
+#-------------------------------------------------
+
 QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
-QWT_H = $$HEADERS
 
-HEADERS = \
-    Qt/plotsdialog/centralplotframe.h \
-    Qt/plotsdialog/keyindexscaleengine.h \
-    Qt/plotsdialog/keyindexscaledraw.h \
-    Qt/preferredtextsizelabel.h \
-    Qt/verticalscrollarea.h \
-    Qt/options/optionstabcontentsvscrollarea.h \
-    Qt/tuningindicatorview.h
+QWT_H = $$HEADERS
+HEADERS =
 
 QWT_S = $$SOURCES
-SOURCES = \
-    Qt/plotsdialog/centralplotframe.cpp \
-    Qt/plotsdialog/keyindexscaleengine.cpp \
-    Qt/plotsdialog/keyindexscaledraw.cpp \
-    Qt/preferredtextsizelabel.cpp \
-    Qt/verticalscrollarea.cpp \
-    Qt/options/optionstabcontentsvscrollarea.cpp \
-    Qt/tuningindicatorview.cpp
+SOURCES =
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 INCLUDEPATH += $$PWD/thirdparty/qwt
+
+
+#-------------------------------------------------
+#                      Apple
+#-------------------------------------------------
+
+# Max OS X and iOS (XCode)
+mac {
+QMAKE_MAC_SDK = macosx10.11
+}
 
 # MacOS X (no iOS)
 macx {
@@ -71,6 +70,9 @@ macx {
 
 # iOS
 ios {
+    # the following line is needed with XCode 7 bug 58926
+    QMAKE_MAC_SDK = iphoneos
+
     iphonesimulator {
         LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
     }
@@ -97,6 +99,12 @@ ios {
         QMAKE_IOS_TARGETED_DEVICE_FAMILY = 2
     }
 }
+
+
+#-------------------------------------------------
+#                      Windows
+#-------------------------------------------------
+
 
 win32 {
     RC_ICONS = $$PWD/appstore/icons/entropytuner.ico
@@ -158,6 +166,13 @@ win32|win32-g++ {
     }
 }
 
+
+
+#-------------------------------------------------
+#                      Linux
+#-------------------------------------------------
+
+
 # linux libs
 linux-g++*:!android {
     LIBS += -lfftw3 -lasound
@@ -166,7 +181,7 @@ linux-g++*:!android {
     QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -Werror
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -Werror -Wpedantic
 }
 # android libs
 android {
@@ -175,9 +190,22 @@ android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platforms/android
 }
 
-#------------------- Qt -----------------------
+#-------------------------------------------------
+#                   Qt files
+#-------------------------------------------------
+
 
 HEADERS  += \
+    Qt/plotsdialog/centralplotframe.h \
+    Qt/plotsdialog/keyindexscaleengine.h \
+    Qt/plotsdialog/keyindexscaledraw.h \
+    Qt/preferredtextsizelabel.h \
+    Qt/verticalscrollarea.h \
+    Qt/options/optionstabcontentsvscrollarea.h \
+    Qt/tuningindicatorview.h \
+    Qt/stroboscopicviewadapterforqt.h \
+    Qt/tuningindicatorgroupbox.h \
+    Qt/audioforqt/audioplayerthreadforqt.h \
     Qt/mainwindow.h \
     Qt/volumecontrollevel.h \
     Qt/tunerapplication.h \
@@ -221,7 +249,6 @@ HEADERS  += \
     Qt/versioncheck.h \
     Qt/runguard.h \
     Qt/displaysize.h \
-    Qt/tuninggroupbox.h \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h \
@@ -271,11 +298,26 @@ SOURCES +=  \
     Qt/versioncheck.cpp \
     Qt/runguard.cpp \
     Qt/displaysize.cpp \
-    Qt/tuninggroupbox.cpp \
     Qt/displaysizedependinggroupbox.cpp \
     Qt/signalanalyzergroupbox.cpp \
     Qt/volumecontrolgroupbox.cpp \
-    Qt/plotsdialog/plotsdialog.cpp
+    Qt/plotsdialog/plotsdialog.cpp \
+    Qt/plotsdialog/centralplotframe.cpp \
+    Qt/plotsdialog/keyindexscaleengine.cpp \
+    Qt/plotsdialog/keyindexscaledraw.cpp \
+    Qt/preferredtextsizelabel.cpp \
+    Qt/verticalscrollarea.cpp \
+    Qt/options/optionstabcontentsvscrollarea.cpp \
+    Qt/tuningindicatorview.cpp \
+    Qt/stroboscopicviewadapterforqt.cpp \
+    Qt/tuningindicatorgroupbox.cpp \
+    Qt/audioforqt/audioplayerthreadforqt.cpp \
+
+
+#-------------------------------------------------
+#                  Core files
+#-------------------------------------------------
+
 
 #------------- Message system --------------------
 
@@ -481,7 +523,9 @@ CORE_SOURCES = \
     core/core.cpp \
     core/settings.cpp \
 
-#---------------- thirdparty ------------------
+#-------------------------------------------------
+#                Third party files
+#-------------------------------------------------
 
 THIRD_PARTY_HEADERS = \
     thirdparty/RtMidi/RtMidi.h \
@@ -524,6 +568,10 @@ SOURCES += \
     $$CORE_SYSTEM_SOURCES \
     $$THIRD_PARTY_SOURCES \
 
+#-------------------------------------------------
+#                   ANDROID
+#-------------------------------------------------
+
 
 # add android files
 android {
@@ -564,7 +612,10 @@ RESOURCES += \
 
 
 
-# -------- translations -------------
+#-------------------------------------------------
+#                  TRANSLATIONS
+#-------------------------------------------------
+
 
 TRANSLATIONS = \
     translations/piano_tuner_de.ts \
@@ -577,7 +628,10 @@ TRANSLATIONS = \
     translations/piano_tuner_fr.ts \
 
 
-# -------- algorithms ---------------
+#-------------------------------------------------
+#                    ALGORITHMS
+#-------------------------------------------------
+
 
 algorithmDirs = $$files($$PWD/algorithms/*)
 for(algorithmDir, algorithmDirs) {
@@ -595,7 +649,10 @@ for(algorithmDir, algorithmDirs) {
     }
 }
 
-# ------------- install ------------
+#-------------------------------------------------
+#                      INSTALL
+#-------------------------------------------------
+
 
 target.path = $$PREFIX/bin
 

@@ -23,22 +23,18 @@
 
 #include "drawerbase.h"
 
-#include <thread>
-
-#include "../system/prerequisites.h"
-
 //-----------------------------------------------------------------------------
 //			                     Constructor
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Constructor
+/// \brief Constructor of a drawer
 ///
 /// \param graphics : Pointer to the GraphicsViewAdapter
 /// \param intervall : maximal update interval in seconds
 ///////////////////////////////////////////////////////////////////////////////
 
-DrawerBase::DrawerBase(GraphicsViewAdapter *graphics, double intervall)
+DrawerBase::DrawerBase (GraphicsViewAdapter *graphics, double intervall)
     : mGraphics(graphics),
       mTimeLastDrawn(std::chrono::high_resolution_clock::now()),
       mRedrawIntervalInSecs(intervall)
@@ -51,54 +47,47 @@ DrawerBase::DrawerBase(GraphicsViewAdapter *graphics, double intervall)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Function to redraw the scene.
+/// \brief Function to completely redraw the scene.
 ///
-/// The function firstly clears the scene and then calls the abstract
+/// The function first clears the scene and then calls the abstract
 /// draw() method.
 /// \param force : true if redrawing is forced.
 ///////////////////////////////////////////////////////////////////////////////
 
-void DrawerBase::redraw(bool force)
+void DrawerBase::redraw (bool force)
 {
-    if (reqestRedraw(force))
+    if (requestRedraw(force))
     {
         mGraphics->clear();
         draw();
     }
 }
 
+
 //-----------------------------------------------------------------------------
-//			                        Redraw
+//          Check for redrawing. If true, set redraw timer to zero
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Function to check if one may redraw.
-/// \param force : Force redrawing
-/// \return true for redrawing, false elsewise
+/// \brief Check whether the content has to be redrawn
 ///
+/// If force is set to false the function returns true on redraw timeout.
 /// If force is set to true the function will always return true.
 /// If returning true the function will automatically reset the timer.
+/// \param force : Force redrawing
+/// \return true for redrawing, false otherwise
 ///////////////////////////////////////////////////////////////////////////////
-///
-bool DrawerBase::reqestRedraw(bool force)
-{
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimeLastDrawn);
 
-    if (force or elapsed.count() >= mRedrawIntervalInSecs * 1000) {
+bool DrawerBase::requestRedraw (bool force)
+{
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>
+            (std::chrono::high_resolution_clock::now() - mTimeLastDrawn);
+
+    if (force or elapsed.count() >= mRedrawIntervalInSecs * 1000)
+    {
         mTimeLastDrawn = std::chrono::high_resolution_clock::now();
         return true;
     }
-
     return false;
 }
 
-//-----------------------------------------------------------------------------
-//			                        Reset
-//-----------------------------------------------------------------------------
-
-///  \brief Reset graphics (clear)
-
-void DrawerBase::reset()
-{
-    mGraphics->clear();
-}

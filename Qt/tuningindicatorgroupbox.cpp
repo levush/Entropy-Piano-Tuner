@@ -17,15 +17,19 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef TUNINGGROUPBOX_H
-#define TUNINGGROUPBOX_H
+#include "tuningindicatorgroupbox.h"
+#include <QHBoxLayout>
 
-#include "displaysizedependinggroupbox.h"
 
-class TuningGroupBox : public DisplaySizeDependingGroupBox
+TuningIndicatorGroupBox::TuningIndicatorGroupBox(QWidget *parent) :
+    DisplaySizeDependingGroupBox(parent, new QHBoxLayout, toFlag(MODE_TUNING))
 {
-public:
-    TuningGroupBox(QWidget *parent);
-};
+    setTitle(tr("Tuning"));
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-#endif // TUNINGGROUPBOX_H
+    QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout*>(mMainWidgetContainer->layout());
+
+    graph = new TuningIndicatorView(this);
+    mainLayout->addWidget(graph);
+}
+

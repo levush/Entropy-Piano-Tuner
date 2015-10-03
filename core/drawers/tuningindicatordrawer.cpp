@@ -23,10 +23,6 @@
 
 #include "tuningindicatordrawer.h"
 
-#include <cstdint>
-#include <iostream>
-#include <algorithm>
-
 #include "../messages/messagenewfftcalculated.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagepreliminarykey.h"
@@ -35,10 +31,8 @@
 #include "../messages/messagetuningdeviation.h"
 #include "../messages/messagestroboscope.h"
 #include "../math/mathtools.h"
-#include "../math/mathtools.h"
 #include "../system/log.h"
 #include "../settings.h"
-#include "../piano/piano.h"
 
 TuningIndicatorDrawer::TuningIndicatorDrawer(GraphicsViewAdapter *graphics) :
     DrawerBase(graphics),
@@ -50,6 +44,7 @@ TuningIndicatorDrawer::TuningIndicatorDrawer(GraphicsViewAdapter *graphics) :
     mDataVector()
 {
 }
+
 
 //-----------------------------------------------------------------------------
 //                            Message listener
@@ -69,13 +64,15 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
     {
     case Message::MSG_MODE_CHANGED:
         {
+            // Copy the operation mode and redraw when switched to tuning
             auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = mmc->getMode();
-            redraw(true);
+            if (mOperationMode == MODE_TUNING) redraw(true);
             break;
         }
     case Message::MSG_PRELIMINARY_KEY:
         {
+            // Store the recognized key and redraw in tuning mode
             if (mOperationMode==MODE_TUNING)
             {
                 auto message(std::static_pointer_cast<MessagePreliminaryKey>(m));
@@ -87,9 +84,10 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_KEY_SELECTION_CHANGED:
         {
+            // Store the selcted key and redraw in tuning mode
             auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
             mSelectedKey = mksc->getKeyNumber();
-            redraw(true);
+            if (mOperationMode == MODE_TUNING) redraw();
             break;
         }
     case Message::MSG_PROJECT_FILE:
@@ -97,9 +95,8 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
             auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
             mPiano = &mpf->getPiano();
             mNumberOfKeys = mPiano->getKeyboard().getNumberOfKeys();
-            mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys);
-            mGraphics->clear();
-            redraw(true);
+            mSelectedKey = std::min<int>(mSelectedKey, mNumberOfKeys); // ??
+            if (mOperationMode == MODE_TUNING) redraw(true);
             break;
         }
     case Message::MSG_TUNING_DEVIATION:
@@ -111,12 +108,17 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
         }
     case Message::MSG_STROBOSCOPE_EVENT:
         {
-            if (Settings::getSingleton().isStroboscopeActive())
+            if (mOperationMode == MODE_TUNING and Settings::getSingleton().isStroboscopeActive())
             {
                 auto mmc(std::static_pointer_cast<MessageStroboscope>(m));
                 mDataVector = mmc->getData();
-                redraw();
+                draw();
             }
+            break;
+        }
+    case Message::MSG_OPTIONS_CHANGED:
+        {
+            redraw();
             break;
         }
     default:
@@ -140,6 +142,7 @@ void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
     LogI("Toggle between needle and stroboscopic tuning indicator by mouse click");
     bool stroboscope = Settings::getSingleton().isStroboscopeActive();
     Settings::getSingleton().setStroboscopeMode (not stroboscope);
+    redraw(true);
 }
 
 
@@ -148,13 +151,13 @@ void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Reset: Clear the shared pointer to the FFT
+/// \brief Clear the shared pointer to the FFT
 ///////////////////////////////////////////////////////////////////////////////
 
-void TuningIndicatorDrawer::reset()
+void TuningIndicatorDrawer::clear()
 {
     mFFTData.reset();
-    DrawerBase::reset();
+    DrawerBase::clear();
 }
 
 
@@ -234,10 +237,10 @@ void TuningIndicatorDrawer::draw()
     //---------------------- Draw overpull marker ------------------------
 
     double overpull = mFrequencyDetectionResult->overpullInCents;
-    if (abs(overpull)>0.2 and abs(overpull<100))
+    if (std::abs(overpull)>0.2 and std::abs(overpull)<100)
     {
         auto overpullColor = GraphicsViewAdapter::PEN_MEDIUM_MAGENTA;
-        if (abs(overpull) > specWindowSize/2)
+        if (std::abs(overpull) > specWindowSize/2)
         {
             overpullColor = GraphicsViewAdapter::PEN_MEDIUM_RED;
             overpull = specWindowSize/2 * (overpull>0 ? 1:-1);

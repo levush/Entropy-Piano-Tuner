@@ -56,6 +56,7 @@ public:
 
     WaveformGenerator();
     void init (int numberOfKeys, int samplerate);
+    void exit () { stop(); }
     void preCalculate (int keynumber, const Spectrum &spectrum);
     Waveform getWaveForm (const int keynumber);
     float getInterpolation(const Waveform &W, const double t);

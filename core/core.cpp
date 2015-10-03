@@ -17,9 +17,9 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                               Core
-//======================================================================
+//============================================================================
+//                                  Core
+//============================================================================
 
 #include "core.h"
 #include "messages/message.h"
@@ -30,11 +30,23 @@
 #include "system/platformtoolscore.h"
 #include <assert.h>
 
+//-----------------------------------------------------------------------------
+//                              Core constructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Core constructor
+/// \param projectManager : Pointer to the project manager
+/// \param recorderAdapter : Pointer to the recorder adapter
+/// \param playerAdapter : Pointer to the player adapter
+/// \param log : Pointer to the system log
+///////////////////////////////////////////////////////////////////////////////
+
 Core::Core(ProjectManagerAdapter *projectManager,
            AudioRecorderAdapter *recorderAdapter,
            AudioPlayerAdapter *playerAdapter,
            Log *log)
-    : mInitialized(false),
+    : mInitialized(false),                      // Initially not initialized
       mProjectManager(projectManager),
       mRecorderAdapter(recorderAdapter),
       mPlayerAdapter(playerAdapter),
@@ -47,70 +59,98 @@ Core::Core(ProjectManagerAdapter *projectManager,
     LogI("Core created");
 }
 
+
+//-----------------------------------------------------------------------------
+//                              Destructor
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Core destructor, calls stop and exit.
+///////////////////////////////////////////////////////////////////////////////
+
 Core::~Core()
 {
     stop();
     exit();  // just to be sure
+    LogI("Core denstroyed");
 }
+
+
+
+//-----------------------------------------------------------------------------
+//                      Core initialization procedure
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Core initialization
+///
+/// On startup the core components have to be initialized by calling this
+/// function. Since the user has should see that something happens, a
+/// message box with a progress bar will be shown. The handling of this
+/// message box is carried out by the initialization adapter passed here
+/// as a pointer.
+/// \param initAdapter : Pointer to the initialization adapter
+///////////////////////////////////////////////////////////////////////////////
 
 void Core::init(CoreInitialisationAdapter *initAdapter)
 {
     EptAssert(initAdapter, "At least the default adapter has to be provided");
 
-    if (mInitialized) {
-        return;  // already initialized
-    }
+    if (mInitialized) return;           // If already initialized return
 
-    initAdapter->create();
-    initAdapter->updateProgress (0);
+    initAdapter->create();              // Open initialization message mox
+
+    initAdapter->updateProgress (0);    // Initialize recorder
     mRecorderAdapter->init();
-    mPlayerAdapter->init();
-    initAdapter->updateProgress (25);
 
-    // start the player, so that the startup sound is played
+    initAdapter->updateProgress (11);   // Initialize player
+    mPlayerAdapter->init();
+
+    initAdapter->updateProgress (22);   // Start the player, so that the startup sound is played
     mPlayerAdapter->start();
 
-    // the signal analyzer
-    initAdapter->updateProgress (30);
+    initAdapter->updateProgress (33);   // Initialize the signal analyzer
     mSignalAnalyzer.init();
 
-    initAdapter->updateProgress (50);
+    initAdapter->updateProgress (50);   // Initialize the sound generator
     mSoundGenerator.init();
 
-    initAdapter->updateProgress (65);
+    initAdapter->updateProgress (65);   // Initialize the recording manager
     mRecordingManager.init();
 
-    initAdapter->updateProgress (75);
+    initAdapter->updateProgress (75);   // Initialze the MIDI system
     mMidi->init();
 
+    initAdapter->updateProgress (87);   // Open the default MIDI port
     std::stringstream ss;
-    ss << "We have " << mMidi->GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi->GetPortNames();
+    ss << "There are " << mMidi->GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi->GetPortNames();
     LogI("%s", ss.str().c_str());
-    mMidi->OpenPort(); // Open default midi port
+    mMidi->OpenPort();
 
     initAdapter->updateProgress (100);
 
-    MessageHandler::send(Message::MSG_INITIALIZE);  // send a message to initialize various modules in indpendent threads
-
-    mInitialized = true;
-    initAdapter->destroy();
+    mInitialized = true;                // set initialization flag and
+    initAdapter->destroy();             // remove the init message box
 }
 
 
 
+//-----------------------------------------------------------------------------
+//                                  Exit
+//-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Thus function calls exit() of all components that were initialized.
+///////////////////////////////////////////////////////////////////////////////
 
 void Core::exit()
 {
-    if (!mInitialized) {
-        return;  // already exited
-    }
-
+    if (not mInitialized) return;
     stop();
-
     mMidi->exit();
-
+    mRecordingManager.exit();
     mSoundGenerator.exit();
+    mSignalAnalyzer.exit();
     mPlayerAdapter->exit();
     mRecorderAdapter->exit();
     CalculationManager::getSingleton().stop();
@@ -118,16 +158,39 @@ void Core::exit()
     mInitialized = false;
 }
 
-void Core::start() {
+
+//-----------------------------------------------------------------------------
+//                              Start the core
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Start the core
+///
+/// Start all members which are running while the core is up.
+///////////////////////////////////////////////////////////////////////////////
+
+void Core::start()
+{
+    LogI("Starting the core");
     mRecorderAdapter->start();
     mPlayerAdapter->start();
 }
 
-void Core::stop() {
-    // stop the signal analysis
-    mSignalAnalyzer.stop();
 
-    // stop audio
+
+//-----------------------------------------------------------------------------
+//                               Stop the core
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stop the core
+///
+/// Stop core components when stopping the core.
+///////////////////////////////////////////////////////////////////////////////
+
+void Core::stop()
+{
+    mSignalAnalyzer.stop();
     mRecorderAdapter->stop();
     mPlayerAdapter->stop();
 }

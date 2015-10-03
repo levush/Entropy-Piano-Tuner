@@ -35,6 +35,7 @@ RecordingManager::RecordingManager  (AudioRecorderAdapter *audioRecorder)
    mNumberOfKeys(88),
    mNumberOfSelectedKey(-1)
 {
+   mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_SLOW);
 }
 
 

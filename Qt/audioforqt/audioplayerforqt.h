@@ -22,11 +22,8 @@
 
 #include "../../core/audio/player/audioplayeradapter.h"
 #include <QAudioOutput>
-#include <mutex>
-#include <atomic>
-#include <QThread>
 
-class QtAudioManager;
+class AudioPlayerThreadForQt;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The AudioPlayerForQt class
@@ -54,51 +51,10 @@ private slots:
     void errorString(QString);
 private:
     QThread* mQtThread;
-    QtAudioManager* mQtAudioManager;
+    AudioPlayerThreadForQt* mQtAudioManager;
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief The QtAudioManager class
-///
-/// This class serves as a container for the workerFunction in which the
-/// thread is running.
-///////////////////////////////////////////////////////////////////////////////
-
-class QtAudioManager : public QObject
-{
-    Q_OBJECT
-
-public:
-    static const double BufferMilliseconds;
-    typedef int16_t DataFormat;
-    QtAudioManager(AudioPlayerForQt *audio);
-    ~QtAudioManager() {}
-
-    void registerForTermination() { mThreadRunning=false; }
-    void setPause(bool pause);
-    bool isRunning () { return mThreadRunning; }
-
-public slots:
-    void workerFunction();
-
-private:
-    void init();
-    void exit();
-    void start();
-    void stop();
-
-signals:
-    void finished();
-    void error(QString err);
-
-private:
-    AudioPlayerForQt *mAudioSource;
-    std::atomic<bool> mThreadRunning;
-    std::atomic<bool> mPause;
-    QAudioOutput *mAudioSink;
-    QIODevice *mIODevice;
-};
 
 
 

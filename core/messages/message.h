@@ -31,8 +31,8 @@
 ///
 /// An instance of this class represents a single message. Messages can
 /// be of different type, which are listed here in the enum below.
-/// For example, Message::MSG_TERMINATE would be such a message type.
-/// The constructor Message(Message::MSG_TERMINATE) would turn this
+/// For example, Message::MSG_CLEAR_RECORDING would be such a message type.
+/// The constructor Message(Message::MSG_CLEAR_RECORDING) would turn this
 /// into a message object. The message type of a message object cannot
 /// be changed during its lifetime.
 ///
@@ -46,34 +46,29 @@ public:
     /// Available message types:
     enum MessageTypes
     {
-        MSG_INITIALIZE,                         ///< sent to initialize various modules
-        MSG_TERMINATE,                          ///< terminate the tuner application
+        // Bare messages without appended data
         MSG_CLEAR_RECORDING,                    ///< called when the recording was cleared
-        MSG_RECORDER_ENERGY_CHANGED,            ///< recording input level has changed
         MSG_RECORDING_STARTED,                  ///< keystroke recognized and recording started
         MSG_RECORDING_ENDED,                    ///< recording ended
         MSG_SIGNAL_ANALYSIS_STARTED,            ///< analysis of the signal started
         MSG_SIGNAL_ANALYSIS_ENDED,              ///< analysis of the signal ended
-        MSG_NEW_FFT_CALCULATED,                 ///< sent by SignalAnalyzer if FFT is ready
-        MSG_FINAL_KEY_RECOGNIZED,               ///< sent by KeyRecognizer if final FFT is ready
-        MSG_PRELIMINARY_KEY,                    ///< number of the key recognized during recording
         MSG_FINAL_KEY,                          ///< final key information after recording
-        MSG_TUNING_DEVIATION,                   ///< tuning deviation curve has been updated
-        MSG_KEY_DATA_CHANGED,                   ///< data of a key changed
+        MSG_OPTIONS_CHANGED,                    ///< settings in the system options changed
 
-        MSG_CHANGE_TUNING_CURVE,                ///< Message that the tuning curve has been adapted
-
-        MSG_MODE_CHANGED,                       ///< Message that the operation mode has changed
-
-        MSG_KEY_SELECTION_CHANGED,              ///< Message that a key has been selected
-
-        MSG_PROJECT_FILE,                       ///< Message that a change was made with the current project file
-
+        // Complex messages carrying data in associated message classes:
         MSG_CALCULATION_PROGRESS,               ///< Message that progress of any kind was made by the calculator
-
+        MSG_CHANGE_TUNING_CURVE,                ///< Message that the tuning curve has been adapted
+        MSG_FINAL_KEY_RECOGNIZED,               ///< sent by KeyRecognizer if final FFT is ready
+        MSG_KEY_DATA_CHANGED,                   ///< data of a key changed
+        MSG_KEY_SELECTION_CHANGED,              ///< Message that a key has been selected
         MSG_MIDI_EVENT,                         ///< new event from MIDI keyboard received
+        MSG_MODE_CHANGED,                       ///< Message that the operation mode has changed
+        MSG_NEW_FFT_CALCULATED,                 ///< sent by SignalAnalyzer if FFT is ready
+        MSG_PRELIMINARY_KEY,                    ///< number of the key recognized during recording
+        MSG_PROJECT_FILE,                       ///< Message that a change was made with the current project file
+        MSG_RECORDER_ENERGY_CHANGED,            ///< recording input level has changed
         MSG_STROBOSCOPE_EVENT,                  ///< stroboscope message
-
+        MSG_TUNING_DEVIATION,                   ///< tuning deviation curve has been updated
     };
 
 public:

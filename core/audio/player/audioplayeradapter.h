@@ -53,6 +53,8 @@ public:
     AudioPlayerAdapter();                           ///< Constructor, resetting default values
     virtual ~AudioPlayerAdapter() {}                ///< Destructor without functionality
 
+    virtual void exit() override;
+
     void setWriter (PCMWriterInterface *interface);
     PCMWriterInterface *getWriter() {return mPCMWriter;} ///< Get pointer to the PCM writer
 
