@@ -43,7 +43,7 @@ TuningIndicatorView::TuningIndicatorView(QWidget *parent)
       TuningIndicatorDrawer(this)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setWhatsThis(tr("This is the tuning indicator. Touch this field to toggle between spectral and stroboscope mode. In the spectral mode you should bring the peak to the center of the window for optimal tuning. When tuning several strings of unisons at once, several peaks might appear. All of them should be tuned to match the center. In the stroboscopic mode you can see various drifiting rainbows which represent the partials. Optimal tuning of single strings is obtained when the rainbows come to a halt."));
+    setWhatsThis(tr("This is the tuning indicator. Touch this field to toggle between spectral and stroboscopic mode. In the spectral mode you should bring the peak to the center of the window for optimal tuning. When tuning several strings of unisons at once, several peaks might appear and all of them should be tuned to match the center. In the stroboscopic mode several stripes of drifiting rainbows are shown. The stripes represent the partials. Optimal tuning of single strings is obtained when the rainbows come to a halt."));
 
 }
 

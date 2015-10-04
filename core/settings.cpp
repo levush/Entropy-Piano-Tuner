@@ -24,25 +24,43 @@
 
 std::unique_ptr<Settings> Settings::mSingleton;
 
+//----------------------------------------------------------------------------
+//                               Constructor
+//----------------------------------------------------------------------------
+
 Settings::Settings()
 {
     mSingleton.reset(this);
 }
 
-Settings::~Settings()
+
+//----------------------------------------------------------------------------
+//                 Get a pointer to the singleton instance
+//----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Get a pointer to the singleton instance
+/// \return Pointer to singleton
+///////////////////////////////////////////////////////////////////////////////
+
+Settings &Settings::getSingleton()
 {
-
-}
-
-Settings &Settings::getSingleton() {
     assert(mSingleton);
     return *mSingleton;
 }
 
-std::string Settings::getUserLanguageId() const {
-    if (mLanguageId.size() > 0) {
-        return mLanguageId;
-    } else {
-        return std::locale("").name().substr(0, 2);
-    }
+
+//----------------------------------------------------------------------------
+//                  Get language ID, system language if none
+//----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Settings::getUserLanguageId
+/// \return String containing the language id
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Settings::getUserLanguageId() const
+{
+    if (not mLanguageId.empty()) return mLanguageId;
+    else return std::locale("").name().substr(0, 2);
 }

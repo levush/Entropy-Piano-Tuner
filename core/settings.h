@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Class holding the program settings on the core level
+//=============================================================================
+
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
@@ -25,62 +29,72 @@
 
 #include "audio/player/soundgenerator.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The Settings class
+///
+/// This class holds and manages the piano-independent settings of the
+/// application.
+///
+/// This class is a singleton class (one global instance)
+///////////////////////////////////////////////////////////////////////////////
+
 class Settings
 {
 public:
-    Settings();
-    ~Settings();
+    Settings();     ///< Constructor
+    ~Settings(){}   ///< Empty destructor
 
     static Settings &getSingleton();
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Getter function for mLanguageId.
-    /// \return mLanguageId
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
+    /// Get the language id (en, de, fr,-...)
     const std::string &getLanguageId() const {return mLanguageId;}
-    virtual std::string getUserLanguageId() const;
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for mLanguageId.
-    /// \param s : The new lanuage id.
-    ///
-    /// This will automatically store its new value to the QSettings.
-    ///////////////////////////////////////////////////////////////////////////////
+    /// Set the language id (en, de, fr,-...)
     virtual void setLanguageId(const std::string &id) {mLanguageId = id;}
 
+    virtual std::string getUserLanguageId() const;
+
+    /// Get the name of the last used algorithm
     const std::string &getLastUsedAlgorithm() const {return mLastUsedAlgorithm;}
+    /// Set the name of the last used algorithm
     virtual void setLastUsedAlgorithm(const std::string &name) {mLastUsedAlgorithm = name;}
 
+    /// Get the last operation mode of the sound generator
     SoundGenerator::SoundGeneratorMode getSoundGeneratorMode() const {return mSoundGeneratorMode;}
+    /// Set the last operation mode of the sound generator
     virtual void setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) {mSoundGeneratorMode = mode;}
 
+    /// Get flag for dynamic volume adaption in the tuning mode
     bool isSoundGeneratorVolumeDynamic() const {return mSoundGeneratorVolumeDynamic;}
+    /// Set flag for dynamic volume adaption in the tuning mode
     virtual void setSoundGeneratorVolumeDynamic(bool dynamic) {mSoundGeneratorVolumeDynamic = dynamic;}
 
+    /// Get flag disabling automatic selection of the key during tuning
     bool isAutomaticKeySelectionDisabled() const {return mDisableAutomaticKeySelection;}
+    /// Set flag disabling automatic selection of the key during tuning
     virtual void setDisableAutomaticKeySelection(bool disable) {mDisableAutomaticKeySelection = disable;}
 
+    /// Get flag indicating the stroboscopic mode of the tuning indicator
     bool isStroboscopeActive() const {return mStroboscopeActive;}
+    /// Set flag indicating the stroboscopic mode of the tuning indicator
     virtual void setStroboscopeMode(bool enable) {mStroboscopeActive = enable;}
 
 protected:
-
     ///////////////////////////////////////////////////////////////////////////////
-    /// \brief the language id
-    /// If empty the default system language will be used
-    /// allowed are e.g. (de, en)
+    /// \brief Language Id
+    ///
+    /// This member variable holds the language shortcut (en, de, fr, ...).
+    /// If empty the default system language will be used.
     ///////////////////////////////////////////////////////////////////////////////
     std::string mLanguageId;
 
-    std::string mLastUsedAlgorithm;
-    SoundGenerator::SoundGeneratorMode mSoundGeneratorMode;
-    bool mSoundGeneratorVolumeDynamic;
-    bool mDisableAutomaticKeySelection;
-    bool mStroboscopeActive;
+    std::string mLastUsedAlgorithm;                             ///< The algorithm that has been used last time
+    SoundGenerator::SoundGeneratorMode mSoundGeneratorMode;     ///< The sound generator mode (sine or synthesizer)
+    bool mSoundGeneratorVolumeDynamic;                          ///< Flag for automatic volume adjustment
+    bool mDisableAutomaticKeySelection;                         ///< Flag suppressing automatic key selection
+    bool mStroboscopeActive;                                    ///< Flag indicating stroboscopic tuning indicator mode
 
 private:
-    static std::unique_ptr<Settings> mSingleton;
+    static std::unique_ptr<Settings> mSingleton;                ///< Singleton pointer
 };
 
 #endif // SETTINGS_H

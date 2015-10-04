@@ -139,7 +139,7 @@ void TuningIndicatorDrawer::handleMessage(MessagePtr m)
 
 void TuningIndicatorDrawer::toggleSpectralAndStroboscopeMode()
 {
-    LogI("Toggle between needle and stroboscopic tuning indicator by mouse click");
+    LogI("Toggle between spectral and stroboscopic tuning indicator by mouse click");
     bool stroboscope = Settings::getSingleton().isStroboscopeActive();
     Settings::getSingleton().setStroboscopeMode (not stroboscope);
     redraw(true);
