@@ -25,6 +25,7 @@
 
 #include <cmath>
 #include "../system/eptexception.h"
+#include "../system/log.h"
 #include "../math/mathtools.h"
 
 // Constants characterizing the logarighmically bins, do not change!
@@ -128,7 +129,12 @@ double &Key::getRecordedFrequency ()
 
 void Key::setMeasuredInharmonicity (double B)
 {
-    EptAssert (B >= 0 && B < 1, "The inharmonicity must be in [0,1)");
+    EptAssert (B >= 0, "The inharmonicity must be positive");
+    if (B>1)
+    {
+        LogW("Inharmonicity larger than 1 ignored");
+        return;
+    }
     mMeasuredInharmonicity = B;
 }
 

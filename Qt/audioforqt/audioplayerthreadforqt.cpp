@@ -37,10 +37,10 @@ const double AudioPlayerThreadForQt::BufferMilliseconds = 50;
 
 AudioPlayerThreadForQt::AudioPlayerThreadForQt(AudioPlayerForQt *audio) :
     mAudioSource(audio),
-    mThreadRunning(true),
-    mPause(false),
     mAudioSink(nullptr),
-    mIODevice(nullptr)
+    mIODevice(nullptr),
+    mThreadRunning(true),
+    mPause(false)
 {}
 
 
@@ -60,6 +60,9 @@ void AudioPlayerThreadForQt::init()
 {
     // (does not work yet) SimpleThreadHandler::setThreadName("AudioPlayer");
 
+    // If the player does not exist no action is taken
+    if (not mAudioSource) return;
+
     // Format specification:
     QAudioFormat format;
     format.setSampleRate(mAudioSource->getSamplingRate());
@@ -67,7 +70,6 @@ void AudioPlayerThreadForQt::init()
     format.setCodec("audio/pcm");
     format.setSampleSize(sizeof(DataFormat) * 8);
     format.setSampleType(QAudioFormat::SignedInt);
-    //format.setByteOrder(QAudioFormat::LittleEndian);
 
     // Find the audio device:
     QAudioDeviceInfo device(QAudioDeviceInfo::defaultOutputDevice());
@@ -152,6 +154,7 @@ void AudioPlayerThreadForQt::init()
 
 void AudioPlayerThreadForQt::exit()
 {
+    stop();
     if (mAudioSink)
     {
         mAudioSink->reset();
@@ -160,7 +163,8 @@ void AudioPlayerThreadForQt::exit()
         mIODevice = nullptr;
     }
 
-    if (mAudioSource && mAudioSource->getWriter()) {
+    if (mAudioSource && mAudioSource->getWriter())
+    {
         mAudioSource->getWriter()->exit();
     }
     LogI("Qt audio player closed.");
@@ -178,12 +182,12 @@ void AudioPlayerThreadForQt::exit()
 void AudioPlayerThreadForQt::start()
 {
     LogI("Start Qt audio device")
-    if (!mAudioSink)
+    if (not mAudioSink)
     {
-        LogI("Audio device not created, cannot start it.");
+        LogI("Audio device was not created and thus cannot be started.");
         return;
     }
-    if (!mIODevice)
+    if (not mIODevice)
     {
         mIODevice = mAudioSink->start();
         if (mAudioSink->error() != QAudio::NoError)
@@ -206,7 +210,7 @@ void AudioPlayerThreadForQt::start()
 void AudioPlayerThreadForQt::stop()
 {
     LogI("Stop Qt audio device");
-    if (!mAudioSink) return;
+    if (not mAudioSink) return;
     if (mIODevice)
     {
         mAudioSink->stop();
@@ -214,14 +218,26 @@ void AudioPlayerThreadForQt::stop()
     }
 }
 
-///
+
+
+//-----------------------------------------------------------------------------
+//                            Stop audio device
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Pause the audio player
 /// \param pause Pause
-///
-void AudioPlayerThreadForQt::setPause(bool pause) {
+///////////////////////////////////////////////////////////////////////////////
+
+void AudioPlayerThreadForQt::setPause(bool pause)
+{
     mPause = pause;
 }
 
+
+//-----------------------------------------------------------------------------
+//                           Main worker function
+//-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Main worker function of the Qt audio manager

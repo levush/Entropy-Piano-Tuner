@@ -26,9 +26,8 @@
 #include <atomic>
 #include <QThread>
 
-
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief The AudioPlayerThreadForQt class
+/// \brief Class for the audio player thread
 ///
 /// This class serves as a container for the workerFunction in which the
 /// thread is running.
@@ -62,11 +61,11 @@ signals:
     void error(QString err);
 
 private:
-    AudioPlayerForQt *mAudioSource;
-    std::atomic<bool> mThreadRunning;
-    std::atomic<bool> mPause;
-    QAudioOutput *mAudioSink;
-    QIODevice *mIODevice;
+    AudioPlayerForQt *mAudioSource;     ///< Audio source where the data comes from
+    QAudioOutput *mAudioSink;           ///< Audio sink to which the data is sent
+    QIODevice *mIODevice;               ///< Qt IO device pointer
+    std::atomic<bool> mThreadRunning;   ///< Boolean indicating that the thread is running
+    std::atomic<bool> mPause;           ///< Boolean indicating that the thread is pausing
 };
 
 
