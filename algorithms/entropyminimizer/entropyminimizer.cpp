@@ -111,8 +111,7 @@ void EntropyMinimizer::algorithmWorkerFunction()
         LogI("Compute initial condition");
         ComputeInitialTuningCurve();
 
-        LogI("Wait 0.5 sec");
-        Timer T; T.wait(500);
+        msleep(500);
 
         MessageHandler::send<MessageCaluclationProgress>
                 (MessageCaluclationProgress::CALCULATION_ENTROPY_REDUCTION_STARTED);
@@ -412,7 +411,7 @@ void EntropyMinimizer::setAllSpectralComponents ()
 /// features. In particular, we start out from an approximate tuning curve
 /// which already shows the expected stretch. This curve is computed by first
 /// defining a linear section between A3 and A5 and then extending this
-/// curve to both sides by matching selected hihger partials. The selection
+/// curve to both sides by matching selected higher partials. The selection
 /// of the partials and their weight differs on both sides. Note that
 /// possible errors do not play a role at this point because they are
 /// elimiated by the subsequent Monte Carlo procedure.
@@ -421,6 +420,7 @@ void EntropyMinimizer::setAllSpectralComponents ()
 void EntropyMinimizer::ComputeInitialTuningCurve ()
 {
     clear();
+    double progress = 0;
 
     // For the computation we need at least two octaves to both sides of A4:
     if (mKeyNumberOfA4<=13 or mNumberOfKeys-mKeyNumberOfA4<=13) return;
@@ -433,23 +433,32 @@ void EntropyMinimizer::ComputeInitialTuningCurve ()
     auto cents = [B] (int keynumber, int n)
     { return 600.0  / MathTools::LOG2 * log((1+n*n*B(keynumber))/(1+B(keynumber))); };
 
+    // Helper function to set a new tuning curve value
+    auto setValue = [this,&progress](int k, double value)
+    {
+        msleep(20);
+        mInitialPitch[k] = value;
+        mPitch[k] = MathTools::roundToInteger(value);
+        updateTuningcurve(k);
+        progress += 1.0 / mNumberOfKeys;
+        showCalculationProgress(progress);
+    };
+
     // Define a linear section of the curve in the middle
     int numberA3 = mKeyNumberOfA4-12;
     int numberA4 = mKeyNumberOfA4;
     int numberA5 = mKeyNumberOfA4+12;
     double pitchA5 = cents(numberA4,2);
     double pitchA3 = cents(numberA4,2)-cents(numberA3,4);
-    for (int k=numberA3; k<mKeyNumberOfA4; ++k)
-        mInitialPitch[k] = pitchA3*(mKeyNumberOfA4-k)/12.0;
-    for (int k=mKeyNumberOfA4+1; k<=numberA5; ++k)
-        mInitialPitch[k] = pitchA5*(k-mKeyNumberOfA4)/12.0;
+    for (int k=numberA3; k<mKeyNumberOfA4; ++k)    setValue(k,pitchA3*(mKeyNumberOfA4-k)/12.0);
+    for (int k=mKeyNumberOfA4+1; k<=numberA5; ++k) setValue(k,pitchA5*(k-mKeyNumberOfA4)/12.0);
 
     // Extend curve to the right by iteration:
     for (int k=numberA5+1; k<mNumberOfKeys; k++)
     {
         double pitch42 = mInitialPitch[k-12] + cents(k-12,4) -cents(k,2);
         double pitch21 = mInitialPitch[k-12] + cents(k-12,2);
-        mInitialPitch[k] = 0.3*pitch42 + 0.7*pitch21;
+        setValue(k,0.3*pitch42 + 0.7*pitch21);
     }
 
     // Extend the curve to the left by iteration:
@@ -458,7 +467,7 @@ void EntropyMinimizer::ComputeInitialTuningCurve ()
         double pitch63 = mInitialPitch[k+12] + cents(k+12,3) -cents(k,6);
         double pitch105 = mInitialPitch[k+12] + cents(k+12,5) -cents(k,10);
         double fraction = 1.0*k/numberA3;
-        mInitialPitch[k] = pitch63*fraction+pitch105*(1-fraction);
+        setValue(k,pitch63*fraction+pitch105*(1-fraction));
     }
 }
 
@@ -497,25 +506,45 @@ int EntropyMinimizer::getTolerance (int keynumber)
 }
 
 //-----------------------------------------------------------------------------
+//           Compute the entropy of the current accumulator content
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Compute the entropy of the current normalized accumulator content
+/// \return Numerical value of the entropy
+///////////////////////////////////////////////////////////////////////////////
 
 double EntropyMinimizer::computeEntropy()
 {
-    SpectrumType copy(mAccumulator);
-
-//    std::ofstream os("MC.dat");
-//    for (int m=0; m<NumberOfBins; m++) os << mtof(m) << " " << copy[m] << "\n";
-//    os.close();
-//    system("xmgrace MC.dat");
-
-    MathTools::normalize(copy);
-    return MathTools::computeEntropy(copy);
+    SpectrumType copy(mAccumulator);            // get a local copy of the accumulator
+    MathTools::normalize(copy);                 // normalize it
+    return MathTools::computeEntropy(copy);     // return Shannon entropy
 }
 
 //-----------------------------------------------------------------------------
+//               Entropy minimization (the very center of the EPT)
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Entropy minimizer
+///
+/// This function is probably the most important one in the EPT. Here the
+/// Monte Carlo process is carried out in order to minize the entropy of
+/// the superposed spectra.
+///
+/// We have here a so-called zero-temperature Monte Carlo algorithm. This means
+/// that a move is accepted if the entropy goes down and rejected otherwise.
+/// The fluctuations are in principle arbitrary. Here we consider two types of
+/// fluctuations. (a) select a key and vary its pitch randomly, and (b)
+/// select a key and vary all pitches either to the left or to the right
+/// randomly by the same amount. These two 'methods' are stochastically mixed
+/// with a 'methodRatio' which varies slowly as time proceeds. It turns out
+/// that this greatly reduces the computation time.
+///////////////////////////////////////////////////////////////////////////////
 
 void EntropyMinimizer::minimizeEntropy ()
 {
-    int cents=20; // even number, defines width of fluctuations
+    int cents=20; // even number which defines the width of the fluctuations
 
     // Create random device for probabilistic seeding:
     std::random_device rd;
@@ -553,14 +582,14 @@ void EntropyMinimizer::minimizeEntropy ()
         // 'reset' updates
         updatesSinceLastChange /= 2;
 
-        // output
-        writeAccumulator("0-accumulator.dat");
-        writeSpectrum(4,"tuned",mPitch[4]-getRecordedPitchET440AsInt(4));
-        writeSpectrum(16,"tuned",mPitch[16]-getRecordedPitchET440AsInt(16));
-        writeSpectrum(28,"tuned",mPitch[28]-getRecordedPitchET440AsInt(28));
+        //output for testing
+        //writeAccumulator("0-accumulator.dat");
+        //writeSpectrum(4,"tuned",mPitch[4]-getRecordedPitchET440AsInt(4));
+        //writeSpectrum(16,"tuned",mPitch[16]-getRecordedPitchET440AsInt(16));
+        //writeSpectrum(28,"tuned",mPitch[28]-getRecordedPitchET440AsInt(28));
     };
 
-    double methodratio = 1;
+    double methodRatio = 1;
     double lastProgress = 0;
     double pbAcc = 0;
     double pbVel = 0;
@@ -577,18 +606,18 @@ void EntropyMinimizer::minimizeEntropy ()
 
     LogV("Accuracy is %s, using %d as max steps.", accuracy.c_str(), stepsToFinish);
 
-    if (stepsToFinish < 0) {
-        // infinite, reset progress to 0
-        showCalculationProgress(0);
-    }
+    // if infinite reset calculation progress
+    if (stepsToFinish < 0) showCalculationProgress(0);
 
+    // Main thread loop in which the computation is carried out
     while (not terminateThread())
     {
         ++attemptsCounter;
         ++updatesSinceLastChange;
 
         // update progress
-        if (stepsToFinish > 0) {
+        if (stepsToFinish > 0)
+        {
             double progress = static_cast<double>(updatesSinceLastChange) / stepsToFinish;
             progress = std::max(progress, lastProgress);
             pbAcc = std::max(-1.0, std::min(1.0, (progress - lastProgress)));
@@ -601,10 +630,8 @@ void EntropyMinimizer::minimizeEntropy ()
                 LogV("Progress: %f", progress);
             }
 
-            if (progress > 1) {
-                // stop calculation
-                break;
-            }
+            // if progress larger than 1 stop the calculation
+            if (progress > 1) break;
         }
 
         // If external manual change of tuning curve reset entropy
@@ -620,15 +647,37 @@ void EntropyMinimizer::minimizeEntropy ()
             mRecalculateFrequency=0;
         }
 
-        // Core of the whole entropy piano tuner:
+        // ********************************************************************
+        // ************** Core of the whole entropy piano tuner: **************
+        // ********************************************************************
+
         // Select a random key which is different from A4
         int keynumber;
-        do keynumber = keydist(generator);
-        while (keynumber==mKeyNumberOfA4);
+        do keynumber = keydist(generator); while (keynumber==mKeyNumberOfA4);
 
 
-        if (probdist(generator)<methodratio)
-        // perform a Monte Carlo trial in which a whole section is moved by +/- 1.
+        if (probdist(generator)>methodRatio)
+        // (a) Monte-Carlo step by changing the pitch of an individual key
+        {
+            int oldpitch = mPitch[keynumber];
+            double initialpitch =  mInitialPitch[keynumber];
+            double tolerance = getTolerance(keynumber);
+            int newpitch;
+            do newpitch = oldpitch + binomial(generator)-cents/2;
+            while (((fabs(oldpitch-initialpitch) < tolerance and
+                     fabs(newpitch-initialpitch) > tolerance)
+                     or newpitch == oldpitch)
+                    and not terminateThread());
+            modifySpectralComponent(keynumber,newpitch);
+            double Hnew = computeEntropy();
+            // If new entropy is lower accept the update, otherwise restore old situation
+            if (Hnew < H) acceptUpdate (keynumber,Hnew);
+            else modifySpectralComponent(keynumber,oldpitch);
+        }
+
+
+        else
+        // (b) perform a Monte Carlo trial in which a whole section is moved by +/- 1.
         {
             std::vector<int> savePitch(mPitch);
             int sign = (probdist(generator)<0.5 ? 1:-1);
@@ -642,33 +691,17 @@ void EntropyMinimizer::minimizeEntropy ()
             }
             setAllSpectralComponents();
             double Hnew = computeEntropy();
+            // If new entropy is lower accept the update, otherwise restore old situation
             if (Hnew < H)
             {
                 acceptUpdate (-1,Hnew);
-                methodratio *= 0.995;
+                methodRatio *= 0.995;
             }
             else
             {
                 mPitch = savePitch;
                 setAllSpectralComponents();
             }
-        }
-        else
-        {
-            // Monte-Carlo step by changing the pitch of an individual key
-            int oldpitch = mPitch[keynumber];
-            double initialpitch =  mInitialPitch[keynumber];
-            double tolerance = getTolerance(keynumber);
-            int newpitch;
-            do newpitch = oldpitch + binomial(generator)-cents/2;
-            while (((fabs(oldpitch-initialpitch) < tolerance and
-                     fabs(newpitch-initialpitch) > tolerance)
-                     or newpitch == oldpitch)
-                    and not terminateThread());
-            modifySpectralComponent(keynumber,newpitch);
-            double Hnew = computeEntropy();
-            if (Hnew < H) acceptUpdate (keynumber,Hnew);
-            else modifySpectralComponent(keynumber,oldpitch);
         }
     }
 #if CONFIG_ENABLE_XMGRACE

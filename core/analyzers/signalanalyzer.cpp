@@ -326,8 +326,7 @@ void SignalAnalyzer::recordSignal()
         }
         timer.wait(50);
     }
-    std::cout << "SignalAnalyzer: Recording complete, total FFT size :"
-              << mPowerspectrum->fft.size() << std::endl;
+    LogI("Recording complete, total FFT size = %d.",static_cast<int>(mPowerspectrum->fft.size()));
 }
 
 

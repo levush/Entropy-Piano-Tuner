@@ -45,9 +45,9 @@ class WaveformGenerator : public SimpleThreadHandler
 {
 private:
 #ifdef __ANDROID__
-    const double mWaveformTime = 3;
+    const double mWaveformTime = 5;
 #else
-    const double mWaveformTime = 10;
+    const double mWaveformTime = 15;
 #endif
 
 public:

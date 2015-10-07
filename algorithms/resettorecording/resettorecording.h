@@ -26,14 +26,22 @@
 
 #include "core/calculation/algorithm.h"
 
+// Algorithms are always protected by their own namespace:
 namespace resettorecording
 {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Reset to recording algorithm
+/// \brief Algorithm to copy the recorded pitches into the tuning curve.
 ///
 /// This algorith simply copies the recorded pitches. This works also
-/// in the case where the keys were only partially recorded.
+/// in the case where the keys were only partially recorded. If A4 has been
+/// recorded and the ConcertPitch is different, the pitches will be shifted
+/// to the wanted ConcertPitch. Therefore, to get an unshifted copy, the
+/// ConcertPitch in the settings should be the same as the recorded A4.
+/// If A4 was recorded it is assumed that A4=440Hz.
+///
+/// This algorithm shows the coder how algorithms can be implemented. It can
+/// also be used by the users to copy or shift an existing tune.
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResetToRecording : public Algorithm
@@ -47,7 +55,7 @@ protected:
     virtual void algorithmWorkerFunction() override final;
 };
 
+
+
 }  // namespace resettorecording
-
-
 #endif // RESETTORECORDING_H

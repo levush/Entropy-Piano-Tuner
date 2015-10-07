@@ -22,9 +22,8 @@
 //=============================================================================
 
 #include "resettorecording.h"
-
-// include the factory we will create later
 #include "core/calculation/algorithmfactory.h"
+#include "core/system/log.h"
 
 template<>
 const AlgorithmFactory<resettorecording::ResetToRecording> AlgorithmFactory<resettorecording::ResetToRecording>::mSingleton(
@@ -38,6 +37,12 @@ namespace resettorecording
 //                              Constructor
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of the copy algorithm
+/// \param piano : Reference to a copy of the piano
+/// \param description : String describing the algorithm
+///////////////////////////////////////////////////////////////////////////////
+
 ResetToRecording::ResetToRecording(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description)
 {
@@ -48,18 +53,26 @@ ResetToRecording::ResetToRecording(const Piano &piano, const AlgorithmFactoryDes
 //               Worker function carrying out the computation
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Worker function in which the computation thread is carried out
+///////////////////////////////////////////////////////////////////////////////
+
 void ResetToRecording::algorithmWorkerFunction()
 {
+    LogI("Algorithm ResetToRecording carried out, copying the recorded pitches to the tuning curve.")
+
     const int A4key = mPiano.getKeyboard().getKeyNumberOfA4();
     double fA4 = mPiano.getKey(A4key).getRecordedFrequency();
     // if A4 was not recorded then fall back to 440 Hz
     if (fA4 < 400 or fA4 > 480) fA4=440;
+
+    // Copy all recorded values, normalizing them to the wanted ConcertPitch
     for (int i = 0; i < mNumberOfKeys; ++i)
     {
-        // set the tuning curve
+        msleep(10);
         updateTuningCurve(i, mPiano.getKey(i).getRecordedFrequency()/fA4*440);
     }
 }
 
 
-}  // namespace resettorecording
+}  // end of namespace resettorecording

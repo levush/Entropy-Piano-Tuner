@@ -27,18 +27,21 @@
 #include "core/calculation/algorithm.h"
 #include "core/messages/messagelistener.h"
 
-/// Namespace for all entropy minimizer classes
+/// Namespace for all entropy minimizer components
 namespace entropyminimizer
 {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Iterative minimization of the entropy
+/// \brief Iterative entropy minimization algorithm
 ///
 /// This class is at the center of the entropy piano tuner, i.e. it carries
 /// out the actual tuning procedure.
 ///
 /// The most important member variable is the mAccumulator, where the spectra
-/// are added up.
+/// are added up. The purpose of the accumulator is to save time. Instead of
+/// computing the sum of all spectra after each Monte Carlo step again, we
+/// simply subtract the previous and add the new spectrum of the modified
+/// key alone.
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -65,9 +68,10 @@ private:
 
 private:
 
+    /// Convert frequency to array index in cent spacing
     static double ftom (double f) { return Key::FrequencyToRealIndex(f); }
+    /// Convert array index in cent spacing to frequency in Hz
     static double mtof (int m)    { return Key::IndexToFrequency(m); }
-
 
     void updateTuningcurve (int keynumber);
     void updateTuningcurve ();
@@ -82,14 +86,14 @@ private:
     double computeEntropy();
 
 private:
-    SpectrumType mAccumulator;
-    std::vector<int> mPitch;
-    std::vector<double>mInitialPitch;
-    int mLowerCutoff;
-    int mUpperCutoff;
-    bool mRecalculateEntropy;
-    int mRecalculateKey;
-    double mRecalculateFrequency;
+    SpectrumType mAccumulator;          ///< Accumulator holding the sum of all spectra
+    std::vector<int> mPitch;            ///< Vector of pitches (in cents)
+    std::vector<double>mInitialPitch;   ///< Vector of initial pitches
+    int mLowerCutoff;                   ///< Lower cutoff for fluctuations
+    int mUpperCutoff;                   ///< Upper cutoff for fluctuations
+    bool mRecalculateEntropy;           ///< Flag for entropy recalculation (after manual intervention by the user)
+    int mRecalculateKey;                ///< Number of manually changed key
+    double mRecalculateFrequency;       ///< Frequency of manually changed key
 
     double getRecordedPitchET440(int keynumber);               ///< Get recorded pitch
     int    getRecordedPitchET440AsInt(int keynumber);          ///< Get recorded pitch

@@ -645,7 +645,6 @@ FFTAnalyzer::PeakListType FFTAnalyzer::identifyPeaks (FFTDataPointer fftData,
         {
             double f = Key::IndexToFrequency(m);
             double fc = findAccuratePeakFrequency(fftData, f);
-            //std::cout << "FFTAnalyzer: correction f=" << f << " -> " << fc << std::endl;
             peaks[fc]=spectrum[m];
         }
     }

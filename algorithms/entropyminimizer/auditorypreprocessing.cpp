@@ -286,7 +286,7 @@ void AuditoryPreprocessing::initializeSPLAFilter()
         double Ra = 12200.0*12200.0*f*f*f*f / (f*f+20.6*20.6) /
                sqrt((f*f+107.7*107.7)*(f*f+737.9*737.9)) / (f*f+12200.0*12200.0);
         mdBA[m] = 2.0+20*log10(Ra);
-        std::cout << f << "\t" << mdBA[m] << std::endl;
+        //std::cout << f << "\t" << mdBA[m] << std::endl;
     }
 }
 

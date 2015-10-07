@@ -44,8 +44,8 @@ RecordingManager::RecordingManager  (AudioRecorderAdapter *audioRecorder)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Manage standby mode
-/// \param m Message from the message handler
+/// \brief Listen to messages and take action accordingly
+/// \param m : The incoming message
 ///////////////////////////////////////////////////////////////////////////////
 
 void RecordingManager::handleMessage(MessagePtr m)
@@ -54,19 +54,25 @@ void RecordingManager::handleMessage(MessagePtr m)
     {
         case Message::MSG_PROJECT_FILE:
         {
+            // In case that e.g. a new file was opened:
             auto mpf(std::static_pointer_cast<MessageProjectFile>(m));
             mPiano = &mpf->getPiano();
             mKeyNumberOfA4 = mPiano->getKeyboard().getKeyNumberOfA4();
+            mSelectedKey = nullptr;
+            mNumberOfSelectedKey = -1;
             updateStroboscopicFrequencies();
             break;
         }
         case Message::MSG_SIGNAL_ANALYSIS_ENDED:
         {
+            // Tell the audio recorder to wait after completed analysis
+            // in order to avoid self-recording of the echo sound
             mAudioRecorder->setWaitingFlag (false);
             break;
         }
         case Message::MSG_MODE_CHANGED:
         {
+            // Change of the operation mode:
             auto mmc(std::static_pointer_cast<MessageModeChanged>(m));
             mOperationMode = mmc->getMode();
             switch (mOperationMode)
@@ -88,20 +94,26 @@ void RecordingManager::handleMessage(MessagePtr m)
         }
         case Message::MSG_KEY_SELECTION_CHANGED:
         {
-            auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
-            mSelectedKey = message->getKey();
-            mNumberOfSelectedKey = message->getKeyNumber();
-            updateStroboscopicFrequencies();
+            // If a key is selected update the stroboscopic frequencies
+            if (mOperationMode == MODE_TUNING)
+            {
+                auto message(std::static_pointer_cast<MessageKeySelectionChanged>(m));
+                mSelectedKey = message->getKey();
+                mNumberOfSelectedKey = message->getKeyNumber();
+                updateStroboscopicFrequencies();
+            }
             break;
         }
         case Message::MSG_RECORDING_STARTED:
         {
-            if (mOperationMode == MODE_TUNING) mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_FAST);
+            if (mOperationMode == MODE_TUNING)
+                mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_FAST);
             break;
         }
         case Message::MSG_RECORDING_ENDED:
         {
-            if (mOperationMode == MODE_TUNING) mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_SLOW);
+            if (mOperationMode == MODE_TUNING)
+                mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_SLOW);
             break;
         }
         default:
@@ -110,16 +122,31 @@ void RecordingManager::handleMessage(MessagePtr m)
 }
 
 
+//-----------------------------------------------------------------------------
+//                 Update the stroboscopic frequencies
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update the stroboscopic frequencies
+///
+/// This function transmits a vector of frequencies of the lowest partials
+/// of the selected key to the stroboscope. The function determines how
+/// many partials are shown in the stroboscope.
+///////////////////////////////////////////////////////////////////////////////
+
 void RecordingManager::updateStroboscopicFrequencies()
 {
+    std::vector<double> ftab;
     if (mSelectedKey)
-    {
-        std::vector<double> ftab;
+    {        
         const double fc = mSelectedKey->getComputedFrequency();
         if (fc > 0)
         {
             const Key::PeakListType peaks = mSelectedKey->getPeaks();
+            // This is the formula determining the number of partials shown in the stroboscope:
             const int numberOfStroboscopicPartials = std::max(1,1+(mKeyNumberOfA4+6+24-mNumberOfSelectedKey)/6);
+
+            // if peaks are available
             if (peaks.size()>0)
             {
                 const double f1 = peaks.begin()->first;
@@ -128,15 +155,17 @@ void RecordingManager::updateStroboscopicFrequencies()
                 if (f1>0) for (auto &e : peaks)
                 {
                     if (++N > numberOfStroboscopicPartials) break;
+                    // Push partials adjusted by concert pitch
                     ftab.push_back(e.first/f1*mPiano->getConcertPitch()/440.0*fc);
                 }
             }
             else // if no peaks are available
             {
+                // Push partials with the expected harmonic spectrum
                 const double B = mPiano->getExpectedInharmonicity (fc);
                 for (int n=1; n<=3; ++n) ftab.push_back(n*fc*sqrt((1+B*n*n)/1+B));
             }
         }
-        mAudioRecorder->getStroboscope()->setFrequencies(ftab);
     }
+    mAudioRecorder->getStroboscope()->setFrequencies(ftab);
 }

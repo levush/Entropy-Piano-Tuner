@@ -113,7 +113,6 @@ void RecordingQualityBar::handleMessage(MessagePtr m) {
     {
         auto message(std::static_pointer_cast<MessageFinalKey>(m));
         double quality = message->getFinalKey()->getRecognitionQuality();
-        //std::cout << "RecordingQualityBar: received quality = " << quality << std::endl;
         updateValue(quality);
         break;
     }

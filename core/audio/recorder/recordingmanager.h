@@ -27,6 +27,13 @@
 #include "../../messages/messagelistener.h"
 #include "audiorecorderadapter.h"
 
+////////////////////////////////////////////////////////////////////////////////
+/// \brief Recording manager
+///
+/// The recording manager, whose instance is held by core, manages the
+/// messages controlling the recording process. It also takes care of the
+/// stroboscopic tuning indicator.
+////////////////////////////////////////////////////////////////////////////////
 
 class RecordingManager :  public MessageListener
 {
@@ -47,7 +54,7 @@ private:
     int mNumberOfSelectedKey;               ///< Number of actually selected key
 
     const double FPS_FAST = 30;             ///< Stroboscopic fps during recording
-    const double FPS_SLOW = 10;             ///< Stroboscopic fps during non-recording
+    const double FPS_SLOW = 15;             ///< Stroboscopic fps during non-recording
 
     void updateStroboscopicFrequencies();
 };

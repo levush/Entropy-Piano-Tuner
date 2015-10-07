@@ -78,7 +78,6 @@ void Algorithm::updateTuningCurve(int keynumber, double frequency)
 
 void Algorithm::showCalculationProgress (double fraction)
 {
-    //std::cout << percentage << " %" << std::endl;
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_PROGRESSED,fraction);
 }
