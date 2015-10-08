@@ -17,7 +17,7 @@ set createInstaller=0
 set publish=0
 
 :: loop through arguments
-:argsloop
+: argsloop
 IF NOT "%1"=="" (
     IF "%1"=="-p" (
         SET vcredist=%2
@@ -48,6 +48,7 @@ IF NOT "%1"=="" (
     GOTO :argsloop
 )
 
+echo t1
 if %vcredist% EQU x86 (
 	call windows_vars_x86.bat
 ) else (
@@ -58,6 +59,8 @@ if %vcredist% EQU x86 (
 		exit /b
 	)
 )
+
+echo t2
 
 call windowsPaths.bat %vcredist%
 
