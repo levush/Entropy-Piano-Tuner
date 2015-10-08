@@ -1,9 +1,0 @@
-# ignore source directory
-src
-package/debian/entropypianotuner
-package/debian/entropypianotuner.debhelper.log
-package/debian/entropypianotuner.substvars
-package/debian/files
-builddir
-build-stamp
-entropypianotuner_*
