@@ -23,7 +23,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 	# Add here commands to compile the package.
-	qmake PREFIX=/usr/src/packages/BUILD/debian/entropypianotuner entropytuner.pro
+	qmake PREFIX=/usr/src/packages/BUILD/debian/entropypianotuner/usr entropytuner.pro
 	$(MAKE)
 	touch $@
 
@@ -45,7 +45,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/your_appname
-	make DESTDIR=/usr/src/packages/BUILD/debian/entropypianotuner install
+	make DESTDIR=/usr/src/packages/BUILD/debian/entropypianotuner/usr PREFIX=/usr install
 
 # Build architecture-independent files here.
 binary-indep: build install

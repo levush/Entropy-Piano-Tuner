@@ -2,7 +2,7 @@ Format:        1.0
 Source:        entropypianotuner
 Version: 1.1.3
 Binary:        entropypianotuner
-Maintainer:    Christoph Wick <info@entropy-tuner.org>
+Maintainer:    Christoph Wick <info@piano-tuner.org>
 Architecture:  any
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 9), qtbase5-dev, qtbase5-dev-tools, qtmultimedia5-dev, qt5-qmake, fftw3-dev, libasound2-dev, libjack-dev
