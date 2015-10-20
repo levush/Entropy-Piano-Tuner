@@ -51,11 +51,6 @@ INCLUDEPATH += $$PWD/thirdparty/qwt
 #                      Apple
 #-------------------------------------------------
 
-# Max OS X and iOS (XCode)
-mac {
-QMAKE_MAC_SDK = macosx10.11
-}
-
 # MacOS X (no iOS)
 macx {
     LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
@@ -598,6 +593,10 @@ mac {
     HEADERS +=
     OBJECTIVE_SOURCES +=
 }
+
+#-------------------------------------------------
+#               Forms and Resources
+#-------------------------------------------------
 
 FORMS += \
     Qt/mainwindow.ui \

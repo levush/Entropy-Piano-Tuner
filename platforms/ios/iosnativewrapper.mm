@@ -154,7 +154,6 @@ return TRUE;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     (void)application; // unused parameter
-    (void)lauchOptions; // unused parameter
     IF_IOS_HAS_COREMIDI
     (
         // We only create a MidiInput object on iOS versions that support CoreMIDI

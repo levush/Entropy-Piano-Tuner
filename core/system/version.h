@@ -28,15 +28,15 @@
 #define EPT_VERSION_STRING     "1.1.3"
 
 // The rolling version is an integer that increments with each published verion
-#define EPT_VERSION_ROLLING    15
+#define EPT_VERSION_ROLLING    16
 
 
 // define the version of the dependencies
 #define EPT_DEPS_VERSION_MAJOR    1
 #define EPT_DEPS_VERSION_MINOR    0
-#define EPT_DEPS_VERSION_PATCH    1
+#define EPT_DEPS_VERSION_PATCH    2
 
-#define EPT_DEPS_VERSION_STRING   "1.0.1"
+#define EPT_DEPS_VERSION_STRING   "1.0.2"
 
 #define EPT_DEPS_VERSION_ROLLING  2
 
