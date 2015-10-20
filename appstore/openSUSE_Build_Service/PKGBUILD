@@ -3,7 +3,7 @@ pkgname=entropypianotuner
 pkgver=1.1.3
 pkgrel=1
 pkgdesc="A tuner for your piano"
-url="http://www.entropy-tuner.org"
+url="http://www.piano-tuner.org"
 arch=('any')
 license=('GPLv3')
 depends=('qt5-base' 'qt5-multimedia' 'fftw')
@@ -12,7 +12,7 @@ build() {
 	# extract archive.tar.gz and move files to the source dir
 	cd "${startdir}"
 	tar -xzvf archive.tar.gz
-	mv Entropy-Piano-Tuner.git/* ${srcdir}
+	mv Entropy-Piano-Tuner*/* ${srcdir}
 
 	# qmake and make the package
 	cd "${srcdir}"

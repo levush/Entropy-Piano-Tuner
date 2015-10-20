@@ -4,10 +4,14 @@ Version: 1.1.3
 Release:        1%{?dist}
 License:        GPLv3
 Group:          Applications/Productivity
-URL:            http://www.entropy-tuner.org
+URL:            http://www.piano-tuner.org
 
-# Source from gitlab (do the workaroud to get the correct version)
-%global ARCHIVE archive.tar.gz?ref=master
+# Source from gitlab
+# Change the hash according to the current master branch
+# Workaround for source containing a '?' (commend at end)
+%global COMMIT  046bfc35f8ab3a7343aea6515730b037a33e9c16
+%global BRANCH  master
+%global ARCHIVE archive.tar.gz?ref=%BRANCH
 %global OWNER entropytuner
 %global PROJECT Entropy-Piano-Tuner
 Source:         https://gitlab.com/%OWNER/%PROJECT/repository/%ARCHIVE #/archive.tar.gz
@@ -25,7 +29,7 @@ Requires:       libqt5-qtbase, libQt5Multimedia5, fftw3, alsa
 This is a program for tuning your piano.
 
 %prep
-%setup -q -n %PROJECT.git
+%setup -q -n %PROJECT-%BRANCH-%COMMIT
 
 %{__cat} <<EOF >%{name}.desktop
 [Desktop Entry]
