@@ -129,7 +129,12 @@ winrt {
     LIBS += -lwinmm
 }
 
-win32-g++{
+# MinGW compiler settings
+win32-g++ {
+    # older version needs explicit cxx flag
+    QMAKE_CXXFLAGS += -std=c++11
+
+    # Libraries
     LIBS += -L$$PWD/dependencies/lib/win_mingw32 -llibfftw3-3
     DLLS = $$PWD/dependencies/lib/win_mingw32/libfftw3-3.dll
 }
