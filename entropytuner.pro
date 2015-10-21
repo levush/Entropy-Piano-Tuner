@@ -132,7 +132,7 @@ winrt {
 # MinGW compiler settings
 win32-g++ {
     # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS += -std=c++11 -pthread
 
     # Libraries
     LIBS += -L$$PWD/dependencies/lib/win_mingw32 -llibfftw3-3
