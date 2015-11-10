@@ -34,6 +34,9 @@ public:
     explicit LogViewer(QWidget *parent = nullptr);
     ~LogViewer();
 
+private slots:
+    void copyToClipboard();
+
 private:
     Ui::LogViewer *ui;
 };

@@ -21,6 +21,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <QScroller>
+#include <QClipboard>
 #include "../core/config.h"
 #include "logforqt.h"
 #include "filemanagerforqt.h"
@@ -45,7 +46,10 @@ LogViewer::LogViewer(QWidget *parent) :
     ui->textBrowser->setText(in.readAll());
 
     ui->textBrowser->setReadOnly(true);
-    ui->textBrowser->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+    ui->textBrowser->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard | Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+
+    // icon
+    ui->copyToClipboardButton->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/media/icons/edit-copy.png")));
 
     SHOW_DIALOG(this);
 
@@ -55,4 +59,10 @@ LogViewer::LogViewer(QWidget *parent) :
 LogViewer::~LogViewer()
 {
     delete ui;
+}
+
+void LogViewer::copyToClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(ui->textBrowser->toPlainText());
 }
