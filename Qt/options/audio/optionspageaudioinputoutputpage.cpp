@@ -51,13 +51,17 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     for (QAudioDeviceInfo info : deviceInfos) {
         if (!info.isFormatSupported(info.preferredFormat())) {
             // no supported formats, dont list
+            LogI("%s is not supported.", info.deviceName().toStdString().c_str());
             continue;
         }
+
+        LogI("%s is supported.", info.deviceName().toStdString().c_str());
+
         mDeviceSelection->addItem(info.deviceName(), QVariant::fromValue<QAudioDeviceInfo>(info));
     }
 
+    // select input device
     QPushButton *selectDefaultInputDeviceButton = new QPushButton(tr("Default"));
-
     inputLayout->addWidget(new QLabel(tr("Input device")), 0, 0);
     inputLayout->addWidget(mDeviceSelection, 0, 1);
     inputLayout->addWidget(selectDefaultInputDeviceButton, 0, 2);
@@ -68,21 +72,7 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     inputLayout->addWidget(mSamplingRates = new QComboBox, 1, 1);
     inputLayout->addWidget(selectDefaultSamplingRateButton, 1, 2);
 
-    // add auto configure input device to input page
-    /*if (mode == QAudio::AudioInput) {
-        QPushButton *autoConfig = new QPushButton(tr("Auto configure"));
-        VolumeControlLevel *controlLevel = new VolumeControlLevel(this);
-        controlLevel->setTextVisible(false);
-
-        inputLayout->addWidget(new QLabel(tr("Input level")), 5, 0);
-        inputLayout->addWidget(controlLevel, 5, 1);
-        inputLayout->addWidget(autoConfig, 5, 2);
-
-        QObject::connect(autoConfig, SIGNAL(clicked()), mOptionsDialog->getMainWindow(), SLOT(onAutoConfigureInputLevel()));
-    }*/
-
     // add open sound settings button
-
     if (mOptionsDialog->getMainWindow()->isSoundControlSupported()) {
         QPushButton *openSystemSettingsButton = new QPushButton(tr("Open system settings"));
         inputLayout->addWidget(openSystemSettingsButton, 10, 0);
