@@ -43,9 +43,8 @@ public:
     AudioPlayerThreadForQt(AudioPlayerForQt *audio);
     ~AudioPlayerThreadForQt() {}
 
-    void registerForTermination() { mThreadRunning=false; }
+    void registerForTermination() { mTerminateThread = true; }
     void setPause(bool pause);
-    bool isRunning () { return mThreadRunning; }
 
 public slots:
     void workerFunction();
@@ -64,7 +63,7 @@ private:
     AudioPlayerForQt *mAudioSource;     ///< Audio source where the data comes from
     QAudioOutput *mAudioSink;           ///< Audio sink to which the data is sent
     QIODevice *mIODevice;               ///< Qt IO device pointer
-    std::atomic<bool> mThreadRunning;   ///< Boolean indicating that the thread is running
+    std::atomic<bool> mTerminateThread; ///< Boolean indicating that the thread shall be terminated
     std::atomic<bool> mPause;           ///< Boolean indicating that the thread is pausing
 };
 

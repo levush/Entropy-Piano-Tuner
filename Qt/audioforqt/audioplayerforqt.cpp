@@ -59,10 +59,10 @@ void AudioPlayerForQt::init()
     mQtAudioManager = new AudioPlayerThreadForQt(this);
     mQtAudioManager->moveToThread(mQtThread);
     connect(mQtAudioManager, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(deleteLater()));
     connect(mQtThread, SIGNAL(started()), mQtAudioManager, SLOT(workerFunction()));
     connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(quit()));
     connect(mQtAudioManager, SIGNAL(finished()), mQtAudioManager, SLOT(deleteLater()));
-    connect(mQtThread, SIGNAL(finished()), mQtThread, SLOT(deleteLater()));
 
     mQtThread->start(QThread::HighPriority);
 }
@@ -81,14 +81,16 @@ void AudioPlayerForQt::init()
 
 void AudioPlayerForQt::exit()
 {
+    // quit and wait for thread termination
     mQtAudioManager->registerForTermination();
-    while (mQtAudioManager->isRunning())
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    mQtThread->quit();
+    mQtThread->wait();
 
-    // deleted automatically upon finished
+    // objects are deleted automatically upon finished, so just set pointers to nullptr
     mQtAudioManager = nullptr;
     mQtThread = nullptr;
 
+    // exit the parent
     AudioPlayerAdapter::exit();
 }
 
@@ -111,4 +113,3 @@ void AudioPlayerForQt::errorString(QString s)
 {
     LogE("Error in QtAudioManager: %s", s.toStdString().c_str());
 }
-

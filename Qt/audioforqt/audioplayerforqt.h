@@ -49,6 +49,7 @@ public:
 
 private slots:
     void errorString(QString);
+
 private:
     QThread* mQtThread;
     AudioPlayerThreadForQt* mQtAudioManager;
