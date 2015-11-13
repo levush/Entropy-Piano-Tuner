@@ -94,7 +94,7 @@ Synthesizer::Synthesizer () :
 ///
 /// This function initializes the synthesizer in that it pre-calculates a sine
 /// function as well as the hammer noise and then starts the main loop
-/// of the synthesizer in an indpendent thread.
+/// of the synthesizer in an independent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
 void Synthesizer::init (int sampleRate, int channels)
@@ -391,8 +391,8 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
                 if (envelope.hammer) if (tone.clock < hammerwavesize)
                 {
                     left += tone.leftamplitude * mHammerWaveLeft[tone.clock];
-                    int phaseshifted = tone.clock + static_cast<int>(tone.phaseshift * sampleRate);
-                    if (phaseshifted < hammerwavesize)
+                    int phaseshifted = static_cast<int>(tone.clock + tone.phaseshift * sampleRate);
+                    if (phaseshifted > 0 and phaseshifted < hammerwavesize)
                         right += tone.rightamplitude* mHammerWaveRight[phaseshifted];
                 }
 

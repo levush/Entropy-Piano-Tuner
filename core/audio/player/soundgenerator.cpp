@@ -182,15 +182,15 @@ void SoundGenerator::handleMessage(MessagePtr m)
                 }
             case MidiAdapter::MIDI_CONTROL_CHANGE:
                 {
-                    // Funny feature that allows you to switch
-                    // between the operating modes by MIDI pedal
-                    // If it is not a pedal break (damper=67):
-                    if (data.byte1 < 64 or data.byte1 > 67) break;
-                    // If pedal pressed go to recording mode.
-                    if (data.byte2 > 0)
-                        MessageHandler::send<MessageModeChanged>(MODE_RECORDING);
-                    else // else go back to calculation mode
-                        MessageHandler::send<MessageModeChanged>(MODE_CALCULATION);
+//                    // Funny feature that allows you to switch
+//                    // between the operating modes by MIDI pedal
+//                    // If it is not a pedal break (damper=67):
+//                    if (data.byte1 < 64 or data.byte1 > 67) break;
+//                    // If pedal pressed go to recording mode.
+//                    if (data.byte2 > 0)
+//                        MessageHandler::send<MessageModeChanged>(MODE_RECORDING);
+//                    else // else go back to calculation mode
+//                        MessageHandler::send<MessageModeChanged>(MODE_CALCULATION);
                 }
                 default:
                     break;
