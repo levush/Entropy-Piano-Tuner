@@ -64,6 +64,20 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
     settings.setValue("application/lastExitCode", EXIT_FAILURE);
 
     QObject::connect(this, SIGNAL(aboutToQuit()), this, SLOT(onAboutToQuit()));
+
+    // check if there was a crash last session
+    if (mLastExitCode != EXIT_SUCCESS) {
+        if (QMessageBox::information(nullptr, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
+                == QMessageBox::Yes) {
+            LogViewer v;
+            v.exec();
+        }
+    }
+
+    new LogForQt();
+    // writeout args to log
+    LogI("Number of arguments: %d", arguments().size());
+    LogI("Program arguments: %s", arguments().join(", ").toStdString().c_str());
 }
 
 TunerApplication::~TunerApplication()
@@ -92,14 +106,7 @@ void TunerApplication::setApplicationExitState(int errorcode) {
 }
 
 void TunerApplication::init() {
-    // check if there was a crash last session
-    if (mLastExitCode != EXIT_SUCCESS) {
-        if (QMessageBox::information(nullptr, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
-                == QMessageBox::Yes) {
-            LogViewer v;
-            v.exec();
-        }
-    }
+
 
     // open the main window with the startup file
     mMainWindow.reset(new MainWindow());
@@ -108,17 +115,12 @@ void TunerApplication::init() {
     mMainWindow->setFixedSize(primaryScreen()->size());
 #endif
 
-    auto log = new LogForQt();
-    // writeout args to log
-    LogI("Number of arguments: %d", arguments().size());
-    LogI("Program arguments: %s", arguments().join(", ").toStdString().c_str());
-
     // create core
     mCore.reset(new Core(
                     new ProjectManagerForQt(mMainWindow.get()),
                     &mAudioRecorder,
                     &mAudioPlayer,
-                    log));
+                    Log::getSingletonPtr()));
 
     PlatformTools::getSingleton()->disableScreensaver();
 
