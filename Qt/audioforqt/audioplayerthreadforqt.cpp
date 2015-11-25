@@ -24,7 +24,6 @@
 #include "../core/system/log.h"
 #include "../core/system/simplethreadhandler.h"
 
-const double AudioPlayerThreadForQt::BufferMilliseconds = 50;
 
 //=============================================================================
 //                      CLASS AudioPlayerThreadForQt
@@ -129,7 +128,7 @@ void AudioPlayerThreadForQt::init()
 
     // Specify the size of the Qt-internal buffer
     const size_t BufferSize = mAudioSource->getChannelCount() *
-            ((mAudioSource->getSamplingRate() * BufferMilliseconds)/1000);
+            ((mAudioSource->getSamplingRate() * mAudioSource->getBufferSize())/1000);
     mAudioSink->setBufferSize(BufferSize);
     if (mAudioSink->error() != QAudio::NoError) {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
@@ -163,10 +162,6 @@ void AudioPlayerThreadForQt::exit()
         mIODevice = nullptr;
     }
 
-    if (mAudioSource && mAudioSource->getWriter())
-    {
-        mAudioSource->getWriter()->exit();
-    }
     LogI("Qt audio player closed.");
 }
 

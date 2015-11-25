@@ -38,7 +38,6 @@ class AudioPlayerThreadForQt : public QObject
     Q_OBJECT
 
 public:
-    static const double BufferMilliseconds;
     typedef int16_t DataFormat;
     AudioPlayerThreadForQt(AudioPlayerForQt *audio);
     ~AudioPlayerThreadForQt() {}

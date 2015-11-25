@@ -20,6 +20,7 @@
 #include "optionspageaudio.h"
 #include "optionspageaudioinputoutputpage.h"
 #include "optionspageaudiomidipage.h"
+#include "optionspageautiosynthesizer.h"
 #include "../../../core/core.h"
 
 namespace options {
@@ -30,6 +31,7 @@ PageAudio::PageAudio(OptionsDialog *optionsDialog)
     this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioInput), tr("Input device"));
     this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioOutput), tr("Output device"));
     this->addTab(new PageAudioMidi(optionsDialog, optionsDialog->getCore()->getMidiInterface()), tr("Midi"));
+    this->addTab(new PageAudioSynthesizer(optionsDialog, optionsDialog->getCore()->getAudioPlayer()), tr("Synthesizer"));
 }
 
 void PageAudio::apply() {
