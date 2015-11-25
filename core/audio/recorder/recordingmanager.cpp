@@ -140,7 +140,9 @@ void RecordingManager::updateStroboscopicFrequencies()
     if (mSelectedKey)
     {        
         const double fc = mSelectedKey->getComputedFrequency();
-        if (fc > 0)
+        const double fr = mSelectedKey->getRecordedFrequency();
+        const double cp = mPiano->getConcertPitch();
+        if (fc > 0 and fr > 0)
         {
             const Key::PeakListType peaks = mSelectedKey->getPeaks();
             // This is the formula determining the number of partials shown in the stroboscope:
@@ -149,14 +151,14 @@ void RecordingManager::updateStroboscopicFrequencies()
             // if peaks are available
             if (peaks.size()>0)
             {
-                const double f1 = peaks.begin()->first;
+                //const double f1 = peaks.begin()->first;
                 int N = 0;
 
-                if (f1>0) for (auto &e : peaks)
+                for (auto &e : peaks)
                 {
                     if (++N > numberOfStroboscopicPartials) break;
                     // Push partials adjusted by concert pitch
-                    ftab.push_back(e.first/f1*mPiano->getConcertPitch()/440.0*fc);
+                    ftab.push_back(e.first*fc/fr*cp/440.0);
                 }
             }
             else // if no peaks are available
