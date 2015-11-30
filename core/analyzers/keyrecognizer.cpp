@@ -58,9 +58,9 @@ KeyRecognizer::KeyRecognizer(KeyRecognizerCallback *callback) :
     mKeyNumberOfA(0),                   // Index of the A-key (normally 48)
     mFFT(),                             // Instance of FFT implementation
     mLogSpec(M),                        // Vector holding the log. spectrum
-    mFlatSpectrum(M),                     // Vector holding the loglog. spectrum
+    mFlatSpectrum(M),                   // Vector holding the loglog. spectrum
     mKernelFFT(M/2+1),                  // Vector holding the complex FFT of the kernel
-    mFlatFFT(M/2+1),              // Vector holding the complex FFT of the loglogspec
+    mFlatFFT(M/2+1),                    // Vector holding the complex FFT of the loglogspec
     mConvolution(M),                    // Convolution vector, real
     mSelectedKey(-1),                   // Selected key
     mKeyForced(false)                   // selected key is forced
@@ -163,7 +163,7 @@ void KeyRecognizer::workerFunction()
         signalPreprocessing();          // Compute flattened loglog spectrum
         CHECK_CANCEL_THREAD;
 
-        f = estimateFrequency(); // Estimate frequency
+        f = estimateFrequency();        // Estimate frequency
         CHECK_CANCEL_THREAD;
     }
 
@@ -253,7 +253,7 @@ double KeyRecognizer::detectFrequencyInTreble()
 
 
 //-----------------------------------------------------------------------------
-//			             Index mapping functions
+//			               Index mapping function
 //-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
@@ -272,6 +272,9 @@ int KeyRecognizer::ftom (double f) {
     return static_cast<int>(0.5+M*(log(f)-logfmin)/(logfmax-logfmin));
 }
 
+//-----------------------------------------------------------------------------
+//			            Inverse index mapping function
+//-----------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
 /// \brief Convert logspec index to frequency

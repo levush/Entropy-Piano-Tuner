@@ -17,11 +17,23 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//              Message reporting a change of the operation mode
+//=============================================================================
+
 #ifndef MESSAGEMODECHANGED_H
 #define MESSAGEMODECHANGED_H
 
 #include "message.h"
 #include "../system/prerequisites.h"
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message reporting a change of the operation mode
+///
+/// The EPT can be in four different operation modes. These can be changed
+/// by clicking or by pressing the TAB key. Whenever the operation mode
+/// changes, this message informs the other components of the EPT
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageModeChanged : public Message
 {

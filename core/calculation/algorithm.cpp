@@ -24,21 +24,34 @@
 #include "../messages/messagechangetuningcurve.h"
 #include "../messages/messagecaluclationprogress.h"
 
-Algorithm::Algorithm(const Piano &piano, const AlgorithmFactoryDescription &desciption) :
+//-----------------------------------------------------------------------------
+//                              Constructor
+//-----------------------------------------------------------------------------
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of a tuning Algorithm
+/// \param piano : Reference to the piano of wich a copy will be create
+/// \param description : Description of type AlgorithmFactoryDescription
+////////////////////////////////////////////////////////////////////////////////
+
+Algorithm::Algorithm(const Piano &piano, const AlgorithmFactoryDescription &description) :
     mPiano(piano),
-    mFactoryDescription(desciption),
+    mFactoryDescription(description),
     mKeyboard(mPiano.getKeyboard()),
     mKeys(mKeyboard.getKeys()),
     mNumberOfKeys(mKeyboard.getNumberOfKeys()),
     mKeyNumberOfA4(mKeyboard.getKeyNumberOfA4())
 {
-
 }
 
-Algorithm::~Algorithm()
-{
 
-}
+//-----------------------------------------------------------------------------
+//                   Thread worker function of the algorithm
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Thread worker function of the Algorithm
+///////////////////////////////////////////////////////////////////////////////
 
 void Algorithm::workerFunction()
 {
@@ -47,6 +60,7 @@ void Algorithm::workerFunction()
     MessageHandler::send<MessageCaluclationProgress>
             (MessageCaluclationProgress::CALCULATION_STARTED);
 
+    // Call the worker function of the algorithm from here
     algorithmWorkerFunction();
 
     // After completion of the algorithm, deselect all keys.
@@ -57,12 +71,22 @@ void Algorithm::workerFunction()
     LogI("End of calculation");
 }
 
+
+//-----------------------------------------------------------------------------
+//                         Update the tuning curve
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update the tuning curve
+/// \param keynumber : Number of the key where the update takes place
+/// \param frequency : Frequency to which the tuning curve is set
+///////////////////////////////////////////////////////////////////////////////
+
 void Algorithm::updateTuningCurve(int keynumber, double frequency)
 {
     EptAssert (keynumber>=0 and keynumber<mNumberOfKeys,"Range of keynumber");
     mKeyboard[keynumber].setComputedFrequency(frequency);
     MessageHandler::send<MessageChangeTuningCurve>(keynumber,frequency);
-
 }
 
 

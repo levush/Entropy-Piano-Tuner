@@ -45,9 +45,9 @@ class WaveformGenerator : public SimpleThreadHandler
 {
 private:
 #ifdef __ANDROID__
-    const double mWaveformTime = 5;
+    const double mWaveformTime = 5;             ///< Minimal sampling time in seconds
 #else
-    const double mWaveformTime = 15;
+    const double mWaveformTime = 15;            ///< Maximal sampling time in seconds
 #endif
 
 public:
@@ -63,17 +63,17 @@ public:
     bool isComputing (const int keynumber);
 
 private:
-    int mSampleRate;
-    int mWaveformSize = 0;
-    int mNumberOfKeys;
-    std::vector<Waveform> mLibrary;
-    std::vector<std::mutex> mLibraryMutex;
-    std::vector<bool> mComputing;
-    FFTComplexVector mIn;
-    FFTRealVector mOut;
-    FFT_Implementation mFFT;
-    std::map<int,Spectrum> mQueue;
-    std::mutex mQueueMutex;
+    int mSampleRate;                        ///< Sample rate
+    int mWaveformSize = 0;                  ///< Stored size of the waveform
+    int mNumberOfKeys;                      ///< Local copy of the number of keys
+    std::vector<Waveform> mLibrary;         ///< Collection (library) of sounds
+    std::vector<std::mutex> mLibraryMutex;  ///< Access mutex for the library
+    std::vector<bool> mComputing;           ///< Flag indicating that the sound is computed
+    FFTComplexVector mIn;                   ///< FFT input array
+    FFTRealVector mOut;                     ///< FFT output array
+    FFT_Implementation mFFT;                ///< Instance of the FFT module
+    std::map<int,Spectrum> mQueue;          ///< Queue of waveform generation requests
+    std::mutex mQueueMutex;                 ///< Access mutex for waveform request queue
 
 private:
     void workerFunction();

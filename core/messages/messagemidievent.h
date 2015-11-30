@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                          Message for a MIDI event
+//=============================================================================
+
 #ifndef MESSAGEMIDIEVENT_H
 #define MESSAGEMIDIEVENT_H
 
@@ -25,6 +29,12 @@
 #include "message.h"
 #include "../audio/midi/midiadapter.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class for a MIDI event
+///
+/// Whenever an incoming MIDI event occurs. The structure of the MIDI event
+/// is defined in the MIDI adapter
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageMidiEvent : public Message
 {

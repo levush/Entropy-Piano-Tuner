@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//             Message informing that a new FFT has been calculated
+//=============================================================================
+
 #ifndef MESSAGENEWFFTCALCULATED_H
 #define MESSAGENEWFFTCALCULATED_H
 
@@ -24,6 +28,10 @@
 #include "../analyzers/fftanalyzererrorcodes.h"
 #include "../math/fftadapter.h"
 #include "../system/prerequisites.h"
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class of a message informing that a new FFT has been calculated
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageNewFFTCalculated : public Message
 {

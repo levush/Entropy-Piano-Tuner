@@ -45,6 +45,10 @@ ProjectManagerAdapter::FileDialogResult::FileDialogResult(const std::string p) :
 //                              Constructor
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Constructor of the ProjectManagerAdapter
+///////////////////////////////////////////////////////////////////////////////
+
 ProjectManagerAdapter::ProjectManagerAdapter()
     : mCore(nullptr),                                   // no pointer to core
       mChangesInFile(false)                             // no changes
@@ -100,10 +104,10 @@ void ProjectManagerAdapter::setCallback (FileChangesCallback *cb)
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief New-file menu response
+/// \brief onNewFile: New-file menu response
 ///
-///
-/// \return
+/// This function is called when the button "New file" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
 ///////////////////////////////////////////////////////////////////////////////
 
 ProjectManagerAdapter::Results ProjectManagerAdapter::onNewFile()
@@ -130,12 +134,19 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onNewFile()
 }
 
 
-
 //-----------------------------------------------------------------------------
 //                          Menu command: Save
 //-----------------------------------------------------------------------------
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile() {
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onSaveFile : Menu save-file response
+///
+/// This function is called when the button "Save file" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile()
+{
     if (mCurrentFilePath.size() == 0)
     {
         // no path specified, use save as
@@ -151,6 +162,14 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile() {
 //-----------------------------------------------------------------------------
 //                          Menu command: Save as...
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onSaveFileAs : Menu save-file-as response
+///
+/// This function is called when the button "Save file as..." is touched
+/// in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
 
 ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFileAs() {
     FileDialogResult r = getSavePath(FT_EPT);
@@ -169,6 +188,13 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFileAs() {
 //                           Menu command: Open
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onOpen : Menu open-file response
+///
+/// This function is called when the button "Open file" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
 ProjectManagerAdapter::Results ProjectManagerAdapter::onOpenFile()
 {
     if (checkForNoChanges() == R_CANCELED) {return R_CANCELED;}
@@ -178,7 +204,6 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onOpenFile()
         // user cancelled
         return R_CANCELED;
     }
-
 
     // file was opened
     openFile(r.path);
@@ -191,9 +216,19 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onOpenFile()
 //                          Menu command: Quit
 //-----------------------------------------------------------------------------
 
-bool ProjectManagerAdapter::onQuit() {
-    if (mChangesInFile) {
-        switch (askForSaving()) {
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onQuit : Menu quit response
+///
+/// This function is called when the button "Quit / Exit" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+bool ProjectManagerAdapter::onQuit()
+{
+    if (mChangesInFile)
+    {
+        switch (askForSaving())
+        {
         case R_NO:
             // dont save file, but resume
             break;
@@ -208,9 +243,7 @@ bool ProjectManagerAdapter::onQuit() {
             break;
         }
     }
-
     LogI("Quitting accepted");
-
     return true;
 }
 
@@ -218,6 +251,14 @@ bool ProjectManagerAdapter::onQuit() {
 //-----------------------------------------------------------------------------
 //                    Menu command: Edit piano data sheet
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onEditFile : Menu edit-file response
+///
+/// This function is called when the button "Edit file" (piano data sheet)
+/// is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
 
 ProjectManagerAdapter::Results ProjectManagerAdapter::onEditFile()
 {
@@ -230,30 +271,47 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onEditFile()
         // notify system that we edit the file
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_EDITED, mCore->getPianoManager()->getPiano());
     }
-
     return r;
 }
 
 
 //-----------------------------------------------------------------------------
-//                    Menu command: Edit piano data sheet
+//                    Menu command: Share file
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onShareFile : Menu share-file response
+///
+/// This function is called when the button "Save file" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
 
-
-ProjectManagerAdapter::Results ProjectManagerAdapter::onShare() {
+ProjectManagerAdapter::Results ProjectManagerAdapter::onShare()
+{
     if (checkForNoChanges() != R_ACCEPTED) {return R_CANCELED;}
-
     // share file
     return share();
 }
 
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::onExport() {
+//-----------------------------------------------------------------------------
+//                    Menu command: Export data
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief onExport : Menu Export-file response
+///
+/// This function is called when the button "Export file" is touched in the GUI.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+ProjectManagerAdapter::Results ProjectManagerAdapter::onExport()
+{
     if (checkForNoChanges() != R_ACCEPTED) {return R_CANCELED;}
 
     FileDialogResult r = getSavePath(FT_CSV);
-    if (!r.isValid()) {
+    if (!r.isValid())
+    {
         // user cancelled
         return R_CANCELED;
     }
@@ -264,9 +322,22 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onExport() {
 }
 
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::checkForNoChanges() {
-    if (mChangesInFile) {
-        switch (askForSaving()) {
+//-----------------------------------------------------------------------------
+//                           Check for no changes
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Check whether no changes have been made. If not ask whether
+/// the user wants to save the file
+/// \return  Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+ProjectManagerAdapter::Results ProjectManagerAdapter::checkForNoChanges()
+{
+    if (mChangesInFile)
+    {
+        switch (askForSaving())
+        {
         case R_NO:
             // dont save file, but resume
             break;
@@ -274,7 +345,8 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::checkForNoChanges() {
             return R_CANCELED;
         default:
             // save the file first
-            if (onSaveFile() == R_CANCELED) {
+            if (onSaveFile() == R_CANCELED)
+            {
                 // canceling the save progress will also cancel the next desired process
                 return R_CANCELED;
             }
@@ -284,8 +356,20 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::checkForNoChanges() {
     return R_ACCEPTED;
 }
 
-void ProjectManagerAdapter::handleMessage(MessagePtr m) {
-    switch (m->getType()) {
+
+//-----------------------------------------------------------------------------
+//                      Handle and dispatch messages
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message handler and dispatcher for the ProjectManagerAdapter
+/// \param m : Pointer to the incoming message
+///////////////////////////////////////////////////////////////////////////////
+
+void ProjectManagerAdapter::handleMessage(MessagePtr m)
+{
+    switch (m->getType())
+    {
     case Message::MSG_CHANGE_TUNING_CURVE:
     case Message::MSG_NEW_FFT_CALCULATED:
     case Message::MSG_KEY_DATA_CHANGED:
@@ -297,32 +381,68 @@ void ProjectManagerAdapter::handleMessage(MessagePtr m) {
     }
 }
 
-void ProjectManagerAdapter::setChangesInFile(bool b) {
+
+//-----------------------------------------------------------------------------
+//                      Mark a file as being changed
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Mark a file as being changed
+///
+/// This function calls the callback function changesInFileUpdated.
+/// \param b : True if changes have been made, otherwise False
+///////////////////////////////////////////////////////////////////////////////
+
+void ProjectManagerAdapter::setChangesInFile(bool b)
+{
     mChangesInFile = b;
-    if (mCallback) {
+    if (mCallback)
+    {
         mCallback->changesInFileUpdated(mChangesInFile);
     }
 
 }
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path, piano::FileType type) {
+
+//-----------------------------------------------------------------------------
+//                              Save file
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief ProjectManagerAdapter::saveFile
+/// \param path : Path where the file shall be stored
+/// \param type : Type of the file
+///
+/// This function calls the function mPianoFile.write in order to write
+/// the entire piano. Possible exceptions are caught and handled. If the
+/// file was save successfully the flag for changes is reset to false.
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path, piano::FileType type)
+{
     EptAssert(type != FT_NONE, "File type not valid.");
     EptAssert(path.size() > 0, "Path not valid.");
-
-    try {
-        if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano(), type)) {
+    try // catching possible exception errors
+    {
+        // Try to save the piano
+        if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano(), type))
+        {
             LogW("File could not be saved");
             return R_CANCELED;
         }
 
 
         LogI("File saved!");
-        mCurrentFilePath = path;
-        setChangesInFile(false);
+        mCurrentFilePath = path;    // remember current path
+        setChangesInFile(false);    // after saving the status is that there are no changes
 
-        MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_SAVED, mCore->getPianoManager()->getPiano());
+        // Tell the other modules that the file has been saved
+        MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_SAVED,
+                                                 mCore->getPianoManager()->getPiano());
     }
-    catch (const EptException &e) {
+    catch (const EptException &e)
+    {
         LogW("Exception during saving a file: %s", e.what());
         // show message box, that there is an error
         showSaveError();
@@ -331,27 +451,44 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string
     return R_ACCEPTED;
 }
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string &path, bool cached) {
-    try {
-        if (!mPianoFile.read(path, mCore->getPianoManager()->getPiano())) {
+
+//-----------------------------------------------------------------------------
+//                          Read (open) piano file
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Open (read) a file
+/// \param path : Path from where the file is read
+/// \param cached : flag whether reading is cached
+/// (retrieved from another source)
+/// \return Enum of type ProjectManagerAdapter::Results
+///////////////////////////////////////////////////////////////////////////////
+
+ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string &path, bool cached)
+{
+    try
+    {
+        if (!mPianoFile.read(path, mCore->getPianoManager()->getPiano()))
+        {
             LogW("File could not be opened");
             return R_CANCELED;
         }
-
-
         LogI("File opened!");
-        if (cached) {
+        if (cached)
+        {
             // file is in cache, we need to save it at a new position
             mCurrentFilePath.clear();
             setChangesInFile(true);
-        } else {
+        }
+        else
+        {
             mCurrentFilePath = path;
             setChangesInFile(false);
         }
-
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_OPENED, mCore->getPianoManager()->getPiano());
     }
-    catch (const EptException &e) {
+    catch (const EptException &e)
+    {
         LogW("Exception during opening a file: %s", e.what());
         // show message box, that there is an error
         showOpenError();

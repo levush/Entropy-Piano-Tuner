@@ -34,7 +34,10 @@ class Piano;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief The ProjectManagerChangesInFileUpdatedCallback class
+/// \brief The FileUpdatedCallback class
+///
+/// Whenever the EPT changes its internal data, it has to keep track of the
+/// changes. This class provides a callback functionality for this purpose.
 ///////////////////////////////////////////////////////////////////////////////
 
 class FileChangesCallback
@@ -66,7 +69,8 @@ public:
 
 
 
-    struct FileDialogResult {
+    struct FileDialogResult
+    {
         FileDialogResult(const std::string path = "");
 
         const std::string path;

@@ -27,9 +27,3 @@ MessageRecorderEnergyChanged::MessageRecorderEnergyChanged(LevelType type, doubl
       mLevel(level) {
 
 }
-
-MessageRecorderEnergyChanged::~MessageRecorderEnergyChanged()
-{
-
-}
-

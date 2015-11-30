@@ -32,8 +32,10 @@
 //	              Determine the raw moments of a distribution
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
 /// The moments are determined with respect to the relative array
 /// index between 0 and 1
+///////////////////////////////////////////////////////////////////////////////
 
 double MathTools::computeMoment (const std::vector<double> &v, const int n)
 {
@@ -53,9 +55,17 @@ double MathTools::computeMoment (const std::vector<double> &v, const int n)
 //	                       Compute Shannon entropy
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// The Shannon entropy is defined as H = - sum ( v_i log v_i ).
+/// Although log 0 is divergent, it is assumed that 0 log 0 = 0.
+///
+/// \param v : Normalized vector of non-negative real values
+/// \return Shannon entropy
+///////////////////////////////////////////////////////////////////////////////
+
 double MathTools::computeEntropy (const std::vector<double> &v)
 {
-    assert(v.size()>0);
+    EptAssert(v.size()>0,"The entropy of a vector with zero length is meaningless.");
     double sum=0;
     for (auto x : v) sum -= (x>0 ? x*log(x) : 0);
     return sum;
@@ -66,9 +76,23 @@ double MathTools::computeEntropy (const std::vector<double> &v)
 //	                          Compute Renyi entropy
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// The Renyi entropy is a certain kind of deformed entropy (see e.g. Wikipedia).
+/// The deformation is controlled by an additional parameter q. In the limit
+/// q->1 the Renyi entropy converges towards the usual Shannon entropy. The
+/// Renyi entropy is interesting in so far as it probes different properties
+/// of a probability distribution. It is, however, no longer directly related
+/// to the information content of the distribution.
+/// \param v : Vector or normalized non-negative real values.
+/// \param q : Renyi deformation parameter (q>0)
+/// \return : Renyi entropy
+///////////////////////////////////////////////////////////////////////////////
+
 double MathTools::computeRenyiEntropy (const std::vector<double> &v, const double q)
 {
-    assert(v.size()>0 and q != 1);
+    EptAssert(v.size()>0,"The entropy of a vector with zero length is meaningless.");
+    EptAssert(q>0,"The Renyi deformation parameter should be positive.");
+    if (q==1) return computeEntropy (v);
     double sum=0;
     for (auto x : v) sum += pow(x,q);
     return log(sum) / (1-q);

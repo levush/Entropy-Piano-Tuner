@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                              Message handler
+//=============================================================================
+
 #ifndef MESSAGERECORDERENERGYCHANGED_H
 #define MESSAGERECORDERENERGYCHANGED_H
 
@@ -25,14 +29,15 @@
 class MessageRecorderEnergyChanged : public Message
 {
 public:
-    enum class LevelType {
+    enum class LevelType
+    {
         LEVEL_INPUT,       ///< The input level changed (actual signal)
         LEVEL_OFF,         ///< The off level changed
     };
 
 public:
     MessageRecorderEnergyChanged(LevelType type, double level);
-    ~MessageRecorderEnergyChanged();
+    ~MessageRecorderEnergyChanged(){};
 
     LevelType getLevelType() const {return mLevelType;}
     double getLevel() const {return mLevel;}

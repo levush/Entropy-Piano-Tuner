@@ -103,8 +103,8 @@ private:
     virtual void keyRecognized(int keyIndex, double frequency) override final;
 
 
-    void WriteSignal (std::string filename, const FFTWVector &signal);    // Development, will be removed
-    void WriteFFT (std::string filename, const FFTWVector &fft);          // Development, will be removed
+//    void WriteSignal (std::string filename, const FFTWVector &signal);    // Development, will be removed
+//    void WriteFFT (std::string filename, const FFTWVector &fft);          // Development, will be removed
 
 private:
     const Piano *mPiano;                    ///< Pointer to the piano

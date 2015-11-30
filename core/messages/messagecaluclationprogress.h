@@ -17,10 +17,23 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                  Message reporting the calculation process
+//=============================================================================
+
 #ifndef MESSAGECALUCLATIONPROGRESS_H
 #define MESSAGECALUCLATIONPROGRESS_H
 
 #include "message.h"
+
+//////////////////////////////////////////////////////////////////////////////
+/// \brief Class for a message reporting the calculation progress
+///
+/// In the EPT we may have various tuning algorithms. During their execution
+/// these algorithms report the calculation pogress and outcome, sending
+/// corresponding messages. For example, a progress bar indicates the
+/// calculation progress in percent,
+/// ///////////////////////////////////////////////////////////////////////////
 
 class MessageCaluclationProgress : public Message
 {
@@ -47,7 +60,7 @@ public:
 public:
     MessageCaluclationProgress(MessageCalculationProgressTypes type, double value = 0);
     MessageCaluclationProgress(MessageCalculationProgressTypes type, MessageCalculationError errorcode);
-    ~MessageCaluclationProgress();
+    ~MessageCaluclationProgress(){};
 
     double getValue() const {return mValue;}
     MessageCalculationProgressTypes getCalculationType() const {return mCalculationType;}

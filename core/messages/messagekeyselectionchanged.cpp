@@ -26,8 +26,4 @@ MessageKeySelectionChanged::MessageKeySelectionChanged(int index, const Key *key
       mKeyState(keyState) {
 }
 
-MessageKeySelectionChanged::~MessageKeySelectionChanged()
-{
-
-}
 

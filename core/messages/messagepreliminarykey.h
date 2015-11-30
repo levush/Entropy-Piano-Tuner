@@ -17,11 +17,18 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Message reporting the preliminary recognition of a key
+//=============================================================================
+
 #ifndef MESSAGEPRELIMINARYKEY_H
 #define MESSAGEPRELIMINARYKEY_H
 
 #include "message.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class of a message reporting the preliminary recognition of a key
+///////////////////////////////////////////////////////////////////////////////
 
 class MessagePreliminaryKey : public Message
 {

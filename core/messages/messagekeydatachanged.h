@@ -17,11 +17,19 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//     Message indicating the change of data associated with a single key
+//=============================================================================
+
 #ifndef MESSAGEKEYDATACHANGED_H
 #define MESSAGEKEYDATACHANGED_H
 
 #include "message.h"
 #include "../piano/key.h"
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message sent whenever the data associated with a single key changes.
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageKeyDataChanged : public Message
 {

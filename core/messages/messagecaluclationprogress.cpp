@@ -34,9 +34,3 @@ MessageCaluclationProgress::MessageCaluclationProgress(MessageCalculationProgres
       mErrorCode(errorcode)
 {
 }
-
-
-MessageCaluclationProgress::~MessageCaluclationProgress()
-{
-}
-
