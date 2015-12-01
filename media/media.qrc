@@ -39,5 +39,6 @@
         <file>icons/go-last.png</file>
         <file>icons/go-next.png</file>
         <file>icons/go-previous.png</file>
+        <file>icons/edit-copy.png</file>
     </qresource>
 </RCC>
