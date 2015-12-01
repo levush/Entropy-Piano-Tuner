@@ -124,6 +124,7 @@ void PageAudioInputOutput::apply() {
 
     if (mMode == QAudio::AudioOutput) {
         dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->setWriter(writerInterfaceBackup);
+        mOptionsDialog->getCore()->getSoundGenerator().init();
     }
 }
 
