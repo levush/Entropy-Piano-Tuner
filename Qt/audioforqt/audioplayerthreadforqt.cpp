@@ -39,7 +39,7 @@ AudioPlayerThreadForQt::AudioPlayerThreadForQt(AudioPlayerForQt *audio) :
     mAudioSource(audio),
     mAudioSink(nullptr),
     mIODevice(nullptr),
-    mThreadRunning(true),
+    mTerminateThread(false),
     mPause(false)
 {}
 
@@ -259,7 +259,7 @@ void AudioPlayerThreadForQt::workerFunction()
 
     mAudioSink->suspend();
 
-    while (mThreadRunning)
+    while (!mTerminateThread)
     {
         if (mPause or not mAudioSource->getWriter() or mAudioSource->isMuted()) {
             QThread::msleep(500);
@@ -287,5 +287,6 @@ void AudioPlayerThreadForQt::workerFunction()
         }
     }
     exit();
+
     emit finished();
 }
