@@ -103,6 +103,11 @@ void PageAudioInputOutput::apply() {
     assert(mSamplingRates->currentIndex() != -1);
     assert(mSamplingRates->currentText().isEmpty() == false);
 
+    PCMWriterInterface *writerInterfaceBackup = nullptr;
+    if (mMode == QAudio::AudioOutput) {
+        writerInterfaceBackup = dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->getWriter();
+    }
+
     mAudioBase->stop();
     mAudioBase->exit();
     if (mMode == QAudio::AudioOutput) {
@@ -116,6 +121,10 @@ void PageAudioInputOutput::apply() {
     mAudioBase->setSamplingRate(mSamplingRates->currentText().toInt());
     mAudioBase->init();
     mAudioBase->start();
+
+    if (mMode == QAudio::AudioOutput) {
+        dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->setWriter(writerInterfaceBackup);
+    }
 }
 
 void PageAudioInputOutput::onDeviceSelectionChanged(int row) {
