@@ -64,6 +64,7 @@ public:
     ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
     AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
     AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
+    SoundGenerator &getSoundGenerator()         {return mSoundGenerator;}
     PianoManager *getPianoManager()             {return &mPianoManager;}
     MidiAdapter *getMidiInterface()             {return mMidi.get();}
 

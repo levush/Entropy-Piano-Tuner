@@ -44,7 +44,7 @@ public:
     SoundGenerator (AudioPlayerAdapter *audioAdapter);
     ~SoundGenerator(){}
 
-    void init () { }                        ///< Initialize (no functionality)
+    void init ();
     void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
 
     /// \brief Mode for sound generation

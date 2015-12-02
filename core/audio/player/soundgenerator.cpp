@@ -63,6 +63,21 @@ SoundGenerator::SoundGenerator (AudioPlayerAdapter *audioAdapter) :
     audioAdapter->setWriter(&mSynthesizer);
 }
 
+//-----------------------------------------------------------------------------
+//	  init function
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Init function
+///
+/// This will simply start the precalculation of all keys
+///////////////////////////////////////////////////////////////////////////////
+///
+void SoundGenerator::init()
+{
+    preCalculateSoundOfAllKeys();
+}
+
 
 //-----------------------------------------------------------------------------
 //	  Message listener, handling all messages related to sound generation
