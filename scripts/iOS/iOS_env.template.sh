@@ -18,8 +18,8 @@ export QTDIR="/Library/Qt/5.4/ios"
 # arguments for the make command (e.g. -j4)
 export MAKE_ARGS=-j4
 
-# path to the probisoning profile relative to the base directory (where entropytuner.pro lies)
-export PROVISONING_PROFILE="EntropyTuner_AppStore.mobileprovision"
+# path to the provisioning profile relative to the base directory (where entropytuner.pro lies)
+export PROVISIONING_PROFILE="EntropyTuner_AppStore.mobileprovision"
 
 # minor important settings
 ###########################################################
