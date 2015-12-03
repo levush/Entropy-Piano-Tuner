@@ -136,10 +136,6 @@ void AudioPlayerThreadForQt::init()
         return;
     }
 
-    if (mAudioSource->getWriter()) {
-        mAudioSource->getWriter()->init(mAudioSource->getSamplingRate(), mAudioSource->getChannelCount());
-    }
-
     LogI("Initialized Qt audio player using device: %s", mAudioSource->getDeviceName().c_str());
 }
 
