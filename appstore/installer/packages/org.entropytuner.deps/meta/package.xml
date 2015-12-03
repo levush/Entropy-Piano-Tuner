@@ -3,7 +3,7 @@
     <DisplayName>Entropy Piano Tuner Dependencies</DisplayName>
     <Description>Install the Entropy Pinano Tuner dependency components.</Description>
     <Version>1.0.2</Version>
-    <ReleaseDate>2015-10-29</ReleaseDate>
+    <ReleaseDate>2015-12-03</ReleaseDate>
     <Name>org.entropytuner.deps</Name>
     <Translations>
     </Translations>
