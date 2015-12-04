@@ -108,6 +108,7 @@ void WaveformGenerator::preCalculate(int keynumber, const Spectrum &spectrum)
     mQueueMutex.lock();
     mQueue[keynumber] = spectrum;
     mComputing[keynumber] = true;
+    invokeCallback(&WaveformGeneratorStatusCallback::queueSizeChanged, mQueue.size(), mComputing.size());
     mQueueMutex.unlock();
 }
 
@@ -254,6 +255,7 @@ void WaveformGenerator::workerFunction()
         {
             mQueueMutex.lock();
             mComputing[keynumber] = false;
+            invokeCallback(&WaveformGeneratorStatusCallback::queueSizeChanged, mQueue.size(), mComputing.size());
             mQueueMutex.unlock();
         }
     }

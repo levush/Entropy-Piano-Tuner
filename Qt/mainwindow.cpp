@@ -278,6 +278,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->setStretch(1, 1);
     mainLayout->setStretch(3, 1);
 
+    mProgressDisplay = new ProgressDisplay(this);
+
 #if CONFIG_DIALOG_SIZE == 1
     // reset old settings (windows size/position and splitter)
     QSettings settings;
@@ -309,6 +311,7 @@ void MainWindow::init(Core *core) {
     qDebug() << "Display size: " << QGuiApplication::primaryScreen()->physicalSize();
 
     mCore->getProjectManager()->setCallback(this);
+    mCore->getSoundGenerator().getSynthesizer().getWaveformGenerator().addListener(mProgressDisplay);
 
     // hide some elements
     if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {

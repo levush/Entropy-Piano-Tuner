@@ -37,10 +37,14 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS =
+HEADERS = \
+    Qt/progressdisplay.h \
+    core/system/basecallback.h
 
 QWT_S = $$SOURCES
-SOURCES =
+SOURCES = \
+    Qt/progressdisplay.cpp \
+    core/system/basecallback.cpp
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)

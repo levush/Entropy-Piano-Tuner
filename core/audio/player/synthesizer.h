@@ -136,6 +136,8 @@ public:
 
     virtual bool generateAudioSignal(AudioBase::PacketType &outputPacket) override final;
 
+    WaveformGenerator &getWaveformGenerator() {return mWaveformGenerator;}
+
 private:
 
     using Waveform = WaveformGenerator::Waveform;

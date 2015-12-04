@@ -47,6 +47,8 @@ public:
     void init ();
     void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
 
+    Synthesizer &getSynthesizer() {return mSynthesizer;}
+
     /// \brief Mode for sound generation
     enum SoundGeneratorMode
     {
