@@ -38,12 +38,10 @@ ProgressDisplay::ProgressDisplay(QWidget *mainWindow) :
 
     mainWindow->installEventFilter(this);
 
-    //resize(200, 100);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     setAutoFillBackground(true);
     setFrameShape(QFrame::StyledPanel);
-    //setFrameShadow(QFrame::Plain);
     show();
 
     adjustSize();
