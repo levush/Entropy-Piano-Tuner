@@ -28,7 +28,8 @@ ProgressDisplay::ProgressDisplay(QWidget *mainWindow) :
         FixedSizeProgressBar()
         {
             QRect br(fontMetrics().boundingRect('A'));
-            setFixedHeight(br.height() * 1.5);
+            setFixedHeight(br.height());
+            setTextVisible(false);
         }
 
     };
