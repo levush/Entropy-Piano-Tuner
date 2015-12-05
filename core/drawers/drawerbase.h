@@ -27,6 +27,7 @@
 #include <ctime>
 #include <chrono>
 
+#include "../system/prerequisites.h"
 #include "../adapters/graphicsviewadapter.h"
 
 ///////////////////////////////////////////////////////////////////////////////

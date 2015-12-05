@@ -78,6 +78,16 @@ public:
     /// Set flag indicating the stroboscopic mode of the tuning indicator
     virtual void setStroboscopeMode(bool enable) {mStroboscopeActive = enable;}
 
+    /// Set the audio players playback buffer size
+    virtual double getAudioPlayerBufferSize() const = 0;
+    /// Get the audio players playback buffer size
+    virtual void setAudioPlayerBufferSize(double d) = 0;
+
+    /// Get the audio player channels count
+    virtual int getAudioPlayerChannelsCount() const = 0;
+    /// Set the audio player channels count
+    virtual void setAudioPlayerChannelsCount(int i) = 0;
+
 protected:
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Language Id

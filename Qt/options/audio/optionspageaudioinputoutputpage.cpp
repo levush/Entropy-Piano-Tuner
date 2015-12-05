@@ -80,8 +80,42 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     }
 
     // add stretch
-    inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
+    inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 200, 0);
 
+
+
+    // special widgets for output
+    if (mMode == QAudio::AudioOutput) {
+        // Channels
+        inputLayout->addWidget(new QLabel(tr("Channels")), 4, 0);
+
+        mChannelsSelect = new QComboBox();
+        mChannelsSelect->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+        QPushButton *defaultChannels = new QPushButton(tr("Default"));
+        QObject::connect(defaultChannels, SIGNAL(clicked(bool)), this, SLOT(onDefaultChannel()));
+
+        inputLayout->addWidget(mChannelsSelect, 4, 1);
+        inputLayout->addWidget(defaultChannels, 4, 2);
+
+        // Buffer size
+        inputLayout->addWidget(new QLabel(tr("Buffer size")), 5, 0);
+
+        mBufferSizeEdit = new QSpinBox();
+        mBufferSizeEdit->setRange(10, 5000);
+        mBufferSizeEdit->setSingleStep(10);
+        mBufferSizeEdit->setSuffix("ms");
+        mBufferSizeEdit->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        mBufferSizeEdit->setValue(static_cast<int>(SettingsForQt::getSingleton().getAudioPlayerBufferSize() + 0.5));
+
+        QPushButton *defaultBufferSize = new QPushButton(tr("Default"));
+        QObject::connect(defaultBufferSize, SIGNAL(clicked(bool)), this, SLOT(onDefaultBufferSize()));
+
+        inputLayout->addWidget(mBufferSizeEdit, 5, 1);
+        inputLayout->addWidget(defaultBufferSize, 5, 2);
+
+
+    }
 
     // set current values
     mDeviceSelection->setCurrentText(QString::fromStdString(mAudioBase->getDeviceName()));
@@ -97,6 +131,14 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     // notify if changes are made
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
     QObject::connect(mSamplingRates, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
+
+    // special audio output
+    if (mMode == QAudio::AudioOutput) {
+        mChannelsSelect->setCurrentText(QString::number(SettingsForQt::getSingleton().getAudioPlayerChannelsCount()));
+        // notify if changes are made
+        QObject::connect(mChannelsSelect, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
+        QObject::connect(mBufferSizeEdit, SIGNAL(valueChanged(int)), optionsDialog, SLOT(onChangesMade()));
+    }
 }
 
 void PageAudioInputOutput::apply() {
@@ -113,6 +155,16 @@ void PageAudioInputOutput::apply() {
     if (mMode == QAudio::AudioOutput) {
         SettingsForQt::getSingleton().setOutputDeviceName(mDeviceSelection->currentText());
         SettingsForQt::getSingleton().setOutputDeviceSamplingRate(mSamplingRates->currentText().toInt());
+
+        const int bufferSize = mBufferSizeEdit->value();
+        const int channels = mChannelsSelect->currentData().toInt();
+
+        SettingsForQt::getSingleton().setAudioPlayerBufferSize(bufferSize);
+        SettingsForQt::getSingleton().setAudioPlayerChannelsCount(channels);
+
+        AudioPlayerAdapter *player = dynamic_cast<AudioPlayerAdapter*>(mAudioBase);
+        player->setChannelCount(channels);
+        player->setBufferSize(bufferSize);
     } else {
         SettingsForQt::getSingleton().setInputDeviceName(mDeviceSelection->currentText());
         SettingsForQt::getSingleton().setInputDeviceSamplingRate(mSamplingRates->currentText().toInt());
@@ -142,6 +194,17 @@ void PageAudioInputOutput::onDeviceSelectionChanged(int row) {
         }
         mSamplingRates->addItem(QString("%1").arg(rate));
     }
+
+    if (mMode == QAudio::AudioOutput) {
+        mChannelsSelect->clear();
+        for (int channels : info.supportedChannelCounts()) {
+            if (channels >= 1 && channels <= 2) {
+                // only 2 and 1 is supported
+                mChannelsSelect->addItem(QString::number(channels), channels);
+            }
+        }
+    }
+
     onDefaultSamplingRate();
 }
 
@@ -178,5 +241,14 @@ void PageAudioInputOutput::onDefaultSamplingRate() {
         }
     }
 }
+
+void PageAudioInputOutput::onDefaultChannel() {
+    mChannelsSelect->setCurrentText(QString::number(2));
+}
+
+void PageAudioInputOutput::onDefaultBufferSize() {
+    mBufferSizeEdit->setValue(AudioPlayerAdapter::DefaultBufferSizeMilliseconds);
+}
+
 
 }  // namespace options

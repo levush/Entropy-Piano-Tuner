@@ -20,6 +20,7 @@
 #ifndef OPTIONSPAGEAUDIOINPUTOUTPUTPAGE_H
 #define OPTIONSPAGEAUDIOINPUTOUTPUTPAGE_H
 
+#include <QSpinBox>
 #include "../optionscontentswidgetinterface.h"
 
 namespace options {
@@ -36,6 +37,12 @@ private slots:
 
     void onDefaultDevice();
     void onDefaultSamplingRate();
+
+
+    // special audio output
+    void onDefaultChannel();
+    void onDefaultBufferSize();
+
 private:
     OptionsDialog *mOptionsDialog;
     AudioBase *mAudioBase;
@@ -44,6 +51,10 @@ private:
     QComboBox *mDeviceSelection;
 
     QComboBox *mSamplingRates;
+
+    // special audio output
+    QComboBox *mChannelsSelect;
+    QSpinBox *mBufferSizeEdit;
 };
 
 }  // namespace options

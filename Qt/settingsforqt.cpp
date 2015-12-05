@@ -155,3 +155,19 @@ void SettingsForQt::setDisableAutomaticKeySelection(bool disable) {
     Settings::setDisableAutomaticKeySelection(disable);
     mSettings.setValue("core/disableAutomaticKeySelection", disable);
 }
+
+double SettingsForQt::getAudioPlayerBufferSize() const {
+    return mSettings.value("audio/playerBufferSize", AudioPlayerAdapter::DefaultBufferSizeMilliseconds).toDouble();
+}
+
+void SettingsForQt::setAudioPlayerBufferSize(double d) {
+    mSettings.setValue("audio/playerBufferSize", d);
+}
+
+int SettingsForQt::getAudioPlayerChannelsCount() const {
+    return mSettings.value("audio/playerChannels", 2).toInt();
+}
+
+void SettingsForQt::setAudioPlayerChannelsCount(int i) {
+    mSettings.setValue("audio/playerChannels", i);
+}

@@ -184,6 +184,12 @@ public:
     virtual void setStroboscopeMode(bool enable) override final;
     virtual void setDisableAutomaticKeySelection(bool disable) override final;
 
+    virtual double getAudioPlayerBufferSize() const override final;
+    virtual void setAudioPlayerBufferSize(double d) override final;
+    virtual int getAudioPlayerChannelsCount() const override final;
+    virtual void setAudioPlayerChannelsCount(int i) override final;
+
+protected:
 private:
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Counter for the application runs.
