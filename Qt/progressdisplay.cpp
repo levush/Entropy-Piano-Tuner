@@ -7,6 +7,7 @@
 ProgressDisplay::ProgressDisplay(QWidget *mainWindow) :
     QFrame(mainWindow)
 {
+    setAttribute(Qt::WA_TransparentForMouseEvents);
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 
@@ -41,6 +42,8 @@ ProgressDisplay::ProgressDisplay(QWidget *mainWindow) :
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     setAutoFillBackground(true);
+    setFrameShape(QFrame::StyledPanel);
+    //setFrameShadow(QFrame::Plain);
     show();
 
     adjustSize();
@@ -78,14 +81,24 @@ void ProgressDisplay::updateWGPercentage(int percentage)
     mWaveformGeneratorStatusBar->setValue(percentage);
 
     if (percentage >= 100) {
-        mWaveformGeneratorStatusBar->setVisible(false);
-        mWaveformGeneratorStatusLabel->setVisible(false);
+        mWaveformGeneratorStatusBar->hide();
+        mWaveformGeneratorStatusLabel->hide();
     } else {
-        mWaveformGeneratorStatusBar->setVisible(true);
-        mWaveformGeneratorStatusLabel->setVisible(true);
+        mWaveformGeneratorStatusBar->show();
+        mWaveformGeneratorStatusLabel->show();
     }
 
+    updateVisibility();
     adjustSize();
+}
+
+void ProgressDisplay::updateVisibility()
+{
+    if (!mWaveformGeneratorStatusBar->isHidden()) {
+        show();
+    } else {
+        hide();
+    }
 }
 
 void ProgressDisplay::updatePosition()

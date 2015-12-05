@@ -30,6 +30,8 @@ public slots:
 private slots:
     void updateWGPercentage(int percentage);
 
+    void updateVisibility();
+
 private:
     QLabel *mWaveformGeneratorStatusLabel;
     QProgressBar *mWaveformGeneratorStatusBar;
