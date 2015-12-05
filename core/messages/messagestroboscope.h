@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//             Message sending a complex vector to the stroboscope
+//=============================================================================
+
 #ifndef MESSAGESTROBOSCOPE_H
 #define MESSAGESTROBOSCOPE_H
 
@@ -25,12 +29,15 @@
 #include "message.h"
 #include "../audio/recorder/stroboscope.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message sending a complex vector to the stroboscope
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageStroboscope : public Message
 {
 public:
     MessageStroboscope(const Stroboscope::ComplexVector &data);
-    ~MessageStroboscope();
+    ~MessageStroboscope(){};
 
     const Stroboscope::ComplexVector &getData() const;
 

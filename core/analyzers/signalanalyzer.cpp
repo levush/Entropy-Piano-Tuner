@@ -65,6 +65,10 @@ SignalAnalyzer::SignalAnalyzer(AudioRecorderAdapter *recorder) :
 {}
 
 
+//-----------------------------------------------------------------------------
+//                        Initialization procedure
+//-----------------------------------------------------------------------------
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Initializes the SignalAnalyzer and its components
 ///
@@ -83,8 +87,16 @@ void SignalAnalyzer::init()
 }
 
 
+//-----------------------------------------------------------------------------
+//                          Stop the signal analyzer
+//-----------------------------------------------------------------------------
 
-void SignalAnalyzer::stop() {
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Stop the signal analyzer
+///////////////////////////////////////////////////////////////////////////////
+
+void SignalAnalyzer::stop()
+{
     mKeyRecognizer.stop();
     SimpleThreadHandler::stop();
 }
@@ -169,8 +181,19 @@ void SignalAnalyzer::changeRole(AnalyzerRole role)
 }
 
 
+//-----------------------------------------------------------------------------
+//                         Update data buffer size
+//-----------------------------------------------------------------------------
 
-
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update data buffer size
+///
+/// In the EPT the signal analyzer can be in different modes. In the recording
+/// mode the signal is incrementally analyzed while in the tuning mode short
+/// chunks are analyzed (rolling fft) in order to ensure a quick reaction of the
+/// tuning indicator. Depending on that mode, different buffer sizes are
+/// needed. This function adjusts the actual buffer size.
+///////////////////////////////////////////////////////////////////////////////
 
 void SignalAnalyzer::updateDataBufferSize()
 {
@@ -408,9 +431,8 @@ void SignalAnalyzer::analyzeSignal()
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Process the singal after recording has finsihed
 ///
-/// In ROLE_RECORD_KEYSTROKE this will perform the actual analysis of the
-/// complete recorded signal.
-/// in ROLE_ROLLING_FFT this wont do anything.
+/// In the ROLE_RECORD_KEYSTROKE this will perform the actual analysis of the
+/// complete recorded signal while in the ROLE_ROLLING_FFT this wont do anything.
 ///////////////////////////////////////////////////////////////////////////////
 
 void SignalAnalyzer::recordPostprocessing()
@@ -444,14 +466,27 @@ void SignalAnalyzer::recordPostprocessing()
 //                            Update overpulls
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Update overpulls
+///
+/// This function calls the overpull module to compute a new overpull value.
+/// If the new value is different from the old one the new value is stored
+/// and a message is sent to the GUI to update the corresponding marker.
+///////////////////////////////////////////////////////////////////////////////
+
 void SignalAnalyzer::updateOverpull ()
 {
     int K = mPiano->getKeyboard().getNumberOfKeys();
     for (int keynumber=0; keynumber<K; ++keynumber)
     {
+        // Compute the new overpull value depending on the current tune
         double overpull = mOverpull.getOverpull(keynumber,mPiano);
+
+        // Get the currently displayed overpull value and compute the change
         double currentoverpull = mPiano->getKey(keynumber).getOverpull();
         double change = overpull-currentoverpull;
+
+        // If more change than 1/10 cents then
         if (fabs(change) >= 0.1 or (currentoverpull!=0 and overpull==0))
         {
             // set new overpull value
@@ -747,11 +782,25 @@ int SignalAnalyzer::identifySelectedKey()
 //                    Callback function of the KeyRecognizer
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Callback function of the KeyRecognizer
+///
+/// This callback function is called by the KeyRecognizer in case of a
+/// successful key recognition. Its purpose is to inform the SignalAnalyzer
+/// about recognized keys because the SignalAnalyzer keeps track of the
+/// statistics. In the end the finally recognized key is declared as the one
+/// which hat the majority of individual recognitions. This statistical
+/// information is held in mKeyCountStatistics.
+/// \param keyIndex : Index of the key
+/// \param frequency : Recognized frequency
+///////////////////////////////////////////////////////////////////////////////
+
 void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
 {
     EptAssert(mPiano, "Piano has to be set.");
 
-    if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE) {
+    if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE)
+    {
         // fetch the current key from the statistics
         if (keyIndex >= 0 and keyIndex < mPiano->getKeyboard().getNumberOfKeys())
         {
@@ -759,42 +808,44 @@ void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
             mKeyCountStatistics[keyIndex]++;
         }
         MessageHandler::send<MessagePreliminaryKey>(identifySelectedKey(),frequency);
-    } else {
+    }
+    else
+    {
+        // In all other modes only one key is held in the statistics
         std::lock_guard<std::mutex> lock(mKeyCountStatisticsMutex);
-        // this is the sole key
+        // this is the only key
         mKeyCountStatistics.clear();
         mKeyCountStatistics[keyIndex]++;
-        // send it
+        // send it as a preliminary recognized key
         MessageHandler::send<MessagePreliminaryKey>(keyIndex,frequency);
     }
 }
 
-//-----------------------------------------------------------------------------
-//			write spectrum to disk in XMGRACE-readable format
-//-----------------------------------------------------------------------------
+////-----------------------------------------------------------------------------
+////			write spectrum to disk in XMGRACE-readable format
+////-----------------------------------------------------------------------------
 
+//void SignalAnalyzer::WriteFFT (std::string filename, const FFTWVector &fft)
+//{
+//    std::ofstream os(filename);
+//    uint samplingrate = mAudioRecorder->getSamplingRate();
+//    uint fftsize = fft.size();
+//    auto qtof = [samplingrate,fftsize] (int q) { return (double)samplingrate*q/fftsize/2; };
+//    os << "@g0 type logy" << std::endl;
+//    os << "@    xaxis  label \"FREQUENCY (HZ)\"" << std::endl;
+//    os << "@    yaxis  label \"INTENSITY\"" << std::endl;
+//    os << "@    subtitle \"SPECTRUM  OF THE RECORDED SIGNAL\"" << std::endl;
+//    for (uint q=0; q<fft.size(); ++q) os << qtof(q) << "\t" << fft[q] << std::endl;
+//    os.close();
+//}
 
-void SignalAnalyzer::WriteFFT (std::string filename, const FFTWVector &fft)
-{
-    std::ofstream os(filename);
-    uint samplingrate = mAudioRecorder->getSamplingRate();
-    uint fftsize = fft.size();
-    auto qtof = [samplingrate,fftsize] (int q) { return (double)samplingrate*q/fftsize/2; };
-    os << "@g0 type logy" << std::endl;
-    os << "@    xaxis  label \"FREQUENCY (HZ)\"" << std::endl;
-    os << "@    yaxis  label \"INTENSITY\"" << std::endl;
-    os << "@    subtitle \"SPECTRUM  OF THE RECORDED SIGNAL\"" << std::endl;
-    for (uint q=0; q<fft.size(); ++q) os << qtof(q) << "\t" << fft[q] << std::endl;
-    os.close();
-}
-
-void SignalAnalyzer::WriteSignal (std::string filename, const FFTWVector &signal)
-{
-    std::ofstream os(filename);
-    int samplingrate = mAudioRecorder->getSamplingRate();
-    os << "@    xaxis  label \"TIME (s)\"" << std::endl;
-    os << "@    yaxis  label \"AMPLITUDE\"" << std::endl;
-    os << "@    subtitle \"RECORDED SIGNAL\"" << std::endl;
-    for (uint i=0; i<signal.size(); ++i) os << (double)i/samplingrate << "\t" << signal[i] << std::endl;
-    os.close();
-}
+//void SignalAnalyzer::WriteSignal (std::string filename, const FFTWVector &signal)
+//{
+//    std::ofstream os(filename);
+//    int samplingrate = mAudioRecorder->getSamplingRate();
+//    os << "@    xaxis  label \"TIME (s)\"" << std::endl;
+//    os << "@    yaxis  label \"AMPLITUDE\"" << std::endl;
+//    os << "@    subtitle \"RECORDED SIGNAL\"" << std::endl;
+//    for (uint i=0; i<signal.size(); ++i) os << (double)i/samplingrate << "\t" << signal[i] << std::endl;
+//    os.close();
+//}

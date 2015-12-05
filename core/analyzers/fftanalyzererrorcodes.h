@@ -37,7 +37,7 @@ enum class FFTAnalyzerErrorTypes
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief The FrequencyDetectionResultStruct struct
+/// \brief Structure holding the data of a successful frequency detection
 ///////////////////////////////////////////////////////////////////////////////
 
 using TuningDeviationCurveType = std::vector<double>;

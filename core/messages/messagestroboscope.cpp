@@ -24,10 +24,6 @@ MessageStroboscope::MessageStroboscope (const Stroboscope::ComplexVector &data)
 {
 }
 
-MessageStroboscope::~MessageStroboscope()
-{
-}
-
 const Stroboscope::ComplexVector &MessageStroboscope::getData () const
 {
     return data;

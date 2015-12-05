@@ -25,9 +25,3 @@ MessageTuningDeviation::MessageTuningDeviation(FrequencyDetectionResult result) 
 {
 
 }
-
-MessageTuningDeviation::~MessageTuningDeviation()
-{
-
-}
-

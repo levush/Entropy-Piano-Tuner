@@ -23,11 +23,4 @@ MessageFinalKey::MessageFinalKey(int keyNumber, std::shared_ptr<Key> key) :
     Message(MSG_FINAL_KEY),
     mKey(key), mKeyNumber(keyNumber)
 {
-
 }
-
-MessageFinalKey::~MessageFinalKey()
-{
-
-}
-

@@ -589,22 +589,40 @@ double FFTAnalyzer::estimateInharmonicity (FFTDataPointer fftData, SpectrumType 
 //                  estimate quality of the recorded sound
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Estimate the quality of the recorded signal
+///
+/// This function estimates the quality of the recorded sound. As a criterion
+/// for the quality we consider the coincidence of the partial series with
+/// the theoretical formula fn=f1*n*sqrt((1+B*n*n)/(1+B)). To this end we
+/// analyze the optimal superposition of all partials according to this
+/// formula. This is essentially what the tuning indicator shows in its
+/// window.
+/// \return Quality between 0 and 1
+///////////////////////////////////////////////////////////////////////////////
+
 double FFTAnalyzer::estimateQuality ()
 {
+    // if there is no such data return quality zero
     if (mOptimalSuperposition.size()==0) return 0;
 
     // cut the superposition at the edges
     int cut = mOptimalSuperposition.size()/2-10;
-
     SpectrumType vec = SpectrumType(mOptimalSuperposition.begin()+cut,
                                     mOptimalSuperposition.end()-cut);
+
+    // Compute the zeroth, first, and second moment of the distribution
     double M0 = MathTools::computeNorm(vec);
-    if (M0==0) return 0;
+    if (M0==0) return 0; // if not normalizable return zero quality
     MathTools::normalize(vec);
     double M1 = MathTools::computeMoment(vec,1);
     double M2 = MathTools::computeMoment(vec,2);
+
+    // Determine the variance from the moments
     double variance = M2-M1*M1;
-    // translate heuristicaly in a measure of quality to be displayed
+    // translate heuristicaly in a measure of quality to be displayed.
+    // M0 is the fraction of the data that was not cut away.
+    // Therefore, the result is expected to be between 0 and 1
     return M0/(1+0.1*pow(variance,1.5));
 }
 
@@ -612,6 +630,16 @@ double FFTAnalyzer::estimateQuality ()
 //-----------------------------------------------------------------------------
 //              estimate frequency shift of the recorded sound
 //-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Estimate the frequency shift
+///
+/// This function estimates how much the frequency determined by the
+/// collapse of the partials deviates from the center. In other words, it
+/// returns the deviation (in cent) of the center of mass of the peak shown
+/// in the tuning indicator.
+/// \return Deviation in cent
+///////////////////////////////////////////////////////////////////////////////
 
 double FFTAnalyzer::estimateFrequencyShift()
 {
@@ -621,6 +649,8 @@ double FFTAnalyzer::estimateFrequencyShift()
     if (start>=stop or stop>=mOptimalSuperposition.size()) return 0;
     SpectrumType vec = SpectrumType(mOptimalSuperposition.begin()+start,
                                     mOptimalSuperposition.begin()+stop);
+
+    // The deviation is the first moment of the distribution in this section
     return MathTools::computeMoment(vec,1)-10;
 }
 
@@ -629,22 +659,41 @@ double FFTAnalyzer::estimateFrequencyShift()
 //      Identify peaks of the spectrum for given inharmonicity
 //-----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Identify the peaks in the spectrum
+/// \param fftData : Original (non-logarithmic) FFT data
+/// \param spectrum : Converted (logarithmically organized) spectrum
+/// \param f : Supposed fundamental frequency
+/// \param B : Supposed inharmonicity parameter
+/// \return List of peaks
+///////////////////////////////////////////////////////////////////////////////
+
 FFTAnalyzer::PeakListType FFTAnalyzer::identifyPeaks (FFTDataPointer fftData,
                                                       const SpectrumType &spectrum,
                                                       const double f, const double B)
 {
+    // Define the number of peaks to be analyzed depending on the frequency
     const int MaxNumberOfPeaks = 50;
+    int N = std::min(MaxNumberOfPeaks, static_cast<int>(10000.0/f));   // number of peaks
+
+    // Define the usual inhamonicity formula
     auto InharmonicPartial = [] (double f, int n, double B) { return f*n*sqrt((1+B*n*n)/(1+B)); };
-    int N=std::min(MaxNumberOfPeaks, static_cast<int>(10000.0/f));   // number of peaks
+
     PeakListType peaks;
     for (int n=1; n<=N; ++n)
     {
+        // Compute the frequency where the peak should be
         double fn = InharmonicPartial(f,n,B);
-        int m= locatePeak (spectrum, Key::FrequencyToIndex(fn), 20);
+
+        // Locate it in the logarithmically organized spectrum in a window of +/- 20 cents
+        int m = locatePeak (spectrum, Key::FrequencyToIndex(fn), 20);
+
+        // If succesful refine the search by looking for the maximum in the original FFT
         if (m>0)
         {
             double f = Key::IndexToFrequency(m);
             double fc = findAccuratePeakFrequency(fftData, f);
+            // Append the refined value to the list of peaks
             peaks[fc]=spectrum[m];
         }
     }
@@ -653,7 +702,7 @@ FFTAnalyzer::PeakListType FFTAnalyzer::identifyPeaks (FFTDataPointer fftData,
 
 
 //-----------------------------------------------------------------------------
-//			Write function for development purposes
+//	   Write function for development purposes, not active in the release
 //-----------------------------------------------------------------------------
 
 void FFTAnalyzer::Write(std::string filename, SpectrumType &v)

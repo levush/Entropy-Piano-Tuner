@@ -17,17 +17,34 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                    Message reporting final key detection
+//=============================================================================
+
 #ifndef MESSAGEFINALKEY_H
 #define MESSAGEFINALKEY_H
 
 #include "message.h"
 #include "../piano/key.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class for a message reporting a finally detected key.
+///
+/// When a piano key is played in the recording mode, the EPT continuously
+/// determines the 'rolling FFT' and uses this information to make a guess
+/// about the key which is pressed. This guess should be the same as long as
+/// the same key is played, but due to inaccuracies it may occasionally fail
+/// or fluctuate. The system keeps track of these changes and, upon completion
+/// of the recording, determines the 'final key' by a majority decision. This
+/// final key is then emitted by this message to inform the other components
+/// of the software.
+///////////////////////////////////////////////////////////////////////////////
+
 class MessageFinalKey : public Message
 {
 public:
     MessageFinalKey(int keyNumber, std::shared_ptr<Key> key);
-    ~MessageFinalKey();
+    ~MessageFinalKey(){};
 
     int getKeyNumber() { return mKeyNumber; }
     std::shared_ptr<Key> getFinalKey() const { return mKey; }

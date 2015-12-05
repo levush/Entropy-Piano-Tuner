@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Message indicating that the selected key has changed
+//=============================================================================
+
 #ifndef MESSAGEKEYSELECTIONCHANGED_H
 #define MESSAGEKEYSELECTIONCHANGED_H
 
@@ -25,11 +29,19 @@
 #include "../piano/key.h"
 #include <cstdint>
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class of a message indicating a change of the selected key
+///
+/// The EPT has the notion of key selection. Keys can be selected automatically
+/// by 'hearing' or by taps and mouse clicks. Whenever the key selection
+/// changes this message is emitted to inform all other modules of the EPT.
+///////////////////////////////////////////////////////////////////////////////
+
 class MessageKeySelectionChanged : public Message
 {
 public:
     MessageKeySelectionChanged(int index, const Key *key, piano::KeyState keyState = piano::STATE_NORMAL);
-    ~MessageKeySelectionChanged();
+    ~MessageKeySelectionChanged(){};
 
     int getKeyNumber() const {return mIndex;}
     const Key *getKey() const {return mKey;}

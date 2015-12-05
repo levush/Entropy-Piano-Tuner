@@ -28,18 +28,18 @@
 
 ////////////////////////////////////////////////////////////////////////
 /// \brief The Algorithm class is a basic abstract class for any
-///        algorithm
+///        tuning algorithm
 ///
 /// It creates a copy of the actual Piano in mPiano. The algorithm is
-/// allowed to change this data in any way.
-///
+/// allowed to change this data arbitrarily. By keeping a copy we hope
+/// to increase the security and stability of the implementation.
 ////////////////////////////////////////////////////////////////////////
 
 class Algorithm : public SimpleThreadHandler
 {
 public:
-    Algorithm(const Piano &piano, const AlgorithmFactoryDescription &desciption);
-    virtual ~Algorithm();
+    Algorithm(const Piano &piano, const AlgorithmFactoryDescription &description);
+    virtual ~Algorithm(){};
 
     virtual void workerFunction() override final;
 
@@ -62,7 +62,6 @@ protected:
     Piano mPiano;               ///< Copy of the piano
     const AlgorithmFactoryDescription &mFactoryDescription;
 
-    // useful variables that
     Keyboard& mKeyboard;        ///< Reference to the keyboard
     Keys& mKeys;                ///< Reference to the keys
     const int mNumberOfKeys;    ///< The number of keys

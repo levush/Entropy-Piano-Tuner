@@ -67,8 +67,8 @@ void WaveformGenerator::init (int numberOfKeys, int samplerate)
 {
     EptAssert(numberOfKeys > 0 and numberOfKeys < 256,
               "Number of keys out of range");
-    EptAssert(samplerate>0 and samplerate<50000,
-              "Range of sample rate invalid");
+    EptAssert(samplerate > 0, "Range of sample rate invalid");
+
     mNumberOfKeys = numberOfKeys;
     mLibrary.resize(mNumberOfKeys);
     mSampleRate = samplerate;

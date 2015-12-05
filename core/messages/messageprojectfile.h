@@ -17,6 +17,10 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//                 Message reporting an action concerining files
+//=============================================================================
+
 #ifndef MESSAGEPROJECTFILE_H
 #define MESSAGEPROJECTFILE_H
 
@@ -24,6 +28,13 @@
 
 class PianoFile;
 class Piano;
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message reporting an action concerining files
+///
+/// Whenever a file is opened, saved, edited or created this message is
+/// emitted to inform the other modules of the EPT.
+///////////////////////////////////////////////////////////////////////////////
 
 class MessageProjectFile : public Message
 {

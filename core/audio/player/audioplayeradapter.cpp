@@ -34,10 +34,16 @@ AudioPlayerAdapter::AudioPlayerAdapter() :
     setChannelCount(2); // Ouput stereo per default
 }
 
+
+//-----------------------------------------------------------------------------
+//  			                    Exit
+//-----------------------------------------------------------------------------
+
 void AudioPlayerAdapter::exit()
 {
     setWriter(nullptr);
 }
+
 
 //-----------------------------------------------------------------------------
 //			          Set the current PCM writer interface

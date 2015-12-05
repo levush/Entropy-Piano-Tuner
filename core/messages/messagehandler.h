@@ -17,9 +17,9 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                          Message handler
-//======================================================================
+//=============================================================================
+//                              Message handler
+//=============================================================================
 
 #ifndef MESSAGEHANDLER_H
 #define MESSAGEHANDLER_H
@@ -30,16 +30,16 @@
 #include <mutex>
 #include "messagelistener.h"
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for handling and sending messages
 ///
 /// This class adds messages of the different threads, places them
 /// in a queue and sends them to the connected listeners.
 ///
 /// This class is a singleton.
-/// Note that "process" has to be called in the same thread as the used
-/// gui.
-////////////////////////////////////////////////////////////////////////
+/// Note that "process" has to be called in the thread of the GUI.
+//////////////////////////////////////////////////////////////////////////////
+
 class MessageHandler
 {
 public:
@@ -62,10 +62,10 @@ public:
     static void sendUnique(Message::MessageTypes type) {sendUnique<Message>(type);}
 private:
     /// \brief private constructor since this class is a singleton
-    MessageHandler();
+    MessageHandler(){};
 
 public:
-    ~MessageHandler();                                      ///< Empty desctructor
+    ~MessageHandler(){}                                     ///< Empty desctructor
 
     static MessageHandler &getSingleton();                  ///< get a reference to the singleton class
     static MessageHandler *getSingletonPtr();               ///< get a pointer to the singleton class

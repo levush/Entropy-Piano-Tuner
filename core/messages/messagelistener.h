@@ -17,23 +17,35 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-//======================================================================
-//                         Message listener
-//======================================================================
+//=============================================================================
+//                             Message listener
+//=============================================================================
 
 #ifndef MESSAGELISTENER_H
 #define MESSAGELISTENER_H
 
 #include "message.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Class of a message listener
+///
+/// All modules that are suppposed to respond to certain messages are
+/// 'message listeners' and thus have to be derived from the present class.
+///////////////////////////////////////////////////////////////////////////////
+
 class MessageListener
 {
 public:
+    /// Constructor, registering the present class at the MessageHandler
     MessageListener(bool defaultActivation = true);
+
+    /// Destructor
     virtual ~MessageListener();
 
+    /// Handle message, to be overloaded in the derived class
     virtual void handleMessage(MessagePtr m) = 0;
 
+    // Functions for activating and deactivating message listening
     bool isMessageListenerActive() const {return mMessageListenerActive;}
     void activateMessageListener() {mMessageListenerActive = true;}
     void deactivateMessageListener() {mMessageListenerActive = false;}

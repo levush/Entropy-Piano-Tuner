@@ -91,9 +91,9 @@ private:
     int mKeyNumberOfA;                                  ///< Index of the A-key
     FFT_Implementation mFFT;                            ///< Instance of FFT implementation
     std::vector<double> mLogSpec;                       ///< Logarithmic spectrum (LogSpec)
-    std::vector<double> mFlatSpectrum;                    ///< DoubleLogarithmic spectrum (LogLogSpec)
+    std::vector<double> mFlatSpectrum;                  ///< DoubleLogarithmic spectrum (LogLogSpec)
     FFTComplexVector mKernelFFT;                        ///< Fourier transform of the kernel
-    FFTComplexVector mFlatFFT;                    ///< Fourier transform of LogLogSpec
+    FFTComplexVector mFlatFFT;                          ///< Fourier transform of LogLogSpec
     FFTRealVector mConvolution;                         ///< Convolution vector
     int mSelectedKey;                                   ///< Number of the actually selected key
     bool mKeyForced;                                    ///< Flag indicating that the key is forced

@@ -17,17 +17,25 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
+//=============================================================================
+//            Message reporting a frequency deviation during tuning
+//=============================================================================
+
 #ifndef MESSAGETUNINGDEVIATION_H
 #define MESSAGETUNINGDEVIATION_H
 
 #include "message.h"
 #include "../analyzers/fftanalyzererrorcodes.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Message reporting a frequency deviation during tuning
+///////////////////////////////////////////////////////////////////////////////
+
 class MessageTuningDeviation : public Message
 {
 public:
     MessageTuningDeviation(FrequencyDetectionResult result);
-    ~MessageTuningDeviation();
+    ~MessageTuningDeviation(){};
 
     FrequencyDetectionResult getResult() const {return mResult;}
 

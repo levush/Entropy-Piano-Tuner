@@ -28,18 +28,6 @@
 
 MessageHandler MessageHandler::mSingleton;
 
-//---------------------------- Empty constructor --------------------------------
-
-MessageHandler::MessageHandler()
-{
-}
-
-//---------------------------- Empty descructor ---------------------------------
-
-MessageHandler::~MessageHandler()
-{
-}
-
 //------------------------- get Singleton reference -----------------------------
 
 MessageHandler &MessageHandler::getSingleton() {
