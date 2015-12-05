@@ -23,10 +23,14 @@
 
 namespace options {
 
-PageEnvironment::PageEnvironment(OptionsDialog *optionsDialog)
-    : CentralWidgetInterface(this) {
+PageEnvironment::PageEnvironment(OptionsDialog *optionsDialog) :
+    PageSavingTabWidget("environment"),
+    CentralWidgetInterface(this) {
     addTab(new PageEnvironmentGeneral(optionsDialog), tr("General"));
     addTab(new PageEnvironmentTuning(optionsDialog), tr("Tuning"));
+
+
+    restorePageFromSettings();
 }
 
 void PageEnvironment::apply() {

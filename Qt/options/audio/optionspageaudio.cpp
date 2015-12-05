@@ -24,12 +24,15 @@
 
 namespace options {
 
-PageAudio::PageAudio(OptionsDialog *optionsDialog)
-    : CentralWidgetInterface(this)
+PageAudio::PageAudio(OptionsDialog *optionsDialog) :
+    PageSavingTabWidget("audio"),
+    CentralWidgetInterface(this)
 {
     this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioInput), tr("Input device"));
     this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioOutput), tr("Output device"));
     this->addTab(new PageAudioMidi(optionsDialog, optionsDialog->getCore()->getMidiInterface()), tr("Midi"));
+
+    restorePageFromSettings();
 }
 
 void PageAudio::apply() {

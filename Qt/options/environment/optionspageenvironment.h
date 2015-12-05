@@ -21,11 +21,12 @@
 #define OPTIONSPAGEENVIRONMENT_H
 
 #include <QTabWidget>
+#include "../pagesavingtabwidget.h"
 #include "../optionscentralwidgetinterface.h"
 
 namespace options {
 
-class PageEnvironment : public QTabWidget, public CentralWidgetInterface
+class PageEnvironment : public PageSavingTabWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
