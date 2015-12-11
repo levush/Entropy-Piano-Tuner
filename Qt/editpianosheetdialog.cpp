@@ -23,6 +23,7 @@
 #include <QDateTime>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QScrollBar>
 #include "ui_editpianosheetdialog.h"
 #include "../core/config.h"
 #include "../core/piano/piano.h"
@@ -37,11 +38,13 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->setupUi(this);
     setModal(true);
 
-    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
-        // on small devices we need a bit more space for translated languages (e.g. German), reduce margins in general for xsmall devices
-        layout()->setMargin(3);
-        ui->scrollAreaWidgetContents->layout()->setMargin(1);
-    }
+    // if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
+    //    // on small devices we need a bit more space for translated languages (e.g. German), reduce margins in general for xsmall devices
+    //    layout()->setMargin(3);
+    //    ui->scrollAreaWidgetContents->layout()->setMargin(1);
+    // }
+
+    ui->scrollArea->setFrameShape(QFrame::NoFrame);
 
     ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());
@@ -62,6 +65,16 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
 
     ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
+
+    if (DisplaySizeDefines::getSingleton()->showMultiLineEditPianoDataSheet()) {
+        ui->pianoManufacturerInformationLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        ui->pianoOperatingSiteInformationLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+    } else {
+        ui->pianoManufacturerInformationLayout->setRowWrapPolicy(QFormLayout::DontWrapRows);
+        ui->pianoOperatingSiteInformationLayout->setRowWrapPolicy(QFormLayout::DontWrapRows);
+    }
+
+    ui->scrollAreaWidgetContents->installEventFilter(this);
 
     SHOW_DIALOG(this);
 }
@@ -88,6 +101,7 @@ void EditPianoSheetDialog::applyData(Piano *piano) const {
 
     piano->getKeyboard().changeKeyboardConfiguration(ui->numberOfKeysSpinBox->value(),
                                          ui->keyNumberOfASpinBox->value() - 1);  // counting start from 1 to 0
+
 }
 
 void EditPianoSheetDialog::keyPressEvent(QKeyEvent *event) {
@@ -102,6 +116,16 @@ void EditPianoSheetDialog::keyPressEvent(QKeyEvent *event) {
         QDialog::keyPressEvent(event);
         break;
     }
+}
+
+bool EditPianoSheetDialog::eventFilter(QObject *o, QEvent *e) {
+    if (o == ui->scrollAreaWidgetContents && e->type() == QEvent::Resize) {
+        setMinimumWidth(ui->scrollAreaWidgetContents->minimumSizeHint().width()
+                        + ui->scrollArea->verticalScrollBar()->width()
+                        + ui->scrollAreaWidgetContents->layout()->margin() * 2);
+    }
+
+    return false;
 }
 
 void EditPianoSheetDialog::onSetTuningTimeToNow() {
