@@ -106,103 +106,103 @@
 <context>
     <name>CalculationProgressGroup</name>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="49"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="68"/>
         <source>Status:</source>
         <translation>상태:</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="87"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="115"/>
         <source>Info</source>
         <translation>정보</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="127"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="186"/>
         <source>An unknown error occured during the calculation.</source>
         <translation>계산중 오류발생.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="130"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="189"/>
         <source>No data available.</source>
         <translation>가능한 데이터가 없습니다.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="133"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="192"/>
         <source>Not all keys recorded</source>
         <translation>모든 건반이 저장되지 않았습니다</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="136"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="195"/>
         <source>Key data inconsistent.</source>
         <translation>건반 데이터 오류.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="139"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="198"/>
         <source>Not enough keys recorded in left section.</source>
         <translation>너무 몇 가지 기록 피아노 키 (중저음).</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="142"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="201"/>
         <source>Not enough keys recorded in right section.</source>
         <translation>너무 몇 가지 기록 피아노 키 (고음).</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="145"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="204"/>
         <source>Undefined error message.</source>
         <translation>정의되지 않은 오류 메시지.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="209"/>
         <source>Calculation error</source>
         <translation>계산 오류</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="150"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="210"/>
         <source>Error code</source>
         <translation>오류 코드</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="158"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="165"/>
         <source>Calculation started</source>
         <translation>계산 시작</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="159"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="166"/>
         <source>Stop calculation</source>
         <translation>계산중지</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
         <source>Calculation finished</source>
         <translation>계산 완료</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="164"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
         <translation>계산이 완료되었습니다! 이제 튜닝모드로 전환하여 여러분의 피아노를 조율할 수 있습니다.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="177"/>
         <source>Minimizing the entropy</source>
         <translation>엔트로피 최소화</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="184"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="236"/>
         <source>Calculation with: %1</source>
         <translation>계산중: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="195"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="271"/>
         <source>Calculation canceled</source>
         <translation>계산 취소</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="212"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="273"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="303"/>
         <source>Start calculation</source>
         <translation>계산시작</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="208"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="299"/>
         <source>Press the button to start the calculation</source>
         <translation>시작하려면 버튼을 누르세요</translation>
     </message>
@@ -244,13 +244,23 @@
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="50"/>
+        <source>Save changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="55"/>
         <source>Question</source>
         <translation>질문</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="58"/>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="64"/>
         <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>저장된 피치 마커 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
+    </message>
+    <message>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="76"/>
+        <source>Do you want to save your current changes? You can save at any time using the tool button or the action from the menu.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Do you really want to reset all pitch markers? This can not be undone!</source>
@@ -261,17 +271,17 @@
         <translation type="vanished">저장된 키들을 리셋하시겠습니까? 지워진 데이터는 회복될 수 없습니다!</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="61"/>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="67"/>
         <source>Not all keys have been recorded. Switch the mode and record them.</source>
         <translation>모든 키들이 저장되지 않았습니다. 모드를 바꿔서 키들을 저장하세요.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="64"/>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="70"/>
         <source>The tuning curve has not been calculated. Switch the mode and calculate it.</source>
         <translation>튜닝 곡선이 계산되지 않았습니다. 모드를 바꿔서 튜닝 곡선을 계산하세요.</translation>
     </message>
     <message>
-        <location filename="../Qt/donotshowagainmessagebox.cpp" line="67"/>
+        <location filename="../Qt/donotshowagainmessagebox.cpp" line="73"/>
         <source>There are missing frequencies in the calculated tuning curve. Recalculate to fix this.</source>
         <translation>빠진 주기가 있습니다.다시 계산하세요.</translation>
     </message>
@@ -388,29 +398,26 @@
 <context>
     <name>InitializeDialog</name>
     <message>
-        <location filename="../Qt/initializedialog.cpp" line="68"/>
+        <location filename="../Qt/initializedialog.cpp" line="69"/>
         <source>Initializing the core component</source>
         <translation>코어 초기화</translation>
     </message>
     <message>
-        <location filename="../Qt/initializedialog.cpp" line="98"/>
         <source>Preparing</source>
-        <translation>준비중</translation>
+        <translation type="vanished">준비중</translation>
     </message>
     <message>
-        <location filename="../Qt/initializedialog.cpp" line="101"/>
+        <location filename="../Qt/initializedialog.cpp" line="98"/>
         <source>Initializing, please wait</source>
         <translation>초기화중 기다려주세요</translation>
     </message>
     <message>
-        <location filename="../Qt/initializedialog.cpp" line="104"/>
         <source>Initializing the midi component</source>
-        <translation>MIDI 초기화</translation>
+        <translation type="vanished">MIDI 초기화</translation>
     </message>
     <message>
-        <location filename="../Qt/initializedialog.cpp" line="107"/>
         <source>Finished</source>
-        <translation>완료</translation>
+        <translation type="vanished">완료</translation>
     </message>
 </context>
 <context>
@@ -425,16 +432,26 @@
     <name>LogViewer</name>
     <message>
         <location filename="../Qt/logviewer.ui" line="20"/>
-        <location filename="../Qt/logviewer.ui" line="34"/>
+        <location filename="../Qt/logviewer.ui" line="36"/>
         <source>Log</source>
         <translation>로그</translation>
+    </message>
+    <message>
+        <location filename="../Qt/logviewer.ui" line="56"/>
+        <source>Copy the contents of the log to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/logviewer.ui" line="59"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="521"/>
+        <location filename="../Qt/mainwindow.cpp" line="537"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
         <source>Entropy piano tuner</source>
         <translation>엔트로피 피아노 튜너</translation>
@@ -481,7 +498,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="143"/>
-        <location filename="../Qt/mainwindow.cpp" line="211"/>
+        <location filename="../Qt/mainwindow.cpp" line="210"/>
         <source>About</source>
         <translation>정보</translation>
     </message>
@@ -527,7 +544,7 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
-        <location filename="../Qt/mainwindow.cpp" line="191"/>
+        <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Clear pitch markers</source>
         <translation>피치 마커를 재설정</translation>
     </message>
@@ -554,94 +571,94 @@
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="204"/>
-        <location filename="../Qt/mainwindow.cpp" line="209"/>
+        <location filename="../Qt/mainwindow.cpp" line="208"/>
         <source>Tutorial</source>
         <translation>튜토리얼</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="144"/>
+        <location filename="../Qt/mainwindow.cpp" line="143"/>
         <source>Idle</source>
         <translation>휴면</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="146"/>
+        <location filename="../Qt/mainwindow.cpp" line="145"/>
         <source>Press this button to switch to the idle mode.</source>
         <translation>휴면 모드로 변환.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="150"/>
+        <location filename="../Qt/mainwindow.cpp" line="149"/>
         <source>Record</source>
         <translation>녹음</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="152"/>
+        <location filename="../Qt/mainwindow.cpp" line="151"/>
         <source>Press this button to switch to the recording mode.</source>
         <translation>녹음 모드로 변환.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="156"/>
+        <location filename="../Qt/mainwindow.cpp" line="155"/>
         <source>Calculate</source>
         <translation>계산</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="158"/>
+        <location filename="../Qt/mainwindow.cpp" line="157"/>
         <source>Press this button to switch to the calculation mode.</source>
         <translation>계산 모드로 변환.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="162"/>
+        <location filename="../Qt/mainwindow.cpp" line="161"/>
         <source>Tune</source>
         <translation>튠</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="164"/>
+        <location filename="../Qt/mainwindow.cpp" line="163"/>
         <source>Press this button to switch to the tuning mode.</source>
         <translation>튜닝 모드로 변환.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="180"/>
+        <location filename="../Qt/mainwindow.cpp" line="179"/>
         <source>Documents and tools</source>
         <translation>문서 툴</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="186"/>
+        <location filename="../Qt/mainwindow.cpp" line="185"/>
         <source>New</source>
         <translation>새 작업</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="187"/>
+        <location filename="../Qt/mainwindow.cpp" line="186"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="111"/>
         <source>Open</source>
         <translation>열기</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="188"/>
+        <location filename="../Qt/mainwindow.cpp" line="187"/>
         <location filename="../Qt/projectmanagerforqt.cpp" line="88"/>
         <source>Save</source>
         <translation>저장</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="189"/>
+        <location filename="../Qt/mainwindow.cpp" line="188"/>
         <source>Save as</source>
         <translation>다른 이름으로 저장</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="190"/>
+        <location filename="../Qt/mainwindow.cpp" line="189"/>
         <source>Edit piano data sheet</source>
         <translation>편집 피아노 데이터 시트</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="193"/>
+        <location filename="../Qt/mainwindow.cpp" line="192"/>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="194"/>
+        <location filename="../Qt/mainwindow.cpp" line="193"/>
         <source>Graphs</source>
         <translation>그래프</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="196"/>
+        <location filename="../Qt/mainwindow.cpp" line="195"/>
         <source>Help</source>
         <translation>도움말</translation>
     </message>
@@ -650,68 +667,68 @@
         <translation type="vanished">로그</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="231"/>
+        <location filename="../Qt/mainwindow.cpp" line="230"/>
         <source>Export</source>
         <translation>내보내기</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="363"/>
+        <location filename="../Qt/mainwindow.cpp" line="367"/>
         <source>File created</source>
         <translation>파일이 생성됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="366"/>
+        <location filename="../Qt/mainwindow.cpp" line="370"/>
         <source>File edited</source>
         <translation>파일이 편집됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="369"/>
+        <location filename="../Qt/mainwindow.cpp" line="373"/>
         <source>File opened</source>
         <translation>파일이 열림</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="372"/>
+        <location filename="../Qt/mainwindow.cpp" line="376"/>
         <source>File saved</source>
         <translation>파일이 저장됨</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="438"/>
+        <location filename="../Qt/mainwindow.cpp" line="454"/>
         <source>Recording keystroke</source>
         <translation>건반누름 저장중</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="446"/>
+        <location filename="../Qt/mainwindow.cpp" line="462"/>
         <source>Signal analysis started</source>
         <translation>신호 분석 시작</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="449"/>
+        <location filename="../Qt/mainwindow.cpp" line="465"/>
         <source>Signal analysis ended</source>
         <translation>신호 분석 완료</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="478"/>
+        <location filename="../Qt/mainwindow.cpp" line="494"/>
         <source>Calculation failed</source>
         <translation>계산실패</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="481"/>
+        <location filename="../Qt/mainwindow.cpp" line="497"/>
         <source>Calculation ended</source>
         <translation>계산완료</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="484"/>
+        <location filename="../Qt/mainwindow.cpp" line="500"/>
         <source>Calculation started</source>
         <translation>계산시작</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="554"/>
-        <location filename="../Qt/mainwindow.cpp" line="760"/>
+        <location filename="../Qt/mainwindow.cpp" line="570"/>
+        <location filename="../Qt/mainwindow.cpp" line="792"/>
         <source>Warning</source>
         <translation>경고</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="554"/>
+        <location filename="../Qt/mainwindow.cpp" line="570"/>
         <source>Unable to find a supported sound control.</source>
         <translation>지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
@@ -720,27 +737,27 @@
         <translation type="vanished">지원되는 사운드 콘트롤을 발견하지 못했습니다.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="602"/>
+        <location filename="../Qt/mainwindow.cpp" line="618"/>
         <source>Canceled</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="602"/>
+        <location filename="../Qt/mainwindow.cpp" line="618"/>
         <source>You need to save the file before you can share it.</source>
         <translation>공유하기 전에 저장하십시오.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="741"/>
+        <location filename="../Qt/mainwindow.cpp" line="773"/>
         <source>A new update is available!</source>
         <translation>새로운 업데이트가 있습니다!</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="742"/>
+        <location filename="../Qt/mainwindow.cpp" line="774"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>새로운 버전 %1 이 존재합니다.업데이트 하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="760"/>
+        <location filename="../Qt/mainwindow.cpp" line="792"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>유지보수 프로그램이 자동으로 실행되지 않았습니다.업데이트를 위해 수동으로 유지보수 프로그램을 실행하십시오.</translation>
     </message>
@@ -877,6 +894,14 @@
     </message>
 </context>
 <context>
+    <name>ProgressDisplay</name>
+    <message>
+        <location filename="../Qt/progressdisplay.cpp" line="37"/>
+        <source>Synthesizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QwtPlotRenderer</name>
     <message>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="979"/>
@@ -985,12 +1010,12 @@
 <context>
     <name>TunerApplication</name>
     <message>
-        <location filename="../Qt/tunerapplication.cpp" line="97"/>
+        <location filename="../Qt/tunerapplication.cpp" line="70"/>
         <source>Crash handler</source>
         <translation>문제해결</translation>
     </message>
     <message>
-        <location filename="../Qt/tunerapplication.cpp" line="97"/>
+        <location filename="../Qt/tunerapplication.cpp" line="70"/>
         <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
         <translation>예상치 못하게 종료되었습니다.이전 로그를 보시겠습니까?</translation>
     </message>
@@ -998,9 +1023,24 @@
 <context>
     <name>TuningGroupBox</name>
     <message>
-        <location filename="../Qt/tuninggroupbox.cpp" line="28"/>
         <source>Tuning</source>
-        <translation>튜닝</translation>
+        <translation type="vanished">튜닝</translation>
+    </message>
+</context>
+<context>
+    <name>TuningIndicatorGroupBox</name>
+    <message>
+        <location filename="../Qt/tuningindicatorgroupbox.cpp" line="27"/>
+        <source>Tuning</source>
+        <translation type="unfinished">튜닝</translation>
+    </message>
+</context>
+<context>
+    <name>TuningIndicatorView</name>
+    <message>
+        <location filename="../Qt/tuningindicatorview.cpp" line="46"/>
+        <source>This is the tuning indicator. Touch this field to toggle between spectral and stroboscopic mode. In the spectral mode you should bring the peak to the center of the window for optimal tuning. When tuning several strings of unisons at once, several peaks might appear and all of them should be tuned to match the center. In the stroboscopic mode several stripes of drifiting rainbows are shown. The stripes represent the partials. Optimal tuning of single strings is obtained when the rainbows come to a halt.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1057,25 +1097,24 @@
 <context>
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
-        <location filename="../Qt/zoomedspectrumgraphicsview.cpp" line="26"/>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation>이것은 튜닝 장치입니다.최적의 튜닝을 위해서 봉우리와 표시바를 창의 중앙으로 이동시킵시시오.여러개의 현을 진동시키는 경우에는 그에 해당하는 모든 봉우리와표시바를 중앙에 맞추십시오.</translation>
+        <translation type="vanished">이것은 튜닝 장치입니다.최적의 튜닝을 위해서 봉우리와 표시바를 창의 중앙으로 이동시킵시시오.여러개의 현을 진동시키는 경우에는 그에 해당하는 모든 봉우리와표시바를 중앙에 맞추십시오.</translation>
     </message>
 </context>
 <context>
     <name>options::OptionsDialog</name>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="47"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="48"/>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="69"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
         <source>Environment</source>
         <translation>환경</translation>
     </message>
     <message>
-        <location filename="../Qt/options/optionsdialog.cpp" line="70"/>
+        <location filename="../Qt/options/optionsdialog.cpp" line="71"/>
         <source>Audio</source>
         <translation>오디오</translation>
     </message>
@@ -1083,17 +1122,17 @@
 <context>
     <name>options::PageAudio</name>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="30"/>
+        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="31"/>
         <source>Input device</source>
         <translation>입력장치</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="31"/>
+        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="32"/>
         <source>Output device</source>
         <translation>출력장치</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="32"/>
+        <location filename="../Qt/options/audio/optionspageaudio.cpp" line="33"/>
         <source>Midi</source>
         <translation>MIDI</translation>
     </message>
@@ -1101,13 +1140,15 @@
 <context>
     <name>options::PageAudioInputOutput</name>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="59"/>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="66"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="64"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="70"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="95"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="111"/>
         <source>Default</source>
         <translation>디폴트</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="61"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="65"/>
         <source>Input device</source>
         <translation>입력장치</translation>
     </message>
@@ -1116,22 +1157,32 @@
         <translation type="vanished">샘플링 레이트</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="67"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="71"/>
         <source>Sampling rates</source>
         <translation>샘플링 속도</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="87"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="77"/>
         <source>Open system settings</source>
         <translation>열기 사운드 콘트롤</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="90"/>
+        <source>Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="102"/>
+        <source>Buffer size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="241"/>
         <source>Warning</source>
         <translation>경고</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="176"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="241"/>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
         <translation>모든 건반을 녹음하고 연주하기 위해서는 적어도%1의 샘플링 레이트가 필요합니다.</translation>
     </message>
@@ -1147,12 +1198,12 @@
 <context>
     <name>options::PageEnvironment</name>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="28"/>
+        <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="29"/>
         <source>General</source>
         <translation>일반</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="29"/>
+        <location filename="../Qt/options/environment/optionspageenvironment.cpp" line="30"/>
         <source>Tuning</source>
         <translation>튜닝</translation>
     </message>
@@ -1160,22 +1211,22 @@
 <context>
     <name>options::PageEnvironmentGeneral</name>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="38"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="47"/>
         <source>User Interface</source>
         <translation>유저 인터페이스</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="45"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="54"/>
         <source>Language</source>
         <translation>언어</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="47"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="56"/>
         <source>&lt;System Language&gt;</source>
         <translation>&lt;시스템 언어&gt;</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="67"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="83"/>
         <source>Reactivate warnings</source>
         <translation>모든 경고를 재 활성화</translation>
     </message>
@@ -1184,12 +1235,12 @@
         <translation type="vanished">리셋 경고들</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="80"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="107"/>
         <source>Information</source>
         <translation>정보</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="80"/>
+        <location filename="../Qt/options/environment/optionspageenvironmentgeneralpage.cpp" line="108"/>
         <source>The language change will take effect after a restart of the entropy piano tuner.</source>
         <translation>언어 변경을 완료하려면 프로그램을 다시 시작하세요.</translation>
     </message>
@@ -1197,32 +1248,37 @@
 <context>
     <name>options::PageEnvironmentTuning</name>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="35"/>
         <source>Disabled</source>
         <translation>불가능</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="36"/>
         <source>Synthesized key sound</source>
         <translation>신데사이저 키 사운드</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="37"/>
         <source>Reference key</source>
         <translation>레퍼런스 키</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="40"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="38"/>
         <source>Synthesizer mode</source>
         <translation>신데사이저 모드</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="44"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="42"/>
         <source>Dynamic synthesizer volume</source>
         <translation>다이나믹 센데사이저 볼륨</translation>
     </message>
     <message>
-        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="50"/>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="48"/>
+        <source>Stroboscopic tuning indicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="54"/>
         <source>Disable automatic key selection</source>
         <translation>불가능.자동 키 선택</translation>
     </message>
