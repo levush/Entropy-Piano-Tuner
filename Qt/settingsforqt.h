@@ -81,10 +81,10 @@ public:
     /// \brief Getter function to check if the given AutoClosingMessageBox shall
     ///        not be shown again.
     /// \param id : Id of the message box
-    /// \return Show the message box again?
+    /// \return -1 if show, >0 for stored result
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    bool doNotShowAgainMessageBox(int id) const;
+    int doNotShowAgainMessageBox(int id) const;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Sets a AutoClosingMessageBox state whether to show again.
@@ -93,15 +93,18 @@ public:
     ///
     /// This will automatically store its new value to the QSettings.
     ///////////////////////////////////////////////////////////////////////////////
-    void setDoNotShowAgainMessageBox(int id, bool doNotShowAgain);
+    void setDoNotShowAgainMessageBox(int id, bool doNotShowAgain, int value);
 
     ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Get the count of all do not show again message boxes whose states
-    ///        are stored.
-    /// \return Number of message boxes.
-    ///
+    /// \brief Sets all results to -1 and stored to false
+    void clearAllDoNotShowAgainMessageBoxes();
+
+
     ///////////////////////////////////////////////////////////////////////////////
-    size_t countCurrentDoNotShowAgainMessageBoxes() const {return mDoNotShowAgainMessageBoxes.size();}
+    /// \brief Counts how many DoNotShowAgainMessageBoxes have a stored state
+    /// \return Number
+    ///
+    int countActiveDoNotShowAgainMessageBoxes() const;
 
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Getter function for mLastVisitedOptionsPage.
@@ -197,9 +200,6 @@ private:
     /// This is used to detect whether this is the first run.
     ///////////////////////////////////////////////////////////////////////////////
     qlonglong mApplicationRuns;
-
-    /// store the ids of the message boxes that wont show again
-    std::vector<int> mDoNotShowAgainMessageBoxes;
 
 
     /// last activated options page

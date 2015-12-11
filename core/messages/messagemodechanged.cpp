@@ -19,9 +19,10 @@
 
 #include "messagemodechanged.h"
 
-MessageModeChanged::MessageModeChanged(OperationMode mode)
+MessageModeChanged::MessageModeChanged(OperationMode mode, OperationMode previousMode)
     : Message(MSG_MODE_CHANGED),
-      mMode(mode) {
+      mMode(mode),
+      mPreviousMode(previousMode) {
 
 }
 

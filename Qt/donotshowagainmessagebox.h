@@ -41,6 +41,7 @@ public:
         NOT_ALL_KEYS_RECORDED,          ///< Not all keys have been recorded
         TUNING_CURVE_NOT_CALCULATED,    ///< The tuning curve has not been calculated
         TUNING_CURVE_NEEDS_UPDATE,      ///< The tuning curve has to be recalculated
+        MODE_CHANGE_SAVE,               ///< Switching the mode from recording and there are changes
 
         COUNT                           ///< Number of message boxes
     };
@@ -76,6 +77,12 @@ public:
     static int show(Type type, const QString text, QWidget *parent = nullptr);
     static int show(Type type, QWidget *parent) {return show(type, QString(), parent);}
 
+    ///
+    /// \brief Action that was stored
+    /// \param Dialog ID
+    /// \return -1 if no action stored (show again), result of dialog elsewise
+    ///
+    static int doNotShowAgainAction(Type type);
     static bool doNotShowAgain(Type type);
 
 private:

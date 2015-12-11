@@ -82,7 +82,7 @@ PageEnvironmentGeneral::PageEnvironmentGeneral (OptionsDialog *optionsDialog)
 
     mResetWarningsButton = new QPushButton(tr("Reactivate warnings"));
     userInterfaceLayout->addRow(mResetWarningsButton, (QWidget*)nullptr);
-    mResetWarningsButton->setEnabled(SettingsForQt::getSingleton().countCurrentDoNotShowAgainMessageBoxes() > 0);
+    mResetWarningsButton->setEnabled(SettingsForQt::getSingleton().countActiveDoNotShowAgainMessageBoxes() > 0);
 
     // notify if changes are made
     QObject::connect(mLanguageSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
@@ -120,10 +120,7 @@ void PageEnvironmentGeneral::apply()
 
 void PageEnvironmentGeneral::onReactivateWarnings()
 {
-    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i)
-    {
-        SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(i, false);
-    }
+    SettingsForQt::getSingleton().clearAllDoNotShowAgainMessageBoxes();
     mResetWarningsButton->setEnabled(false);
 }
 

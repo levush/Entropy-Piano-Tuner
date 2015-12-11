@@ -393,6 +393,18 @@ void MainWindow::handleMessage(MessagePtr m) {
         // hide all groups first and enable if required
         mCalculationProgressGroup->setVisible(false);
 
+        // ask user if he wants to save
+        if (mCore->getProjectManager()->hasChangesInFile()) {
+            if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::MODE_CHANGE_SAVE, this) == QMessageBox::Yes) {
+                // save
+                if (mCore->getProjectManager()->onSaveFile() == ProjectManagerAdapter::R_CANCELED) {
+                    // if the user cancels the dialog, reset the save state of the dialog
+                    SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(DoNotShowAgainMessageBox::MODE_CHANGE_SAVE, false, -1);
+                }
+            }
+        }
+
+        // display
         if (mmc->getMode() == MODE_CALCULATION) {
             // hide first for correct sizing
             mCalculationProgressGroup->setVisible(true);
@@ -612,7 +624,7 @@ void MainWindow::onEditPianoDataSheet() {
 }
 
 void MainWindow::onResetRecording() {
-    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_PITCHES, this) == QMessageBox::Accepted) {
+    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_PITCHES, this) == QMessageBox::Yes) {
         mCore->getPianoManager()->resetPitches();
     }
 }

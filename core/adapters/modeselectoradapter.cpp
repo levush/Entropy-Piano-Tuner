@@ -61,7 +61,8 @@ void ModeSelectorAdapter::setMode(OperationMode m)
 {
     if (mCurrentMode != m)
     {
+        auto oldMode = mCurrentMode;
         mCurrentMode = m;
-        MessageHandler::sendUnique<MessageModeChanged>(m);
+        MessageHandler::sendUnique<MessageModeChanged>(m, oldMode);
     }
 }
