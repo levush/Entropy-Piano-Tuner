@@ -203,6 +203,7 @@ void PageAudioInputOutput::onDeviceSelectionChanged(int row) {
                 mChannelsSelect->addItem(QString::number(channels), channels);
             }
         }
+        mChannelsSelect->setCurrentIndex(mChannelsSelect->count() - 1);
     }
 
     onDefaultSamplingRate();
