@@ -46,6 +46,8 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
       mAudioRecorder(this),
       mAudioPlayer(this) {
 
+    LogForQt *log = new LogForQt();
+
     EptAssert(!mSingleton, "Singleton class already created");
     mSingleton = this;
 
@@ -56,6 +58,7 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
     }
 
     new FileManagerForQt();
+    log->createLogFile();
 
     // get last exit code
     QSettings settings;
@@ -74,7 +77,6 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
         }
     }
 
-    new LogForQt();
     // writeout args to log
     LogI("Number of arguments: %d", arguments().size());
     LogI("Program arguments: %s", arguments().join(", ").toStdString().c_str());

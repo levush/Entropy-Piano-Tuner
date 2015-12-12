@@ -31,19 +31,21 @@
 const std::string Log::LOG_NAME("entropy_tuner_log.txt");
 std::shared_ptr<Log> Log::mLog;
 
-Log::Log(bool useLogfile) {
+Log::Log() {
     mLog = std::shared_ptr<Log>(this);
-    if (useLogfile) {
-        FileManager::getSingleton().open(
-                    mLogStream,
-                    FileManager::getSingleton().getLogFilePath(LOG_NAME));
-        writeToLogfile(LEVEL_INFORMATION, "Log file for entropy tuner\n\n", __LINE__, __FILE__, __func__);
-    }
 }
 
 Log::~Log()
 {
     mLogStream.close();
+}
+
+void Log::createLogFile()
+{
+    FileManager::getSingleton().open(
+                mLogStream,
+                FileManager::getSingleton().getLogFilePath(LOG_NAME));
+    writeToLogfile(LEVEL_INFORMATION, "Log file for entropy tuner\n\n", __LINE__, __FILE__, __func__);
 }
 
 const char* Log::simplify (const char* filename)

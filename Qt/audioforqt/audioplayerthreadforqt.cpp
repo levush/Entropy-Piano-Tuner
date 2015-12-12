@@ -102,12 +102,12 @@ void AudioPlayerThreadForQt::init()
             mAudioSource->setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8)
             {
-                LogW("Sample size not supported");
+                LogW("Sample size of %i not supported", format.sampleSize());
                 return;
             }
             if (format.sampleType() != QAudioFormat::SignedInt)
             {
-                LogW("Sample format not supported");
+                LogW("Sample format (%i) not supported", format.sampleType());
                 return;
             }
         }

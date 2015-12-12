@@ -185,7 +185,11 @@ contains(QWT_CONFIG, QwtPlot) {
 
 greaterThan(QT_MAJOR_VERSION, 4) {
 
-    QT += printsupport
+    winrt|winphone {
+    }
+    else {
+        QT += printsupport
+    }
     QT += concurrent
 } 
 
