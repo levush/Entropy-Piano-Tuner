@@ -62,13 +62,13 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
 
     // select input device
     QPushButton *selectDefaultInputDeviceButton = new QPushButton(tr("Default"));
-    inputLayout->addWidget(new QLabel(tr("Input device")), 0, 0);
+    inputLayout->addWidget(new QLabel(tr("Device")), 0, 0);
     inputLayout->addWidget(mDeviceSelection, 0, 1);
     inputLayout->addWidget(selectDefaultInputDeviceButton, 0, 2);
 
     // sampling rate
     QPushButton *selectDefaultSamplingRateButton = new QPushButton(tr("Default"));
-    inputLayout->addWidget(new QLabel(tr("Sampling rates")), 1, 0);
+    inputLayout->addWidget(new QLabel(tr("Sampling rate ")), 1, 0);
     inputLayout->addWidget(mSamplingRates = new QComboBox, 1, 1);
     inputLayout->addWidget(selectDefaultSamplingRateButton, 1, 2);
 
