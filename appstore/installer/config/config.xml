@@ -12,6 +12,7 @@
     <RunProgram>@TargetDir@/entropypianotuner</RunProgram>
     <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
     <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
+	<AdminTargetDir>@ApplicationsDir@/EntropyPianoTuner</AdminTargetDir>
     <RemoteRepositories>
         <Repository>
             <Url>http://download.piano-tuner.org/Resources/Public/Downloads/Repository/dummy_repository</Url>
