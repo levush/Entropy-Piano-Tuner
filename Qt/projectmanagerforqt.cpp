@@ -86,6 +86,7 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
     QString defaultSuffix;
     if (fileType & piano::FT_EPT) {defaultSuffix = "ept";}
     else if (fileType & piano::FT_CSV) {defaultSuffix = "csv";}
+    // static method call is required to get native file dialog
     QString file = QFileDialog::getSaveFileName(mMainWindow, MainWindow::tr("Save"), path, getFileFilters(fileType, true), 0);
     if (file.isEmpty()) {
         // canceled
@@ -95,7 +96,9 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
         // add default ending
         file.append("." + defaultSuffix);
     }
+    // update/store path
     setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
+    // return selected file
     return file.toStdString();
 #endif
 }
@@ -107,12 +110,15 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileT
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
+    // static method call is required to get native file dialog
     QString file = QFileDialog::getOpenFileName(mMainWindow, MainWindow::tr("Open"), path, getFileFilters(fileType, true), 0);
     if (file.isEmpty()) {
         // canceled
         return std::string();
     }
+    // update/store path
     setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
+    // return selected file
     return file.toStdString();
 #endif
 }
