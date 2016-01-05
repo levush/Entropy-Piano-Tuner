@@ -119,6 +119,7 @@ protected:
 
 
     QString getFileFilters(int fileTypes, bool addAll) const;
+    bool isVaildFileEndig(QString filename, int fileTypes) const;
 
 private:
     /// The main window.

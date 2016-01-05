@@ -83,21 +83,20 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
-
-
-    QFileDialog d(mMainWindow, MainWindow::tr("Save"), path, getFileFilters(fileType, true));
-    d.setAcceptMode(QFileDialog::AcceptSave);
-    d.setFileMode(QFileDialog::AnyFile);
-    if (fileType & piano::FT_EPT) {d.setDefaultSuffix("ept");}
-    else if (fileType & piano::FT_CSV) {d.setDefaultSuffix("csv");}
-    SHOW_DIALOG(&d);
-    if (d.exec() == QDialog::Accepted) {
-        setCurrentPath(d.directory().absolutePath());
-        const QString file = d.selectedFiles().first();
-        return file.toStdString();
-    } else {
+    QString defaultSuffix;
+    if (fileType & piano::FT_EPT) {defaultSuffix = "ept";}
+    else if (fileType & piano::FT_CSV) {defaultSuffix = "csv";}
+    QString file = QFileDialog::getSaveFileName(mMainWindow, MainWindow::tr("Save"), path, getFileFilters(fileType, true), 0);
+    if (file.isEmpty()) {
+        // canceled
         return std::string();
     }
+    if (isVaildFileEndig(file, fileType) == false) {
+        // add default ending
+        file.append("." + defaultSuffix);
+    }
+    setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
+    return file.toStdString();
 #endif
 }
 
@@ -108,16 +107,13 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileT
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
-    QFileDialog d(mMainWindow, MainWindow::tr("Open"), path, getFileFilters(fileType, true));
-    d.setAcceptMode(QFileDialog::AcceptOpen);
-    d.setFileMode(QFileDialog::AnyFile);
-    SHOW_DIALOG(&d);
-    if (d.exec() == QDialog::Accepted) {
-        setCurrentPath(d.directory().absolutePath());
-        return d.selectedFiles().first().toStdString();
-    } else {
+    QString file = QFileDialog::getOpenFileName(mMainWindow, MainWindow::tr("Open"), path, getFileFilters(fileType, true), 0);
+    if (file.isEmpty()) {
+        // canceled
         return std::string();
     }
+    setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
+    return file.toStdString();
 #endif
 }
 
@@ -187,4 +183,15 @@ QString ProjectManagerForQt::getFileFilters(int fileTypes, bool addAll) const {
         files += MainWindow::tr("All files") + " (*)";
     }
     return files;
+}
+
+bool ProjectManagerForQt::isVaildFileEndig(QString filename, int fileTypes) const {
+    if (fileTypes & piano::FT_EPT) {
+        if (filename.endsWith(".ept")) {return true;}
+    }
+    if (fileTypes & piano::FT_CSV) {
+        if (filename.endsWith(".csv")) {return true;}
+    }
+
+    return false;
 }
