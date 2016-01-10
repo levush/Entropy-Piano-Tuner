@@ -254,6 +254,7 @@ HEADERS  += \
     Qt/options/pagesavingtabwidget.h \
     Qt/piano/pianofileiointerface.h \
     Qt/piano/pianofileioxml.h \
+    Qt/piano/pianofileiocsv.h \
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -317,6 +318,7 @@ SOURCES +=  \
     Qt/options/pagesavingtabwidget.cpp \
     Qt/piano/pianofileiointerface.cpp \
     Qt/piano/pianofileioxml.cpp \
+    Qt/piano/pianofileiocsv.cpp \
 
 
 #-------------------------------------------------
