@@ -146,12 +146,12 @@ ProjectManagerForQt::Results ProjectManagerForQt::share() {
 }
 
 void ProjectManagerForQt::fillNew(Piano &piano) {
-    piano.setName(MainWindow::tr("New piano").toStdString());
-    piano.setSerialNumber("0000-0000");
-    piano.setManufactureYear(QString("%1").arg(QDate::currentDate().year()).toStdString());
-    piano.setManufactureLocation(MainWindow::tr("Unknown").toStdString());
+    piano.setName(MainWindow::tr("New piano").toStdWString());
+    piano.setSerialNumber(QString("0000-0000").toStdWString());
+    piano.setManufactureYear(QString("%1").arg(QDate::currentDate().year()).toStdWString());
+    piano.setManufactureLocation(MainWindow::tr("Unknown").toStdWString());
 
-    piano.setTuningLocation(MainWindow::tr("Unknown").toStdString());
+    piano.setTuningLocation(MainWindow::tr("Unknown").toStdWString());
     piano.setTuningTimeToActualTime();
     piano.setConcertPitch(Piano::DEFAULT_CONCERT_PITCH);
     piano.getKeyboard().changeKeyboardConfiguration(Piano::DEFAULT_NUMBER_OF_KEYS,

@@ -534,7 +534,7 @@ void MainWindow::updateFrequency(const Key *key) {
 }
 
 void MainWindow::updateWindowTitle() {
-    setWindowTitle(tr("Entropy piano tuner") + " - " + QString::fromStdString(mCore->getPianoManager()->getPiano().getName()) + (mCore->getProjectManager()->hasChangesInFile() ? "*" : ""));
+    setWindowTitle(tr("Entropy piano tuner") + " - " + QString::fromStdWString(mCore->getPianoManager()->getPiano().getName()) + (mCore->getProjectManager()->hasChangesInFile() ? "*" : ""));
 }
 
 void MainWindow::updateVolumeBar() {

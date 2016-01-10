@@ -31,12 +31,12 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
     writer.writeAttribute("concertPitch", QString::number(piano.getConcertPitch()));
     writer.writeAttribute("type", QString::number(piano.getPianoType()));
 
-    writer.writeTextElement("name", QString::fromStdString(piano.getName()));
-    writer.writeTextElement("serialNumber", QString::fromStdString(piano.getSerialNumber()));
-    writer.writeTextElement("manufactionYear", QString::fromStdString(piano.getManufactionYear()));
-    writer.writeTextElement("manufactionLocation", QString::fromStdString(piano.getManufactionLocation()));
-    writer.writeTextElement("tuningLocation", QString::fromStdString(piano.getTuningLocation()));
-    writer.writeTextElement("tuningTimestamp", QString::fromStdString(piano.getTuningTime()));
+    writer.writeTextElement("name", QString::fromStdWString(piano.getName()));
+    writer.writeTextElement("serialNumber", QString::fromStdWString(piano.getSerialNumber()));
+    writer.writeTextElement("manufactionYear", QString::fromStdWString(piano.getManufactionYear()));
+    writer.writeTextElement("manufactionLocation", QString::fromStdWString(piano.getManufactionLocation()));
+    writer.writeTextElement("tuningLocation", QString::fromStdWString(piano.getTuningLocation()));
+    writer.writeTextElement("tuningTimestamp", QString::fromStdWString(piano.getTuningTime()));
 
     // keyboard
     writer.writeStartElement("keyboard");
@@ -160,7 +160,6 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
             // read header information
 
             mFileVersion = reader.attributes().value("version").toInt(&ok);
-            CheckAttributeParseError("version");
 
             if (mFileVersion == UNSET_FILE_VERSION) {
                 LogW("No file version specified. Trying to continue with minimum supported.");
@@ -195,19 +194,19 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                 }
 
                 if (reader.name() == "name") {
-                    piano.setName(reader.text().toString().toStdString());
+                    piano.setName(reader.text().toString().toStdWString());
                 } else if (reader.name() == "serialNumber") {
-                    piano.setSerialNumber(reader.text().toString().toStdString());
+                    piano.setSerialNumber(reader.text().toString().toStdWString());
                 } else if (reader.name() == "manufactionYear") {
-                    piano.setManufactureYear(reader.text().toString().toStdString());
+                    piano.setManufactureYear(reader.text().toString().toStdWString());
                 } else if (reader.name() == "manufactionLocation") {
-                    piano.setManufactureLocation(reader.text().toString().toStdString());
+                    piano.setManufactureLocation(reader.text().toString().toStdWString());
                 } else if (reader.name() == "tuningLocation") {
-                    piano.setTuningLocation(reader.text().toString().toStdString());
+                    piano.setTuningLocation(reader.text().toString().toStdWString());
                 } else if (reader.name() == "tuningTimestamp") {
                     QString text = reader.text().toString();
                     if (text.isEmpty()) {
-                        piano.setTuningTime(text.toStdString());
+                        piano.setTuningTime(text.toStdWString());
                     } else {
                         piano.setTuningTimeToActualTime();
                     }

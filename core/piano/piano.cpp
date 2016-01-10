@@ -25,6 +25,8 @@
 
 #include <cmath>
 #include <ctime>
+#include <codecvt>
+#include <locale>
 
 #include "../system/eptexception.h"
 
@@ -43,13 +45,13 @@ const double Piano::DEFAULT_CONCERT_PITCH = 440;
 ///////////////////////////////////////////////////////////////////////////////
 
 Piano::Piano() :
-    mName(""),
+    mName(),
     mType(piano::PT_GRAND),
-    mSerialNumber(""),
-    mManufactureYear(""),
-    mManufactureLocation(""),
-    mTuningLocation(""),
-    mTuningTime(""),
+    mSerialNumber(),
+    mManufactureYear(),
+    mManufactureLocation(),
+    mTuningLocation(),
+    mTuningTime(),
     mConcertPitch(DEFAULT_CONCERT_PITCH),
     mKeyboard(DEFAULT_NUMBER_OF_KEYS)
 {
@@ -78,7 +80,9 @@ void Piano::setTuningTimeToActualTime()
 #endif
     char buffer[50];
     strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", &nowtime);
-    mTuningTime = buffer;
+
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    mTuningTime = converter.from_bytes(buffer);
 }
 
 

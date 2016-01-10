@@ -175,8 +175,8 @@ void PianoFile::createTextXMLElement(tinyxml2::XMLElement *parent, const char *l
     e->SetText(text);
 }
 
-void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
-    EptAssert(e, "XMLElement has to exist.");
+void PianoFile::read(const tinyxml2::XMLElement *, Piano &) {
+    /*EptAssert(e, "XMLElement has to exist.");
     int type = piano.getPianoType();
 
     e->QueryDoubleAttribute("concertPitch", &piano.getConcertPitch());
@@ -204,11 +204,11 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
         } else if (strcmp(data->Value(), "keyboard") == 0) {
             read(data, piano.getKeyboard());
         }
-    }
+    }*/
 }
 
-void PianoFile::write(tinyxml2::XMLElement *e, const Piano &piano) const {
-    e->SetAttribute("concertPitch", piano.getConcertPitch());
+void PianoFile::write(tinyxml2::XMLElement *, const Piano &) const {
+    /*e->SetAttribute("concertPitch", piano.getConcertPitch());
     e->SetAttribute("type", piano.getPianoType());
 
     createTextXMLElement(e, "name", piano.getName().c_str());
@@ -221,7 +221,7 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Piano &piano) const {
     // write key data
     tinyxml2::XMLElement *keyboardElem = e->GetDocument()->NewElement("keyboard");
     e->InsertEndChild(keyboardElem);
-    write(keyboardElem, piano.getKeyboard());
+    write(keyboardElem, piano.getKeyboard());*/
 
 }
 
