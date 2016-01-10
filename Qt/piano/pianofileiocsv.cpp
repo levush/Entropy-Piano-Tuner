@@ -35,15 +35,15 @@ void PianoFileIOCsv::write(QIODevice *device, const Piano &piano) const {
     };
     for (int i = 0; i < piano.getKeyboard().getNumberOfKeys(); ++i) {
         const Key &key = piano.getKeyboard()[i];
-        stream << left << QString("%1").arg(i + 1) << right
+        stream << QString("%1,").arg(i + 1)
                << QString("%1,").arg(key.getMeasuredInharmonicity(), 8, 'g', 5)
-               << QString("%1,").arg(key.getRecordedFrequency(), 8, 'g', 2)
-               << QString("%1,").arg(cents(i,key.getRecordedFrequency(),Akey.getRecordedFrequency()), 6, 'g', 1)
-               << QString("%1,").arg(key.getComputedFrequency(), 8, 'g', 2)
-               << QString("%1,").arg(cents(i,key.getComputedFrequency(),Akey.getComputedFrequency()), 6, 'g', 1)
-               << QString("%1,").arg(key.getTunedFrequency(), 8, 'g', 2)
-               << QString("%1,").arg(cents(i,key.getTunedFrequency(),piano.getConcertPitch()), 6, 'g', 1)
-               << QString("%1,").arg(key.getRecognitionQuality(), 6, 'g', 2)
+               << QString("%1,").arg(key.getRecordedFrequency(), 8, 'g', 5)
+               << QString("%1,").arg(cents(i,key.getRecordedFrequency(),Akey.getRecordedFrequency()), 6, 'g', 5)
+               << QString("%1,").arg(key.getComputedFrequency(), 8, 'g', 5)
+               << QString("%1,").arg(cents(i,key.getComputedFrequency(),Akey.getComputedFrequency()), 6, 'g', 5)
+               << QString("%1,").arg(key.getTunedFrequency(), 8, 'g', 5)
+               << QString("%1,").arg(cents(i,key.getTunedFrequency(),piano.getConcertPitch()), 6, 'g', 5)
+               << QString("%1,").arg(key.getRecognitionQuality(), 6, 'g', 5)
                << endl;
     }
 

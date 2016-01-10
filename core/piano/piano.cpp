@@ -25,8 +25,6 @@
 
 #include <cmath>
 #include <ctime>
-#include <codecvt>
-#include <locale>
 
 #include "../system/eptexception.h"
 
@@ -55,13 +53,13 @@ Piano::Piano() :
     mConcertPitch(DEFAULT_CONCERT_PITCH),
     mKeyboard(DEFAULT_NUMBER_OF_KEYS)
 {
-    setTuningTimeToActualTime(); // Set current time as tuning time
+    setTuningTimeToCurrentTime(); // Set current time as tuning time
 }
 
 
 
 //-----------------------------------------------------------------------------
-//			             set tuning time to actual time
+//			             set tuning time to current time
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,7 +67,7 @@ Piano::Piano() :
 /// used as default value.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Piano::setTuningTimeToActualTime()
+void Piano::setTuningTimeToCurrentTime()
 {
     time_t rawtime = time(0);
     struct tm nowtime;
@@ -81,13 +79,16 @@ void Piano::setTuningTimeToActualTime()
     char buffer[50];
     strftime(buffer, 50, "%Y-%m-%d %H:%M:%S", &nowtime);
 
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    mTuningTime = converter.from_bytes(buffer);
+    std::string str(buffer);
+
+    // convert std::string to std::wstring
+    mTuningTime = std::wstring(str.length(), L' ');  // Make room
+    std::copy(str.begin(), str.end(), mTuningTime.begin());
 }
 
 
 //-----------------------------------------------------------------------------
-//			             Set tuning time to actual time
+//			             Retrun the expected inharmonicity
 //-----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////

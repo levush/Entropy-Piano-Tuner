@@ -8,7 +8,8 @@
 class PianoFileIOInterface
 {
 public:
-    PianoFileIOInterface();
+    PianoFileIOInterface() {}
+    virtual ~PianoFileIOInterface() {}
 
     virtual void write(QIODevice *device, const Piano &piano) const = 0;
     virtual void read(QIODevice *device, Piano &piano) = 0;

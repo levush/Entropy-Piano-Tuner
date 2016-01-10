@@ -2,6 +2,8 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QTextStream>
+#include <QTextCodec>
+#include <QDebug>
 #include <chrono>
 #include <sstream>
 
@@ -132,7 +134,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
         if (!reader.attributes().hasAttribute(aname)) {
             return defaultValue;
         }
-        qreal value = reader.attributes().value(aname).toInt(&ok);
+        qreal value = reader.attributes().value(aname).toDouble(&ok);
         CheckAttributeParseError(aname);
         if (!ok) {
             LogI("Using default value");
@@ -154,7 +156,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
 
     while (!reader.atEnd()) {
         // read only start elements
-        reader.readNextStartElement();
+        if (!reader.readNextStartElement()) {break;}
 
         if (reader.name() == FILE_TYPE_NAME) {
             // read header information
@@ -194,21 +196,21 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                 }
 
                 if (reader.name() == "name") {
-                    piano.setName(reader.text().toString().toStdWString());
+                    piano.setName(reader.readElementText().toStdWString());
                 } else if (reader.name() == "serialNumber") {
-                    piano.setSerialNumber(reader.text().toString().toStdWString());
+                    piano.setSerialNumber(reader.readElementText().toStdWString());
                 } else if (reader.name() == "manufactionYear") {
-                    piano.setManufactureYear(reader.text().toString().toStdWString());
+                    piano.setManufactureYear(reader.readElementText().toStdWString());
                 } else if (reader.name() == "manufactionLocation") {
-                    piano.setManufactureLocation(reader.text().toString().toStdWString());
+                    piano.setManufactureLocation(reader.readElementText().toStdWString());
                 } else if (reader.name() == "tuningLocation") {
-                    piano.setTuningLocation(reader.text().toString().toStdWString());
+                    piano.setTuningLocation(reader.readElementText().toStdWString());
                 } else if (reader.name() == "tuningTimestamp") {
-                    QString text = reader.text().toString();
+                    QString text = reader.readElementText();
                     if (text.isEmpty()) {
                         piano.setTuningTime(text.toStdWString());
                     } else {
-                        piano.setTuningTimeToActualTime();
+                        piano.setTuningTimeToCurrentTime();
                     }
                 } else if (reader.name() == "keyboard") {
                     Keyboard &keyboard = piano.getKeyboard();
@@ -221,6 +223,11 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
 
                     while (!reader.atEnd()) {
                         reader.readNext();
+
+                        // break if end element of keyboard element
+                        if (reader.isEndElement() && reader.name() == "keyboard") {
+                            break;
+                        }
 
                         // read only start elements
                         if (!reader.isStartElement()) {
@@ -252,7 +259,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                         while (!reader.atEnd()) {
                             reader.readNext();
 
-                            if (reader.isEndElement() && reader.name() == "keyboard") {
+                            if (reader.isEndElement() && reader.name() == "key") {
                                 break;
                             }
 
@@ -262,7 +269,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                                 // spectrum
                                 auto &spectrum = key.getSpectrum();
                                 // pointer to the text
-                                QString s = reader.text().toString();
+                                QString s = reader.readElementText();
                                 QTextStream ts(&s, QIODevice::ReadOnly);
                                 ts.setLocale(QLocale(QLocale::English));
 
@@ -276,11 +283,6 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                             } else {
                                 LogW("Invalid child xml element '%s'", reader.name().toString().toStdString().c_str());
                             }
-                        }
-
-                        // break if end element of keyboard element
-                        if (reader.isEndElement() && reader.name() == "keyboard") {
-                            break;
                         }
                     }
                 } else {

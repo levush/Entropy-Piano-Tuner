@@ -486,7 +486,6 @@ CORE_ANALYZER_SOURCES = \
 
 CORE_PIANO_HEADERS = \
     core/piano/piano.h \
-    core/piano/pianofile.h \
     core/piano/key.h \
     core/piano/pianomanager.h \
     core/piano/keyboard.h \
@@ -494,7 +493,6 @@ CORE_PIANO_HEADERS = \
 
 CORE_PIANO_SOURCES = \
     core/piano/piano.cpp  \
-    core/piano/pianofile.cpp \
     core/piano/key.cpp \
     core/piano/pianomanager.cpp \
     core/piano/keyboard.cpp \

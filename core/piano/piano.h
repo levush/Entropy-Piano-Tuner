@@ -73,7 +73,7 @@ public:
     const std::wstring &getTuningLocation() const {return mTuningLocation;}
 
     void setTuningTime(const std::wstring &time) {mTuningTime = time;}
-    void setTuningTimeToActualTime();
+    void setTuningTimeToCurrentTime();
     const std::wstring &getTuningTime() const {return mTuningTime;}
 
     void setConcertPitch(double pitch) {mConcertPitch = pitch;}
