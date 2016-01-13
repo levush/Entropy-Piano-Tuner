@@ -40,3 +40,7 @@ void IOsPlatformTools::enableScreensaver() {
 std::shared_ptr<MidiAdapter> IOsPlatformTools::createMidiAdapter() const {
     return std::make_shared<IOsMidiAdapter>();
 }
+
+double IOsPlatformTools::getPhysicalMemoryInGB() const {
+    return iosGetPhysicalMemoryInGB();
+}

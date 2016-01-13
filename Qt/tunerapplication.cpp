@@ -124,6 +124,9 @@ void TunerApplication::init() {
                     &mAudioPlayer,
                     Log::getSingletonPtr()));
 
+    // disable sound generator if low memory (at least 500 MB required)
+    mCore->setEnableSoundGenerator(PlatformTools::getSingleton()->getPhysicalMemoryInGB() > 0.5);
+
     PlatformTools::getSingleton()->disableScreensaver();
 
 

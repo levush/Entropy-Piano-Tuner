@@ -53,6 +53,10 @@ void iosReleaseScreensaverLock() {
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
+void iosGetPhysicalMemoryInGB() {
+    return [NSProcessInfo processInfo].physicalMemory / (1024.0 * 1024.0 * 1024.0);
+}
+
 // midi functions
 // =================================================================================================
 void iosMidiInit() {

@@ -78,6 +78,9 @@ public:
     /// file.
     ///////////////////////////////////////////////////////////////////////////////
     void openFile(const char *file, bool cached);
+
+    /// Returns the physical memory, can be used to detect low memory devices
+    virtual double getPhysicalMemoryInGB() const {return 1e10;}
 };
 
 template <typename PT>

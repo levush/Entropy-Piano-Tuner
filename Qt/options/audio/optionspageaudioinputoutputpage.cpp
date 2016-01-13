@@ -177,7 +177,9 @@ void PageAudioInputOutput::apply() {
     if (mMode == QAudio::AudioOutput) {
         dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->setWriter(writerInterfaceBackup);
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // give waveform generator time
-        mOptionsDialog->getCore()->getSoundGenerator().init();
+        if (mOptionsDialog->getCore()->getSoundGenerator()) {
+            mOptionsDialog->getCore()->getSoundGenerator()->init();
+        }
     }
 }
 
