@@ -215,7 +215,7 @@ bool TunerApplication::openFile(QString filePath, bool cached) {
         mStartupFile = filePath;
         return true;
     }
-    return mCore->getProjectManager()->openFile(filePath.toStdString(), cached) == ProjectManagerAdapter::R_ACCEPTED;
+    return mCore->getProjectManager()->openFile(filePath.toStdWString(), cached) == ProjectManagerAdapter::R_ACCEPTED;
 }
 
 bool TunerApplication::event(QEvent *e) {

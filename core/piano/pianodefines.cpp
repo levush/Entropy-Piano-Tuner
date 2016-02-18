@@ -30,6 +30,14 @@ std::string toFileEnding(FileType ft) {
     }
 }
 
+std::wstring toFileEndingW(FileType ft) {
+    switch (ft) {
+    case FT_CSV: return L"csv";
+    case FT_EPT: return L"ept";
+    default: EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Invalid file type");
+    }
+}
+
 FileType parseFileType(const std::string &fileEnding) {
     if (fileEnding == "csv") {return FT_CSV;}
     if (fileEnding == "ept") {return FT_EPT;}
@@ -37,5 +45,15 @@ FileType parseFileType(const std::string &fileEnding) {
     return FT_NONE;
 }
 
+FileType parseFileType(const std::wstring &fileEnding) {
+    if (fileEnding == L"csv") {return FT_CSV;}
+    if (fileEnding == L"ept") {return FT_EPT;}
+
+    return FT_NONE;
+}
+
+FileType parseTypeOfFilePath(const std::wstring &filePath) {
+    return parseFileType(filePath.substr(filePath.find_last_of(L".") + 1));
+}
 
 }  // namespace piano

@@ -26,7 +26,7 @@
 #define PROJECTMANAGERADAPTER_H
 
 #include <string>
-#include "../piano/pianofile.h"
+#include "core/piano/pianodefines.h"
 #include "../messages/messagelistener.h"
 
 class Core;
@@ -71,12 +71,13 @@ public:
 
     struct FileDialogResult
     {
-        FileDialogResult(const std::string path = "");
+        FileDialogResult(const std::wstring path = std::wstring());
+        FileDialogResult(const std::wstring path, const piano::FileType fileType);
 
-        const std::string path;
+        const std::wstring path;
         const piano::FileType fileType;
 
-        bool isValid() {return path.size() != 0 && fileType != piano::FT_NONE;}
+        bool isValid() const {return path.size() != 0 && fileType != piano::FT_NONE;}
     };
 
 public:
@@ -88,7 +89,7 @@ public:
 
     bool hasChangesInFile() const {return mChangesInFile;}
 
-    const std::string &getCurrentFilePath() const {return mCurrentFilePath;}
+    const std::wstring &getCurrentFilePath() const {return mCurrentFilePath;}
 
 
     // signals to be called from the gui
@@ -103,8 +104,8 @@ public:
 
 
     // open or save file
-    Results saveFile(const std::string &path, piano::FileType type);
-    Results openFile(const std::string &path, bool cached = false);
+    Results saveFile(const FileDialogResult &fileInfo);
+    Results openFile(const FileDialogResult &fileInfo, bool cached = false);
 
 protected:
     // signals to be reimplemented by the gui
@@ -143,15 +144,18 @@ protected:
 
     /// change the state of mChangesInFile and notify the listener
     void setChangesInFile(bool b);
+
+    /// virtual function to write a piano file to the desired format
+    virtual void writePianoFile(const FileDialogResult &fileInfo, const Piano& piano) = 0;
+
+    /// virtual function to read a piano file from the desired format
+    virtual void readPianoFile(const FileDialogResult &fileInfo, Piano *piano) = 0;
 private:
     Results checkForNoChanges();
 
 protected:
     /// the core
     Core *mCore;
-
-    /// the piano file
-    PianoFile mPianoFile;
 
 private:
     /// stores whether there are unsaved changes in the current file
@@ -161,7 +165,7 @@ private:
     FileChangesCallback *mCallback = nullptr;
 
     /// current file path
-    std::string mCurrentFilePath;
+    std::wstring mCurrentFilePath;
 };
 
 #endif // PROJECTMANAGERADAPTER_H

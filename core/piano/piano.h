@@ -53,28 +53,28 @@ public:
 
     // access functions
 
-    void setName(const std::string &name) {mName = name;}
-    const std::string &getName() const {return mName;}
+    void setName(const std::wstring &name) {mName = name;}
+    const std::wstring &getName() const {return mName;}
 
     void setType(piano::PianoType type) {mType = type;}
     piano::PianoType getPianoType() const {return mType;}
     piano::PianoType &getPianoType() {return mType;}
 
-    void setSerialNumber(const std::string &number) {mSerialNumber = number;}
-    const std::string &getSerialNumber() const {return mSerialNumber;}
+    void setSerialNumber(const std::wstring &number) {mSerialNumber = number;}
+    const std::wstring &getSerialNumber() const {return mSerialNumber;}
 
-    void setManufactureYear(const std::string &year) {mManufactureYear = year;}
-    const std::string &getManufactionYear() const {return mManufactureYear;}
+    void setManufactureYear(const std::wstring &year) {mManufactureYear = year;}
+    const std::wstring &getManufactionYear() const {return mManufactureYear;}
 
-    void setManufactureLocation(const std::string &loc) {mManufactureLocation = loc;}
-    const std::string &getManufactionLocation() const {return mManufactureLocation;}
+    void setManufactureLocation(const std::wstring &loc) {mManufactureLocation = loc;}
+    const std::wstring &getManufactionLocation() const {return mManufactureLocation;}
 
-    void setTuningLocation(const std::string &loc) {mTuningLocation = loc;}
-    const std::string &getTuningLocation() const {return mTuningLocation;}
+    void setTuningLocation(const std::wstring &loc) {mTuningLocation = loc;}
+    const std::wstring &getTuningLocation() const {return mTuningLocation;}
 
-    void setTuningTime(const std::string &time) {mTuningTime = time;}
-    void setTuningTimeToActualTime();
-    const std::string &getTuningTime() const {return mTuningTime;}
+    void setTuningTime(const std::wstring &time) {mTuningTime = time;}
+    void setTuningTimeToCurrentTime();
+    const std::wstring &getTuningTime() const {return mTuningTime;}
 
     void setConcertPitch(double pitch) {mConcertPitch = pitch;}
     const double &getConcertPitch() const {return mConcertPitch;}
@@ -101,20 +101,20 @@ public:
 
 private:
     /// name of the real piano
-    std::string mName;
+    std::wstring mName;
     /// type of the real piano
     piano::PianoType mType;
     /// serial number of the real piano
-    std::string mSerialNumber;
+    std::wstring mSerialNumber;
     /// manufaction year of the real piano
-    std::string mManufactureYear;
+    std::wstring mManufactureYear;
     /// location where the piano was produced
-    std::string mManufactureLocation;
+    std::wstring mManufactureLocation;
 
     /// location where the piano is now
-    std::string mTuningLocation;
+    std::wstring mTuningLocation;
     /// time when the tuning hast been started (format yyyy-mm-dd HH:MM:SS, UTC)
-    std::string mTuningTime;
+    std::wstring mTuningTime;
     /// concert pitch (default 440 Hz)
     double mConcertPitch;
 

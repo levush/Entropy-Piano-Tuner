@@ -19,15 +19,12 @@
 
 #include "versioncheck.h"
 
-#include "thirdparty/tinyxml2/tinyxml2.h"
+#include <QXmlStreamReader>
 
 #include "core/system/eptexception.h"
 #include "core/system/version.h"
 #include "core/system/log.h"
 #include "core/system/serverinfo.h"
-
-using tinyxml2::XMLElement;
-using tinyxml2::XMLDocument;
 
 VersionCheck::VersionCheck(QObject *parent) : QNetworkAccessManager(parent)
 {
@@ -55,30 +52,40 @@ void VersionCheck::onNetworkReply(QNetworkReply *reply) {
         case 200:  // status code ok
             if (reply->isReadable()) {
                 QString replyString = QString::fromUtf8(reply->readAll().data());
-                XMLDocument doc;
-                doc.Parse(replyString.toStdString().c_str());
-                if (doc.Error()) {
-                    EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, serverinfo::VERSION_FILENAME + " file could not be parsed.");
+
+                QXmlStreamReader reader(replyString);
+
+                bool ok = false;
+                int appRolling = -1, depsRolling = -1;
+                QString appVersion, depsVersion;
+
+                // read root
+                while (!reader.atEnd()) {
+                  reader.readNextStartElement();
+                  if (!reader.isStartElement()) {
+                      continue;
+                  }
+                  if (reader.hasError()) {
+                      LogE("Error during parsing xml-document");
+                      return;
+                  }
+
+                  if (reader.name() == "app") {
+                    appRolling = reader.attributes().value("rolling").toInt(&ok);
+                    if (!ok) {LogE("Empty rolling element"); return;}
+                    appVersion = reader.attributes().value("string").toString();
+                  } else if (reader.name() == "dependencies") {
+                    depsRolling = reader.attributes().value("rolling").toInt(&ok);
+                    if (!ok) {LogE("Empty rolling element"); return;}
+                    depsVersion = reader.attributes().value("string").toString();
+                  }
                 }
 
-                XMLElement *root = doc.FirstChildElement();
-                EptAssert(root, "Root must exist.");
-
-                XMLElement *appsElem = root->FirstChildElement("app");
-                XMLElement *depsElem = root->FirstChildElement("dependencies");
-
-                if (!appsElem || !depsElem) {
+                // all info read
+                if (appVersion.isEmpty() || depsVersion.isEmpty()) {
                     LogW("Required nodes not found. Requesting update.");
                     emit updateAvailable({"Unknown", "Unknown"});
                 } else {
-                    int appRolling = -1, depsRolling = -1;
-                    appsElem->QueryIntAttribute("rolling", &appRolling);
-                    depsElem->QueryIntAttribute("rolling", &depsRolling);
-
-                    QString appVersion("Unkown"), depsVersion("Unknown");
-                    if (appsElem->Attribute("string")) {appVersion = appsElem->Attribute("string");}
-                    if (depsElem->Attribute("string")) {depsVersion = depsElem->Attribute("string");}
-
                     VersionInformation info = {appVersion, depsVersion};
 
                     if (appRolling < 0 || depsRolling < 0) {

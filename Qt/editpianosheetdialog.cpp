@@ -46,15 +46,15 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
 
     ui->scrollArea->setFrameShape(QFrame::NoFrame);
 
-    ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
+    ui->nameLineEdit->setText(QString::fromStdWString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());
-    ui->serialNumberLineEdit->setText(QString::fromStdString(piano.getSerialNumber()));
+    ui->serialNumberLineEdit->setText(QString::fromStdWString(piano.getSerialNumber()));
     // we only need the year
-    ui->yearEdit->setDate(QDate(QString::fromStdString(piano.getManufactionYear()).toInt(), 1, 1));
-    ui->productionLocationLineEdit->setText(QString::fromStdString(piano.getManufactionLocation()));
+    ui->yearEdit->setDate(QDate(QString::fromStdWString(piano.getManufactionYear()).toInt(), 1, 1));
+    ui->productionLocationLineEdit->setText(QString::fromStdWString(piano.getManufactionLocation()));
 
-    ui->tuningLocationLineEdit->setText(QString::fromStdString(piano.getTuningLocation()));
-    QDateTime time = QDateTime::fromString(QString::fromStdString(piano.getTuningTime()), "yyyy-MM-dd HH:mm:ss").toLocalTime();
+    ui->tuningLocationLineEdit->setText(QString::fromStdWString(piano.getTuningLocation()));
+    QDateTime time = QDateTime::fromString(QString::fromStdWString(piano.getTuningTime()), "yyyy-MM-dd HH:mm:ss").toLocalTime();
     time.setTimeSpec(Qt::UTC);
     ui->timeOfTuningDateTimeEdit->setDateTime(time.toLocalTime());
 
@@ -87,15 +87,15 @@ EditPianoSheetDialog::~EditPianoSheetDialog()
 void EditPianoSheetDialog::applyData(Piano *piano) const {
     assert(piano);
 
-    piano->setName(ui->nameLineEdit->text().toStdString());
+    piano->setName(ui->nameLineEdit->text().toStdWString());
     piano->setType(static_cast<piano::PianoType>(ui->pianoType->currentIndex()));
-    piano->setSerialNumber(ui->serialNumberLineEdit->text().toStdString());
+    piano->setSerialNumber(ui->serialNumberLineEdit->text().toStdWString());
     // we only need the year
-    piano->setManufactureYear(QString("%1").arg(ui->yearEdit->date().year()).toStdString());
-    piano->setManufactureLocation(ui->productionLocationLineEdit->text().toStdString());
+    piano->setManufactureYear(QString("%1").arg(ui->yearEdit->date().year()).toStdWString());
+    piano->setManufactureLocation(ui->productionLocationLineEdit->text().toStdWString());
 
-    piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdString());
-    piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
+    piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdWString());
+    piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdWString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
     piano->getKeyboard().setNumberOfBassKeys(ui->keysOnBassBridgeSpinBox->value());
 
