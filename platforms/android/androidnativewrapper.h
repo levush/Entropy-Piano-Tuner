@@ -28,5 +28,6 @@
 #include <QAndroidJniEnvironment>
 
 void callAndroidVoidTunerApplicationFunction(const char *functionName);
+long int callAndroidLongIntTunerApplicationFunction(const char *functionName);
 
 #endif // ANDROIDNATIVEWRAPPER_H

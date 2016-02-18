@@ -30,6 +30,7 @@ class AndroidPlatformTools : public PlatformToolsImplementation<AndroidPlatformT
 private:
     virtual void init() override;
     bool loadStartupFile(const QStringList args) override;
+    virtual double getPhysicalMemoryInGB() const override final;
 };
 
 #endif

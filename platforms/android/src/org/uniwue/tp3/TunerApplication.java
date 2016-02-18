@@ -29,6 +29,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
@@ -101,6 +103,15 @@ public class TunerApplication extends QtActivity {
 
         this.startActivity(Intent.createChooser(share, title));
     }
+
+    public long getPhysicalMemoryInB()
+    {
+        MemoryInfo mi = new MemoryInfo();
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        activityManager.getMemoryInfo(mi);
+        return mi.availMem;
+    }
+
 
 
     public static native void java_openFile(String s, boolean cached);
