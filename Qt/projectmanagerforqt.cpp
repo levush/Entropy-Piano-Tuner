@@ -84,7 +84,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::askForSaving() {
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileType) {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     Q_UNUSED(fileType);
-    return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
+    return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdWString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
@@ -111,7 +111,7 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileType)  {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     Q_UNUSED(fileType);
-    return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
+    return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdWString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
@@ -135,7 +135,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::share() {
     // get the application instance
     QAndroidJniObject instance = QAndroidJniObject::callStaticObjectMethod("org/uniwue/tp3/TunerApplication", "getInstance", "()Lorg/uniwue/tp3/TunerApplication;");
     QAndroidJniObject jTitle = QAndroidJniObject::fromString(MainWindow::tr("Share tuning data"));
-    QAndroidJniObject jPath = QAndroidJniObject::fromString(QString::fromStdString(getCurrentFilePath()));
+    QAndroidJniObject jPath = QAndroidJniObject::fromString(QString::fromStdWString(getCurrentFilePath()));
     // get the path to the file to open, zero length if there is none
     instance.callMethod<void>("shareFile", "(Ljava/lang/String;Ljava/lang/String;)V", jTitle.object<jstring>(), jPath.object<jstring>());
     // check for errors
