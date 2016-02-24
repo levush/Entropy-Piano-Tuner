@@ -37,10 +37,10 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS = \
+HEADERS =
 
 QWT_S = $$SOURCES
-SOURCES = \
+SOURCES =
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -538,11 +538,13 @@ THIRD_PARTY_HEADERS = \
     thirdparty/RtMidi/RtMidi.h \
     thirdparty/tinyxml2/tinyxml2.h \
     thirdparty/timesupport/timesupport.h \
+    thirdparty/getMemorySize/getmemorysize.h \
 
 THIRD_PARTY_SOURCES = \
     thirdparty/RtMidi/RtMidi.cpp \
     thirdparty/tinyxml2/tinyxml2.cpp \
     thirdparty/timesupport/timesupport.cpp \
+    thirdparty/getMemorySize/getmemorysize.cpp \
 
 
 #---------------- complete --------------------

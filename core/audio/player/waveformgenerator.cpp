@@ -26,6 +26,7 @@
 #include <random>
 #include "../../math/mathtools.h"
 #include "../../system/log.h"
+#include "core/system/platformtoolscore.h"
 
 //-----------------------------------------------------------------------------
 //                               Constructor
@@ -36,6 +37,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 WaveformGenerator::WaveformGenerator () :
+    mWaveformTime(convertAvailablePhysicalMemoryToWaveformTime()),
     mNumberOfKeys(),
     mLibrary(),
     mLibraryMutex(256),
@@ -44,7 +46,9 @@ WaveformGenerator::WaveformGenerator () :
     mOut(mWaveformSize),
     mFFT(),
     mQueue()
-{}
+{
+    LogI("Using waveforms of length %.2f seconds.", mWaveformTime);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -261,4 +265,22 @@ void WaveformGenerator::workerFunction()
     }
 }
 
+double WaveformGenerator::convertAvailablePhysicalMemoryToWaveformTime()
+{
+    const long long availableInB = PlatformToolsCore::getSingleton()->getInstalledPhysicalMemoryInB();
+    const double availableInMiB = availableInB / 1024.0 / 1024.0;
 
+    // the required memory for the complete program for 15s waveform is approx 344 MiB
+    // the required memory for the complete program for  5s waveform is approx 188 MiB
+    // the required memory for the complete program for  2s waveform is approx 140 MiB
+
+    // If the device has more than 500 MiB memory, use full 15 secs
+    // If the device has less than 256 MiB memory, use 2 secs
+    // Interpolate inbetween
+
+    // devices with less than 256 MiB memory should not be supported!
+
+    if (availableInMiB > 500) {return 15;}
+    if (availableInMiB < 256) {return 2;}
+    return (15.0 - 2.0) / (500.0 - 256.0) * (availableInMiB - 256.0) + 2.0;
+}

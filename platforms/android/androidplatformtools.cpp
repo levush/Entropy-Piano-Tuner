@@ -33,6 +33,6 @@ bool AndroidPlatformTools::loadStartupFile(const QStringList args) {
     return false;
 }
 
-double AndroidPlatformTools::getPhysicalMemoryInGB() const {
-    return callAndroidLongIntTunerApplicationFunction("getPhysicalMemoryInB") / 1024. / 1024. / 1024.;
+unsigned long long AndroidPlatformTools::getInstalledPhysicalMemoryInB() const {
+    return callAndroidLongIntTunerApplicationFunction("getPhysicalMemoryInB");
 }

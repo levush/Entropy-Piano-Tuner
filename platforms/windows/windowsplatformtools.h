@@ -31,7 +31,7 @@ public:
     virtual bool loadStartupFile(const QStringList args) override;
     virtual void disableScreensaver() override;
     virtual void enableScreensaver() override;
-    virtual double getPhysicalMemoryInGB() const override final;
+    virtual unsigned long long getInstalledPhysicalMemoryInB() const override final;
 };
 
 

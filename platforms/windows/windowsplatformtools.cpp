@@ -20,15 +20,6 @@
 #include "windowsplatformtools.h"
 #include <Windows.h>
 
-#ifdef __MINGW32__
-// we have to define the function ourself, because it is not included in the MinGW
-// Version of <windows.h>
-// Note that one has to link with -lkernel32
-extern "C"
-WINBASEAPI BOOL WINAPI GetPhysicallyInstalledSystemMemory(PULONGLONG);
-#endif
-
-
 template<>
 std::unique_ptr<WindowsPlatformTools> PlatformToolsImplementation<WindowsPlatformTools>::mSingleton(new WindowsPlatformTools());
 
@@ -54,13 +45,11 @@ void WindowsPlatformTools::enableScreensaver() {
 #endif
 }
 
-double WindowsPlatformTools::getPhysicalMemoryInGB() const {
+unsigned long long WindowsPlatformTools::getInstalledPhysicalMemoryInB() const {
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-    ULONGLONG memInKB = 0;
-    GetPhysicallyInstalledSystemMemory(&memInKB);
-    return memInKB / 1024.0 / 1024.0;
+    return PlatformToolsImplementation<WindowsPlatformTools>::getInstalledPhysicalMemoryInB();
 #else
     // TODO: Implement correctly for windows RT and Windows Phone
-    return PlatformToolsImplementation<WindowsPlatformTools>::getPhysicalMemoryInGB();
+    return PlatformToolsImplementation<WindowsPlatformTools>::getInstalledPhysicalMemoryInB();
 #endif
 }
