@@ -46,12 +46,6 @@ void SettingsForQt::load() {
     mApplicationRuns = mSettings.value("app/runs", 0).toLongLong();
     mLanguageId = mSettings.value("app/languageId", QString()).toString().toStdString();
 
-    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i) {
-        if (mSettings.value(QString("doNotShowAgain/id%1").arg(i), false).toBool()) {
-            mDoNotShowAgainMessageBoxes.push_back(i);
-        }
-    }
-
     mLastVisitedOptionsPage = mSettings.value("app/lastOptionsPage", options::OptionsDialog::PAGE_ENVIRONMENT).toInt();
 
     mInputDeviceName = mSettings.value("audio/inputDeviceName", QString()).toString();
@@ -91,19 +85,32 @@ std::string SettingsForQt::getUserLanguageId() const {
     }
 }
 
-bool SettingsForQt::doNotShowAgainMessageBox(int id) const {
-    return std::find(mDoNotShowAgainMessageBoxes.begin(), mDoNotShowAgainMessageBoxes.end(), id) != mDoNotShowAgainMessageBoxes.end();
+int SettingsForQt::doNotShowAgainMessageBox(int id) const {
+   if (mSettings.value(QString("doNotShowAgain/id%1").arg(id), false).toBool() == true) {
+       return mSettings.value(QString("doNotShowAgain/id%1_value").arg(id), -1).toInt();
+   }
+   return -1;
 }
 
-void SettingsForQt::setDoNotShowAgainMessageBox(int id, bool doNotShowAgain) {
-    auto entry(std::find(mDoNotShowAgainMessageBoxes.begin(), mDoNotShowAgainMessageBoxes.end(), id));
-    if (doNotShowAgain && entry == mDoNotShowAgainMessageBoxes.end()) {
-        mDoNotShowAgainMessageBoxes.push_back(id);
-        mSettings.setValue(QString("doNotShowAgain/id%1").arg(id), true);
-    } else if (entry != mDoNotShowAgainMessageBoxes.end()) {
-        mDoNotShowAgainMessageBoxes.erase(entry);
-        mSettings.remove(QString("doNotShowAgain/id%1").arg(id));
+void SettingsForQt::setDoNotShowAgainMessageBox(int id, bool doNotShowAgain, int value) {
+    mSettings.setValue(QString("doNotShowAgain/id%1").arg(id), doNotShowAgain);
+    mSettings.setValue(QString("doNotShowAgain/id%1_value").arg(id), value);
+}
+
+void SettingsForQt::clearAllDoNotShowAgainMessageBoxes() {
+    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i) {
+        setDoNotShowAgainMessageBox(i, false, -1);
     }
+}
+
+int SettingsForQt::countActiveDoNotShowAgainMessageBoxes() const {
+    int out = 0;
+    for (int i = 0; i < DoNotShowAgainMessageBox::COUNT; ++i) {
+        if (doNotShowAgainMessageBox(i) >= 0) {
+            out += 1;
+        }
+    }
+    return out;
 }
 
 void SettingsForQt::setLastVisitedOptionsPage(int id) {
@@ -154,4 +161,20 @@ void SettingsForQt::setStroboscopeMode(bool enable) {
 void SettingsForQt::setDisableAutomaticKeySelection(bool disable) {
     Settings::setDisableAutomaticKeySelection(disable);
     mSettings.setValue("core/disableAutomaticKeySelection", disable);
+}
+
+double SettingsForQt::getAudioPlayerBufferSize() const {
+    return mSettings.value("audio/playerBufferSize", AudioPlayerAdapter::DefaultBufferSizeMilliseconds).toDouble();
+}
+
+void SettingsForQt::setAudioPlayerBufferSize(double d) {
+    mSettings.setValue("audio/playerBufferSize", d);
+}
+
+int SettingsForQt::getAudioPlayerChannelsCount() const {
+    return mSettings.value("audio/playerChannels", 2).toInt();
+}
+
+void SettingsForQt::setAudioPlayerChannelsCount(int i) {
+    mSettings.setValue("audio/playerChannels", i);
 }

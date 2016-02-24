@@ -75,6 +75,8 @@ public:
     bool showPlotNavigationVertical() const;
     bool abbrevPlotLabels() const;
     bool showMuteOutputButton() const;
+    bool showMultiLineEditPianoDataSheet() const;
+
 };
 
 #endif // DISPLAYSIZE

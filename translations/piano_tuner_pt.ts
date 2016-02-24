@@ -224,6 +224,14 @@
         <source>Do you really want to clear all pitch markers? This can not be undone!</source>
         <translation>Você realmente quer para repor todos os marcadores arremesso? Isso não pode ser desfeito!</translation>
     </message>
+    <message>
+        <source>Save changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save your current changes? You can save at any time using the tool button or the action from the menu.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>EditPianoSheetDialog</name>
@@ -319,7 +327,7 @@
     </message>
     <message>
         <source>Preparing</source>
-        <translation>Preparando</translation>
+        <translation type="vanished">Preparando</translation>
     </message>
     <message>
         <source>Initializing, please wait</source>
@@ -327,11 +335,11 @@
     </message>
     <message>
         <source>Initializing the midi component</source>
-        <translation>Inicializando o componente midi</translation>
+        <translation type="vanished">Inicializando o componente midi</translation>
     </message>
     <message>
         <source>Finished</source>
-        <translation>Fim</translation>
+        <translation type="vanished">Fim</translation>
     </message>
 </context>
 <context>
@@ -346,6 +354,14 @@
     <message>
         <source>Log</source>
         <translation>Log</translation>
+    </message>
+    <message>
+        <source>Copy the contents of the log to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -707,6 +723,13 @@
     </message>
 </context>
 <context>
+    <name>ProgressDisplay</name>
+    <message>
+        <source>Synthesizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QwtPlotRenderer</name>
     <message>
         <source>Documents</source>
@@ -804,7 +827,21 @@
     <name>TuningGroupBox</name>
     <message>
         <source>Tuning</source>
-        <translation>Afinação</translation>
+        <translation type="vanished">Afinação</translation>
+    </message>
+</context>
+<context>
+    <name>TuningIndicatorGroupBox</name>
+    <message>
+        <source>Tuning</source>
+        <translation type="unfinished">Afinação</translation>
+    </message>
+</context>
+<context>
+    <name>TuningIndicatorView</name>
+    <message>
+        <source>This is the tuning indicator. Touch this field to toggle between spectral and stroboscopic mode. In the spectral mode you should bring the peak to the center of the window for optimal tuning. When tuning several strings of unisons at once, several peaks might appear and all of them should be tuned to match the center. In the stroboscopic mode several stripes of drifiting rainbows are shown. The stripes represent the partials. Optimal tuning of single strings is obtained when the rainbows come to a halt.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -853,7 +890,7 @@
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation>Este é o dispositivo de ajuste. Você deve trazer o pico e a barra do indicador no meio da janela para uma afinação ideal. Ao ajustar várias cordas de uma só vez, pode aparecer vários picos. Todos eles devem ser sintonizado para coincidir com o centro.</translation>
+        <translation type="vanished">Este é o dispositivo de ajuste. Você deve trazer o pico e a barra do indicador no meio da janela para uma afinação ideal. Ao ajustar várias cordas de uma só vez, pode aparecer vários picos. Todos eles devem ser sintonizado para coincidir com o centro.</translation>
     </message>
 </context>
 <context>
@@ -915,6 +952,14 @@
     <message>
         <source>Sampling rates</source>
         <translation>Taxas de amostragem</translation>
+    </message>
+    <message>
+        <source>Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buffer size</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -991,6 +1036,10 @@
     <message>
         <source>Disable automatic key selection</source>
         <translation>Desabilitar a seleção automática da chave</translation>
+    </message>
+    <message>
+        <source>Stroboscopic tuning indicator</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

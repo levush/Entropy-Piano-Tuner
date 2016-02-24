@@ -219,9 +219,11 @@ void TuningCurveGraphDrawer::drawGrid ()
             mGraphics->drawLine(0, y, 1, y, type)->setItemRole(ROLE_GRID);
         }
     // Draw vertical lines according to the keys
-    const double dx = 1.0 / mNumberOfKeys;
-    for (int i = 0; i <= mNumberOfKeys; i++)
-        mGraphics->drawLine(i*dx, 0,i*dx, 1, gridcolor)->setItemRole(ROLE_GRID);
+    if (mNumberOfKeys > 0) {
+        const double dx = 1.0 / mNumberOfKeys;
+        for (int i = 0; i <= mNumberOfKeys; i++)
+            mGraphics->drawLine(i*dx, 0,i*dx, 1, gridcolor)->setItemRole(ROLE_GRID);
+    }
 
     // Draw green background in tuning mode
     if (mOperationMode == MODE_TUNING) {

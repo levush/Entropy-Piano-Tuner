@@ -35,6 +35,7 @@
 #include "volumecontrolgroupbox.h"
 #include "tuningindicatorgroupbox.h"
 #include "versioncheck.h"
+#include "progressdisplay.h"
 
 class KeyboardGraphicsView;
 
@@ -164,6 +165,9 @@ private:
     VolumeControlGroupBox *mVolumeControlGroup;
 
     KeyboardGraphicsView *mKeyboardGraphicsView;
+
+    /// Progress display on the lower right side
+    ProgressDisplay *mProgressDisplay;
 
     QToolBar *mFileToolBar;
 

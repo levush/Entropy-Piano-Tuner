@@ -21,11 +21,12 @@
 #define OPTIONSPAGEAUDIO_H
 
 #include <QTabWidget>
+#include "../pagesavingtabwidget.h"
 #include "../optionscentralwidgetinterface.h"
 
 namespace options {
 
-class PageAudio : public QTabWidget, public CentralWidgetInterface
+class PageAudio : public PageSavingTabWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:

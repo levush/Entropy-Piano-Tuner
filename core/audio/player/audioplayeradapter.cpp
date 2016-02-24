@@ -23,13 +23,16 @@
 
 #include "audioplayeradapter.h"
 
+const double AudioPlayerAdapter::DefaultBufferSizeMilliseconds = 50;
+
 //-----------------------------------------------------------------------------
 //			                    Constructor
 //-----------------------------------------------------------------------------
 
 AudioPlayerAdapter::AudioPlayerAdapter() :
     mPCMWriter(nullptr),
-    mMuted(false)
+    mMuted(false),
+    mBufferSize(DefaultBufferSizeMilliseconds)
 {
     setChannelCount(2); // Ouput stereo per default
 }

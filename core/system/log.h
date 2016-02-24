@@ -85,8 +85,10 @@ public:
     static void warning(const char *text, int line, const char *file, const char *function);
     static void error(const char *text, int line, const char *file, const char *function);
 
-    Log(bool useLogfile = true);
+    Log();
     ~Log();
+
+    void createLogFile();
 
     static Log &getSingleton() {return *mLog.get();}
     static Log *getSingletonPtr() {return mLog.get();}

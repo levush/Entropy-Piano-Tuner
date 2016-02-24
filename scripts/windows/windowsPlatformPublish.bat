@@ -48,7 +48,6 @@ IF NOT "%1"=="" (
     GOTO :argsloop
 )
 
-echo t1
 if %vcredist% EQU x86 (
 	call windows_vars_x86.bat
 ) else (
@@ -59,8 +58,6 @@ if %vcredist% EQU x86 (
 		exit /b
 	)
 )
-
-echo t2
 
 call windowsPaths.bat %vcredist%
 

@@ -38,13 +38,15 @@
 class MessageModeChanged : public Message
 {
 public:
-    MessageModeChanged(OperationMode mode);
+    MessageModeChanged(OperationMode mode, OperationMode previousMode);
     ~MessageModeChanged();
 
     OperationMode getMode() const {return mMode;}
+    OperationMode getPreviousMode() const {return mPreviousMode;}
 
 private:
     OperationMode mMode;
+    OperationMode mPreviousMode;
 };
 
 #endif // MESSAGEMODECHANGED_H

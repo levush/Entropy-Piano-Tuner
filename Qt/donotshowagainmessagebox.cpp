@@ -46,9 +46,15 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
         setWindowTitle(tr("Tuning curve must be recalculated"));
         setStandardButtons(QMessageBox::Ok);
         break;
+    case MODE_CHANGE_SAVE:
+        setWindowTitle(tr("Save changes"));
+        setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        setIcon(QMessageBox::Question);
+        break;
     default:
         setWindowTitle(tr("Question"));
         setStandardButtons(QMessageBox::Ok);
+        setIcon(QMessageBox::Question);
         break;
     }
 
@@ -66,6 +72,9 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
         case TUNING_CURVE_NEEDS_UPDATE:
             setText(tr("There are missing frequencies in the calculated tuning curve. Recalculate to fix this."));
             break;
+        case MODE_CHANGE_SAVE:
+            setText(tr("Do you want to save your current changes? You can save at any time using the tool button or the action from the menu."));
+            break;
         default:
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "DoNotShowAgainMessageBoxTypeNotImplemented");
         }
@@ -81,24 +90,30 @@ DoNotShowAgainMessageBox::~DoNotShowAgainMessageBox()
 
 
 int DoNotShowAgainMessageBox::show(Type type, const QString text, QWidget *parent) {
-    if (doNotShowAgain(type)) {
+    int storedResult = doNotShowAgainAction(type);
+    if (storedResult >= 0) {
         // do not show again, accept
-        return QMessageBox::Accepted;
+        return storedResult;
     }
 
     DoNotShowAgainMessageBox b(type, text, parent);
 
     int r(b.exec());
-    if (r == QMessageBox::Rejected || r == QMessageBox::Cancel) {
-        return r;
-    }
-    if (b.checkBox()->isChecked()) {
+
+    // store value, but deny if the user canceled the dialog
+    bool denyStoring = r == QMessageBox::Rejected || r == QMessageBox::Cancel;
+    if (b.checkBox()->isChecked() && !denyStoring) {
         // store state
-        SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(type, true);
+        SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(type, true, r);
     }
-    return QMessageBox::Accepted;
+
+    return r;
+}
+
+int DoNotShowAgainMessageBox::doNotShowAgainAction(Type type) {
+    return SettingsForQt::getSingleton().doNotShowAgainMessageBox(type);
 }
 
 bool DoNotShowAgainMessageBox::doNotShowAgain(Type type) {
-    return SettingsForQt::getSingleton().doNotShowAgainMessageBox(type);
+    return SettingsForQt::getSingleton().doNotShowAgainMessageBox(type) >= 0;
 }

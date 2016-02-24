@@ -20,8 +20,11 @@
 #include <qpainter.h>
 #include <qpaintengine.h>
 #include <qtransform.h>
+#ifdef QT_NO_PRINTER
+#else
 #include <qprinter.h>
 #include <qprintdialog.h>
+#endif
 #include <qfiledialog.h>
 #include <qfileinfo.h>
 #include <qstyle.h>

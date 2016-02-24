@@ -37,10 +37,10 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS =
+HEADERS = \
 
 QWT_S = $$SOURCES
-SOURCES =
+SOURCES = \
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -178,7 +178,7 @@ linux-g++*:!android {
     QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBU -Wall -Werror -Wpedantic
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Werror -Wpedantic
 }
 # android libs
 android {
@@ -249,7 +249,12 @@ HEADERS  += \
     Qt/displaysizedependinggroupbox.h \
     Qt/signalanalyzergroupbox.h \
     Qt/volumecontrolgroupbox.h \
-    Qt/plotsdialog/plotsdialog.h
+    Qt/plotsdialog/plotsdialog.h \
+    Qt/progressdisplay.h \
+    Qt/options/pagesavingtabwidget.h \
+    Qt/piano/pianofileiointerface.h \
+    Qt/piano/pianofileioxml.h \
+    Qt/piano/pianofileiocsv.h \
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -309,6 +314,11 @@ SOURCES +=  \
     Qt/stroboscopicviewadapterforqt.cpp \
     Qt/tuningindicatorgroupbox.cpp \
     Qt/audioforqt/audioplayerthreadforqt.cpp \
+    Qt/progressdisplay.cpp \
+    Qt/options/pagesavingtabwidget.cpp \
+    Qt/piano/pianofileiointerface.cpp \
+    Qt/piano/pianofileioxml.cpp \
+    Qt/piano/pianofileiocsv.cpp \
 
 
 #-------------------------------------------------
@@ -446,6 +456,7 @@ CORE_SYSTEM_HEADERS = \
     core/system/version.h \
     core/system/platformtoolscore.h \
     core/system/serverinfo.h \
+    core/system/basecallback.h \
 
 CORE_SYSTEM_SOURCES = \
     core/system/log.cpp \
@@ -454,6 +465,7 @@ CORE_SYSTEM_SOURCES = \
     core/system/timer.cpp \
     core/system/platformtoolscore.cpp \
     core/system/serverinfo.cpp \
+    core/system/basecallback.cpp \
 
 #--------------- Analyzers -----------------
 
@@ -474,7 +486,6 @@ CORE_ANALYZER_SOURCES = \
 
 CORE_PIANO_HEADERS = \
     core/piano/piano.h \
-    core/piano/pianofile.h \
     core/piano/key.h \
     core/piano/pianomanager.h \
     core/piano/keyboard.h \
@@ -482,7 +493,6 @@ CORE_PIANO_HEADERS = \
 
 CORE_PIANO_SOURCES = \
     core/piano/piano.cpp  \
-    core/piano/pianofile.cpp \
     core/piano/key.cpp \
     core/piano/pianomanager.cpp \
     core/piano/keyboard.cpp \

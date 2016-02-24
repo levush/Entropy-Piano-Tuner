@@ -23,6 +23,7 @@
 #include <QDateTime>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QScrollBar>
 #include "ui_editpianosheetdialog.h"
 #include "../core/config.h"
 #include "../core/piano/piano.h"
@@ -37,21 +38,23 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
     ui->setupUi(this);
     setModal(true);
 
-    if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
-        // on small devices we need a bit more space for translated languages (e.g. German), reduce margins in general for xsmall devices
-        layout()->setMargin(3);
-        ui->scrollAreaWidgetContents->layout()->setMargin(1);
-    }
+    // if (DisplaySizeDefines::getSingleton()->isLEq(DS_XSMALL)) {
+    //    // on small devices we need a bit more space for translated languages (e.g. German), reduce margins in general for xsmall devices
+    //    layout()->setMargin(3);
+    //    ui->scrollAreaWidgetContents->layout()->setMargin(1);
+    // }
 
-    ui->nameLineEdit->setText(QString::fromStdString(piano.getName()));
+    ui->scrollArea->setFrameShape(QFrame::NoFrame);
+
+    ui->nameLineEdit->setText(QString::fromStdWString(piano.getName()));
     ui->pianoType->setCurrentIndex(piano.getPianoType());
-    ui->serialNumberLineEdit->setText(QString::fromStdString(piano.getSerialNumber()));
+    ui->serialNumberLineEdit->setText(QString::fromStdWString(piano.getSerialNumber()));
     // we only need the year
-    ui->yearEdit->setDate(QDate(QString::fromStdString(piano.getManufactionYear()).toInt(), 1, 1));
-    ui->productionLocationLineEdit->setText(QString::fromStdString(piano.getManufactionLocation()));
+    ui->yearEdit->setDate(QDate(QString::fromStdWString(piano.getManufactionYear()).toInt(), 1, 1));
+    ui->productionLocationLineEdit->setText(QString::fromStdWString(piano.getManufactionLocation()));
 
-    ui->tuningLocationLineEdit->setText(QString::fromStdString(piano.getTuningLocation()));
-    QDateTime time = QDateTime::fromString(QString::fromStdString(piano.getTuningTime()), "yyyy-MM-dd HH:mm:ss").toLocalTime();
+    ui->tuningLocationLineEdit->setText(QString::fromStdWString(piano.getTuningLocation()));
+    QDateTime time = QDateTime::fromString(QString::fromStdWString(piano.getTuningTime()), "yyyy-MM-dd HH:mm:ss").toLocalTime();
     time.setTimeSpec(Qt::UTC);
     ui->timeOfTuningDateTimeEdit->setDateTime(time.toLocalTime());
 
@@ -62,6 +65,16 @@ EditPianoSheetDialog::EditPianoSheetDialog(const Piano &piano, QWidget *parent) 
 
     ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(ui->scrollArea->viewport(), QScroller::LeftMouseButtonGesture);
+
+    if (DisplaySizeDefines::getSingleton()->showMultiLineEditPianoDataSheet()) {
+        ui->pianoManufacturerInformationLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        ui->pianoOperatingSiteInformationLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+    } else {
+        ui->pianoManufacturerInformationLayout->setRowWrapPolicy(QFormLayout::DontWrapRows);
+        ui->pianoOperatingSiteInformationLayout->setRowWrapPolicy(QFormLayout::DontWrapRows);
+    }
+
+    ui->scrollAreaWidgetContents->installEventFilter(this);
 
     SHOW_DIALOG(this);
 }
@@ -74,20 +87,21 @@ EditPianoSheetDialog::~EditPianoSheetDialog()
 void EditPianoSheetDialog::applyData(Piano *piano) const {
     assert(piano);
 
-    piano->setName(ui->nameLineEdit->text().toStdString());
+    piano->setName(ui->nameLineEdit->text().toStdWString());
     piano->setType(static_cast<piano::PianoType>(ui->pianoType->currentIndex()));
-    piano->setSerialNumber(ui->serialNumberLineEdit->text().toStdString());
+    piano->setSerialNumber(ui->serialNumberLineEdit->text().toStdWString());
     // we only need the year
-    piano->setManufactureYear(QString("%1").arg(ui->yearEdit->date().year()).toStdString());
-    piano->setManufactureLocation(ui->productionLocationLineEdit->text().toStdString());
+    piano->setManufactureYear(QString("%1").arg(ui->yearEdit->date().year()).toStdWString());
+    piano->setManufactureLocation(ui->productionLocationLineEdit->text().toStdWString());
 
-    piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdString());
-    piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdString());
+    piano->setTuningLocation(ui->tuningLocationLineEdit->text().toStdWString());
+    piano->setTuningTime(ui->timeOfTuningDateTimeEdit->dateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss").toStdWString());
     piano->setConcertPitch(ui->concertPitchSpinBox->value());
     piano->getKeyboard().setNumberOfBassKeys(ui->keysOnBassBridgeSpinBox->value());
 
     piano->getKeyboard().changeKeyboardConfiguration(ui->numberOfKeysSpinBox->value(),
                                          ui->keyNumberOfASpinBox->value() - 1);  // counting start from 1 to 0
+
 }
 
 void EditPianoSheetDialog::keyPressEvent(QKeyEvent *event) {
@@ -102,6 +116,16 @@ void EditPianoSheetDialog::keyPressEvent(QKeyEvent *event) {
         QDialog::keyPressEvent(event);
         break;
     }
+}
+
+bool EditPianoSheetDialog::eventFilter(QObject *o, QEvent *e) {
+    if (o == ui->scrollAreaWidgetContents && e->type() == QEvent::Resize) {
+        setMinimumWidth(ui->scrollAreaWidgetContents->minimumSizeHint().width()
+                        + ui->scrollArea->verticalScrollBar()->width()
+                        + ui->scrollAreaWidgetContents->layout()->margin() * 2);
+    }
+
+    return false;
 }
 
 void EditPianoSheetDialog::onSetTuningTimeToNow() {

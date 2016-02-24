@@ -278,6 +278,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->setStretch(1, 1);
     mainLayout->setStretch(3, 1);
 
+    mProgressDisplay = new ProgressDisplay(this);
+
 #if CONFIG_DIALOG_SIZE == 1
     // reset old settings (windows size/position and splitter)
     QSettings settings;
@@ -309,6 +311,7 @@ void MainWindow::init(Core *core) {
     qDebug() << "Display size: " << QGuiApplication::primaryScreen()->physicalSize();
 
     mCore->getProjectManager()->setCallback(this);
+    mCore->getSoundGenerator().getSynthesizer().getWaveformGenerator().addListener(mProgressDisplay);
 
     // hide some elements
     if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
@@ -390,6 +393,18 @@ void MainWindow::handleMessage(MessagePtr m) {
         // hide all groups first and enable if required
         mCalculationProgressGroup->setVisible(false);
 
+        // ask user if he wants to save
+        if (mCore->getProjectManager()->hasChangesInFile()) {
+            if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::MODE_CHANGE_SAVE, this) == QMessageBox::Yes) {
+                // save
+                if (mCore->getProjectManager()->onSaveFile() == ProjectManagerAdapter::R_CANCELED) {
+                    // if the user cancels the dialog, reset the save state of the dialog
+                    SettingsForQt::getSingleton().setDoNotShowAgainMessageBox(DoNotShowAgainMessageBox::MODE_CHANGE_SAVE, false, -1);
+                }
+            }
+        }
+
+        // display
         if (mmc->getMode() == MODE_CALCULATION) {
             // hide first for correct sizing
             mCalculationProgressGroup->setVisible(true);
@@ -519,7 +534,18 @@ void MainWindow::updateFrequency(const Key *key) {
 }
 
 void MainWindow::updateWindowTitle() {
-    setWindowTitle(tr("Entropy piano tuner") + " - " + QString::fromStdString(mCore->getPianoManager()->getPiano().getName()) + (mCore->getProjectManager()->hasChangesInFile() ? "*" : ""));
+    QFileInfo fi(QString::fromStdWString(mCore->getProjectManager()->getCurrentFilePath()));
+    QString asterix = mCore->getProjectManager()->hasChangesInFile() ? "*" : "";
+    QString pianoName(QString::fromStdWString(mCore->getPianoManager()->getPiano().getName()));
+
+    QString title = tr("Entropy piano tuner");
+    if (pianoName.isEmpty() == false) {
+        title = "[" + pianoName + "] - " + title;
+    }
+    if (fi.fileName().isEmpty() == false) {
+        title = fi.fileName() + asterix + " - " + title;
+    }
+    setWindowTitle(title);
 }
 
 void MainWindow::updateVolumeBar() {
@@ -609,7 +635,7 @@ void MainWindow::onEditPianoDataSheet() {
 }
 
 void MainWindow::onResetRecording() {
-    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_PITCHES, this) == QMessageBox::Accepted) {
+    if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::RESET_PITCHES, this) == QMessageBox::Yes) {
         mCore->getPianoManager()->resetPitches();
     }
 }

@@ -25,7 +25,25 @@
 #define WAVEFORMGENERATOR_H
 
 #include "../../system/simplethreadhandler.h"
+#include "../../system/basecallback.h"
 #include "../../math/fftimplementation.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief The WaveformGeneratorStatusCallback class
+///
+/// Implements callback functions called by the WaveformGenerator.
+////////////////////////////////////////////////////////////////////////////////
+class WaveformGeneratorStatusCallback : public BaseCallbackInterface
+{
+public:
+    ///
+    /// \brief Called by WaveformGenerator if the size of the queue changed
+    /// \param size The new size
+    /// \param maxSize The maximum size, usually the number of keys
+    ///
+    virtual void queueSizeChanged(size_t size, size_t maxSize) = 0;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief The WaveformGenerator class
@@ -41,7 +59,9 @@
 /// The WaveformGenerator runs in an independent thread with normal priority.
 ////////////////////////////////////////////////////////////////////////////////
 
-class WaveformGenerator : public SimpleThreadHandler
+class WaveformGenerator :
+        public SimpleThreadHandler,
+        public CallbackManager<WaveformGeneratorStatusCallback>
 {
 private:
 #ifdef __ANDROID__

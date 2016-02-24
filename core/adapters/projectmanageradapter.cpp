@@ -36,9 +36,15 @@ using piano::FT_EPT;
 using piano::FT_NONE;
 using piano::parseFileType;
 
-ProjectManagerAdapter::FileDialogResult::FileDialogResult(const std::string p) :
+ProjectManagerAdapter::FileDialogResult::FileDialogResult(const std::wstring p) :
     path(p),
-    fileType(parseFileType(p.substr(p.find_last_of(".") + 1))) {
+    fileType(piano::parseTypeOfFilePath(p)) {
+}
+
+ProjectManagerAdapter::FileDialogResult::FileDialogResult(const std::wstring path, const piano::FileType fileType) :
+    path(path),
+    fileType(fileType) {
+    assert(piano::parseTypeOfFilePath(path) == fileType);
 }
 
 //-----------------------------------------------------------------------------
@@ -154,7 +160,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFile()
     }
 
     // save at current location
-    saveFile(mCurrentFilePath, FT_EPT);
+    saveFile(FileDialogResult(mCurrentFilePath, FT_EPT));
     return R_ACCEPTED;
 }
 
@@ -179,7 +185,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onSaveFileAs() {
     }
 
     // file was stored    
-    saveFile(r.path, r.fileType);
+    saveFile(FileDialogResult(r.path, r.fileType));
     return R_ACCEPTED;
 }
 
@@ -206,7 +212,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onOpenFile()
     }
 
     // file was opened
-    openFile(r.path);
+    openFile(r);
 
     return R_ACCEPTED;
 }
@@ -317,7 +323,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::onExport()
     }
 
     // file was stored
-    saveFile(r.path, r.fileType);
+    saveFile(FileDialogResult(r.path, r.fileType));
     return R_ACCEPTED;
 }
 
@@ -419,23 +425,18 @@ void ProjectManagerAdapter::setChangesInFile(bool b)
 /// \return Enum of type ProjectManagerAdapter::Results
 ///////////////////////////////////////////////////////////////////////////////
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string &path, piano::FileType type)
+ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const FileDialogResult &fileInfo)
 {
-    EptAssert(type != FT_NONE, "File type not valid.");
-    EptAssert(path.size() > 0, "Path not valid.");
+    EptAssert(fileInfo.isValid(), "File type not valid.");
+
     try // catching possible exception errors
     {
         // Try to save the piano
-        if (!mPianoFile.write(path, mCore->getPianoManager()->getPiano(), type))
-        {
-            LogW("File could not be saved");
-            return R_CANCELED;
-        }
-
+        writePianoFile(fileInfo, mCore->getPianoManager()->getPiano());
 
         LogI("File saved!");
-        mCurrentFilePath = path;    // remember current path
-        setChangesInFile(false);    // after saving the status is that there are no changes
+        mCurrentFilePath = fileInfo.path;    // remember current path
+        setChangesInFile(false);             // after saving the status is that there are no changes
 
         // Tell the other modules that the file has been saved
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_SAVED,
@@ -464,15 +465,12 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::saveFile(const std::string
 /// \return Enum of type ProjectManagerAdapter::Results
 ///////////////////////////////////////////////////////////////////////////////
 
-ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string &path, bool cached)
+ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const FileDialogResult &fileInfo, bool cached)
 {
     try
     {
-        if (!mPianoFile.read(path, mCore->getPianoManager()->getPiano()))
-        {
-            LogW("File could not be opened");
-            return R_CANCELED;
-        }
+        readPianoFile(fileInfo, &mCore->getPianoManager()->getPiano());
+
         LogI("File opened!");
         if (cached)
         {
@@ -482,7 +480,7 @@ ProjectManagerAdapter::Results ProjectManagerAdapter::openFile(const std::string
         }
         else
         {
-            mCurrentFilePath = path;
+            mCurrentFilePath = fileInfo.path;
             setChangesInFile(false);
         }
         MessageHandler::send<MessageProjectFile>(MessageProjectFile::FILE_OPENED, mCore->getPianoManager()->getPiano());

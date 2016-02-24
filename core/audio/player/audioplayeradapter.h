@@ -50,6 +50,8 @@
 class AudioPlayerAdapter : public AudioBase
 {
 public:
+    static const double DefaultBufferSizeMilliseconds;  ///< The default playback buffer size in milliseconds
+public:
     AudioPlayerAdapter();                           ///< Constructor, resetting default values
     virtual ~AudioPlayerAdapter() {}                ///< Destructor without functionality
 
@@ -59,10 +61,14 @@ public:
     PCMWriterInterface *getWriter() {return mPCMWriter;} ///< Get pointer to the PCM writer
 
     void setMuted (bool muted) { mMuted = muted; }  ///< Mute the audio player.
-    bool isMuted() { return mMuted; }               ///< Returns true if the player is muted
+    bool isMuted() const { return mMuted; }         ///< Returns true if the player is muted
+
+    void setBufferSize (double bufferSize) { mBufferSize = bufferSize; }   ///< Set the buffersize, exit->init has to be called after changes
+    double getBufferSize () const { return mBufferSize; }                  ///< Returns the playback buffer size in milliseconds
 private:
     PCMWriterInterface *mPCMWriter;                 ///< Pointer to PCM writer
     bool   mMuted;                                  ///< Flag which is true if the ouput device muted
+    double mBufferSize;                             ///< Playback buffer size in milliseconds
 };
 
 #endif // AUDIOPLAYERADAPTER_H

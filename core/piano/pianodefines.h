@@ -64,7 +64,11 @@ namespace piano {
     };
 
     std::string toFileEnding(FileType ft);
+    std::wstring toFileEndingW(FileType ft);
+
     FileType parseFileType(const std::string &fileEnding);
+    FileType parseFileType(const std::wstring &fileEnding);
+    FileType parseTypeOfFilePath(const std::wstring &filePath);
 
 }  // namespace piano
 

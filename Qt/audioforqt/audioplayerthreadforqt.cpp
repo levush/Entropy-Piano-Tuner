@@ -24,7 +24,6 @@
 #include "../core/system/log.h"
 #include "../core/system/simplethreadhandler.h"
 
-const double AudioPlayerThreadForQt::BufferMilliseconds = 50;
 
 //=============================================================================
 //                      CLASS AudioPlayerThreadForQt
@@ -103,12 +102,12 @@ void AudioPlayerThreadForQt::init()
             mAudioSource->setSamplingRate(format.sampleRate());
             if (format.sampleSize() != sizeof(DataFormat) * 8)
             {
-                LogW("Sample size not supported");
+                LogW("Sample size of %i not supported", format.sampleSize());
                 return;
             }
             if (format.sampleType() != QAudioFormat::SignedInt)
             {
-                LogW("Sample format not supported");
+                LogW("Sample format (%i) not supported", format.sampleType());
                 return;
             }
         }
@@ -129,7 +128,7 @@ void AudioPlayerThreadForQt::init()
 
     // Specify the size of the Qt-internal buffer
     const size_t BufferSize = mAudioSource->getChannelCount() *
-            ((mAudioSource->getSamplingRate() * BufferMilliseconds)/1000);
+            ((mAudioSource->getSamplingRate() * mAudioSource->getBufferSize())/1000);
     mAudioSink->setBufferSize(BufferSize);
     if (mAudioSink->error() != QAudio::NoError) {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
@@ -159,10 +158,6 @@ void AudioPlayerThreadForQt::exit()
         mIODevice = nullptr;
     }
 
-    if (mAudioSource && mAudioSource->getWriter())
-    {
-        mAudioSource->getWriter()->exit();
-    }
     LogI("Qt audio player closed.");
 }
 
