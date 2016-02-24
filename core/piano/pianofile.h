@@ -24,6 +24,12 @@
 #include "../../thirdparty/tinyxml2/tinyxml2.h"
 #include "piano.h"
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief The PianoFile class
+/// \details This class manages the file management, allowing the user to
+/// load and save ept and csv files. The files are coded in XML format.
+/// To this end we use the third-party software tinyXML.
+///////////////////////////////////////////////////////////////////////////////
 
 class PianoFile
 {

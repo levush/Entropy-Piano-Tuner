@@ -37,12 +37,36 @@ const PianoFile::FileVersionType PianoFile::UNSET_FILE_VERSION(-1);
 const PianoFile::FileVersionType PianoFile::CURRENT_FILE_VERSION(1);
 const PianoFile::FileVersionType PianoFile::MIN_SUPPORTED_FILE_VERSION(1);
 
+
+//-----------------------------------------------------------------------------
+//                               Constructor
+//-----------------------------------------------------------------------------
+
+/// \brief Constructor
+
 PianoFile::PianoFile()
     : mFileVersion(-1) {
 }
 
+//-----------------------------------------------------------------------------
+//                                Destructor
+//-----------------------------------------------------------------------------
+
+/// \brief Destructor
+
 PianoFile::~PianoFile() {
 }
+
+//-----------------------------------------------------------------------------
+//                              Read entire piano
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Read the entire piano from a file
+/// \param absolutePath : path to the file from where the data is read
+/// \param piano : Reference to the piano object
+/// \return True if success.
+///////////////////////////////////////////////////////////////////////////////
 
 bool PianoFile::read(const std::string &absolutePath, Piano &piano) {
     // change locale to be sure to read doubles in classic format
@@ -58,6 +82,18 @@ bool PianoFile::read(const std::string &absolutePath, Piano &piano) {
 
     return true;
 }
+
+//-----------------------------------------------------------------------------
+//                              Write entire piano
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Write the data of the entire piano to a file
+/// \param absolutePath : path to the file to be written
+/// \param piano : Reference to the piano object
+/// \param fileType : type of the file (ept or csv)
+/// \return True on success
+///////////////////////////////////////////////////////////////////////////////
 
 bool PianoFile::write(const std::string &absolutePath, const Piano &piano, piano::FileType fileType) const {
     // change locale to be sure to write doubles in classic format
@@ -79,6 +115,17 @@ bool PianoFile::write(const std::string &absolutePath, const Piano &piano, piano
 
     return true;
 }
+
+
+//-----------------------------------------------------------------------------
+//                Read XML data and copy them into the piano
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Read XML data and copy them into the piano
+/// \param absolutePath : Path of the file from where the data is being read.
+/// \param piano : Reference to the piano structure
+///////////////////////////////////////////////////////////////////////////////
 
 void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
     auto startTime = std::chrono::high_resolution_clock::now();
@@ -135,6 +182,10 @@ void PianoFile::readXmlFile(const std::string &absolutePath, Piano &piano) {
 
 }
 
+//-----------------------------------------------------------------------------
+//                          Write XML data of a piano
+//-----------------------------------------------------------------------------
+
 void PianoFile::writeXmlFile(const std::string &absolutePath, const Piano &piano) const {
     tinyxml2::XMLDocument doc;
 
@@ -161,6 +212,10 @@ void PianoFile::writeXmlFile(const std::string &absolutePath, const Piano &piano
     LogI("Succesfully saved Xml-File: %s", absolutePath.c_str());
 }
 
+//-----------------------------------------------------------------------------
+//                     Get the text of a single SML element
+//-----------------------------------------------------------------------------
+
 std::string PianoFile::getText(const tinyxml2::XMLElement *element) {
     if (!element->GetText()) {
         return std::string();
@@ -169,11 +224,19 @@ std::string PianoFile::getText(const tinyxml2::XMLElement *element) {
     }
 }
 
+//-----------------------------------------------------------------------------
+//                      Create an XML text element
+//-----------------------------------------------------------------------------
+
 void PianoFile::createTextXMLElement(tinyxml2::XMLElement *parent, const char *label, const char *text) const {
     tinyxml2::XMLElement *e = parent->GetDocument()->NewElement(label);
     parent->InsertEndChild(e);
     e->SetText(text);
 }
+
+//-----------------------------------------------------------------------------
+//               Read a XML elements and copy them into the piano
+//-----------------------------------------------------------------------------
 
 void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
     EptAssert(e, "XMLElement has to exist.");
@@ -207,6 +270,10 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Piano &piano) {
     }
 }
 
+//-----------------------------------------------------------------------------
+//                    Get piano data and write XML elements
+//-----------------------------------------------------------------------------
+
 void PianoFile::write(tinyxml2::XMLElement *e, const Piano &piano) const {
     e->SetAttribute("concertPitch", piano.getConcertPitch());
     e->SetAttribute("type", piano.getPianoType());
@@ -224,6 +291,11 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Piano &piano) const {
     write(keyboardElem, piano.getKeyboard());
 
 }
+
+
+//-----------------------------------------------------------------------------
+//             Read XML elements and copy them to the keyboard
+//-----------------------------------------------------------------------------
 
 void PianoFile::read(const tinyxml2::XMLElement *e, Keyboard &keyboard) {
     int numberOfKeys = keyboard.getNumberOfKeys();
@@ -296,6 +368,10 @@ void PianoFile::read(const tinyxml2::XMLElement *e, Keyboard &keyboard) {
     }
 }
 
+//-----------------------------------------------------------------------------
+//               Get the keyboard data and write XML element
+//-----------------------------------------------------------------------------
+
 void PianoFile::write(tinyxml2::XMLElement *e, const Keyboard &keyboard) const {
     assert(e);
     e->SetAttribute("numberOfKeys", keyboard.getNumberOfKeys());
@@ -338,9 +414,9 @@ void PianoFile::write(tinyxml2::XMLElement *e, const Keyboard &keyboard) const {
 }
 
 
-// ==================================================================================================
-// CSV
-
+//-----------------------------------------------------------------------------
+//                               Write CSV file
+//-----------------------------------------------------------------------------
 
 void PianoFile::writeCsvFile(const std::string &absolutePath, const Piano &piano) const {
     std::ofstream stream;
