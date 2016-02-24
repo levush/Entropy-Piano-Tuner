@@ -5,6 +5,11 @@
  *          http://creativecommons.org/licenses/by/3.0/deed.en_US
  */
 
+/*
+ * Changes:
+ *  - Windows section only for Windows Desktop, disabled for WinRT/Phone
+ */
+
 #if defined(_WIN32)
 #include <Windows.h>
 
@@ -33,8 +38,8 @@ size_t getMemorySize( )
     GlobalMemoryStatus( &status );
     return (size_t)status.dwTotalPhys;
 
-#elif defined(_WIN32)
-    /* Windows. ------------------------------------------------- */
+#elif WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+    /* Windows Desktop ------------------------------------------ */
     /* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
