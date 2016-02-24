@@ -165,7 +165,7 @@ void RecordingManager::updateStroboscopicFrequencies()
             {
                 // Push partials with the expected harmonic spectrum
                 const double B = mPiano->getExpectedInharmonicity (fc);
-                for (int n=1; n<=3; ++n) ftab.push_back(n*fc*sqrt((1+B*n*n)/1+B));
+                for (int n=1; n<=3; ++n) ftab.push_back(n*fc*sqrt((1+B*n*n)/(1+B)));
             }
         }
     }

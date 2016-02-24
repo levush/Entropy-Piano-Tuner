@@ -536,7 +536,18 @@ void MainWindow::updateFrequency(const Key *key) {
 }
 
 void MainWindow::updateWindowTitle() {
-    setWindowTitle(tr("Entropy piano tuner") + " - " + QString::fromStdString(mCore->getPianoManager()->getPiano().getName()) + (mCore->getProjectManager()->hasChangesInFile() ? "*" : ""));
+    QFileInfo fi(QString::fromStdWString(mCore->getProjectManager()->getCurrentFilePath()));
+    QString asterix = mCore->getProjectManager()->hasChangesInFile() ? "*" : "";
+    QString pianoName(QString::fromStdWString(mCore->getPianoManager()->getPiano().getName()));
+
+    QString title = tr("Entropy piano tuner");
+    if (pianoName.isEmpty() == false) {
+        title = "[" + pianoName + "] - " + title;
+    }
+    if (fi.fileName().isEmpty() == false) {
+        title = fi.fileName() + asterix + " - " + title;
+    }
+    setWindowTitle(title);
 }
 
 void MainWindow::updateVolumeBar() {

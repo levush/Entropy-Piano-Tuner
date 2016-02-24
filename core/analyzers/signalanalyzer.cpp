@@ -551,7 +551,7 @@ double SignalAnalyzer::signalPreprocessing(FFTWVector &signal)
 
     // 2. Determine the initial energy of the keystroke:
     uint blocksize = std::min(N,sr/5);  // 0.2 sec
-    assert(blocksize>0);
+    if (blocksize<=0) return 0;
     double E0=0;
     for (uint i=0; i<blocksize; i++) E0+=signal[i]*signal[i];
     E0 *= 2.0/blocksize;

@@ -18,7 +18,6 @@
  *****************************************************************************/
 
 #include "messageprojectfile.h"
-#include "../piano/pianofile.h"
 
 MessageProjectFile::MessageProjectFile(Types type, const Piano &piano)
     : Message(MSG_PROJECT_FILE),

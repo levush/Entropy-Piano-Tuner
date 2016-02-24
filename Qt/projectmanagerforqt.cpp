@@ -36,10 +36,15 @@
 #include "mainwindow.h"
 #include "simplefiledialog.h"
 
+#include "piano/pianofileiocsv.h"
+#include "piano/pianofileioxml.h"
+
 ProjectManagerForQt::ProjectManagerForQt(MainWindow *mainwindow)
     : ProjectManagerAdapter(),
       mMainWindow(mainwindow) {
 
+    mPianoFileWriters[piano::FT_CSV].reset(new PianoFileIOCsv());
+    mPianoFileWriters[piano::FT_EPT].reset(new PianoFileIOXml());
 }
 
 ProjectManagerForQt::~ProjectManagerForQt()
@@ -79,7 +84,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::askForSaving() {
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileType) {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     Q_UNUSED(fileType);
-    return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
+    return SimpleFileDialog::getSaveFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdWString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
@@ -90,7 +95,7 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
     QString file = QFileDialog::getSaveFileName(mMainWindow, MainWindow::tr("Save"), path, getFileFilters(fileType, true), 0);
     if (file.isEmpty()) {
         // canceled
-        return std::string();
+        return std::wstring();
     }
     if (isVaildFileEndig(file, fileType) == false) {
         // add default ending
@@ -99,14 +104,14 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getSavePath(int fileT
     // update/store path
     setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
     // return selected file
-    return file.toStdString();
+    return file.toStdWString();
 #endif
 }
 
 ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileType)  {
 #if CONFIG_USE_SIMPLE_FILE_DIALOG
     Q_UNUSED(fileType);
-    return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdString();
+    return SimpleFileDialog::getOpenFile(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toStdWString();
 #else
     QString path(getCurrentPath());
     QDir().mkdir(path);
@@ -114,12 +119,12 @@ ProjectManagerForQt::FileDialogResult ProjectManagerForQt::getOpenPath(int fileT
     QString file = QFileDialog::getOpenFileName(mMainWindow, MainWindow::tr("Open"), path, getFileFilters(fileType, true), 0);
     if (file.isEmpty()) {
         // canceled
-        return std::string();
+        return std::wstring();
     }
     // update/store path
     setCurrentPath(QFileInfo(file).absoluteDir().absolutePath());
     // return selected file
-    return file.toStdString();
+    return file.toStdWString();
 #endif
 }
 
@@ -130,7 +135,7 @@ ProjectManagerForQt::Results ProjectManagerForQt::share() {
     // get the application instance
     QAndroidJniObject instance = QAndroidJniObject::callStaticObjectMethod("org/uniwue/tp3/TunerApplication", "getInstance", "()Lorg/uniwue/tp3/TunerApplication;");
     QAndroidJniObject jTitle = QAndroidJniObject::fromString(MainWindow::tr("Share tuning data"));
-    QAndroidJniObject jPath = QAndroidJniObject::fromString(QString::fromStdString(getCurrentFilePath()));
+    QAndroidJniObject jPath = QAndroidJniObject::fromString(QString::fromStdWString(getCurrentFilePath()));
     // get the path to the file to open, zero length if there is none
     instance.callMethod<void>("shareFile", "(Ljava/lang/String;Ljava/lang/String;)V", jTitle.object<jstring>(), jPath.object<jstring>());
     // check for errors
@@ -146,13 +151,13 @@ ProjectManagerForQt::Results ProjectManagerForQt::share() {
 }
 
 void ProjectManagerForQt::fillNew(Piano &piano) {
-    piano.setName(MainWindow::tr("New piano").toStdString());
-    piano.setSerialNumber("0000-0000");
-    piano.setManufactureYear(QString("%1").arg(QDate::currentDate().year()).toStdString());
-    piano.setManufactureLocation(MainWindow::tr("Unknown").toStdString());
+    piano.setName(MainWindow::tr("New piano").toStdWString());
+    piano.setSerialNumber(QString("0000-0000").toStdWString());
+    piano.setManufactureYear(QString("%1").arg(QDate::currentDate().year()).toStdWString());
+    piano.setManufactureLocation(MainWindow::tr("Unknown").toStdWString());
 
-    piano.setTuningLocation(MainWindow::tr("Unknown").toStdString());
-    piano.setTuningTimeToActualTime();
+    piano.setTuningLocation(MainWindow::tr("Unknown").toStdWString());
+    piano.setTuningTimeToCurrentTime();
     piano.setConcertPitch(Piano::DEFAULT_CONCERT_PITCH);
     piano.getKeyboard().changeKeyboardConfiguration(Piano::DEFAULT_NUMBER_OF_KEYS,
                                         Piano::DEFAULT_KEY_NUMBER_OF_A);
@@ -200,4 +205,22 @@ bool ProjectManagerForQt::isVaildFileEndig(QString filename, int fileTypes) cons
     }
 
     return false;
+}
+
+void ProjectManagerForQt::writePianoFile(const FileDialogResult &fileInfo, const Piano &piano) {
+    QFile file(QString::fromStdWString(fileInfo.path));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        EPT_EXCEPT(EptException::ERR_CANNOT_WRITE_TO_FILE, QString("Could not open file '%1'").arg(QString::fromStdWString(fileInfo.path)).toStdString().c_str());
+    }
+
+    mPianoFileWriters[fileInfo.fileType]->write(&file, piano);
+}
+
+void ProjectManagerForQt::readPianoFile(const FileDialogResult &fileInfo, Piano *piano) {
+    QFile file(QString::fromStdWString(fileInfo.path));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, QString("Could not open file '%1'").arg(QString::fromStdWString(fileInfo.path)).toStdString().c_str());
+    }
+
+    mPianoFileWriters[fileInfo.fileType]->read(&file, *piano);
 }

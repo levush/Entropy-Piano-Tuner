@@ -23,6 +23,10 @@
 #include "../core/adapters/projectmanageradapter.h"
 #include <QObject>
 #include <QWidget>
+#include <map>
+#include <memory>
+
+#include "piano/pianofileiointerface.h"
 
 class MainWindow;
 
@@ -121,9 +125,15 @@ protected:
     QString getFileFilters(int fileTypes, bool addAll) const;
     bool isVaildFileEndig(QString filename, int fileTypes) const;
 
+    virtual void writePianoFile(const FileDialogResult &fileInfo, const Piano &piano) override final;
+    virtual void readPianoFile(const FileDialogResult &fileInfo, Piano *piano) override final;
+
 private:
     /// The main window.
     MainWindow *mMainWindow;
+
+    /// The piano file writers
+    std::map<piano::FileType, std::unique_ptr<PianoFileIOInterface>> mPianoFileWriters;
 };
 
 #endif // PROJECTMANAGERFORQT_H
