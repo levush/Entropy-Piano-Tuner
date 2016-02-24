@@ -35,7 +35,7 @@
 void iosInit();
 void iosDisableScreensaver();
 void iosReleaseScreensaverLock();
-void iosGetPhysicalMemoryInGB();
+double iosGetPhysicalMemoryInGB();
 
 
 // midi functions

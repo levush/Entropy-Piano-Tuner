@@ -1,5 +1,6 @@
 #include "pianofileiocsv.h"
 #include <QTextStream>
+#include <cmath>
 
 #include "core/system/eptexception.h"
 
@@ -29,7 +30,7 @@ void PianoFileIOCsv::write(QIODevice *device, const Piano &piano) const {
     const Key &Akey = piano.getKey(A4);
     auto cents = [A4] (int i, double f, double fA4)
     {
-        double ET = pow(2.0,(i-A4)/12.0);
+        double ET = std::pow(2.0,(i-A4)/12.0);
         if (f == 0 or fA4 == 0) return 0.0;
         else return 1200.0 * std::log(f/fA4/ET)/std::log(2.0);
     };

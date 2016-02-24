@@ -53,7 +53,7 @@ void iosReleaseScreensaverLock() {
     [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
-void iosGetPhysicalMemoryInGB() {
+double iosGetPhysicalMemoryInGB() {
     return [NSProcessInfo processInfo].physicalMemory / (1024.0 * 1024.0 * 1024.0);
 }
 
