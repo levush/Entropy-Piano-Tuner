@@ -8,6 +8,7 @@
 /*
  * Changes:
  *  - Windows section only for Windows Desktop, disabled for WinRT/Phone
+ *  - Moved last return out of else block, to hold also for subversions
  */
 
 #if defined(_WIN32)
@@ -38,13 +39,17 @@ size_t getMemorySize( )
     GlobalMemoryStatus( &status );
     return (size_t)status.dwTotalPhys;
 
-#elif WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-    /* Windows Desktop ------------------------------------------ */
-    /* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
-    MEMORYSTATUSEX status;
-    status.dwLength = sizeof(status);
-    GlobalMemoryStatusEx( &status );
-    return (size_t)status.ullTotalPhys;
+#elif defined(_WIN32)
+#   if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+        /* Windows Desktop ------------------------------------------ */
+        /* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
+        MEMORYSTATUSEX status;
+        status.dwLength = sizeof(status);
+        GlobalMemoryStatusEx( &status );
+        return (size_t)status.ullTotalPhys;
+#   else
+        /* WinRT/WinPhone are not supported */
+#   endif
 
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
     /* UNIX variants. ------------------------------------------- */
@@ -95,6 +100,6 @@ size_t getMemorySize( )
 #endif /* sysctl and sysconf variants */
 
 #else
-    return 0L;			/* Unknown OS. */
 #endif
+    return 0L;			/* Unknown OS. */
 }
