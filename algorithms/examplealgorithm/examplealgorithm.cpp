@@ -37,7 +37,7 @@ namespace examplealgorithm
 ExampleAlgorithm::ExampleAlgorithm(const Piano &piano, const AlgorithmFactoryDescription &description) :
     Algorithm(piano, description),
     // load the parameter from the description
-    mConcertPitchParam(description.getDoubleParameter("concertPitch"))
+    mConcertPitchParam(mParameters->getDoubleParameter("concertPitch"))
 {
 }
 

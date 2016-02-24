@@ -49,7 +49,7 @@ public:
     CalculationAdapter(Core *core);         // Constructor
     virtual ~CalculationAdapter() {}        ///< Empty virtual destructor
 
-    virtual void startCalculation(const std::string &algorithmName);
+    virtual void startCalculation();
     virtual void cancelCalculation();
 
     std::vector<std::string> getAvailableAlgorithms() const;

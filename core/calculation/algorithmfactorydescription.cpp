@@ -26,18 +26,3 @@ AlgorithmFactoryDescription::AlgorithmFactoryDescription(
 {
 
 }
-
-double AlgorithmFactoryDescription::getDoubleParameter(const std::string &s) const {
-    EptAssert(hasDoubleParameter(s), "Parameter has to be in list before accessing.");
-    return mDoubleParameters.at(s);
-}
-
-int AlgorithmFactoryDescription::getIntParameter(const std::string &s) const {
-    EptAssert(hasIntParameter(s), "Parameter has to be in list before accessing.");
-    return mIntParamters.at(s);
-}
-
-const std::string &AlgorithmFactoryDescription::getStringParameter(const std::string &id) const {
-    EptAssert(hasStringParameter(id), "Parameter has to be in list before accessing.");
-    return mStringParameters.at(id);
-}

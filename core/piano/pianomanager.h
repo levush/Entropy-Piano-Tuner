@@ -25,6 +25,7 @@
 #define PIANOMANAGER_H
 
 #include "../system/prerequisites.h"
+#include "core/system/eptexception.h"
 #include "piano.h"
 #include "../messages/messagelistener.h"
 #include "../adapters/modeselectoradapter.h"
@@ -38,9 +39,13 @@
 
 class PianoManager : public MessageListener
 {
+private:
+    static std::unique_ptr<PianoManager> THE_ONE_AND_ONLY;
 public:
     PianoManager();
-    ~PianoManager() {};
+    ~PianoManager() {}
+
+    static const std::unique_ptr<PianoManager> &getSingletonPtr() {EptAssert(THE_ONE_AND_ONLY, "PianoManager has to be created with new, once!"); return THE_ONE_AND_ONLY;}
 
     Piano &getPiano()             {return mPiano;}
     const Piano &getPiano() const {return mPiano;}

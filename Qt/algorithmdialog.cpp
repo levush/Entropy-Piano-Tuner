@@ -37,11 +37,13 @@
 #include "core/calculation/algorithmfactorydescription.h"
 #include "core/calculation/calculationmanager.h"
 #include "core/calculation/algorithminformation.h"
+#include "core/piano/piano.h"
 
 AlgorithmDialog::AlgorithmIdList AlgorithmDialog::mAlgorithmNames;
 
-AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, QWidget *parent) :
-    QDialog(parent)
+AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, Piano &piano, QWidget *parent) :
+    QDialog(parent),
+    mPiano(piano)
 {
     EptAssert(currentAlgorithm, "Current algorithm has to exist.");
 
@@ -111,7 +113,7 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
 }
 
 void AlgorithmDialog::acceptCurrent() {
-    if (!mCurrentFactoryDescription) {
+    if (!mCurrentAlgorithmParameters) {
         // nothin selected
         return;
     }
@@ -124,14 +126,14 @@ void AlgorithmDialog::acceptCurrent() {
         if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
             const QDoubleSpinBox *sb = dynamic_cast<const QDoubleSpinBox*>(widget);
             EptAssert(sb, "This parameter is described by a QDoubleSpinBox");
-            mCurrentFactoryDescription->setDoubleParameter(paramWidget.first, sb->value());
+            mCurrentAlgorithmParameters->setDoubleParameter(paramWidget.first, sb->value());
         } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
             const QSpinBox *sb = dynamic_cast<const QSpinBox*>(widget);
             EptAssert(sb, "This parameter is described by a QSpinBox");
-            mCurrentFactoryDescription->setIntParameter(paramWidget.first, sb->value());
+            mCurrentAlgorithmParameters->setIntParameter(paramWidget.first, sb->value());
         } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
             const QComboBox *cb = qobject_cast<const QComboBox*>(widget);
-            mCurrentFactoryDescription->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
+            mCurrentAlgorithmParameters->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
         } else {
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parameter type not implemented");
         }
@@ -147,10 +149,10 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
     // load new
     QString algId = mAlgorithmSelection->itemData(index).toString();
-    AlgorithmFactoryDescription &description = CalculationManager::getSingleton().getAlgorithmDescription(algId.toStdString());
-    mCurrentFactoryDescription = &description;
-    mCurrentAlgorithmInformation = CalculationManager::getSingleton().loadAlgorithmInformation(description.getAlgorithmName());
+    mCurrentAlgorithmParameters = mPiano.getAlgorithmParameters().getOrCreate(algId.toStdString());
+    mCurrentAlgorithmInformation = CalculationManager::getSingleton().loadAlgorithmInformation(mCurrentAlgorithmParameters->getAlgorithmName());
     const AlgorithmInformation &info(*mCurrentAlgorithmInformation.get());
+    const SingleAlgorithmParameters &description = *mCurrentAlgorithmParameters;
 
     setWindowTitle(tr("Info of algorithm: %1").arg(QString::fromStdString(info.getName())));
 

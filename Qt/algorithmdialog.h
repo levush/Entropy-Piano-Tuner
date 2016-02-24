@@ -29,6 +29,7 @@
 #include <memory>
 
 #include "core/calculation/algorithminformation.h"
+#include "core/piano/piano.h"
 
 class AlgorithmParameter;
 class AlgorithmFactoryDescription;
@@ -37,7 +38,7 @@ class AlgorithmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, QWidget *parent);
+    AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, Piano &piano, QWidget *parent);
 
     std::shared_ptr<const AlgorithmInformation> getAlgorithmInformation() const {return mCurrentAlgorithmInformation;}
 private:
@@ -54,8 +55,9 @@ private:
     using AlgorithmWidgetConnectionList = QList<QPair<std::string, QWidget*>>;
     AlgorithmWidgetConnectionList mAlgorithmWidgetConnectionList;
 
-    AlgorithmFactoryDescription *mCurrentFactoryDescription = nullptr;
     std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;
+    Piano &mPiano;
+    SingleAlgorithmParametersPtr mCurrentAlgorithmParameters;
     QComboBox *mAlgorithmSelection = nullptr;
     QScrollArea *mAlgorithmDescriptionScrollArea = nullptr;
 };

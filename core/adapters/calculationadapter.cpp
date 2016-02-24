@@ -50,13 +50,11 @@ CalculationAdapter::CalculationAdapter(Core *core)
 /// tuning curve.
 ///////////////////////////////////////////////////////////////////////////////
 
-void CalculationAdapter::startCalculation(const std::string &algorithmName)
+void CalculationAdapter::startCalculation()
 {
     CalculationManager *calculator = &CalculationManager::getSingleton();
     Piano &piano = mCore->getPianoManager()->getPiano();
-    calculator->start (algorithmName, piano);
-
-    Settings::getSingleton().setLastUsedAlgorithm (algorithmName);
+    calculator->start(piano);
 }
 
 

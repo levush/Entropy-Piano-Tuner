@@ -37,6 +37,7 @@
 Algorithm::Algorithm(const Piano &piano, const AlgorithmFactoryDescription &description) :
     mPiano(piano),
     mFactoryDescription(description),
+    mParameters(piano.getAlgorithmParameters().getPreparedParameters(description.getAlgorithmName())),
     mKeyboard(mPiano.getKeyboard()),
     mKeys(mKeyboard.getKeys()),
     mNumberOfKeys(mKeyboard.getNumberOfKeys()),

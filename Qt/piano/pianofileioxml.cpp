@@ -9,6 +9,7 @@
 
 #include "core/system/eptexception.h"
 #include "core/system/log.h"
+#include "core/calculation/calculationmanager.h"
 
 const QString PianoFileIOXml::FILE_TYPE_NAME("entropyPianoTunerFile");
 const PianoFileIOXml::FileVersionType PianoFileIOXml::UNSET_FILE_VERSION(-1);
@@ -28,6 +29,7 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
     writer.writeAttribute("version", QString::number(CURRENT_FILE_VERSION));
 
     // piano
+    // ----------------------------------------------------------------------------------------
     writer.writeStartElement("piano");
 
     writer.writeAttribute("concertPitch", QString::number(piano.getConcertPitch()));
@@ -88,9 +90,67 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
 
     writer.writeEndElement();  // keyboard
 
-    // finish
+
+    // algorithm status
+    // ----------------------------------------------------------------------------------------
+    writer.writeStartElement("algorithms");
+
+    const std::string &currentAlgorithm = CalculationManager::getSingleton().getCurrentAlgorithmId();
+    const std::vector<SingleAlgorithmParametersPtr> &parameters = piano.getAlgorithmParameters().getParameters();
+
+    if (currentAlgorithm.empty() == false) {
+        writer.writeAttribute("current", QString::fromStdString(currentAlgorithm));
+    }
+
+    for (const SingleAlgorithmParametersPtr ad : parameters) {
+        writer.writeStartElement("algorithm");
+
+        writer.writeAttribute("name", QString::fromStdString(ad->getAlgorithmName()));
+
+        auto doubleParameters = ad->getDoubleParameters();
+        for (const auto &dp : doubleParameters) {
+            writer.writeStartElement("parameter");
+
+            writer.writeAttribute("type", "double");
+
+            writer.writeAttribute("name", QString::fromStdString(dp.first));
+            writer.writeCharacters(QString::number(dp.second));
+
+            writer.writeEndElement();  // parameter
+        }
+
+        auto intParameters = ad->getIntParameters();
+        for (const auto &ip : intParameters) {
+            writer.writeStartElement("parameter");
+
+            writer.writeAttribute("type", "int");
+
+            writer.writeAttribute("name", QString::fromStdString(ip.first));
+            writer.writeCharacters(QString::number(ip.second));
+
+            writer.writeEndElement();  // parameter
+        }
+
+        auto stringParameters = ad->getStringParameters();
+        for (const auto &sp : stringParameters) {
+            writer.writeStartElement("parameter");
+
+            writer.writeAttribute("type", "string");
+
+            writer.writeAttribute("name", QString::fromStdString(sp.first));
+            writer.writeCharacters(QString::fromStdString(sp.second));
+
+            writer.writeEndElement();  // parameter
+        }
+
+        writer.writeEndElement();  // algorithm
+    }
+
+
+    writer.writeEndElement();  // algorithm
 
     writer.writeEndElement();  // piano
+    // finished
 
     writer.writeEndElement();  // entropyPianoTunerFile
 
@@ -283,6 +343,66 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                             } else {
                                 LogW("Invalid child xml element '%s'", reader.name().toString().toStdString().c_str());
                             }
+                        }
+                    }
+                } else if (reader.name() == "algorithms") {
+                    if (reader.attributes().hasAttribute("current")) {
+                        CalculationManager::getSingleton().setCurrentAlgorithmInformationById(reader.attributes().value("current").toString().toStdString());
+                    }
+
+                    // read single algorithms
+                    while (!reader.atEnd()) {
+                        reader.readNext();
+
+                        // break on algorithms end
+                        if (reader.isEndElement() && reader.name() == "algorithms") {
+                            break;
+                        }
+
+                        // read start elements only
+                        if (reader.isStartElement() == false) {
+                            continue;
+                        }
+
+
+                        if (reader.name() == "algorithm") {
+                            // algorithm name
+                            QString algorithmName = reader.attributes().value("name").toString();
+
+                            SingleAlgorithmParametersPtr ad = piano.getAlgorithmParameters().getOrCreate(algorithmName.toStdString());
+
+                            // read a single algorithm
+                            while (!reader.atEnd()) {
+                                reader.readNext();
+
+                                // break on algorithm end
+                                if (reader.isEndElement() && reader.name() == "algorithm") {break;}
+
+                                // read start elements only
+                                if (reader.isStartElement() == false) {continue;}
+
+                                if (reader.name() == "parameter") {
+                                    QStringRef type = reader.attributes().value("type");
+                                    std::string id = reader.attributes().value("name").toString().toStdString();
+                                    QString value = reader.readElementText();
+
+                                    if (type == "double") {
+                                        ad->setDoubleParameter(id, value.toDouble());
+                                    } else if (type == "int") {
+                                        ad->setIntParameter(id, value.toInt());
+                                    } else if (type == "string") {
+                                        ad->setStringParameter(id, value.toStdString());
+                                    } else {
+                                        LogW("Unknown parameter type '%s' with id '%s' and value '%s'", type.toString().toStdString().c_str(), id.c_str(), value.toStdString().c_str());
+                                    }
+
+                                } else {
+                                    LogW("Unknown start element: %s", reader.name().toString().toStdString().c_str());
+                                }
+
+                            }
+                        } else {
+                            LogW("Unknown start element: %s", reader.name().toString().toStdString().c_str());
                         }
                     }
                 } else {

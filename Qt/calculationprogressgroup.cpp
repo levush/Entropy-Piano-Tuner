@@ -36,6 +36,7 @@
 #include "../core/calculation/calculationmanager.h"
 #include "../core/calculation/algorithmfactorydescription.h"
 #include "../core/messages/messagecaluclationprogress.h"
+#include "../core/piano/pianomanager.h"
 #include "settingsforqt.h"
 #include "algorithmdialog.h"
 #include "displaysize.h"
@@ -57,7 +58,7 @@
 
 CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     : DisplaySizeDependingGroupBox(parent, new QVBoxLayout, toFlag(MODE_CALCULATION)),
-      MessageListener(false),
+      MessageListener(),
       CalculationAdapter(core),
       mCalculationInProgress(false)
 {
@@ -121,17 +122,6 @@ CalculationProgressGroup::CalculationProgressGroup(Core *core, QWidget *parent)
     // Reset the calculation
     onResetCalculation();
 
-    // check if algorithm exists
-    std::string lastUsedAlgorithm(SettingsForQt::getSingleton().getLastUsedAlgorithm());
-    if (CalculationManager::getSingleton().hasAlgorithm(lastUsedAlgorithm) == false)
-    {
-        // select default algorithm
-        lastUsedAlgorithm = CalculationManager::getSingleton().getDefaultAlgorithmId();
-    }
-
-    // load algorithm information
-    mAlgorithmSelection = CalculationManager::getSingleton().loadAlgorithmInformation(lastUsedAlgorithm);
-
     // show algorithm information in the title
     updateTitle();
 
@@ -166,14 +156,17 @@ void CalculationProgressGroup::handleMessage(MessagePtr m)
             mStartCancelButton->setText(tr("Stop calculation"));
             break;
         case MessageCaluclationProgress::CALCULATION_ENDED:
+            if (!mCalculationInProgress) {return;}
             onResetCalculation();
             mCalculationInProgress = false;
             QMessageBox::information(this, tr("Calculation finished"), tr("The calculation finished successfully! Now you can switch to the tuning mode and tune your piano."));
             break;
         case MessageCaluclationProgress::CALCULATION_PROGRESSED:
+            if (!mCalculationInProgress) {return;}
             mCalculationProgressBar->setValue(mcp->getValue() * 100);
             break;
         case MessageCaluclationProgress::CALCULATION_ENTROPY_REDUCTION_STARTED:
+            if (!mCalculationInProgress) {return;}
             mStatusLabel->setText(tr("Minimizing the entropy"));
             break;
         case MessageCaluclationProgress::CALCULATION_FAILED:
@@ -216,6 +209,8 @@ void CalculationProgressGroup::handleMessage(MessagePtr m)
         default:
             break;
         }
+    } else if (m->getType() == Message::MSG_PROJECT_FILE) {
+        updateTitle();
     }
 }
 
@@ -230,10 +225,10 @@ void CalculationProgressGroup::handleMessage(MessagePtr m)
 
 void CalculationProgressGroup::updateTitle()
 {
-    EptAssert(mAlgorithmSelection, "Algorithm has to be selected");
     if (mGroupBox)
     {
-        mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdString(mAlgorithmSelection->getName())));
+        auto algorithm = CalculationManager::getSingleton().getCurrentAlgorithmInformation();
+        mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdString(algorithm->getName())));
     }
 }
 
@@ -250,9 +245,7 @@ void CalculationProgressGroup::updateTitle()
 
 void CalculationProgressGroup::onStartCalculation()
 {
-    CalculationAdapter::startCalculation(mAlgorithmSelection->getId());
-
-    activateMessageListener();
+    CalculationAdapter::startCalculation();
 }
 
 
@@ -273,7 +266,6 @@ void CalculationProgressGroup::onCancelCalculation()
     mStartCancelButton->setText(tr("Start calculation"));
 
     cancelCalculation();
-    deactivateMessageListener();
     mCalculationInProgress = false;
 }
 
@@ -302,7 +294,6 @@ void CalculationProgressGroup::onResetCalculation()
     mCalculationProgressBar->setValue(0);
     mStartCancelButton->setText(tr("Start calculation"));
 
-    deactivateMessageListener();
     mCalculationInProgress = false;
 }
 
@@ -332,9 +323,8 @@ void CalculationProgressGroup::startCancelPressed()
 
 void CalculationProgressGroup::showAlgorithmInfo()
 {
-    AlgorithmDialog dialog(mAlgorithmSelection, parentWidget());
+    AlgorithmDialog dialog(CalculationManager::getSingleton().getCurrentAlgorithmInformation(), PianoManager::getSingletonPtr()->getPiano(), parentWidget());
     dialog.exec();
-    mAlgorithmSelection = dialog.getAlgorithmInformation();
+    CalculationManager::getSingleton().setCurrentAlgorithmInformation(dialog.getAlgorithmInformation());
     updateTitle();
-    Settings::getSingleton().setLastUsedAlgorithm(mAlgorithmSelection->getId());
 }

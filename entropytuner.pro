@@ -37,10 +37,10 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS = \
+HEADERS =
 
 QWT_S = $$SOURCES
-SOURCES = \
+SOURCES =
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -507,6 +507,7 @@ CORE_CALCULATION_HEADERS = \
     core/calculation/algorithmfactorydescription.h \
     core/calculation/algorithminformation.h \
     core/calculation/algorithmparameter.h \
+    core/calculation/algorithmparameters.h \
     core/calculation/algorithminformationparser.h \
 
 
@@ -517,6 +518,7 @@ CORE_CALCULATION_SOURCES = \
     core/calculation/algorithmfactorydescription.cpp \
     core/calculation/algorithminformation.cpp \
     core/calculation/algorithmparameter.cpp \
+    core/calculation/algorithmparameters.cpp \
     core/calculation/algorithminformationparser.cpp \
 
 #----------------- Core --------------------

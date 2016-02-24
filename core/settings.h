@@ -53,11 +53,6 @@ public:
 
     virtual std::string getUserLanguageId() const;
 
-    /// Get the name of the last used algorithm
-    const std::string &getLastUsedAlgorithm() const {return mLastUsedAlgorithm;}
-    /// Set the name of the last used algorithm
-    virtual void setLastUsedAlgorithm(const std::string &name) {mLastUsedAlgorithm = name;}
-
     /// Get the last operation mode of the sound generator
     SoundGenerator::SoundGeneratorMode getSoundGeneratorMode() const {return mSoundGeneratorMode;}
     /// Set the last operation mode of the sound generator
@@ -97,7 +92,6 @@ protected:
     ///////////////////////////////////////////////////////////////////////////////
     std::string mLanguageId;
 
-    std::string mLastUsedAlgorithm;                             ///< The algorithm that has been used last time
     SoundGenerator::SoundGeneratorMode mSoundGeneratorMode;     ///< The sound generator mode (sine or synthesizer)
     bool mSoundGeneratorVolumeDynamic;                          ///< Flag for automatic volume adjustment
     bool mDisableAutomaticKeySelection;                         ///< Flag suppressing automatic key selection

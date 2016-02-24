@@ -43,11 +43,6 @@ protected:
 public:
     virtual std::unique_ptr<Algorithm> createAlgorithm(const Piano &piano) = 0;
 
-    AlgorithmFactoryDescription &getDescription() {return mDescription;}
-
-protected:
-    void loadDefaultParams();
-
 protected:
     AlgorithmFactoryDescription mDescription;
 };
@@ -74,8 +69,6 @@ protected:
     }
 
     virtual std::unique_ptr<Algorithm> createAlgorithm(const Piano &piano) {
-        // load all default params, before creating the algorithm
-        loadDefaultParams();
         // create the alogrithm with all required params set
         return std::unique_ptr<Algorithm>(new AlgorithmClass(piano, mDescription));
     }
