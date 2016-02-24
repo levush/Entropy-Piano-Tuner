@@ -42,14 +42,16 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        const std::string &description,
                                        int defaultValue,
                                        int minValue,
-                                       int maxValue) :
+                                       int maxValue,
+                                       bool displaySlider) :
     mParameterType(TYPE_INT),
     mID(id),
     mLabel(label),
     mDescription(description),
     mIntDefaultValue(defaultValue),
     mIntMinValue(minValue),
-    mIntMaxValue(maxValue)
+    mIntMaxValue(maxValue),
+    mDisplaySlider(displaySlider)
 {
 }
 

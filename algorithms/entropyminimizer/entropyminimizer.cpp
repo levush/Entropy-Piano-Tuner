@@ -548,8 +548,12 @@ void EntropyMinimizer::minimizeEntropy ()
 
     // Create random device for probabilistic seeding:
     std::random_device rd;
+    int user_seed = mFactoryDescription.getIntParameter("seed");
     // Initialze Mersenne twister with random seed:
-    static std::mt19937 generator(rd());
+    // - if user_seed=0 use rd
+    // - else use the seed of the user
+    std::mt19937 generator((user_seed == 0) ? rd() : user_seed);
+
     // Define distributions to be used:
     std::binomial_distribution<int> binomial(cents);
     std::uniform_int_distribution<int> keydist(0,mNumberOfKeys-1);

@@ -50,7 +50,8 @@ public:
                        const std::string &description,
                        int defaultValue,
                        int minValue,
-                       int maxValue);
+                       int maxValue,
+                       bool displaySlider);
 
     // constructor for a list
     AlgorithmParameter(const std::string &id,
@@ -75,6 +76,8 @@ public:
     int getIntMinValue() const {return mIntMinValue;}
     int getIntMaxValue() const {return mIntMaxValue;}
 
+    bool displaySlider() const {return mDisplaySlider;}
+
     const std::string &getStringDefaultValue() const {return mStringDefaultValue;}
     const StringParameterList &getStringList() const {return mStringList;}
 
@@ -93,6 +96,8 @@ private:
     const int    mIntDefaultValue = 0;
     const int    mIntMinValue = 0;
     const int    mIntMaxValue = 0;
+
+    const bool   mDisplaySlider = true;
 
     const std::string mStringDefaultValue;
     const StringParameterList mStringList;

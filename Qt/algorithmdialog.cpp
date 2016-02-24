@@ -202,7 +202,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                     sb->setValue(param.getDoubleDefaultValue());
                 }
 
-                if (param.getDoublePrecision() >= 0) {
+                if (param.getDoublePrecision() >= 0 && param.displaySlider()) {
                     // add a slider aswell
                     DoubleSlider *slider = new DoubleSlider(param.getDoubleMinValue(), param.getDoubleMaxValue(), param.getDoublePrecision());
                     slider->setOrientation(Qt::Horizontal);
@@ -234,15 +234,18 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                     sb->setValue(param.getIntDefaultValue());
                 }
 
-                // add a slider aswell
-                QSlider *slider = new QSlider(Qt::Horizontal);
-                slider->setMinimum(param.getIntMinValue());
-                slider->setMaximum(param.getIntMaxValue());
-                slider->setValue(sb->value());
-                valueLayout->addWidget(slider);
+                // add a slider aswell if desired
+                if (param.displaySlider()) {
+                    QSlider *slider = new QSlider(Qt::Horizontal);
+                    slider->setMinimum(param.getIntMinValue());
+                    slider->setMaximum(param.getIntMaxValue());
+                    slider->setValue(sb->value());
+                    valueLayout->addWidget(slider);
 
-                QObject::connect(slider, SIGNAL(valueChanged(int)), sb, SLOT(setValue(int)));
-                QObject::connect(sb, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+                    QObject::connect(slider, SIGNAL(valueChanged(int)), sb, SLOT(setValue(int)));
+                    QObject::connect(sb, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+                }
+
 
                 valueLayout->addWidget(sb);
 
@@ -265,14 +268,21 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
             EptAssert(dataWidget, "A data widget has to exist.");
 
+            // create label
+            QLabel *label = new QLabel(QString::fromStdString(param.getLabel()));
+
+            // apply tool tip and whats this
             dataWidget->setWhatsThis(QString::fromStdString(param.getDescription()));
+            dataWidget->setToolTip(dataWidget->whatsThis());
+            label->setWhatsThis(dataWidget->whatsThis());
+            label->setToolTip(dataWidget->toolTip());
 
             if (dataLayout) {
-                paramsBoxLayout->addRow(new QLabel(QString::fromStdString(param.getLabel())), dataLayout);
+                paramsBoxLayout->addRow(label, dataLayout);
             } else if (dataWidget) {
-                paramsBoxLayout->addRow(new QLabel(QString::fromStdString(param.getLabel())), dataWidget);
+                paramsBoxLayout->addRow(label, dataWidget);
             } else {
-                EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "the parameter has to create a data layout or a data widget. Maybe it is not implemented at all");
+                EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "The parameter has to create a data layout or a data widget. Maybe it is not implemented at all");
             }
 
             mAlgorithmWidgetConnectionList.append(qMakePair(param.getID(), dataWidget));

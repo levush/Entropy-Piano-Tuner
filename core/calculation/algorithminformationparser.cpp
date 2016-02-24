@@ -148,10 +148,12 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
         const int defaultValue = element->IntAttribute("default");
         int minValue = std::numeric_limits<int>::min();
         int maxValue = std::numeric_limits<int>::max();
+        bool displaySlider = true;
 
         element->QueryIntAttribute("min", &minValue);
         element->QueryIntAttribute("max", &maxValue);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue);
+        element->QueryBoolAttribute("slider", &displaySlider);
+        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, displaySlider);
     } else if (type == "list") {
         const std::string defaultValue = element->Attribute("default");
         AlgorithmParameter::StringParameterList list;
