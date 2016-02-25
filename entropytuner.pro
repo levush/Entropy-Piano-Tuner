@@ -37,10 +37,10 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS = \
+HEADERS =
 
 QWT_S = $$SOURCES
-SOURCES = \
+SOURCES =
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -239,7 +239,8 @@ HEADERS  += \
     Qt/options/environment/optionspageenvironmenttuningpage.h \
     Qt/doubleslider.h \
     Qt/simplefiledialog.h \
-    Qt/algorithmdialog.h \
+    Qt/algorithmdialog/algorithmdialog.h \
+    Qt/algorithmdialog/algorithmdialogparameterupdatetimer.h \
     Qt/qtconfig.h \
     Qt/keyboard/graphicskeyitem.h \
     Qt/aboutdialog.h \
@@ -294,7 +295,8 @@ SOURCES +=  \
     Qt/options/environment/optionspageenvironmenttuningpage.cpp \
     Qt/doubleslider.cpp \
     Qt/simplefiledialog.cpp \
-    Qt/algorithmdialog.cpp \
+    Qt/algorithmdialog/algorithmdialog.cpp \
+    Qt/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \
@@ -506,7 +508,8 @@ CORE_CALCULATION_HEADERS = \
     core/calculation/algorithmfactory.h \
     core/calculation/algorithmfactorydescription.h \
     core/calculation/algorithminformation.h \
-    core/calculation/algorithmparameter.h \
+    core/calculation/algorithmparameterdescription.h \
+    core/calculation/algorithmparameters.h \
     core/calculation/algorithminformationparser.h \
 
 
@@ -516,7 +519,8 @@ CORE_CALCULATION_SOURCES = \
     core/calculation/algorithmfactory.cpp \
     core/calculation/algorithmfactorydescription.cpp \
     core/calculation/algorithminformation.cpp \
-    core/calculation/algorithmparameter.cpp \
+    core/calculation/algorithmparameterdescription.cpp \
+    core/calculation/algorithmparameters.cpp \
     core/calculation/algorithminformationparser.cpp \
 
 #----------------- Core --------------------

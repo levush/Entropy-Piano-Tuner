@@ -68,17 +68,13 @@ CalculationManager &CalculationManager::getSingleton() {
 /// \param piano : Reference to the piano instance.
 ///////////////////////////////////////////////////////////////////////////////
 
-void CalculationManager::start(const std::string &algorithmName, const Piano &piano)
+void CalculationManager::start(const Piano &piano)
 {
-    if (mAlgorithms.count(algorithmName) != 1) {
-        EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "An algorithm with name '" + algorithmName + "' does not exist.");
-    }
-
     // stop the old algorithm to be sure
     stop();
 
     // create and start new algorithm
-    mCurrentAlgorithm = std::move(mAlgorithms[algorithmName]->createAlgorithm(piano));
+    mCurrentAlgorithm = std::move(mAlgorithms[getCurrentAlgorithmInformation()->getId()]->createAlgorithm(piano));
     mCurrentAlgorithm->start();
 }
 
@@ -115,15 +111,6 @@ void CalculationManager::registerFactory(const std::string &name, AlgorithmFacto
     mAlgorithms[name] = factory;
 }
 
-AlgorithmFactoryDescription &CalculationManager::getAlgorithmDescription(const std::string &algorithmName) const
-{
-    if (!hasAlgorithm(algorithmName)) {
-        EPT_EXCEPT(EptException::ERR_DUPLICATE_ITEM, "An algorithm with name '" + algorithmName + "' does not exist.");
-    }
-
-    return mAlgorithms.at(algorithmName)->getDescription();
-}
-
 std::shared_ptr<const AlgorithmInformation> CalculationManager::loadAlgorithmInformation(const std::string &algorithmName) const
 {
     // open the xml file for this algorithm and return the information in the current language
@@ -136,6 +123,15 @@ bool CalculationManager::hasAlgorithm(const std::string &id) const {
 }
 
 std::string CalculationManager::getDefaultAlgorithmId() const {
-   EptAssert(hasAlgorithm("entropyminimizer"), "Default algorithm doesnt exist");
-   return "entropyminimizer";
+    EptAssert(hasAlgorithm("entropyminimizer"), "Default algorithm does not exits.");
+    return "entropyminimizer";
+}
+
+const std::shared_ptr<const AlgorithmInformation> CalculationManager::getCurrentAlgorithmInformation() {
+    if (!mCurrentAlgorithmInformation) {
+        // load default
+        LogI("Loading default algorithm information");
+        mCurrentAlgorithmInformation = loadAlgorithmInformation(getDefaultAlgorithmId());
+    }
+    return mCurrentAlgorithmInformation;
 }

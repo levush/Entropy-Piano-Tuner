@@ -76,9 +76,6 @@ private:
     QLabel *mStatusLabel;                   ///< Pointer to the status label
     QProgressBar *mCalculationProgressBar;  ///< Pointer to the progress bar
     QPushButton *mStartCancelButton;        ///< Pointer to the start and cancel button
-
-    /// Pointer to the algorithm selector
-    std::shared_ptr<const AlgorithmInformation> mAlgorithmSelection;
 };
 
 #endif // CALCULATIONPROGRESSGROUP_H

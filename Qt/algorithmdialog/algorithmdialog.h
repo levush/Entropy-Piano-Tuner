@@ -26,9 +26,12 @@
 #include <QPair>
 #include <QScrollArea>
 #include <QComboBox>
+#include <QPushButton>
 #include <memory>
 
 #include "core/calculation/algorithminformation.h"
+#include "core/piano/piano.h"
+
 
 class AlgorithmParameter;
 class AlgorithmFactoryDescription;
@@ -37,14 +40,16 @@ class AlgorithmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, QWidget *parent);
+    AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, Piano &piano, QWidget *parent);
 
     std::shared_ptr<const AlgorithmInformation> getAlgorithmInformation() const {return mCurrentAlgorithmInformation;}
 private:
     void acceptCurrent();
+    virtual bool eventFilter(QObject *o, QEvent *e) override final;
 
 private slots:
     void algorithmSelectionChanged(int index);
+    void defaultButtonClicked();
     void accept() override;
 
 private:
@@ -54,10 +59,26 @@ private:
     using AlgorithmWidgetConnectionList = QList<QPair<std::string, QWidget*>>;
     AlgorithmWidgetConnectionList mAlgorithmWidgetConnectionList;
 
-    AlgorithmFactoryDescription *mCurrentFactoryDescription = nullptr;
     std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;
+    Piano &mPiano;
+    SingleAlgorithmParametersPtr mCurrentAlgorithmParameters;
     QComboBox *mAlgorithmSelection = nullptr;
     QScrollArea *mAlgorithmDescriptionScrollArea = nullptr;
+
+    class DefaultButton : public QPushButton {
+    public:
+        DefaultButton(QString label, const std::string &id, QWidget *dataWidget) :
+            QPushButton(label),
+            mId(id),
+            mDataWidget(dataWidget) {
+        }
+
+        const std::string &getID() const {return mId;}
+        QWidget *getDataWidget() const {return mDataWidget;}
+    private:
+        const std::string &mId;
+        QWidget *mDataWidget;
+    };
 };
 
 #endif // ALGORITHMDIALOG_H

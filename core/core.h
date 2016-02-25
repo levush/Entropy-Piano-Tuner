@@ -65,7 +65,7 @@ public:
     AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
     AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
     SoundGenerator &getSoundGenerator()         {return mSoundGenerator;}
-    PianoManager *getPianoManager()             {return &mPianoManager;}
+    PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
     MidiAdapter *getMidiInterface()             {return mMidi.get();}
 
 private:
@@ -76,7 +76,6 @@ private:
     SoundGenerator mSoundGenerator;
     RecordingManager mRecordingManager;
     SignalAnalyzer mSignalAnalyzer;
-    PianoManager mPianoManager;
     std::shared_ptr<MidiAdapter> mMidi;
 };
 

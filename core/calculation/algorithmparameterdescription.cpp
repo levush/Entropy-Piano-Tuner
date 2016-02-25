@@ -17,30 +17,4 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef DOUBLESLIDER_H
-#define DOUBLESLIDER_H
-
-#include <QSlider>
-
-class DoubleSlider : public QSlider
-{
-    Q_OBJECT
-public:
-    DoubleSlider(double min, double max, int precision);
-
-private:
-    const double mPrecFactor;
-
-public slots:
-    void setValue(double);
-    void setValue(QString);
-
-private slots:
-    void onValueChanged(int);
-
-signals:
-    void valueChanged(double);
-    void valueChanged(QString);
-};
-
-#endif // DOUBLESLIDER_H
+#include "algorithmparameterdescription.h"
