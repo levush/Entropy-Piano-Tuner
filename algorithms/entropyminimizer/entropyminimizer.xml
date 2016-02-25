@@ -50,7 +50,7 @@
             <string lang="de">Entropie</string>
         </label>
         <description>
-            <string>This value displays the current computed value of the entropy. A value of 0 states that there is no calculation yet.</string>
+            <string>This value displays the current computed value of the entropy. A value of 0 states that there was no calculation yet.</string>
             <string lang="de">Dieser Wert zeigt den aktuell berechneten Wert der Entropie an. Ein Wert von 0 besagt, dass noch keine Berechnung durchgeführt wurde.</string>
         </description>
     </param>
