@@ -99,9 +99,9 @@ public:
     bool readOnly() const {return mReadOnly;}
     bool &readOnly() {return mReadOnly;}
 
-    double updateInterval() const {return mUpdateInterval;}
-    double &updateInterval() {return mUpdateInterval;}
-    void setUpdateInterval(double i) {mUpdateInterval = i;}
+    int updateIntervalInMS() const {return mUpdateIntervalInMS;}
+    int &updateIntervalInMS() {return mUpdateIntervalInMS;}
+    void setUpdateIntervalInMS(int i) {mUpdateIntervalInMS = i;}
 
 private:
     Type mParameterType = TYPE_UNSET;
@@ -129,7 +129,7 @@ private:
 
     bool   mReadOnly        = false;
 
-    double mUpdateInterval = -1;
+    int    mUpdateIntervalInMS = -1;
 };
 
 #endif // ALGORITHMPARAMETER_H

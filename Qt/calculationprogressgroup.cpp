@@ -38,7 +38,7 @@
 #include "../core/messages/messagecaluclationprogress.h"
 #include "../core/piano/pianomanager.h"
 #include "settingsforqt.h"
-#include "algorithmdialog.h"
+#include "algorithmdialog/algorithmdialog.h"
 #include "displaysize.h"
 
 //-----------------------------------------------------------------------------

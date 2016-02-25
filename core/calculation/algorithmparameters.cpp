@@ -5,7 +5,7 @@
 SingleAlgorithmParameters::SingleAlgorithmParameters(const std::string &algorithmName) :
     mAlgorithmName(algorithmName)
 {
-
+    loadDefaultParams();
 }
 
 void SingleAlgorithmParameters::loadDefaultParams() {

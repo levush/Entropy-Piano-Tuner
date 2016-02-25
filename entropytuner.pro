@@ -239,7 +239,8 @@ HEADERS  += \
     Qt/options/environment/optionspageenvironmenttuningpage.h \
     Qt/doubleslider.h \
     Qt/simplefiledialog.h \
-    Qt/algorithmdialog.h \
+    Qt/algorithmdialog/algorithmdialog.h \
+    Qt/algorithmdialog/algorithmdialogparameterupdatetimer.h \
     Qt/qtconfig.h \
     Qt/keyboard/graphicskeyitem.h \
     Qt/aboutdialog.h \
@@ -294,7 +295,8 @@ SOURCES +=  \
     Qt/options/environment/optionspageenvironmenttuningpage.cpp \
     Qt/doubleslider.cpp \
     Qt/simplefiledialog.cpp \
-    Qt/algorithmdialog.cpp \
+    Qt/algorithmdialog/algorithmdialog.cpp \
+    Qt/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
     Qt/keyboard/graphicskeyitem.cpp \
     Qt/aboutdialog.cpp \
     Qt/versioncheck.cpp \

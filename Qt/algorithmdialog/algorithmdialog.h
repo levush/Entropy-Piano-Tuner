@@ -32,6 +32,7 @@
 #include "core/calculation/algorithminformation.h"
 #include "core/piano/piano.h"
 
+
 class AlgorithmParameter;
 class AlgorithmFactoryDescription;
 

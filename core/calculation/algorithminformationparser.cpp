@@ -144,7 +144,7 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
     element->QueryBoolAttribute("slider", &parameter.displaySlider());
     element->QueryBoolAttribute("defaultButton", &parameter.displaySetDefaultButton());
     element->QueryBoolAttribute("readOnly", &parameter.readOnly());
-    element->QueryDoubleAttribute("updateInterval", &parameter.updateInterval());
+    element->QueryIntAttribute("updateInterval", &parameter.updateIntervalInMS());
 
 
     if (type == "double") {

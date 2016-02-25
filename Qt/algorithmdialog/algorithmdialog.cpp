@@ -44,6 +44,8 @@
 #include "core/calculation/algorithminformation.h"
 #include "core/piano/piano.h"
 
+#include "algorithmdialogparameterupdatetimer.h"
+
 AlgorithmDialog::AlgorithmIdList AlgorithmDialog::mAlgorithmNames;
 
 AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> currentAlgorithm, Piano &piano, QWidget *parent) :
@@ -384,6 +386,11 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 defaultButton->setToolTip(defaultButton->whatsThis());
                 dataLayout->addWidget(defaultButton);
                 QObject::connect(defaultButton, SIGNAL(clicked(bool)), this, SLOT(defaultButtonClicked()));
+            }
+
+            // create update timer
+            if (param.updateIntervalInMS() >= 0) {
+                new AlgorithmDialogParameterUpdateTimer(param, mCurrentAlgorithmParameters, dataWidget, this);
             }
 
             paramsBoxLayout->addRow(label, dataLayout);
