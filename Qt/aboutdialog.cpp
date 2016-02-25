@@ -84,7 +84,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
 #endif
 
-    const QString copyrightText = tr("Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
+    const QString copyrightText = tr("Copyright 2016 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
     const QString licenseText = tr("This software is licensed under the terms of the %1. The source code can be accessed at %2.").
             arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
                 "<a href=\"https://gitlab.com/entropytuner/Entropy-Piano-Tuner\">GitLab</a>");
