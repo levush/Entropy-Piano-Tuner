@@ -390,7 +390,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
             // create update timer
             if (param.updateIntervalInMS() >= 0) {
-                new AlgorithmDialogParameterUpdateTimer(param, mCurrentAlgorithmParameters, dataWidget, this);
+                new AlgorithmDialogParameterUpdateTimer(param, mCurrentAlgorithmParameters, dataWidget, scrollContentWidget);
             }
 
             paramsBoxLayout->addRow(label, dataLayout);
