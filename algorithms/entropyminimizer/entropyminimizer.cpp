@@ -363,7 +363,6 @@ void EntropyMinimizer::modifySpectralComponent (int keynumber,
                                                 int pitch)
 {
     EptAssert(keynumber>=0 and keynumber<mNumberOfKeys,"Range of parameter key");
-    EptAssert(abs(pitch)<100,"Pitch should be less than a half tone");
 
     Key &key = mKeys[keynumber];
     SpectrumType &spectrum = key.getSpectrum();
