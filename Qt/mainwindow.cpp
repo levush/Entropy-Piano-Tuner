@@ -186,7 +186,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addAction(iconFromTheme("document-open"), tr("Open"), this, SLOT(onFileOpen()));
     mFileToolBar->addAction(iconFromTheme("document-save"), tr("Save"), this, SLOT(onFileSave()));
     mFileToolBar->addAction(iconFromTheme("document-save-as"), tr("Save as"), this, SLOT(onFileSaveAs()));
-    mFileToolBar->addAction(iconFromTheme("accessories-text-editor"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
+    mFileToolBar->addAction(iconFromTheme("edit-piano-sheet"), tr("Edit piano data sheet"), this, SLOT(onEditPianoDataSheet()));
     mFileToolBar->addAction(iconFromTheme("edit-clear"), tr("Clear pitch markers"), this, SLOT(onResetRecording()));
     mFileToolBar->addSeparator();
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
@@ -217,7 +217,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionSave->setIcon(iconFromTheme("document-save"));
     ui->actionSave_As->setIcon(iconFromTheme("document-save-as"));
     ui->actionExit->setIcon(iconFromTheme("application-exit"));
-    ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("accessories-text-editor"));
+    ui->actionEdit_piano_data_sheet->setIcon(iconFromTheme("edit-piano-sheet"));
     ui->actionClear_pitches->setIcon(iconFromTheme("edit-clear"));
     ui->actionOptions->setIcon(iconFromTheme("preferences-system"));
     ui->actionTutorial->setIcon(iconFromTheme("help-contents"));
