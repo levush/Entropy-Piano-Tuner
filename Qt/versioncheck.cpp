@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright 2015 Haye Hinrichsen, Christoph Wick
+ * Copyright 2016 Haye Hinrichsen, Christoph Wick
  *
  * This file is part of Entropy Piano Tuner.
  *
