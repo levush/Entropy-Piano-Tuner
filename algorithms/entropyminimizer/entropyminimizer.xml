@@ -44,4 +44,14 @@
             <string lang="de">Setzen Sie diesen Wert auf eine beliebige ganze Zahl um den Pseudozufallszahlengenerator zu initializieren, um eine deterministische Stimmung zu berechnen. Setzen Sie den Seed auf 0, um den Generator mit einer Zufallszahl zu initializieren, die vom System generiert wird.</string>
         </description>
     </param>
+    <param id="entropy" type="double" default="0" slider="false" precision="6" min="0" max="100">
+        <label>
+            <string>Entropy</string>
+            <string lang="de">Entropie</string>
+        </label>
+        <description>
+            <string>This value displays the current computed value of the entropy. A value of 0 states that there is no calculation yet.</string>
+            <string lang="de">Dieser Wert zeigt den aktuell berechneten Wert der Entropie an. Ein Wert von 0 besagt, dass noch keine Berechnung durchgeführt wurde.</string>
+        </description>
+    </param>
 </algorithm>

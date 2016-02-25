@@ -43,6 +43,7 @@ public:
     std::shared_ptr<const AlgorithmInformation> getAlgorithmInformation() const {return mCurrentAlgorithmInformation;}
 private:
     void acceptCurrent();
+    virtual bool eventFilter(QObject *o, QEvent *e) override final;
 
 private slots:
     void algorithmSelectionChanged(int index);

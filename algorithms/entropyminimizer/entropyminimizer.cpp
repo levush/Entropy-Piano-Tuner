@@ -583,6 +583,9 @@ void EntropyMinimizer::minimizeEntropy ()
         if (keynumber>=0) updateTuningcurve(keynumber);
         else updateTuningcurve();
 
+        // update entropy parameter
+        mParameters->setDoubleParameter("entropy", H);
+
         // 'reset' updates
         updatesSinceLastChange /= 2;
 

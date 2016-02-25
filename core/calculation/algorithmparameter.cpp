@@ -24,7 +24,9 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        const std::string &description,
                                        double defaultValue,
                                        double minValue,
-                                       double maxValue, int precision) :
+                                       double maxValue,
+                                       int precision,
+                                       bool displaySlider) :
     mParameterType(TYPE_DOUBLE),
     mID(id),
     mLabel(label),
@@ -32,7 +34,8 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
     mDoubleDefaultValue(defaultValue),
     mDoubleMinValue(minValue),
     mDoubleMaxValue(maxValue),
-    mDoublePrecision(precision)
+    mDoublePrecision(precision),
+    mDisplaySlider(displaySlider)
 {
 
 }

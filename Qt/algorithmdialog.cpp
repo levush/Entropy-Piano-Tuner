@@ -29,6 +29,7 @@
 #include <QGroupBox>
 #include <QDoubleSpinBox>
 #include <QScroller>
+#include <QScrollBar>
 #include <QDebug>
 #include "doubleslider.h"
 
@@ -89,11 +90,10 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
 
     // scroll area
     mAlgorithmDescriptionScrollArea = new QScrollArea;
-    mainLayout->addWidget(mAlgorithmDescriptionScrollArea);
-    //mAlgorithmDescriptionScrollArea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     mAlgorithmDescriptionScrollArea->setWidgetResizable(true);
-    //mAlgorithmDescriptionScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //mAlgorithmDescriptionScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    //mAlgorithmDescriptionScrollArea->setFrameShape(QFrame::NoFrame);
+    mainLayout->addWidget(mAlgorithmDescriptionScrollArea);
+    mAlgorithmDescriptionScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QScroller::grabGesture(mAlgorithmDescriptionScrollArea->viewport(), QScroller::LeftMouseButtonGesture);
 
@@ -110,6 +110,19 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
     algorithmSelectionChanged(comboBox->currentIndex());
 
     SHOW_DIALOG(this);
+}
+
+bool AlgorithmDialog::eventFilter(QObject *o, QEvent *e) {
+    if (o == mAlgorithmDescriptionScrollArea->widget() && e->type() == QEvent::Resize) {
+        QWidget *contents = mAlgorithmDescriptionScrollArea->widget();
+        QScrollBar *vScrollBar = mAlgorithmDescriptionScrollArea->verticalScrollBar();
+
+        setMinimumWidth(contents->minimumSizeHint().width()
+                        + vScrollBar->width()
+                        + contents->layout()->margin() * 2);
+    }
+
+    return false;
 }
 
 void AlgorithmDialog::acceptCurrent() {
@@ -158,6 +171,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
     QWidget *scrollContentWidget = new QWidget;
     scrollContentWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    scrollContentWidget->installEventFilter(this);
     mAlgorithmDescriptionScrollArea->setWidget(scrollContentWidget);
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     scrollContentWidget->setLayout(scrollLayout);
@@ -193,11 +207,13 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 dataLayout = valueLayout;
 
                 QDoubleSpinBox *sb = new QDoubleSpinBox();
+                sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 #ifdef __ANDROID__
                 // HACK: fix spin box size on android
                 sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
 #endif
                 sb->setRange(param.getDoubleMinValue(), param.getDoubleMaxValue());
+                sb->setDecimals(param.getDoublePrecision());
                 if (description.hasDoubleParameter(param.getID())) {
                     sb->setValue(description.getDoubleParameter(param.getID()));
                 } else {
@@ -225,6 +241,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 dataLayout = valueLayout;
 
                 QSpinBox *sb = new QSpinBox();
+                sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 #ifdef __ANDROID__
                 // HACK: fix spin box size on android
                 sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);

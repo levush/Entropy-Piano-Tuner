@@ -42,7 +42,8 @@ public:
                        double defaultValue,
                        double minValue,
                        double maxValue,
-                       int precision = -1);
+                       int precision,
+                       bool displaySlider);
 
     // constructor for a int parameter
     AlgorithmParameter(const std::string &id,

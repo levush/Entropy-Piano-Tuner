@@ -139,11 +139,13 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
         double minValue = std::numeric_limits<double>::min();
         double maxValue = std::numeric_limits<double>::max();
         int precision = -1;
+        bool displaySlider = true;
 
         element->QueryDoubleAttribute("min", &minValue);
         element->QueryDoubleAttribute("max", &maxValue);
         element->QueryIntAttribute("precision", &precision);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision);
+        element->QueryBoolAttribute("slider", &displaySlider);
+        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision, displaySlider);
     } else if (type == "int") {
         const int defaultValue = element->IntAttribute("default");
         int minValue = std::numeric_limits<int>::min();
