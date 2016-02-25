@@ -31,7 +31,12 @@ void DoubleSlider::setValue(double value) {
     QSlider::setValue(round(value * mPrecFactor));
 }
 
+void DoubleSlider::setValue(QString value) {
+    setValue(value.toDouble());
+}
+
 void DoubleSlider::onValueChanged(int value) {
     emit valueChanged(value / mPrecFactor);
+    emit valueChanged(QString::number(value / mPrecFactor));
 }
 

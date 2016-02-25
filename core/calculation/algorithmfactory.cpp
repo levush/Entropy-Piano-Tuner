@@ -28,29 +28,4 @@ AlgorithmFactoryBase::AlgorithmFactoryBase(const AlgorithmFactoryDescription &de
     CalculationManager::getSingleton().registerFactory(description.getAlgorithmName(), this);
 }
 
-void AlgorithmFactoryBase::loadDefaultParams() {
-    // load algorithm information from xml file
-    // add all params with default value if not in algorithm description
-    auto info = CalculationManager::getSingleton().loadAlgorithmInformation(mDescription.getAlgorithmName());
 
-    for (const AlgorithmParameter &param : info->getParameters()) {
-        switch (param.getType()) {
-        case AlgorithmParameter::TYPE_DOUBLE:
-            if (mDescription.hasDoubleParameter(param.getID())) {continue;}
-            mDescription.setDoubleParameter(param.getID(), param.getDoubleDefaultValue());
-            break;
-        case AlgorithmParameter::TYPE_INT:
-            if (mDescription.hasIntParameter(param.getID())) {continue;}
-            mDescription.setIntParameter(param.getID(), param.getIntDefaultValue());
-            break;
-        case AlgorithmParameter::TYPE_LIST:
-            if (mDescription.hasStringParameter(param.getID())) {continue;}
-            mDescription.setStringParameter(param.getID(), param.getStringDefaultValue());
-            break;
-        default:
-            EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parsing of default parameter not implemented");
-            break;
-        }
-    }
-
-}

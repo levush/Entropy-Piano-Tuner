@@ -36,6 +36,8 @@
 #include "../adapters/modeselectoradapter.h"
 #include "../piano/key.h"
 
+std::unique_ptr<PianoManager> PianoManager::THE_ONE_AND_ONLY;
+
 //-----------------------------------------------------------------------------
 //			                      Constructor
 //-----------------------------------------------------------------------------
@@ -49,7 +51,10 @@ PianoManager::PianoManager() :
     mSelectedKey(-1),
     mForcedRecording(false),
     mOperationMode(OperationMode::MODE_IDLE)
-{}
+{
+    EptAssert(!THE_ONE_AND_ONLY, "Constructor may only be called once!");
+    THE_ONE_AND_ONLY.reset(this);
+}
 
 
 //-----------------------------------------------------------------------------

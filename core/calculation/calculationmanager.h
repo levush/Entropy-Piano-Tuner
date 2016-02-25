@@ -59,20 +59,25 @@ public:
 
     static CalculationManager &getSingleton();
 
-    void start(const std::string &algorithmName, const Piano &piano);
+    void start(const Piano &piano);
     void stop();
 
     void registerFactory(const std::string &name, AlgorithmFactoryBase* factory);
 
     const std::map<std::string, AlgorithmFactoryBase*> &getAlgorithms() const {return mAlgorithms;}
-    AlgorithmFactoryDescription &getAlgorithmDescription(const std::string &algorithmName) const;
     std::shared_ptr<const AlgorithmInformation> loadAlgorithmInformation(const std::string &algorithmName) const;
     bool hasAlgorithm(const std::string &id) const;
     std::string getDefaultAlgorithmId() const;
 
+    const std::string &getCurrentAlgorithmId() {return getCurrentAlgorithmInformation()->getId();}
+    const std::shared_ptr<const AlgorithmInformation> getCurrentAlgorithmInformation();
+    void setCurrentAlgorithmInformation(const std::shared_ptr<const AlgorithmInformation> ai) {mCurrentAlgorithmInformation = ai;}
+    void setCurrentAlgorithmInformationById(const std::string &algorithmName) {mCurrentAlgorithmInformation = loadAlgorithmInformation(algorithmName);}
+
 private:
     std::map<std::string, AlgorithmFactoryBase*> mAlgorithms;
     std::unique_ptr<Algorithm> mCurrentAlgorithm;
+    std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;  ///< The current algorithm to use
 };
 
 #endif // CALCULATIONMANAGER_H

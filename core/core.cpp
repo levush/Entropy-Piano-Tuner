@@ -53,6 +53,7 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mRecordingManager (recorderAdapter),
       mSignalAnalyzer(recorderAdapter)
 {
+    new PianoManager;
     mMidi = PlatformToolsCore::getSingleton()->createMidiAdapter();
     EptAssert(log, "A log has to be specified during creation of the core");
     LogI("Core created");

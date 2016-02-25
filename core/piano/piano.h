@@ -29,6 +29,7 @@
 
 #include "keyboard.h"
 #include "pianodefines.h"
+#include "core/calculation/algorithmparameters.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -98,6 +99,8 @@ public:
 
     double getDefiningTempFrequency (int keynumber, double cents=0, double A4=0) const;
 
+    AlgorithmParameters &getAlgorithmParameters() {return mAlgorithmParameters;}
+    const AlgorithmParameters &getAlgorithmParameters() const {return mAlgorithmParameters;}
 
 private:
     /// name of the real piano
@@ -121,6 +124,9 @@ private:
     /// the keyboard
     Keyboard mKeyboard;
 
+
+    /// current parameters of the algorithms
+    AlgorithmParameters mAlgorithmParameters;
 };
 
 #endif // PIANO_H

@@ -61,6 +61,7 @@ protected:
 
     Piano mPiano;               ///< Copy of the piano
     const AlgorithmFactoryDescription &mFactoryDescription;
+    SingleAlgorithmParametersPtr mParameters;
 
     Keyboard& mKeyboard;        ///< Reference to the keyboard
     Keys& mKeys;                ///< Reference to the keys

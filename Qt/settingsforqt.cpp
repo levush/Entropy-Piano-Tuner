@@ -55,7 +55,6 @@ void SettingsForQt::load() {
     mOutputDeviceSamplingRate = mSettings.value("audio/outputDeviceSamplingRate", 22050).toInt();
 
 
-    mLastUsedAlgorithm = mSettings.value("core/lastUsedAlgorithm", QString()).toString().toStdString();
     mSoundGeneratorMode = static_cast<SoundGenerator::SoundGeneratorMode>(
                 mSettings.value("core/soundGeneratorMode", static_cast<int>(SoundGenerator::SGM_SYNTHESIZE_KEY)).toInt());
     mSoundGeneratorVolumeDynamic = mSettings.value("core/soundGeneratorVolumeDynamic", true).toBool();
@@ -136,11 +135,6 @@ void SettingsForQt::setOutputDeviceName(const QString &s) {
 void SettingsForQt::setOutputDeviceSamplingRate(int rate) {
     mOutputDeviceSamplingRate = rate;
     mSettings.setValue("audio/outputDeviceSamplingRate", mOutputDeviceSamplingRate);
-}
-
-void SettingsForQt::setLastUsedAlgorithm(const std::string &name) {
-    Settings::setLastUsedAlgorithm(name);
-    mSettings.setValue("core/lastUsedAlgorithm", QString::fromStdString(name));
 }
 
 void SettingsForQt::setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) {

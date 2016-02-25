@@ -547,8 +547,12 @@ void EntropyMinimizer::minimizeEntropy ()
 
     // Create random device for probabilistic seeding:
     std::random_device rd;
+    int user_seed = mParameters->getIntParameter("seed");
     // Initialze Mersenne twister with random seed:
-    static std::mt19937 generator(rd());
+    // - if user_seed=0 use rd
+    // - else use the seed of the user
+    std::mt19937 generator((user_seed == 0) ? rd() : user_seed);
+
     // Define distributions to be used:
     std::binomial_distribution<int> binomial(cents);
     std::uniform_int_distribution<int> keydist(0,mNumberOfKeys-1);
@@ -578,6 +582,9 @@ void EntropyMinimizer::minimizeEntropy ()
         if (keynumber>=0) updateTuningcurve(keynumber);
         else updateTuningcurve();
 
+        // update entropy parameter
+        mParameters->setDoubleParameter("entropy", H);
+
         // 'reset' updates
         updatesSinceLastChange /= 2;
 
@@ -595,7 +602,7 @@ void EntropyMinimizer::minimizeEntropy ()
 
     // accuracy (duration) of algorithm
     int stepsToFinish = 100;
-    std::string accuracy = mFactoryDescription.getStringParameter("accuracy");
+    std::string accuracy = mParameters->getStringParameter("accuracy");
     if (accuracy == "low") {stepsToFinish = 50;}
     else if (accuracy == "standard") {stepsToFinish = 100;}
     else if (accuracy == "high") {stepsToFinish = 150;}
