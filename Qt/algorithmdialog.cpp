@@ -178,6 +178,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     // cleanup and save old
     acceptCurrent();
     if (mAlgorithmDescriptionScrollArea->widget()) {delete mAlgorithmDescriptionScrollArea->widget();}
+    mAlgorithmDescriptionScrollArea->setWidget(nullptr);
     mAlgorithmWidgetConnectionList.clear();
 
     auto applyFormLayoutFormat = [](QFormLayout *l) {
@@ -200,16 +201,17 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     QWidget *scrollContentWidget = new QWidget;
     scrollContentWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     scrollContentWidget->installEventFilter(this);
-    mAlgorithmDescriptionScrollArea->setWidget(scrollContentWidget);
     QVBoxLayout *scrollLayout = new QVBoxLayout;
     scrollContentWidget->setLayout(scrollLayout);
+
+    mAlgorithmDescriptionScrollArea->setWidget(scrollContentWidget);
 
     QGroupBox *infoGroupBox = new QGroupBox(tr("Info"));
     scrollLayout->addWidget(infoGroupBox);
 
     QFormLayout *layout = new QFormLayout;
     infoGroupBox->setLayout(layout);
-    applyFormLayoutFormat(layout);
+    //applyFormLayoutFormat(layout);
 
     layout->addRow(new QLabel(tr("Name:")), new QLabel(QString::fromStdString(info.getName())));
     layout->addRow(new QLabel(tr("Author:")), new QLabel(QString::fromStdString(info.getAuthor())));
