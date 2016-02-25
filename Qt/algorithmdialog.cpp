@@ -405,7 +405,7 @@ void AlgorithmDialog::defaultButtonClicked() {
     const AlgorithmInformation::ParameterType &param = mCurrentAlgorithmInformation->getParameter(defaultButton->getID());
 
     switch (param.getType()) {
-    case AlgorithmInformation::ParameterType::TYPE_DOUBLE:
+    case AlgorithmParameter::TYPE_DOUBLE:
         if (param.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getDoubleDefaultValue()));
         }
@@ -413,7 +413,7 @@ void AlgorithmDialog::defaultButtonClicked() {
             dynamic_cast<QDoubleSpinBox*>(dataWidget)->setValue(param.getDoubleDefaultValue());
         }
         break;
-    case AlgorithmInformation::ParameterType::TYPE_INT:
+    case AlgorithmParameter::TYPE_INT:
         if (param.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getIntDefaultValue()));
         }
@@ -421,7 +421,7 @@ void AlgorithmDialog::defaultButtonClicked() {
             dynamic_cast<QSpinBox*>(dataWidget)->setValue(param.getIntDefaultValue());
         }
         break;
-    case AlgorithmInformation::ParameterType::TYPE_LIST: {
+    case AlgorithmParameter::TYPE_LIST: {
         QComboBox *cb = dynamic_cast<QComboBox*>(dataWidget);
         cb->setCurrentIndex(cb->findData(QString::fromStdString(param.getStringDefaultValue())));
         break; }

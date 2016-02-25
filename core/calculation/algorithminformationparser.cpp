@@ -122,51 +122,50 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
     const XMLElement *labelElement = element->FirstChildElement("label");
     const XMLElement *descriptionElement = element->FirstChildElement("description");
 
+    AlgorithmParameter parameter;
+
+    parameter.getID() = id;
+
     if (labelElement) {
-        label = parseLanguageString(labelElement);
+        parameter.getLabel() = parseLanguageString(labelElement);
     } else {
         EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "XMLElement 'label' missing while parsing a parameter element");
     }
 
     if (descriptionElement) {
-        description = parseLanguageString(descriptionElement);
+        parameter.getDescription() = parseLanguageString(descriptionElement);
     } else {
         LogD("Desciption of parameter not set.");
     }
 
     // nonspecific parameters
-    bool displayLineEdit = false;
-    bool displaySpinBox = true;
-    bool displaySlider = true;
-    bool displaySetDefaultButton = true;
-    bool readOnly = false;
+    element->QueryBoolAttribute("lineEdit", &parameter.displayLineEdit());
+    element->QueryBoolAttribute("spinBox", &parameter.displaySpinBox());
+    element->QueryBoolAttribute("slider", &parameter.displaySlider());
+    element->QueryBoolAttribute("defaultButton", &parameter.displaySetDefaultButton());
+    element->QueryBoolAttribute("readOnly", &parameter.readOnly());
+    element->QueryDoubleAttribute("updateInterval", &parameter.updateInterval());
 
-    element->QueryBoolAttribute("lineEdit", &displayLineEdit);
-    element->QueryBoolAttribute("spinBox", &displaySpinBox);
-    element->QueryBoolAttribute("slider", &displaySlider);
-    element->QueryBoolAttribute("readOnly", &readOnly);
 
     if (type == "double") {
-        const double defaultValue = element->DoubleAttribute("default");
-        double minValue = std::numeric_limits<double>::min();
-        double maxValue = std::numeric_limits<double>::max();
-        int precision = -1;
+        parameter.setType(AlgorithmParameter::TYPE_DOUBLE);
 
-        element->QueryDoubleAttribute("min", &minValue);
-        element->QueryDoubleAttribute("max", &maxValue);
-        element->QueryIntAttribute("precision", &precision);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision, displayLineEdit, displaySpinBox, displaySlider, displaySetDefaultButton, readOnly);
+        element->QueryDoubleAttribute("default", &parameter.getDoubleDefaultValue());
+        element->QueryDoubleAttribute("min", &parameter.getDoubleMinValue());
+        element->QueryDoubleAttribute("max", &parameter.getDoubleMaxValue());
+        element->QueryIntAttribute("precision", &parameter.getDoublePrecision());
     } else if (type == "int") {
-        const int defaultValue = element->IntAttribute("default");
-        int minValue = std::numeric_limits<int>::min();
-        int maxValue = std::numeric_limits<int>::max();
+        parameter.setType(AlgorithmParameter::TYPE_INT);
 
-        element->QueryIntAttribute("min", &minValue);
-        element->QueryIntAttribute("max", &maxValue);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, displayLineEdit, displaySpinBox, displaySlider, displaySetDefaultButton, readOnly);
+        element->QueryIntAttribute("default", &parameter.getIntDefaultValue());
+        element->QueryIntAttribute("min", &parameter.getIntMinValue());
+        element->QueryIntAttribute("max", &parameter.getIntMaxValue());
     } else if (type == "list") {
-        const std::string defaultValue = element->Attribute("default");
-        AlgorithmParameter::StringParameterList list;
+        parameter.setType(AlgorithmParameter::TYPE_LIST);
+
+        parameter.getStringDefaultValue() = element->Attribute("default");
+
+        AlgorithmParameter::StringParameterList &list = parameter.getStringList();
 
         for (const XMLElement *entry = element->FirstChildElement("entry"); entry;
              entry = entry->NextSiblingElement("entry")) {
@@ -175,9 +174,12 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
             std::string label = parseLanguageString(entry);
             list.push_back(std::make_pair(value, label));
         }
-
-        return AlgorithmParameter(id, label, description, defaultValue, list, displaySetDefaultButton);
     } else {
         EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Parameter type '" + type + "' is not supported.");
     }
+
+    EptAssert(parameter.getType() != AlgorithmParameter::TYPE_UNSET, "The parameter type was not set");
+    EptAssert(parameter.getID().empty() == false, "The parameter id is unset");
+
+    return parameter;
 }

@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <limits>
 
 class AlgorithmParameter
 {
@@ -29,101 +30,106 @@ public:
     using StringParameterList = std::vector<std::pair<std::string, std::string> >;
 public:
     enum Type {
+        TYPE_UNSET,
         TYPE_DOUBLE,
         TYPE_INT,
         TYPE_LIST,
     };
 
 public:
-    // constructor for a double paramter
-    AlgorithmParameter(const std::string &id,
-                       const std::string &label,
-                       const std::string &description,
-                       double defaultValue,
-                       double minValue,
-                       double maxValue,
-                       int precision,
-                       bool displayLineEdit,
-                       bool displaySpinBox,
-                       bool displaySlider,
-                       bool displaySetDefaultButton,
-                       bool readOnly);
-
-    // constructor for a int parameter
-    AlgorithmParameter(const std::string &id,
-                       const std::string &label,
-                       const std::string &description,
-                       int defaultValue,
-                       int minValue,
-                       int maxValue,
-                       bool displayLineEdit,
-                       bool displaySpinBox,
-                       bool displaySlider,
-                       bool displaySetDefaultButton,
-                       bool readOnly);
-
-    // constructor for a list
-    AlgorithmParameter(const std::string &id,
-                       const std::string &label,
-                       const std::string &description,
-                       const std::string &defaultValue,
-                       const StringParameterList &list,
-                       bool displaySetDefaultButton);
-
-    ~AlgorithmParameter();
-
     const std::string &getID() const {return mID;}
+    std::string &getID() {return mID;}
+
     const std::string &getLabel() const {return mLabel;}
+    std::string &getLabel() {return mLabel;}
+
     const std::string &getDescription() const {return mDescription;}
+    std::string &getDescription() {return mDescription;}
+
     Type getType() const {return mParameterType;}
+    void setType(Type t) {mParameterType = t;}
 
+    // double parameters
+    // ----------------------------------------------------------------------------
     double getDoubleDefaultValue() const {return mDoubleDefaultValue;}
+    double &getDoubleDefaultValue() {return mDoubleDefaultValue;}
+
     double getDoubleMinValue() const {return mDoubleMinValue;}
+    double &getDoubleMinValue() {return mDoubleMinValue;}
+
     double getDoubleMaxValue() const {return mDoubleMaxValue;}
+    double &getDoubleMaxValue() {return mDoubleMaxValue;}
+
     int    getDoublePrecision() const {return mDoublePrecision;}
+    int    &getDoublePrecision() {return mDoublePrecision;}
 
+    // int parameters
+    // ----------------------------------------------------------------------------
     int getIntDefaultValue() const {return mIntDefaultValue;}
-    int getIntMinValue() const {return mIntMinValue;}
-    int getIntMaxValue() const {return mIntMaxValue;}
+    int &getIntDefaultValue() {return mIntDefaultValue;}
 
+    int getIntMinValue() const {return mIntMinValue;}
+    int &getIntMinValue() {return mIntMinValue;}
+
+    int getIntMaxValue() const {return mIntMaxValue;}
+    int &getIntMaxValue() {return mIntMaxValue;}
+
+    // string parameters
+    // ----------------------------------------------------------------------------
+    const std::string &getStringDefaultValue() const {return mStringDefaultValue;}
+    std::string &getStringDefaultValue() {return mStringDefaultValue;}
+
+    const StringParameterList &getStringList() const {return mStringList;}
+    StringParameterList &getStringList() {return mStringList;}
+
+    // global parameters
+    // ----------------------------------------------------------------------------
     bool displayLineEdit() const {return mDisplayLineEdit;}
+    bool &displayLineEdit() {return mDisplayLineEdit;}
+
     bool displaySpinBox() const {return mDisplaySpinBox;}
+    bool &displaySpinBox() {return mDisplaySpinBox;}
+
     bool displaySlider() const {return mDisplaySlider;}
+    bool &displaySlider() {return mDisplaySlider;}
+
     bool displaySetDefaultButton() const {return mDisplaySetDefaultButton;}
+    bool &displaySetDefaultButton() {return mDisplaySetDefaultButton;}
 
     bool readOnly() const {return mReadOnly;}
+    bool &readOnly() {return mReadOnly;}
 
-
-    const std::string &getStringDefaultValue() const {return mStringDefaultValue;}
-    const StringParameterList &getStringList() const {return mStringList;}
+    double updateInterval() const {return mUpdateInterval;}
+    double &updateInterval() {return mUpdateInterval;}
+    void setUpdateInterval(double i) {mUpdateInterval = i;}
 
 private:
-    const Type mParameterType;
-    const std::string mID;
+    Type mParameterType = TYPE_UNSET;
+    std::string mID;
 
-    const std::string mLabel;
-    const std::string mDescription;
+    std::string mLabel;
+    std::string mDescription;
 
-    const double mDoubleDefaultValue = 0;
-    const double mDoubleMinValue = 0;
-    const double mDoubleMaxValue = 0;
-    const int    mDoublePrecision = 1;
+    double mDoubleDefaultValue = 0;
+    double mDoubleMinValue = std::numeric_limits<double>::min();
+    double mDoubleMaxValue = std::numeric_limits<double>::max();
+    int    mDoublePrecision = 0;
 
-    const int    mIntDefaultValue = 0;
-    const int    mIntMinValue = 0;
-    const int    mIntMaxValue = 0;
+    int    mIntDefaultValue = 0;
+    int    mIntMinValue = std::numeric_limits<int>::min();
+    int    mIntMaxValue = std::numeric_limits<int>::max();
 
-    const std::string mStringDefaultValue;
-    const StringParameterList mStringList;
+    std::string mStringDefaultValue;
+    StringParameterList mStringList;
 
-    const bool   mDisplayLineEdit = false;
-    const bool   mDisplaySpinBox  = true;
-    const bool   mDisplaySlider   = true;
-    const bool   mDisplaySetDefaultButton = true;
+    bool   mDisplayLineEdit = false;
+    bool   mDisplaySpinBox  = true;
+    bool   mDisplaySlider   = true;
+    bool   mDisplaySetDefaultButton = true;
 
-    const bool   mReadOnly        = false;
+    bool   mReadOnly        = false;
 
-
+    double mUpdateInterval = -1;
 };
 
 #endif // ALGORITHMPARAMETER_H
