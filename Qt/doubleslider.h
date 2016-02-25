@@ -33,12 +33,14 @@ private:
 
 public slots:
     void setValue(double);
+    void setValue(QString);
 
 private slots:
     void onValueChanged(int);
 
 signals:
     void valueChanged(double);
+    void valueChanged(QString);
 };
 
 #endif // DOUBLESLIDER_H

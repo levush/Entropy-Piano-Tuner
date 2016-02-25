@@ -43,7 +43,11 @@ public:
                        double minValue,
                        double maxValue,
                        int precision,
-                       bool displaySlider);
+                       bool displayLineEdit,
+                       bool displaySpinBox,
+                       bool displaySlider,
+                       bool displaySetDefaultButton,
+                       bool readOnly);
 
     // constructor for a int parameter
     AlgorithmParameter(const std::string &id,
@@ -52,14 +56,19 @@ public:
                        int defaultValue,
                        int minValue,
                        int maxValue,
-                       bool displaySlider);
+                       bool displayLineEdit,
+                       bool displaySpinBox,
+                       bool displaySlider,
+                       bool displaySetDefaultButton,
+                       bool readOnly);
 
     // constructor for a list
     AlgorithmParameter(const std::string &id,
                        const std::string &label,
                        const std::string &description,
                        const std::string &defaultValue,
-                       const StringParameterList &list);
+                       const StringParameterList &list,
+                       bool displaySetDefaultButton);
 
     ~AlgorithmParameter();
 
@@ -77,7 +86,13 @@ public:
     int getIntMinValue() const {return mIntMinValue;}
     int getIntMaxValue() const {return mIntMaxValue;}
 
+    bool displayLineEdit() const {return mDisplayLineEdit;}
+    bool displaySpinBox() const {return mDisplaySpinBox;}
     bool displaySlider() const {return mDisplaySlider;}
+    bool displaySetDefaultButton() const {return mDisplaySetDefaultButton;}
+
+    bool readOnly() const {return mReadOnly;}
+
 
     const std::string &getStringDefaultValue() const {return mStringDefaultValue;}
     const StringParameterList &getStringList() const {return mStringList;}
@@ -98,10 +113,17 @@ private:
     const int    mIntMinValue = 0;
     const int    mIntMaxValue = 0;
 
-    const bool   mDisplaySlider = true;
-
     const std::string mStringDefaultValue;
     const StringParameterList mStringList;
+
+    const bool   mDisplayLineEdit = false;
+    const bool   mDisplaySpinBox  = true;
+    const bool   mDisplaySlider   = true;
+    const bool   mDisplaySetDefaultButton = true;
+
+    const bool   mReadOnly        = false;
+
+
 };
 
 #endif // ALGORITHMPARAMETER_H

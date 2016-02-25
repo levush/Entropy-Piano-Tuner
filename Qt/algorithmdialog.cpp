@@ -31,7 +31,11 @@
 #include <QScroller>
 #include <QScrollBar>
 #include <QDebug>
+#include <QLineEdit>
+#include <QPushButton>
+
 #include "doubleslider.h"
+#include "displaysize.h"
 
 #include "qtconfig.h"
 #include "core/config.h"
@@ -137,13 +141,29 @@ void AlgorithmDialog::acceptCurrent() {
         const QWidget *widget = paramWidget.second;
 
         if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
-            const QDoubleSpinBox *sb = dynamic_cast<const QDoubleSpinBox*>(widget);
-            EptAssert(sb, "This parameter is described by a QDoubleSpinBox");
-            mCurrentAlgorithmParameters->setDoubleParameter(paramWidget.first, sb->value());
+            if (param.displaySpinBox()) {
+                const QDoubleSpinBox *sb = dynamic_cast<const QDoubleSpinBox*>(widget);
+                EptAssert(sb, "This parameter is described by a QDoubleSpinBox");
+                mCurrentAlgorithmParameters->setDoubleParameter(paramWidget.first, sb->value());
+            } else if (param.displayLineEdit()) {
+                const QLineEdit *le = dynamic_cast<const QLineEdit*>(widget);
+                EptAssert(le, "This parameter is described by a QLineEdit");
+                mCurrentAlgorithmParameters->setDoubleParameter(paramWidget.first, le->text().toDouble());
+            } else {
+                EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Either display spin box or line edit have to be set.");
+            }
         } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
-            const QSpinBox *sb = dynamic_cast<const QSpinBox*>(widget);
-            EptAssert(sb, "This parameter is described by a QSpinBox");
-            mCurrentAlgorithmParameters->setIntParameter(paramWidget.first, sb->value());
+            if (param.displaySpinBox()) {
+                const QSpinBox *sb = dynamic_cast<const QSpinBox*>(widget);
+                EptAssert(sb, "This parameter is described by a QSpinBox");
+                mCurrentAlgorithmParameters->setIntParameter(paramWidget.first, sb->value());
+            } else if (param.displayLineEdit()) {
+                const QLineEdit *le = dynamic_cast<const QLineEdit*>(widget);
+                EptAssert(le, "This parameter is described by a QLineEdit");
+                mCurrentAlgorithmParameters->setIntParameter(paramWidget.first, le->text().toInt());
+            } else {
+                EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Either display spin box or line edit have to be set.");
+            }
         } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
             const QComboBox *cb = qobject_cast<const QComboBox*>(widget);
             mCurrentAlgorithmParameters->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
@@ -159,6 +179,14 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     acceptCurrent();
     if (mAlgorithmDescriptionScrollArea->widget()) {delete mAlgorithmDescriptionScrollArea->widget();}
     mAlgorithmWidgetConnectionList.clear();
+
+    auto applyFormLayoutFormat = [](QFormLayout *l) {
+        if (DisplaySizeDefines::getSingleton()->showMultiLineEditPianoDataSheet()) {
+            l->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        } else {
+            l->setRowWrapPolicy(QFormLayout::DontWrapRows);
+        }
+    };
 
     // load new
     QString algId = mAlgorithmSelection->itemData(index).toString();
@@ -181,6 +209,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
     QFormLayout *layout = new QFormLayout;
     infoGroupBox->setLayout(layout);
+    applyFormLayoutFormat(layout);
 
     layout->addRow(new QLabel(tr("Name:")), new QLabel(QString::fromStdString(info.getName())));
     layout->addRow(new QLabel(tr("Author:")), new QLabel(QString::fromStdString(info.getAuthor())));
@@ -198,59 +227,100 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
         scrollLayout->addWidget(paramsBox);
         QFormLayout *paramsBoxLayout = new QFormLayout;
         paramsBox->setLayout(paramsBoxLayout);
+        applyFormLayoutFormat(paramsBoxLayout);
         for (const AlgorithmParameter &param : info.getParameters()) {
             QWidget *dataWidget = nullptr;
-            QLayout *dataLayout = nullptr;
+            QHBoxLayout *dataLayout = new QHBoxLayout;
+
+            EptAssert((param.displayLineEdit() && !param.displaySpinBox())
+                      || (!param.displayLineEdit() && param.displaySpinBox()),
+                      "Either line edit or spin box may be enabled for a parameter");
 
             if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
-                QHBoxLayout *valueLayout = new QHBoxLayout;
-                dataLayout = valueLayout;
-
-                QDoubleSpinBox *sb = new QDoubleSpinBox();
-                sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-#ifdef __ANDROID__
-                // HACK: fix spin box size on android
-                sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
-#endif
-                sb->setRange(param.getDoubleMinValue(), param.getDoubleMaxValue());
-                sb->setDecimals(param.getDoublePrecision());
+                double value = param.getDoubleDefaultValue();
                 if (description.hasDoubleParameter(param.getID())) {
-                    sb->setValue(description.getDoubleParameter(param.getID()));
-                } else {
-                    sb->setValue(param.getDoubleDefaultValue());
+                    value = description.getDoubleParameter(param.getID());
+                }
+
+                QLineEdit *le = nullptr;
+                QDoubleSpinBox *sb = nullptr;
+                DoubleSlider *slider = nullptr;
+
+                if (param.displayLineEdit()) {
+                    le = new QLineEdit();
+                    le->setReadOnly(param.readOnly());
+                    le->setValidator(new QDoubleValidator(param.getDoubleMinValue(), param.getDoubleMaxValue(), param.getDoublePrecision()));
+                    le->setText(QString::number(value));
+                    dataLayout->addWidget(le);
+                    dataWidget = le;
+                }
+
+                if (param.displaySpinBox()) {
+                    sb = new QDoubleSpinBox();
+                    sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+                    sb->setReadOnly(param.readOnly());
+#ifdef __ANDROID__
+                    // HACK: fix spin box size on android
+                    sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
+  #endif
+                    sb->setRange(param.getDoubleMinValue(), param.getDoubleMaxValue());
+                    sb->setDecimals(param.getDoublePrecision());
+                    sb->setValue(value);
+                    dataLayout->addWidget(sb);
+                    dataWidget = sb;
                 }
 
                 if (param.getDoublePrecision() >= 0 && param.displaySlider()) {
                     // add a slider aswell
-                    DoubleSlider *slider = new DoubleSlider(param.getDoubleMinValue(), param.getDoubleMaxValue(), param.getDoublePrecision());
+                    slider = new DoubleSlider(param.getDoubleMinValue(), param.getDoubleMaxValue(), param.getDoublePrecision());
                     slider->setOrientation(Qt::Horizontal);
                     slider->setValue(sb->value());
-                    valueLayout->addWidget(slider);
-
-                    QObject::connect(slider, SIGNAL(valueChanged(double)), sb, SLOT(setValue(double)));
-                    QObject::connect(sb, SIGNAL(valueChanged(double)), slider, SLOT(setValue(double)));
-
-                    sb->setDecimals(param.getDoublePrecision());
                 }
 
-                valueLayout->addWidget(sb);
+                if (slider) {
+                    dataLayout->addWidget(slider);
 
-                dataWidget = sb;
+                    if (le) {
+                        QObject::connect(slider, SIGNAL(valueChanged(QString)), le, SLOT(setText(QString)));
+                        QObject::connect(le, SIGNAL(textChanged(QString)), slider, SLOT(setValue(QString)));
+                    }
+
+                    if (sb) {
+                        QObject::connect(slider, SIGNAL(valueChanged(double)), sb, SLOT(setValue(double)));
+                        QObject::connect(sb, SIGNAL(valueChanged(double)), slider, SLOT(setValue(double)));
+                    }
+                }
             } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
-                QHBoxLayout *valueLayout = new QHBoxLayout;
-                dataLayout = valueLayout;
-
-                QSpinBox *sb = new QSpinBox();
-                sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-#ifdef __ANDROID__
-                // HACK: fix spin box size on android
-                sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
-#endif
-                sb->setRange(param.getIntMinValue(), param.getIntMaxValue());
+                int value = param.getIntDefaultValue();
                 if (description.hasIntParameter(param.getID())) {
-                    sb->setValue(description.getIntParameter(param.getID()));
-                } else {
-                    sb->setValue(param.getIntDefaultValue());
+                    value = description.getIntParameter(param.getID());
+                }
+
+                QLineEdit *le = nullptr;
+                QSpinBox *sb = nullptr;
+                DoubleSlider *slider = nullptr;
+
+                if (param.displayLineEdit()) {
+                    le = new QLineEdit();
+                    le->setReadOnly(param.readOnly());
+                    le->setValidator(new QIntValidator(param.getIntMinValue(), param.getIntMaxValue()));
+                    le->setText(QString::number(value));
+                    dataLayout->addWidget(le);
+                    dataWidget = le;
+                }
+
+                if (param.displaySpinBox()) {
+                    sb = new QSpinBox();
+                    sb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+                    sb->setReadOnly(param.readOnly());
+#ifdef __ANDROID__
+                    // HACK: fix spin box size on android
+                    sb->setMinimumWidth(sb->fontInfo().pointSizeF() * 15);
+#endif
+                    sb->setRange(param.getIntMinValue(), param.getIntMaxValue());
+                    sb->setValue(value);
+                    dataLayout->addWidget(sb);
+                    dataWidget = sb;
                 }
 
                 // add a slider aswell if desired
@@ -258,19 +328,27 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                     QSlider *slider = new QSlider(Qt::Horizontal);
                     slider->setMinimum(param.getIntMinValue());
                     slider->setMaximum(param.getIntMaxValue());
-                    slider->setValue(sb->value());
-                    valueLayout->addWidget(slider);
-
-                    QObject::connect(slider, SIGNAL(valueChanged(int)), sb, SLOT(setValue(int)));
-                    QObject::connect(sb, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+                    slider->setValue(value);
                 }
 
+                if (slider) {
+                    dataLayout->addWidget(slider);
 
-                valueLayout->addWidget(sb);
+                    if (le) {
+                        QObject::connect(slider, SIGNAL(valueChanged(QString)), le, SLOT(setText(QString)));
+                        QObject::connect(le, SIGNAL(textChanged(QString)), slider, SLOT(setValue(QString)));
+                    }
 
-                dataWidget = sb;
+                    if (sb) {
+                        QObject::connect(slider, SIGNAL(valueChanged(double)), sb, SLOT(setValue(double)));
+                        QObject::connect(sb, SIGNAL(valueChanged(double)), slider, SLOT(setValue(double)));
+                    }
+                }
             } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
                 QComboBox *cb = new QComboBox;
+                cb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+                dataLayout->addWidget(cb);
+
                 for (const auto &p : param.getStringList()) {
                     cb->addItem(QString::fromStdString(p.second), QString::fromStdString(p.first));
                 }
@@ -296,13 +374,17 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
             label->setWhatsThis(dataWidget->whatsThis());
             label->setToolTip(dataWidget->toolTip());
 
-            if (dataLayout) {
-                paramsBoxLayout->addRow(label, dataLayout);
-            } else if (dataWidget) {
-                paramsBoxLayout->addRow(label, dataWidget);
-            } else {
-                EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "The parameter has to create a data layout or a data widget. Maybe it is not implemented at all");
+            // create default button
+            if (param.displaySetDefaultButton() && !param.readOnly()) {
+                QPushButton *defaultButton = new DefaultButton(tr("Default"), param.getID(), dataWidget);
+                defaultButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+                defaultButton->setWhatsThis(tr("Reset the parameter to its default value"));
+                defaultButton->setToolTip(defaultButton->whatsThis());
+                dataLayout->addWidget(defaultButton);
+                QObject::connect(defaultButton, SIGNAL(clicked(bool)), this, SLOT(defaultButtonClicked()));
             }
+
+            paramsBoxLayout->addRow(label, dataLayout);
 
             mAlgorithmWidgetConnectionList.append(qMakePair(param.getID(), dataWidget));
         }
@@ -310,6 +392,41 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
 
 
     //layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+}
+
+void AlgorithmDialog::defaultButtonClicked() {
+    DefaultButton *defaultButton = dynamic_cast<DefaultButton*>(sender());
+    EptAssert(defaultButton, "Sender is not a DefaultButton");
+
+
+    QWidget *dataWidget = defaultButton->getDataWidget();
+    const AlgorithmInformation::ParameterType &param = mCurrentAlgorithmInformation->getParameter(defaultButton->getID());
+
+    switch (param.getType()) {
+    case AlgorithmInformation::ParameterType::TYPE_DOUBLE:
+        if (param.displayLineEdit()) {
+            dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getDoubleDefaultValue()));
+        }
+        if (param.displaySpinBox()) {
+            dynamic_cast<QDoubleSpinBox*>(dataWidget)->setValue(param.getDoubleDefaultValue());
+        }
+        break;
+    case AlgorithmInformation::ParameterType::TYPE_INT:
+        if (param.displayLineEdit()) {
+            dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getIntDefaultValue()));
+        }
+        if (param.displaySpinBox()) {
+            dynamic_cast<QSpinBox*>(dataWidget)->setValue(param.getIntDefaultValue());
+        }
+        break;
+    case AlgorithmInformation::ParameterType::TYPE_LIST: {
+        QComboBox *cb = dynamic_cast<QComboBox*>(dataWidget);
+        cb->setCurrentIndex(cb->findData(QString::fromStdString(param.getStringDefaultValue())));
+        break; }
+    default:
+        EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Default button does not implement type.");
+    }
+
 }
 
 void AlgorithmDialog::accept() {

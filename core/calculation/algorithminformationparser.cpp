@@ -134,28 +134,36 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
         LogD("Desciption of parameter not set.");
     }
 
+    // nonspecific parameters
+    bool displayLineEdit = false;
+    bool displaySpinBox = true;
+    bool displaySlider = true;
+    bool displaySetDefaultButton = true;
+    bool readOnly = false;
+
+    element->QueryBoolAttribute("lineEdit", &displayLineEdit);
+    element->QueryBoolAttribute("spinBox", &displaySpinBox);
+    element->QueryBoolAttribute("slider", &displaySlider);
+    element->QueryBoolAttribute("readOnly", &readOnly);
+
     if (type == "double") {
         const double defaultValue = element->DoubleAttribute("default");
         double minValue = std::numeric_limits<double>::min();
         double maxValue = std::numeric_limits<double>::max();
         int precision = -1;
-        bool displaySlider = true;
 
         element->QueryDoubleAttribute("min", &minValue);
         element->QueryDoubleAttribute("max", &maxValue);
         element->QueryIntAttribute("precision", &precision);
-        element->QueryBoolAttribute("slider", &displaySlider);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision, displaySlider);
+        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, precision, displayLineEdit, displaySpinBox, displaySlider, displaySetDefaultButton, readOnly);
     } else if (type == "int") {
         const int defaultValue = element->IntAttribute("default");
         int minValue = std::numeric_limits<int>::min();
         int maxValue = std::numeric_limits<int>::max();
-        bool displaySlider = true;
 
         element->QueryIntAttribute("min", &minValue);
         element->QueryIntAttribute("max", &maxValue);
-        element->QueryBoolAttribute("slider", &displaySlider);
-        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, displaySlider);
+        return AlgorithmParameter(id, label, description, defaultValue, minValue, maxValue, displayLineEdit, displaySpinBox, displaySlider, displaySetDefaultButton, readOnly);
     } else if (type == "list") {
         const std::string defaultValue = element->Attribute("default");
         AlgorithmParameter::StringParameterList list;
@@ -168,7 +176,7 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
             list.push_back(std::make_pair(value, label));
         }
 
-        return AlgorithmParameter(id, label, description, defaultValue, list);
+        return AlgorithmParameter(id, label, description, defaultValue, list, displaySetDefaultButton);
     } else {
         EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Parameter type '" + type + "' is not supported.");
     }

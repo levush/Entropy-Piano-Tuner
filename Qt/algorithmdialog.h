@@ -26,6 +26,7 @@
 #include <QPair>
 #include <QScrollArea>
 #include <QComboBox>
+#include <QPushButton>
 #include <memory>
 
 #include "core/calculation/algorithminformation.h"
@@ -47,6 +48,7 @@ private:
 
 private slots:
     void algorithmSelectionChanged(int index);
+    void defaultButtonClicked();
     void accept() override;
 
 private:
@@ -61,6 +63,21 @@ private:
     SingleAlgorithmParametersPtr mCurrentAlgorithmParameters;
     QComboBox *mAlgorithmSelection = nullptr;
     QScrollArea *mAlgorithmDescriptionScrollArea = nullptr;
+
+    class DefaultButton : public QPushButton {
+    public:
+        DefaultButton(QString label, const std::string &id, QWidget *dataWidget) :
+            QPushButton(label),
+            mId(id),
+            mDataWidget(dataWidget) {
+        }
+
+        const std::string &getID() const {return mId;}
+        QWidget *getDataWidget() const {return mDataWidget;}
+    private:
+        const std::string &mId;
+        QWidget *mDataWidget;
+    };
 };
 
 #endif // ALGORITHMDIALOG_H

@@ -26,7 +26,11 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        double minValue,
                                        double maxValue,
                                        int precision,
-                                       bool displaySlider) :
+                                       bool displayLineEdit,
+                                       bool displaySpinBox,
+                                       bool displaySlider,
+                                       bool displaySetDefaultButton,
+                                       bool readOnly) :
     mParameterType(TYPE_DOUBLE),
     mID(id),
     mLabel(label),
@@ -35,7 +39,11 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
     mDoubleMinValue(minValue),
     mDoubleMaxValue(maxValue),
     mDoublePrecision(precision),
-    mDisplaySlider(displaySlider)
+    mDisplayLineEdit(displayLineEdit),
+    mDisplaySpinBox(displaySpinBox),
+    mDisplaySlider(displaySlider),
+    mDisplaySetDefaultButton(displaySetDefaultButton),
+    mReadOnly(readOnly)
 {
 
 }
@@ -46,7 +54,11 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        int defaultValue,
                                        int minValue,
                                        int maxValue,
-                                       bool displaySlider) :
+                                       bool displayLineEdit,
+                                       bool displaySpinBox,
+                                       bool displaySlider,
+                                       bool displaySetDefaultButton,
+                                       bool readOnly) :
     mParameterType(TYPE_INT),
     mID(id),
     mLabel(label),
@@ -54,7 +66,11 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
     mIntDefaultValue(defaultValue),
     mIntMinValue(minValue),
     mIntMaxValue(maxValue),
-    mDisplaySlider(displaySlider)
+    mDisplayLineEdit(displayLineEdit),
+    mDisplaySpinBox(displaySpinBox),
+    mDisplaySlider(displaySlider),
+    mDisplaySetDefaultButton(displaySetDefaultButton),
+    mReadOnly(readOnly)
 {
 }
 
@@ -62,13 +78,15 @@ AlgorithmParameter::AlgorithmParameter(const std::string &id,
                                        const std::string &label,
                                        const std::string &description,
                                        const std::string &defaultValue,
-                                       const StringParameterList &list) :
+                                       const StringParameterList &list,
+                                       bool displaySetDefaultButton) :
     mParameterType(TYPE_LIST),
     mID(id),
     mLabel(label),
     mDescription(description),
     mStringDefaultValue(defaultValue),
-    mStringList(list)
+    mStringList(list),
+    mDisplaySetDefaultButton(displaySetDefaultButton)
 {
 }
 
