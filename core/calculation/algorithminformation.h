@@ -23,12 +23,12 @@
 #include <string>
 #include <vector>
 
-#include "algorithmparameter.h"
+#include "algorithmparameterdescription.h"
 
 class AlgorithmInformation
 {
 public:
-    using ParameterType = AlgorithmParameter;
+    using ParameterType = AlgorithmParameterDescription;
     using ParameterListType = std::vector<ParameterType>;
 
 public:

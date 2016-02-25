@@ -508,7 +508,7 @@ CORE_CALCULATION_HEADERS = \
     core/calculation/algorithmfactory.h \
     core/calculation/algorithmfactorydescription.h \
     core/calculation/algorithminformation.h \
-    core/calculation/algorithmparameter.h \
+    core/calculation/algorithmparameterdescription.h \
     core/calculation/algorithmparameters.h \
     core/calculation/algorithminformationparser.h \
 
@@ -519,7 +519,7 @@ CORE_CALCULATION_SOURCES = \
     core/calculation/algorithmfactory.cpp \
     core/calculation/algorithmfactorydescription.cpp \
     core/calculation/algorithminformation.cpp \
-    core/calculation/algorithmparameter.cpp \
+    core/calculation/algorithmparameterdescription.cpp \
     core/calculation/algorithmparameters.cpp \
     core/calculation/algorithminformationparser.cpp \
 

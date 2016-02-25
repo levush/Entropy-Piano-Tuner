@@ -17,4 +17,4 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "algorithmparameter.h"
+#include "algorithmparameterdescription.h"

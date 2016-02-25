@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QWidget>
 
-#include "core/calculation/algorithmparameter.h"
+#include "core/calculation/algorithmparameterdescription.h"
 #include "core/calculation/algorithmparameters.h"
 
 class AlgorithmDialogParameterUpdateTimer : public QObject
@@ -12,7 +12,7 @@ class AlgorithmDialogParameterUpdateTimer : public QObject
     Q_OBJECT
 public:
     explicit AlgorithmDialogParameterUpdateTimer(
-            const AlgorithmParameter &description,
+            const AlgorithmParameterDescription &description,
             ConstSingleAlgorithmParametersPtr parameters,
             QWidget *outputWidget,
             QObject *parent = 0);
@@ -25,7 +25,7 @@ private slots:
 private:
     QWidget *mOutputWidget;
 
-    const AlgorithmParameter mParameterDescription;
+    const AlgorithmParameterDescription mParameterDescription;
     ConstSingleAlgorithmParametersPtr mAlgorithmParameters;
 };
 

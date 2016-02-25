@@ -34,7 +34,7 @@ public:
 
 private:
     std::string parseLanguageString(const tinyxml2::XMLElement *element) const;
-    AlgorithmParameter parseAlgorithmParameter(const tinyxml2::XMLElement *element) const;
+    AlgorithmParameterDescription parseAlgorithmParameter(const tinyxml2::XMLElement *element) const;
 };
 
 #endif // ALGORITHMINFORMATIONPARSER_H

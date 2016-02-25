@@ -111,7 +111,7 @@ std::string AlgorithmInformationParser::parseLanguageString(const tinyxml2::XMLE
     EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Element '" + std::string(element->Name()) + "' has no child elements with name 'string'");
 }
 
-AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tinyxml2::XMLElement *element) const {
+AlgorithmParameterDescription AlgorithmInformationParser::parseAlgorithmParameter(const tinyxml2::XMLElement *element) const {
     EptAssert(element, "XMLElement has to exist");
 
     const std::string id = element->Attribute("id");
@@ -122,7 +122,7 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
     const XMLElement *labelElement = element->FirstChildElement("label");
     const XMLElement *descriptionElement = element->FirstChildElement("description");
 
-    AlgorithmParameter parameter;
+    AlgorithmParameterDescription parameter;
 
     parameter.getID() = id;
 
@@ -148,24 +148,24 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
 
 
     if (type == "double") {
-        parameter.setType(AlgorithmParameter::TYPE_DOUBLE);
+        parameter.setType(AlgorithmParameterDescription::TYPE_DOUBLE);
 
         element->QueryDoubleAttribute("default", &parameter.getDoubleDefaultValue());
         element->QueryDoubleAttribute("min", &parameter.getDoubleMinValue());
         element->QueryDoubleAttribute("max", &parameter.getDoubleMaxValue());
         element->QueryIntAttribute("precision", &parameter.getDoublePrecision());
     } else if (type == "int") {
-        parameter.setType(AlgorithmParameter::TYPE_INT);
+        parameter.setType(AlgorithmParameterDescription::TYPE_INT);
 
         element->QueryIntAttribute("default", &parameter.getIntDefaultValue());
         element->QueryIntAttribute("min", &parameter.getIntMinValue());
         element->QueryIntAttribute("max", &parameter.getIntMaxValue());
     } else if (type == "list") {
-        parameter.setType(AlgorithmParameter::TYPE_LIST);
+        parameter.setType(AlgorithmParameterDescription::TYPE_LIST);
 
         parameter.getStringDefaultValue() = element->Attribute("default");
 
-        AlgorithmParameter::StringParameterList &list = parameter.getStringList();
+        AlgorithmParameterDescription::StringParameterList &list = parameter.getStringList();
 
         for (const XMLElement *entry = element->FirstChildElement("entry"); entry;
              entry = entry->NextSiblingElement("entry")) {
@@ -178,7 +178,7 @@ AlgorithmParameter AlgorithmInformationParser::parseAlgorithmParameter(const tin
         EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Parameter type '" + type + "' is not supported.");
     }
 
-    EptAssert(parameter.getType() != AlgorithmParameter::TYPE_UNSET, "The parameter type was not set");
+    EptAssert(parameter.getType() != AlgorithmParameterDescription::TYPE_UNSET, "The parameter type was not set");
     EptAssert(parameter.getID().empty() == false, "The parameter id is unset");
 
     return parameter;

@@ -17,14 +17,14 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef ALGORITHMPARAMETER_H
-#define ALGORITHMPARAMETER_H
+#ifndef ALGORITHMPARAMETERDESCRIPTION_H
+#define ALGORITHMPARAMETERDESCRIPTION_H
 
 #include <string>
 #include <vector>
 #include <limits>
 
-class AlgorithmParameter
+class AlgorithmParameterDescription
 {
 public:
     using StringParameterList = std::vector<std::pair<std::string, std::string> >;
@@ -132,4 +132,4 @@ private:
     int    mUpdateIntervalInMS = -1;
 };
 
-#endif // ALGORITHMPARAMETER_H
+#endif // ALGORITHMPARAMETERDESCRIPTION_H

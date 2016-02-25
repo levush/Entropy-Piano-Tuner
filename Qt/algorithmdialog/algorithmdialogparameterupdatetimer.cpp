@@ -8,10 +8,10 @@
 #include "core/system/log.h"
 
 AlgorithmDialogParameterUpdateTimer::AlgorithmDialogParameterUpdateTimer(
-            const AlgorithmParameter &description,
-            ConstSingleAlgorithmParametersPtr parameters,
-            QWidget *outputWidget,
-            QObject *parent) :
+        const AlgorithmParameterDescription &description,
+        ConstSingleAlgorithmParametersPtr parameters,
+        QWidget *outputWidget,
+        QObject *parent) :
     QObject(parent),
     mOutputWidget(outputWidget),
     mParameterDescription(description),
@@ -27,7 +27,7 @@ AlgorithmDialogParameterUpdateTimer::AlgorithmDialogParameterUpdateTimer(
 void AlgorithmDialogParameterUpdateTimer::update()
 {
     switch (mParameterDescription.getType()) {
-    case AlgorithmParameter::TYPE_DOUBLE:
+    case AlgorithmParameterDescription::TYPE_DOUBLE:
         if (mParameterDescription.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(mOutputWidget)->setText(QString::number(mAlgorithmParameters->getDoubleParameter(mParameterDescription.getID())));
         }
@@ -35,7 +35,7 @@ void AlgorithmDialogParameterUpdateTimer::update()
             dynamic_cast<QDoubleSpinBox*>(mOutputWidget)->setValue(mAlgorithmParameters->getDoubleParameter(mParameterDescription.getID()));
         }
         break;
-    case AlgorithmParameter::TYPE_INT:
+    case AlgorithmParameterDescription::TYPE_INT:
         if (mParameterDescription.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(mOutputWidget)->setText(QString::number(mAlgorithmParameters->getIntParameter(mParameterDescription.getID())));
         }
@@ -43,7 +43,7 @@ void AlgorithmDialogParameterUpdateTimer::update()
             dynamic_cast<QSpinBox*>(mOutputWidget)->setValue(mAlgorithmParameters->getIntParameter(mParameterDescription.getID()));
         }
         break;
-    case AlgorithmParameter::TYPE_LIST: {
+    case AlgorithmParameterDescription::TYPE_LIST: {
         QComboBox *cb = dynamic_cast<QComboBox*>(mOutputWidget);
         cb->setCurrentIndex(cb->findData(QString::fromStdString(mAlgorithmParameters->getStringParameter(mParameterDescription.getID()))));
         break; }

@@ -13,17 +13,17 @@ void SingleAlgorithmParameters::loadDefaultParams() {
     // add all params with default value if not in algorithm description
     auto info = CalculationManager::getSingleton().loadAlgorithmInformation(getAlgorithmName());
 
-    for (const AlgorithmParameter &param : info->getParameters()) {
+    for (const AlgorithmParameterDescription &param : info->getParameters()) {
         switch (param.getType()) {
-        case AlgorithmParameter::TYPE_DOUBLE:
+        case AlgorithmParameterDescription::TYPE_DOUBLE:
             if (hasDoubleParameter(param.getID())) {continue;}
             setDoubleParameter(param.getID(), param.getDoubleDefaultValue());
             break;
-        case AlgorithmParameter::TYPE_INT:
+        case AlgorithmParameterDescription::TYPE_INT:
             if (hasIntParameter(param.getID())) {continue;}
             setIntParameter(param.getID(), param.getIntDefaultValue());
             break;
-        case AlgorithmParameter::TYPE_LIST:
+        case AlgorithmParameterDescription::TYPE_LIST:
             if (hasStringParameter(param.getID())) {continue;}
             setStringParameter(param.getID(), param.getStringDefaultValue());
             break;

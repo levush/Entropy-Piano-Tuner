@@ -139,10 +139,10 @@ void AlgorithmDialog::acceptCurrent() {
 
     // update the parameters
     for (auto &paramWidget : mAlgorithmWidgetConnectionList) {
-        const AlgorithmParameter &param = mCurrentAlgorithmInformation->getParameter(paramWidget.first);
+        const AlgorithmParameterDescription &param = mCurrentAlgorithmInformation->getParameter(paramWidget.first);
         const QWidget *widget = paramWidget.second;
 
-        if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
+        if (param.getType() == AlgorithmParameterDescription::TYPE_DOUBLE) {
             if (param.displaySpinBox()) {
                 const QDoubleSpinBox *sb = dynamic_cast<const QDoubleSpinBox*>(widget);
                 EptAssert(sb, "This parameter is described by a QDoubleSpinBox");
@@ -154,7 +154,7 @@ void AlgorithmDialog::acceptCurrent() {
             } else {
                 EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Either display spin box or line edit have to be set.");
             }
-        } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
+        } else if (param.getType() == AlgorithmParameterDescription::TYPE_INT) {
             if (param.displaySpinBox()) {
                 const QSpinBox *sb = dynamic_cast<const QSpinBox*>(widget);
                 EptAssert(sb, "This parameter is described by a QSpinBox");
@@ -166,7 +166,7 @@ void AlgorithmDialog::acceptCurrent() {
             } else {
                 EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Either display spin box or line edit have to be set.");
             }
-        } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
+        } else if (param.getType() == AlgorithmParameterDescription::TYPE_LIST) {
             const QComboBox *cb = qobject_cast<const QComboBox*>(widget);
             mCurrentAlgorithmParameters->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
         } else {
@@ -232,7 +232,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
         QFormLayout *paramsBoxLayout = new QFormLayout;
         paramsBox->setLayout(paramsBoxLayout);
         applyFormLayoutFormat(paramsBoxLayout);
-        for (const AlgorithmParameter &param : info.getParameters()) {
+        for (const AlgorithmParameterDescription &param : info.getParameters()) {
             QWidget *dataWidget = nullptr;
             QHBoxLayout *dataLayout = new QHBoxLayout;
 
@@ -240,7 +240,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                       || (!param.displayLineEdit() && param.displaySpinBox()),
                       "Either line edit or spin box may be enabled for a parameter");
 
-            if (param.getType() == AlgorithmParameter::TYPE_DOUBLE) {
+            if (param.getType() == AlgorithmParameterDescription::TYPE_DOUBLE) {
                 double value = param.getDoubleDefaultValue();
                 if (description.hasDoubleParameter(param.getID())) {
                     value = description.getDoubleParameter(param.getID());
@@ -294,7 +294,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                         QObject::connect(sb, SIGNAL(valueChanged(double)), slider, SLOT(setValue(double)));
                     }
                 }
-            } else if (param.getType() == AlgorithmParameter::TYPE_INT) {
+            } else if (param.getType() == AlgorithmParameterDescription::TYPE_INT) {
                 int value = param.getIntDefaultValue();
                 if (description.hasIntParameter(param.getID())) {
                     value = description.getIntParameter(param.getID());
@@ -348,7 +348,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                         QObject::connect(sb, SIGNAL(valueChanged(double)), slider, SLOT(setValue(double)));
                     }
                 }
-            } else if (param.getType() == AlgorithmParameter::TYPE_LIST) {
+            } else if (param.getType() == AlgorithmParameterDescription::TYPE_LIST) {
                 QComboBox *cb = new QComboBox;
                 cb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
                 dataLayout->addWidget(cb);
@@ -412,7 +412,7 @@ void AlgorithmDialog::defaultButtonClicked() {
     const AlgorithmInformation::ParameterType &param = mCurrentAlgorithmInformation->getParameter(defaultButton->getID());
 
     switch (param.getType()) {
-    case AlgorithmParameter::TYPE_DOUBLE:
+    case AlgorithmParameterDescription::TYPE_DOUBLE:
         if (param.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getDoubleDefaultValue()));
         }
@@ -420,7 +420,7 @@ void AlgorithmDialog::defaultButtonClicked() {
             dynamic_cast<QDoubleSpinBox*>(dataWidget)->setValue(param.getDoubleDefaultValue());
         }
         break;
-    case AlgorithmParameter::TYPE_INT:
+    case AlgorithmParameterDescription::TYPE_INT:
         if (param.displayLineEdit()) {
             dynamic_cast<QLineEdit*>(dataWidget)->setText(QString::number(param.getIntDefaultValue()));
         }
@@ -428,7 +428,7 @@ void AlgorithmDialog::defaultButtonClicked() {
             dynamic_cast<QSpinBox*>(dataWidget)->setValue(param.getIntDefaultValue());
         }
         break;
-    case AlgorithmParameter::TYPE_LIST: {
+    case AlgorithmParameterDescription::TYPE_LIST: {
         QComboBox *cb = dynamic_cast<QComboBox*>(dataWidget);
         cb->setCurrentIndex(cb->findData(QString::fromStdString(param.getStringDefaultValue())));
         break; }
