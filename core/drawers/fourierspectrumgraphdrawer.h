@@ -42,7 +42,7 @@
 class FourierSpectrumGraphDrawer : public DrawerBase, public MessageListener
 {
 public:
-    const double updateInterval = 1.0;      ///< Update interval at least 1 sec
+    static const double updateInterval;     ///< Update interval at least 1 sec
 
     enum RoleType                           ///< Roles of the items used here
     {

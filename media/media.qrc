@@ -40,5 +40,6 @@
         <file>icons/go-next.png</file>
         <file>icons/go-previous.png</file>
         <file>icons/edit-copy.png</file>
+        <file>icons/edit-piano-sheet.png</file>
     </qresource>
 </RCC>

@@ -51,6 +51,10 @@ public class UsbMidiDriverAdapter {
             }
 
             @Override
+            public void onMidiReset(MidiInputDevice midiInputDevice, int id) {
+            }
+
+            @Override
             public void onDeviceDetached(UsbDevice usbDevice) {
                 // deprecated method.
             }
@@ -114,6 +118,43 @@ public class UsbMidiDriverAdapter {
             @Override
             public void onMidiCableEvents(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
             }
+
+            @Override
+            public void onMidiActiveSensing(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiStop(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiContinue(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiStart(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiTimingClock(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiTuneRequest(MidiInputDevice device, int cable) {
+            }
+
+            @Override
+            public void onMidiSongPositionPointer(MidiInputDevice device, int cable, int byte1) {
+            }
+
+            @Override
+            public void onMidiSongSelect(MidiInputDevice device, int cable, int byte1) {
+            }
+
+            @Override
+            public void onMidiTimeCodeQuarterFrame(MidiInputDevice device, int cable, int byte1) {
+            }
+
         };
 
         usbMidiDriver.open();

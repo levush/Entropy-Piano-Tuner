@@ -36,6 +36,9 @@ public:
     static PlatformToolsCore *getSingleton();
 
     virtual std::shared_ptr<MidiAdapter> createMidiAdapter() const;
+
+    /// Returns the physical memory, can be used to detect low memory devices
+    virtual unsigned long long getInstalledPhysicalMemoryInB() const;
 };
 
 #endif // PLATFORMTOOLSCORE_H

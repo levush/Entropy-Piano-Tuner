@@ -22,6 +22,7 @@
 #include "core/system/eptexception.h"
 #include "core/audio/midi/NoMidiimplementation.h"
 #include "core/audio/midi/RtMidiimplementation.h"
+#include "thirdparty/getMemorySize/getmemorysize.h"
 
 PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
 
@@ -41,4 +42,8 @@ std::shared_ptr<MidiAdapter> PlatformToolsCore::createMidiAdapter() const
 #else
     return std::make_shared<NoMidiImplementation>();
 #endif
+}
+
+unsigned long long PlatformToolsCore::getInstalledPhysicalMemoryInB() const {
+    return getMemorySize();
 }

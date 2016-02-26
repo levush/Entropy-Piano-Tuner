@@ -124,6 +124,11 @@ void TunerApplication::init() {
                     &mAudioPlayer,
                     Log::getSingletonPtr()));
 
+    // print memory information, the waveform generator will check cases
+    // to determine the length of the waveforms
+    double physicalMemoryInGiB = PlatformTools::getSingleton()->getInstalledPhysicalMemoryInB() / 1024.0 / 1024.0 / 1024.0;
+    LogI("Installed Physical memory: %f GiB", physicalMemoryInGiB);
+
     PlatformTools::getSingleton()->disableScreensaver();
 
 

@@ -82,6 +82,7 @@
 				<string>AppIcon72x72@2x~ipad.png</string>
 				<string>AppIcon76x76~ipad.png</string>
 				<string>AppIcon76x76@2x~ipad.png</string>
+				<string>AppIcon83.5x83.5@2x.png</string>
 			</array>
 		</dict>
 	</dict>
@@ -100,9 +101,9 @@
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.4</string>
+	<string>1.1.5</string>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>24</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

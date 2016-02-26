@@ -35,6 +35,13 @@ void callAndroidVoidTunerApplicationFunction(const char *functionName) {
     instance.callMethod<void>(functionName);
 }
 
+long int callAndroidLongIntTunerApplicationFunction(const char *functionName) {
+    // get the application instance
+    QAndroidJniObject instance = QAndroidJniObject::callStaticObjectMethod("org/uniwue/tp3/TunerApplication", "getInstance", "()Lorg/uniwue/tp3/TunerApplication;");
+    // get the path to the file to open, zero length if there is none
+    return instance.callMethod<jlong>(functionName);
+}
+
 static void java_openFile(JNIEnv *env, jobject thiz, jstring string, jboolean cached) {
     (void)thiz;
 
