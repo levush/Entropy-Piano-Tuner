@@ -63,13 +63,6 @@ class WaveformGenerator :
         public SimpleThreadHandler,
         public CallbackManager<WaveformGeneratorStatusCallback>
 {
-private:
-#ifdef __ANDROID__
-    const double mWaveformTime = 5;             ///< Minimal sampling time in seconds
-#else
-    const double mWaveformTime = 15;            ///< Maximal sampling time in seconds
-#endif
-
 public:
     using Waveform = std::vector<float>;
     using Spectrum = std::map<double,double>;   // type of spectrum
@@ -83,6 +76,7 @@ public:
     bool isComputing (const int keynumber);
 
 private:
+    const double mWaveformTime;             ///< Sampling time in seconds
     int mSampleRate;                        ///< Sample rate
     int mWaveformSize = 0;                  ///< Stored size of the waveform
     int mNumberOfKeys;                      ///< Local copy of the number of keys
@@ -97,6 +91,9 @@ private:
 
 private:
     void workerFunction();
+
+    /// Helper function to compute the waveform time based on the installed memory
+    double convertAvailablePhysicalMemoryToWaveformTime();
 };
 
 #endif // WAVEFORMGENERATOR_H

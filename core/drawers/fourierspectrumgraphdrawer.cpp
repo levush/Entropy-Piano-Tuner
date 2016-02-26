@@ -29,6 +29,7 @@
 #include "../messages/messagemodechanged.h"
 #include "../math/mathtools.h"
 
+const double FourierSpectrumGraphDrawer::updateInterval = 1.0;
 
 //-----------------------------------------------------------------------------
 //                              Constructor

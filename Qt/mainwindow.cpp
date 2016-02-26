@@ -311,7 +311,6 @@ void MainWindow::init(Core *core) {
     qDebug() << "Display size: " << QGuiApplication::primaryScreen()->physicalSize();
 
     mCore->getProjectManager()->setCallback(this);
-    mCore->getSoundGenerator().getSynthesizer().getWaveformGenerator().addListener(mProgressDisplay);
 
     // hide some elements
     if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
@@ -329,6 +328,11 @@ void MainWindow::start() {
 
     // init the project manager (load startup file)
     mCore->getProjectManager()->init(mCore);
+
+    // add progress display as listener of the WaveformGenerator
+    if (mCore->getSoundGenerator()) {
+        mCore->getSoundGenerator()->getSynthesizer().getWaveformGenerator().addListener(mProgressDisplay);
+    }
 
     updateWindowTitle();
 

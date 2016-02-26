@@ -51,6 +51,8 @@ public:
          Log *log = new Log());
     ~Core();
 
+    void setEnableSoundGenerator(bool enable);
+
 
     void init (CoreInitialisationAdapter *initAdapter);
     void exit();
@@ -64,16 +66,20 @@ public:
     ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
     AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
     AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
-    SoundGenerator &getSoundGenerator()         {return mSoundGenerator;}
-    PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
+    SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
+    PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}  
     MidiAdapter *getMidiInterface()             {return mMidi.get();}
 
 private:
     bool mInitialized;
+
+    // modules
+    bool mEnableSoundGenerator = true;
+
     std::unique_ptr<ProjectManagerAdapter> mProjectManager;
     AudioRecorderAdapter *mRecorderAdapter;
     AudioPlayerAdapter *mPlayerAdapter;
-    SoundGenerator mSoundGenerator;
+    std::unique_ptr<SoundGenerator> mSoundGenerator;
     RecordingManager mRecordingManager;
     SignalAnalyzer mSignalAnalyzer;
     std::shared_ptr<MidiAdapter> mMidi;

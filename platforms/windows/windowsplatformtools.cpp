@@ -44,3 +44,12 @@ void WindowsPlatformTools::enableScreensaver() {
 #else
 #endif
 }
+
+unsigned long long WindowsPlatformTools::getInstalledPhysicalMemoryInB() const {
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+    return PlatformToolsImplementation<WindowsPlatformTools>::getInstalledPhysicalMemoryInB();
+#else
+    // TODO: Implement correctly for windows RT and Windows Phone
+    return PlatformToolsImplementation<WindowsPlatformTools>::getInstalledPhysicalMemoryInB();
+#endif
+}

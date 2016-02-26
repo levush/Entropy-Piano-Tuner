@@ -542,11 +542,13 @@ THIRD_PARTY_HEADERS = \
     thirdparty/RtMidi/RtMidi.h \
     thirdparty/tinyxml2/tinyxml2.h \
     thirdparty/timesupport/timesupport.h \
+    thirdparty/getMemorySize/getmemorysize.h \
 
 THIRD_PARTY_SOURCES = \
     thirdparty/RtMidi/RtMidi.cpp \
     thirdparty/tinyxml2/tinyxml2.cpp \
     thirdparty/timesupport/timesupport.cpp \
+    thirdparty/getMemorySize/getmemorysize.cpp \
 
 
 #---------------- complete --------------------

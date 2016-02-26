@@ -50,7 +50,6 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mProjectManager(projectManager),
       mRecorderAdapter(recorderAdapter),
       mPlayerAdapter(playerAdapter),
-      mSoundGenerator (playerAdapter),
       mRecordingManager (recorderAdapter),
       mSignalAnalyzer(recorderAdapter)
 {
@@ -76,6 +75,16 @@ Core::~Core()
     LogI("Core denstroyed");
 }
 
+void Core::setEnableSoundGenerator(bool enable)
+{
+    mEnableSoundGenerator = enable;
+    if (!enable) {
+        mSignalAnalyzer.stop();
+        if (mSoundGenerator) {
+            mSoundGenerator->exit();
+        }
+    }
+}
 
 
 //-----------------------------------------------------------------------------
@@ -114,7 +123,12 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
     mSignalAnalyzer.init();
 
     initAdapter->updateProgress (50);   // Initialize the sound generator
-    mSoundGenerator.init();
+    if (mEnableSoundGenerator) {
+        mSoundGenerator.reset(new SoundGenerator(mPlayerAdapter));
+        mSoundGenerator->init();
+    } else {
+        LogI("SoundGenerator is disabled. Possibly low physical memory!");
+    }
 
     initAdapter->updateProgress (65);   // Initialize the recording manager
     mRecordingManager.init();
@@ -150,7 +164,7 @@ void Core::exit()
     stop();
     mMidi->exit();
     mRecordingManager.exit();
-    mSoundGenerator.exit();
+    if (mSoundGenerator) {mSoundGenerator->exit();}
     mSignalAnalyzer.exit();
     mPlayerAdapter->exit();
     mRecorderAdapter->exit();
