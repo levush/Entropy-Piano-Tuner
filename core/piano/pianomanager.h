@@ -45,7 +45,7 @@ public:
     PianoManager();
     ~PianoManager() {}
 
-    static const std::unique_ptr<PianoManager> &getSingletonPtr() {EptAssert(THE_ONE_AND_ONLY, "PianoManager has to be created with new, once!"); return THE_ONE_AND_ONLY;}
+    static std::unique_ptr<PianoManager> &getSingletonPtr() {return THE_ONE_AND_ONLY;}
 
     Piano &getPiano()             {return mPiano;}
     const Piano &getPiano() const {return mPiano;}

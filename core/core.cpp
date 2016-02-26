@@ -73,6 +73,8 @@ Core::~Core()
 {
     stop();
     exit();  // just to be sure
+    // destroy piano manager (here, because it inherits MessageListener)
+    PianoManager::getSingletonPtr().reset();
     LogI("Core denstroyed");
 }
 
