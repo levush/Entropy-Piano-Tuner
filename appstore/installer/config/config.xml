@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>Entropy Piano Tuner</Name>
-    <Version>1.1.4</Version>
+    <Version>1.1.5</Version>
     <Title>Entropy Piano Tuner Installer</Title>
     <Publisher>TP III Universität Würzburg</Publisher>
     <ProductUrl>http://piano-tuner.org</ProductUrl>

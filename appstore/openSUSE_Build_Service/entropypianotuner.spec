@@ -1,6 +1,6 @@
 Summary:        Entropy Piano Tuner
 Name:           entropypianotuner
-Version: 1.1.4
+Version: 1.1.5
 Release:        1%{?dist}
 License:        GPLv3
 Group:          Applications/Productivity
