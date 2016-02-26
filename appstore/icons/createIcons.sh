@@ -28,6 +28,7 @@ convert icon_1024x1024.png -resize 50x50 ios/AppIcon50x50~ipad.png
 convert icon_1024x1024.png -resize 57x57 ios/AppIcon57x57.png
 convert icon_1024x1024.png -resize 114x114 ios/AppIcon57x57@2x.png
 convert icon_1024x1024.png -resize 120x120 ios/AppIcon60x60@2x.png
+convert icon_1024x1024.png -resize 167x167 ios/AppIcon83.5x83.5@2x.png
 convert icon_1024x1024.png -resize 144x144 ios/AppIcon72x72@2x~ipad.png
 convert icon_1024x1024.png -resize 72x72 ios/AppIcon72x72~ipad.png
 convert icon_1024x1024.png -resize 152x152 ios/AppIcon76x76@2x~ipad.png
