@@ -41,11 +41,19 @@
     </message>
     <message>
         <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Todos os direitos reservados. </translation>
+        <translation type="vanished">Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Todos os direitos reservados. </translation>
     </message>
     <message>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
         <translation>Este software está licenciado sob os termos da %1.O código-fonte pode ser acessado no %2.</translation>
+    </message>
+    <message>
+        <source>Copyright 2016 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="obsolete">Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Todos os direitos reservados.  {2016 ?}</translation>
+    </message>
+    <message>
+        <source>Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation>Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. Todos os direitos reservados. </translation>
     </message>
 </context>
 <context>
@@ -81,6 +89,14 @@
     <message>
         <source>Parameters</source>
         <translation>Parâmetros</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Default</translation>
+    </message>
+    <message>
+        <source>Reset the parameter to its default value</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -931,7 +947,7 @@
     </message>
     <message>
         <source>Input device</source>
-        <translation>Equipamento de entrada</translation>
+        <translation type="vanished">Equipamento de entrada</translation>
     </message>
     <message>
         <source>Sample rates</source>
@@ -951,7 +967,7 @@
     </message>
     <message>
         <source>Sampling rates</source>
-        <translation>Taxas de amostragem</translation>
+        <translation type="vanished">Taxas de amostragem</translation>
     </message>
     <message>
         <source>Channels</source>
@@ -960,6 +976,14 @@
     <message>
         <source>Buffer size</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>Equipamento</translation>
+    </message>
+    <message>
+        <source>Sampling rate </source>
+        <translation>Taxa de amostragem</translation>
     </message>
 </context>
 <context>

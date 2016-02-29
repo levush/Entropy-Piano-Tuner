@@ -70,7 +70,9 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     QObject::connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(onOpenAboutUrl(QUrl)));
     mainLayout->addWidget(text);
 
-    const QString buildText = tr("Built on %1").arg(QDateTime::fromString(__TIMESTAMP__).toString(Qt::DefaultLocaleLongDate));
+    QDateTime compileTime(QDateTime::fromString(__TIMESTAMP__));
+
+    const QString buildText = tr("Built on %1").arg(compileTime.toString(Qt::DefaultLocaleLongDate));
     const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
     QString dependenciesText = tr("Based on");
@@ -84,7 +86,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     dependenciesText.append(", <a href=\"http://www.music.mcgill.ca/~gary/rtmidi\">RtMidi</a>");
 #endif
 
-    const QString copyrightText = tr("Copyright 2016 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.");
+    const QString copyrightText = tr("Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.").arg(compileTime.toString("yyyy"));
     const QString licenseText = tr("This software is licensed under the terms of the %1. The source code can be accessed at %2.").
             arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
                 "<a href=\"https://gitlab.com/entropytuner/Entropy-Piano-Tuner\">GitLab</a>");

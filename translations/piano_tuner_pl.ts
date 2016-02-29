@@ -14,27 +14,35 @@
         <translation>Entropy Piano Tuner</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="73"/>
+        <location filename="../Qt/aboutdialog.cpp" line="75"/>
         <source>Built on %1</source>
         <translation>Utworzono: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="74"/>
+        <location filename="../Qt/aboutdialog.cpp" line="76"/>
         <source>by %1 and %2</source>
         <translation>przez %1 oraz %2</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="76"/>
+        <location filename="../Qt/aboutdialog.cpp" line="78"/>
         <source>Based on</source>
         <translation>Oparte na</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="87"/>
-        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
-        <translation>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Wszelkie prawa zastrzeżone.</translation>
+        <location filename="../Qt/aboutdialog.cpp" line="89"/>
+        <source>Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation>Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. Wszelkie prawa zastrzeżone.</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="88"/>
+        <source>Copyright 2016 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="obsolete">Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Wszelkie prawa zastrzeżone. {2016 ?}</translation>
+    </message>
+    <message>
+        <source>Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.</source>
+        <translation type="vanished">Copyright 2015 Dept. of Theor. Phys. III, University of Würzburg. Wszelkie prawa zastrzeżone.</translation>
+    </message>
+    <message>
+        <location filename="../Qt/aboutdialog.cpp" line="90"/>
         <source>This software is licensed under the terms of the %1. The source code can be accessed at %2.</source>
         <translation>To oprogramowanie jest licencjonowane na zasadach licencji %1. Kod źródłowy jest dostępny w %2.</translation>
     </message>
@@ -43,17 +51,17 @@
         <translation type="vanished">Ten program jest licencjonowany na warunkach %1. Kod źródłowy jest dostępny pod adresem %2.</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="92"/>
+        <location filename="../Qt/aboutdialog.cpp" line="94"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="94"/>
+        <location filename="../Qt/aboutdialog.cpp" line="96"/>
         <source>We thank all those who have contributed to the project:</source>
         <translation>Dziękujemy wszystkim tym, którzy pomogli przy projekcie:</translation>
     </message>
     <message>
-        <location filename="../Qt/aboutdialog.cpp" line="118"/>
+        <location filename="../Qt/aboutdialog.cpp" line="120"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -61,146 +69,156 @@
 <context>
     <name>AlgorithmDialog</name>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="74"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="83"/>
         <source>Algorithm:</source>
         <translation>Algorytm:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="155"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="201"/>
         <source>Info of algorithm: %1</source>
         <translation>Informacje na temat algorytmu: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="163"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="211"/>
         <source>Info</source>
         <translation>Informacje</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="169"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="218"/>
         <source>Name:</source>
         <translation>Nazwa:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="170"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="219"/>
         <source>Author:</source>
         <translation>Autor:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="171"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="220"/>
         <source>Year:</source>
         <translation>Rok:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="176"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="225"/>
         <source>Description:</source>
         <translation>Opis:</translation>
     </message>
     <message>
-        <location filename="../Qt/algorithmdialog.cpp" line="181"/>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="230"/>
         <source>Parameters</source>
         <translation>Parametry</translation>
+    </message>
+    <message>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="383"/>
+        <source>Default</source>
+        <translation>Domyślne</translation>
+    </message>
+    <message>
+        <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="385"/>
+        <source>Reset the parameter to its default value</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CalculationProgressGroup</name>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="68"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="69"/>
         <source>Status:</source>
         <translation>Status:</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="115"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="116"/>
         <source>Info</source>
         <translation>Informacje</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="186"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="179"/>
         <source>An unknown error occured during the calculation.</source>
         <translation>Podczas obliczeń wystąpił nieznany błąd.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="189"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="182"/>
         <source>No data available.</source>
         <translation>Brak danych.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="192"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="185"/>
         <source>Not all keys recorded</source>
         <translation>Nie wszystkie klawisze zostały nagrane</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="195"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="188"/>
         <source>Key data inconsistent.</source>
         <translation>Dane klawiszy niekonsystentne.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="198"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="191"/>
         <source>Not enough keys recorded in left section.</source>
         <translation>Nie ma wystarczającej liczby klawiszy nagrane (bas).</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="201"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="194"/>
         <source>Not enough keys recorded in right section.</source>
         <translation>Nie ma wystarczającej liczby klawiszy rejestrowana (soprany).</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="204"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
         <source>Undefined error message.</source>
         <translation>Niezdefiniowany komunikat o błędzie.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="209"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="202"/>
         <source>Calculation error</source>
         <translation>Błąd podczas obliczeń</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="210"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="203"/>
         <source>Error code</source>
         <translation>Kod błędu</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="165"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="155"/>
         <source>Calculation started</source>
         <translation>Obliczenia rozpoczęte</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="166"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="156"/>
         <source>Stop calculation</source>
         <translation>Zatrzymaj obliczenia</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="162"/>
         <source>Calculation finished</source>
         <translation>Obliczenia zakończone</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="171"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="162"/>
         <source>The calculation finished successfully! Now you can switch to the tuning mode and tune your piano.</source>
         <translation>Obliczenia zakończone sukcesem! Teraz możesz przejść do trybu strojenia by nastroić swój instrument.</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="177"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="170"/>
         <source>Minimizing the entropy</source>
         <translation>Minimalizuję entropię</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="236"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="231"/>
         <source>Calculation with: %1</source>
         <translation>Obliczenia z: %1</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="271"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="264"/>
         <source>Calculation canceled</source>
         <translation>Obliczenia przerwane</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="273"/>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="303"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="266"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="295"/>
         <source>Start calculation</source>
         <translation>Rozpocznij obliczenia</translation>
     </message>
     <message>
-        <location filename="../Qt/calculationprogressgroup.cpp" line="299"/>
+        <location filename="../Qt/calculationprogressgroup.cpp" line="291"/>
         <source>Press the button to start the calculation</source>
         <translation>Naciśnij przycisk by rozpocząć obliczenia</translation>
     </message>
@@ -323,9 +341,9 @@
     </message>
     <message>
         <location filename="../Qt/editpianosheetdialog.ui" line="128"/>
-        <location filename="../Qt/editpianosheetdialog.ui" line="224"/>
-        <location filename="../Qt/editpianosheetdialog.ui" line="258"/>
-        <location filename="../Qt/editpianosheetdialog.ui" line="310"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="230"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="264"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="322"/>
         <source>Default</source>
         <translation>Domyślne</translation>
     </message>
@@ -350,37 +368,37 @@
         <translation>Rok produkcji</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="189"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="195"/>
         <source>Production location</source>
         <translation>Miejsce produkcji</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="199"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="205"/>
         <source>Number of keys</source>
         <translation>Liczba klawiszy</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="233"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="239"/>
         <source>Key number of A</source>
         <translation>Numer klawisza a</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="267"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="273"/>
         <source>Piano type</source>
         <translation>Typ instrumentu</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="275"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="287"/>
         <source>Grand</source>
         <translation>Fortepian</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="280"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="292"/>
         <source>Upright</source>
         <translation>Pianino</translation>
     </message>
     <message>
-        <location filename="../Qt/editpianosheetdialog.ui" line="288"/>
+        <location filename="../Qt/editpianosheetdialog.ui" line="300"/>
         <source>Keys on bass bridge</source>
         <translation type="unfinished"></translation>
     </message>
@@ -449,8 +467,8 @@
     <name>MainWindow</name>
     <message>
         <location filename="../Qt/mainwindow.ui" line="14"/>
-        <location filename="../Qt/mainwindow.cpp" line="537"/>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="181"/>
+        <location filename="../Qt/mainwindow.cpp" line="545"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="188"/>
         <source>Entropy piano tuner</source>
         <translation>Entropy Piano Tuner</translation>
     </message>
@@ -658,63 +676,63 @@
         <translation>Eksport</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="367"/>
+        <location filename="../Qt/mainwindow.cpp" line="371"/>
         <source>File created</source>
         <translation>Plik został utworzony</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="370"/>
+        <location filename="../Qt/mainwindow.cpp" line="374"/>
         <source>File edited</source>
         <translation>Plik został zmieniony</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="373"/>
+        <location filename="../Qt/mainwindow.cpp" line="377"/>
         <source>File opened</source>
         <translation>Plik został otwarty</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="376"/>
+        <location filename="../Qt/mainwindow.cpp" line="380"/>
         <source>File saved</source>
         <translation>Plik został zapisany</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="454"/>
+        <location filename="../Qt/mainwindow.cpp" line="458"/>
         <source>Recording keystroke</source>
         <translation>Nagrywanie stuknięcia klawisza</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="462"/>
+        <location filename="../Qt/mainwindow.cpp" line="466"/>
         <source>Signal analysis started</source>
         <translation>Analiza sygnału rozpoczęta</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="465"/>
+        <location filename="../Qt/mainwindow.cpp" line="469"/>
         <source>Signal analysis ended</source>
         <translation>Analiza sygnału zakończona</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="494"/>
+        <location filename="../Qt/mainwindow.cpp" line="498"/>
         <source>Calculation failed</source>
         <translation>Wystąpił błąd podczas obliczeń</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="497"/>
+        <location filename="../Qt/mainwindow.cpp" line="501"/>
         <source>Calculation ended</source>
         <translation>Obliczenia zakończone</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="500"/>
+        <location filename="../Qt/mainwindow.cpp" line="504"/>
         <source>Calculation started</source>
         <translation>Obliczenia rozpoczęte</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="570"/>
-        <location filename="../Qt/mainwindow.cpp" line="792"/>
+        <location filename="../Qt/mainwindow.cpp" line="585"/>
+        <location filename="../Qt/mainwindow.cpp" line="807"/>
         <source>Warning</source>
         <translation>Ostrzeżenie</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="570"/>
+        <location filename="../Qt/mainwindow.cpp" line="585"/>
         <source>Unable to find a supported sound control.</source>
         <translation>Nie udało się znaleźć systemowych ustawień głośności.</translation>
     </message>
@@ -723,81 +741,81 @@
         <translation type="vanished">Nie udało się znaleźć systemowych ustawień głośności.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="618"/>
+        <location filename="../Qt/mainwindow.cpp" line="633"/>
         <source>Canceled</source>
         <translation>Anulowano</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="618"/>
+        <location filename="../Qt/mainwindow.cpp" line="633"/>
         <source>You need to save the file before you can share it.</source>
         <translation>Należy zapisać plik przed jego współdzieleniem.</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="773"/>
+        <location filename="../Qt/mainwindow.cpp" line="788"/>
         <source>A new update is available!</source>
         <translation>Nowa aktualizacja jest dostępna!</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="774"/>
+        <location filename="../Qt/mainwindow.cpp" line="789"/>
         <source>The online app version is %1. Do you want to install this update?</source>
         <translation>Wersja dostępna online jest w wersji %1. Czy chcesz zainstalować aktualizację?</translation>
     </message>
     <message>
-        <location filename="../Qt/mainwindow.cpp" line="792"/>
+        <location filename="../Qt/mainwindow.cpp" line="807"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
         <translation>Narzędzie serwisowe nie zdołało uruchomić się automatycznie. W celu aktualizacji programu należy uruchomić narzędzie serwisowe ręcznie.</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="66"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="71"/>
         <source>The document has been modified.</source>
         <translation>Dokument został zmodyfikowany.</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="67"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="72"/>
         <source>Do you want to save your changes?</source>
         <translation>Czy chcesz zachować zmiany?</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="187"/>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="88"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="95"/>
         <source>Save</source>
         <translation>Zapisz</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.cpp" line="186"/>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="111"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="119"/>
         <source>Open</source>
         <translation>Otwórz</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="130"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="137"/>
         <source>Share tuning data</source>
         <translation>Współdziel dane strojenia</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="147"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="154"/>
         <source>New piano</source>
         <translation>Nowe pianino</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="150"/>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="152"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="157"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="159"/>
         <source>Unknown</source>
         <translation>Nieznany</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="160"/>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="164"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="167"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="171"/>
         <source>Error</source>
         <translation>Błąd</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="160"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="167"/>
         <source>File could not be opened.</source>
         <translation>Plik nie mógł być otworzony.</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="164"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="171"/>
         <source>File could not be saved.</source>
         <translation>Plik nie mógł być zapisany.</translation>
     </message>
@@ -806,12 +824,12 @@
         <translation type="obsolete">Entopy piano tuner</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="184"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="191"/>
         <source>Comma-separated values</source>
         <translation>Wartości oddzielonych przecinkami</translation>
     </message>
     <message>
-        <location filename="../Qt/projectmanagerforqt.cpp" line="187"/>
+        <location filename="../Qt/projectmanagerforqt.cpp" line="194"/>
         <source>All files</source>
         <translation>Wszystkie pliki</translation>
     </message>
@@ -898,7 +916,7 @@
 <context>
     <name>ProgressDisplay</name>
     <message>
-        <location filename="../Qt/progressdisplay.cpp" line="37"/>
+        <location filename="../Qt/progressdisplay.cpp" line="56"/>
         <source>Synthesizer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -906,19 +924,19 @@
 <context>
     <name>QwtPlotRenderer</name>
     <message>
-        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="979"/>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="982"/>
         <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="985"/>
+        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="988"/>
         <source>Documents</source>
         <translation>Dokumenty</translation>
     </message>
     <message>
-        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="990"/>
+        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="993"/>
         <source>Images</source>
         <translation>Zdjęcia</translation>
     </message>
     <message>
-        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="1005"/>
+        <location filename="../thirdparty/qwt/qwt_plot_renderer.cpp" line="1008"/>
         <source>Export File Name</source>
         <translation>Eksport: Nazwa pliku</translation>
     </message>
@@ -1008,12 +1026,12 @@
 <context>
     <name>TunerApplication</name>
     <message>
-        <location filename="../Qt/tunerapplication.cpp" line="70"/>
+        <location filename="../Qt/tunerapplication.cpp" line="73"/>
         <source>Crash handler</source>
         <translation>Obsługa błędów</translation>
     </message>
     <message>
-        <location filename="../Qt/tunerapplication.cpp" line="70"/>
+        <location filename="../Qt/tunerapplication.cpp" line="73"/>
         <source>The application exited unexpectedly on the last run. Do you want to view the last log?</source>
         <translation>Aplikacja została nieoczekiwanie zamknięta podczas ostatniego działania. Czy chcesz wyświetlić ostatni log (dziennik zdarzeń)?</translation>
     </message>
@@ -1146,18 +1164,26 @@
         <translation>Domyślne</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="65"/>
         <source>Input device</source>
-        <translation>Urządzenie wejściowe</translation>
+        <translation type="vanished">Urządzenie wejściowe</translation>
     </message>
     <message>
         <source>Sample rates</source>
         <translation type="vanished">Częstość próbkowania</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="71"/>
         <source>Sampling rates</source>
-        <translation>Częstotliwości próbkowania</translation>
+        <translation type="vanished">Częstotliwości próbkowania</translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="65"/>
+        <source>Device</source>
+        <translation>Urządzenie</translation>
+    </message>
+    <message>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="71"/>
+        <source>Sampling rate </source>
+        <translation>Częstotliwość próbkowania</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="77"/>
@@ -1175,12 +1201,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="241"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="243"/>
         <source>Warning</source>
         <translation>Ostrzeżenie</translation>
     </message>
     <message>
-        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="241"/>
+        <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="243"/>
         <source>You need at least a sampling rate of %1 to record and play all keys.</source>
         <translation>Częstość próbkowania nie może być niższa od %1 by nagrać wszystkie klawisze.</translation>
     </message>
