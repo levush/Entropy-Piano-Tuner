@@ -9,7 +9,6 @@ URL:            http://www.piano-tuner.org
 # Source from gitlab
 # Change the hash according to the current master branch
 # Workaround for source containing a '?' (commend at end)
-%global COMMIT  046bfc35f8ab3a7343aea6515730b037a33e9c16
 %global BRANCH  master
 %global ARCHIVE archive.tar.gz?ref=%BRANCH
 %global OWNER entropytuner
@@ -29,7 +28,24 @@ Requires:       libqt5-qtbase, libQt5Multimedia5, fftw3, alsa
 This is a program for tuning your piano.
 
 %prep
-%setup -q -n %PROJECT-%BRANCH-%COMMIT
+# standard setup, but rename the dir in the archive, because it contains its commit hash!
+cd $RPM_BUILD_DIR
+rm -rf %{PROJECT}
+gzip -dc  $RPM_SOURCE_DIR/archive.tar.gz | tar -xf -
+if [ $? -ne 0 ]; then
+  exit $?
+fi
+
+# remove commit number
+find . -depth -type d -name '%{PROJECT}-%{BRANCH}*' -exec mv {} %{PROJECT} \;
+
+cd $RPM_BUILD_DIR/%{PROJECT}
+chmod -Rf a+rX,u+w,g-w,o-w .
+
+# end of setup
+
+# this is default setup, that does not work, because the archive contains a directory with the commit hash in its name
+#%setup -q -n %PROJECT-%BRANCH-%COMMIT
 
 %{__cat} <<EOF >%{name}.desktop
 [Desktop Entry]
@@ -44,11 +60,17 @@ Categories=Education;Music;
 EOF
 
 %build
+# cd to source dir is required (see prep)
+cd $RPM_BUILD_DIR/%{PROJECT}
+
 qmake-qt5 -r 
 make %{?_smp_mflags}
 
 
 %install
+# cd to source dir is required (see prep)
+cd $RPM_BUILD_DIR/%{PROJECT}
+
 INSTALL_ROOT=%{buildroot}%{_prefix} %make_install
 %{__install} -d -m0755 %{buildroot}%{_datadir}/applications/
 desktop-file-install \
