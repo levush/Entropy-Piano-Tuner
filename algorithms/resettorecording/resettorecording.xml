@@ -3,9 +3,11 @@
     <name>
         <string>Restore recorded frequencies</string>
         <string lang="de">Stimmen nach aufgenommener Frequenz</string>
+        <string lang="zh">恢复录音频率</string>
     </name>
     <description>
         <string>This algorithm just copies the measured frequencies, allowing you to tune the piano according to the recorded pitches.</string>
         <string lang="de">Dieser Algorithmus kopiert die gemessenen Frequenzen und ermöglicht es Ihnen, die aufgenommene Stimmung zu reproduzieren.</string>
+        <string lang="zh">本算法仅拷贝已测量频率，允许你按照录音音高调律钢琴（将录音曲线直接变成计算曲线用于调律）。</string>
     </description>
 </algorithm>

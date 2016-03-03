@@ -3,10 +3,11 @@
     <name>
         <string>Pitch Raise</string>
         <string lang="de">Frequenzanhebung (pitch raise)</string>
+        <string lang="zh">音高拉升</string>
     </name>
-
     <description>
         <string>This algorithm generates an approximate tuning which is needed for a pitch raise. For details please refer to the user manual.</string>
         <string lang="de">Dieser Algorithmus erzeugt eine ungefähre Stimmkurve, die man für eine Frequenzanhebung (pitch raise) benötigt. Einzelheiten dazu finden Sie in der Bedienungsanleitung.</string>
+        <string lang="zh">本算法为音高拉升产生一条近似的调律曲线，请详见用户手册。</string>
     </description>
 </algorithm>

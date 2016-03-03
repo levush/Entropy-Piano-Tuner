@@ -116,7 +116,7 @@
     <message>
         <location filename="../Qt/algorithmdialog/algorithmdialog.cpp" line="385"/>
         <source>Reset the parameter to its default value</source>
-        <translation type="unfinished"></translation>
+        <translation>重置参数为默认值</translation>
     </message>
 </context>
 <context>
@@ -155,17 +155,17 @@
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="191"/>
         <source>Not enough keys recorded in left section.</source>
-        <translation></translation>
+        <translation>左边没有足够键被录音</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="194"/>
         <source>Not enough keys recorded in right section.</source>
-        <translation></translation>
+        <translation>右边没有足够键被录音</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="197"/>
         <source>Undefined error message.</source>
-        <translation></translation>
+        <translation>无定义错误信息</translation>
     </message>
     <message>
         <location filename="../Qt/calculationprogressgroup.cpp" line="202"/>
@@ -237,12 +237,12 @@
     </message>
     <message>
         <source>Reset pitch markers</source>
-        <translation type="vanished">重置所有节距标记</translation>
+        <translation type="vanished">重置音高标记</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="34"/>
         <source>Clear pitch markers</source>
-        <translation>重置所有节距标记</translation>
+        <translation>清除音高标记</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="38"/>
@@ -262,7 +262,7 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="50"/>
         <source>Save changes</source>
-        <translation type="unfinished"></translation>
+        <translation>保存更改</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="55"/>
@@ -272,17 +272,17 @@
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="64"/>
         <source>Do you really want to clear all pitch markers? This can not be undone!</source>
-        <translation type="unfinished">你真的要清除所有音高标记？这不能恢复！</translation>
+        <translation>你真的要清除所有音高标记？这不能恢复！</translation>
     </message>
     <message>
         <location filename="../Qt/donotshowagainmessagebox.cpp" line="76"/>
         <source>Do you want to save your current changes? You can save at any time using the tool button or the action from the menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>你要保存当前更改？您可以使用工具按钮或从菜单中选择操作随时保存。</translation>
     </message>
     <message>
         <source>Do you really want to reset all pitch markers? This can not be undone!</source>
         <translatorcomment>added translation by Google, please refine</translatorcomment>
-        <translation type="vanished">你真的要重置所有节距标记？这不能逆转！</translation>
+        <translation type="vanished">你真的要重置所有音高标记？这不能逆转！</translation>
     </message>
     <message>
         <source>Do you really want to reset all recorded keys? This can not be made undone!</source>
@@ -403,7 +403,7 @@
         <location filename="../Qt/editpianosheetdialog.ui" line="300"/>
         <source>Keys on bass bridge</source>
         <translatorcomment>低音琴桥上的键数</translatorcomment>
-        <translation type="unfinished">低音键数</translation>
+        <translation>低桥键数</translation>
     </message>
 </context>
 <context>
@@ -458,12 +458,13 @@
     <message>
         <location filename="../Qt/logviewer.ui" line="56"/>
         <source>Copy the contents of the log to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>复制日志内容到剪贴板。
+</translation>
     </message>
     <message>
         <location filename="../Qt/logviewer.ui" line="59"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
 </context>
 <context>
@@ -559,21 +560,21 @@
     <message>
         <location filename="../Qt/mainwindow.ui" line="191"/>
         <source>&amp;Clear pitch markers</source>
-        <translation type="unfinished">&amp;清除所有音高标记</translation>
+        <translation>&amp;清除音高标记</translation>
     </message>
     <message>
         <location filename="../Qt/mainwindow.ui" line="194"/>
         <location filename="../Qt/mainwindow.cpp" line="190"/>
         <source>Clear pitch markers</source>
-        <translation type="unfinished">清除所有音高标记</translation>
+        <translation>清除音高标记</translation>
     </message>
     <message>
         <source>&amp;Reset pitch markers</source>
-        <translation type="vanished">&amp;重置所有节距标记</translation>
+        <translation type="vanished">&amp;重置音高标记</translation>
     </message>
     <message>
         <source>Reset pitch markers</source>
-        <translation type="vanished">重置所有节距标记</translation>
+        <translation type="vanished">重置音高标记</translation>
     </message>
     <message>
         <source>&amp;Reset recording</source>
@@ -771,7 +772,7 @@
     <message>
         <location filename="../Qt/mainwindow.cpp" line="807"/>
         <source>The maintenance tool could not be started automatically. To update the program you have to start the maintenance tool manually.</source>
-        <translation>无法自动启动维护工具。要更新程序，您必须手动启动维护工具。</translation>
+        <translation>无法自动启动维护工具。您必须手动升级程序。</translation>
     </message>
     <message>
         <location filename="../Qt/projectmanagerforqt.cpp" line="71"/>
@@ -873,48 +874,48 @@
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="116"/>
         <source>Inh.</source>
-        <translatorcomment>失谐系数</translatorcomment>
-        <translation type="unfinished">失谐系数</translation>
+        <translatorcomment>失谐度</translatorcomment>
+        <translation>失谐度</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="117"/>
         <source>Rec.</source>
         <translatorcomment>录制的</translatorcomment>
-        <translation type="unfinished">录制的</translation>
+        <translation>录制</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="118"/>
         <source>Comp.</source>
         <translatorcomment>计算</translatorcomment>
-        <translation type="unfinished">计算的</translation>
+        <translation>计算</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="119"/>
         <source>Tun.</source>
         <translatorcomment>调律</translatorcomment>
-        <translation type="unfinished">已调律</translation>
+        <translation>调律</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="124"/>
         <source>Tuned</source>
-        <translatorcomment>已调律的</translatorcomment>
-        <translation></translation>
+        <translatorcomment>调律</translatorcomment>
+        <translation>调律</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="121"/>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="283"/>
         <source>Inharmonicity</source>
-        <translation type="unfinished">失谐度</translation>
+        <translation>失谐度</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="122"/>
         <source>Recorded</source>
-        <translation>已录音</translation>
+        <translation>录音</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="123"/>
         <source>Computed</source>
-        <translation>已计算</translation>
+        <translation>计算</translation>
     </message>
     <message>
         <location filename="../Qt/plotsdialog/plotsdialog.cpp" line="137"/>
@@ -932,7 +933,7 @@
     <message>
         <location filename="../Qt/progressdisplay.cpp" line="56"/>
         <source>Synthesizer</source>
-        <translation type="unfinished"></translation>
+        <translation>合成器</translation>
     </message>
 </context>
 <context>
@@ -1018,7 +1019,7 @@
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="149"/>
         <source>A file with the given name already exists at %1. Do you want to overwrite it?</source>
-        <translation type="unfinished">给定文件名已存在 %1.你想复盖吗？</translation>
+        <translation>给定文件名已存在 %1.你想复盖吗？</translation>
     </message>
     <message>
         <location filename="../Qt/simplefiledialog.cpp" line="157"/>
@@ -1066,7 +1067,7 @@
     <message>
         <location filename="../Qt/tuningindicatorgroupbox.cpp" line="27"/>
         <source>Tuning</source>
-        <translation type="unfinished">调律</translation>
+        <translation>调律</translation>
     </message>
 </context>
 <context>
@@ -1074,7 +1075,7 @@
     <message>
         <location filename="../Qt/tuningindicatorview.cpp" line="46"/>
         <source>This is the tuning indicator. Touch this field to toggle between spectral and stroboscopic mode. In the spectral mode you should bring the peak to the center of the window for optimal tuning. When tuning several strings of unisons at once, several peaks might appear and all of them should be tuned to match the center. In the stroboscopic mode several stripes of drifiting rainbows are shown. The stripes represent the partials. Optimal tuning of single strings is obtained when the rainbows come to a halt.</source>
-        <translation type="unfinished"></translation>
+        <translation>这是调律指示器。轻触此区域，可以在频谱和频闪模式之间切换。在频谱模式下，把波峰带到窗口中心为最佳调整。当一次调整几条弦的同度时，会出现几个波峰，它们都应该调整到中心位置。在频闪模式下会显示数条移动的彩虹条纹。每条条纹代表一个谐音。当彩虹条静止时得到单弦的最优调整。</translation>
     </message>
 </context>
 <context>
@@ -1092,7 +1093,7 @@
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="131"/>
         <source>Click this button to mute the speaker or headphone.</source>
-        <translation type="unfinished">点击此按钮使扬声器或耳机静音</translation>
+        <translation>点击此按钮使扬声器或耳机静音</translation>
     </message>
     <message>
         <location filename="../Qt/volumecontrolgroupbox.cpp" line="142"/>
@@ -1132,7 +1133,7 @@
     <name>ZoomedSpectrumGraphicsView</name>
     <message>
         <source>This is the tuning device. You should bring the peak and the indicator bar in the middle of the window for an optimal tuning. When tuning several strings at once, there might appear several peaks. All of them should be tuned to match the center.</source>
-        <translation type="vanished">这是调律装置。在窗口中间带有峰值和指示条以作优化调律用。当一次调整几根弦时，可能会出现几个峰值，所有这些峰都应该被调到匹配的中心。</translation>
+        <translation type="vanished">这是调律器，带波峰和指示条到窗口中心为优化调整，当一次调整几根弦时，可能会出现几个峰值，所有这些峰都应该被调到匹配的中心。</translation>
     </message>
 </context>
 <context>
@@ -1211,12 +1212,12 @@
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="90"/>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>通道数</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="102"/>
         <source>Buffer size</source>
-        <translation type="unfinished"></translation>
+        <translation>缓冲区大小</translation>
     </message>
     <message>
         <location filename="../Qt/options/audio/optionspageaudioinputoutputpage.cpp" line="243"/>
@@ -1317,7 +1318,7 @@
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="48"/>
         <source>Stroboscopic tuning indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>频闪指示器</translation>
     </message>
     <message>
         <location filename="../Qt/options/environment/optionspageenvironmenttuningpage.cpp" line="54"/>
