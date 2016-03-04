@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <dirent.h>
 
 #include "../config.h"
 #include "../system/log.h"
@@ -45,6 +46,7 @@
 
 CalculationManager::CalculationManager()
 {
+    loadAlgorithms("algorithms");
 }
 
 CalculationManager::~CalculationManager()
@@ -53,9 +55,37 @@ CalculationManager::~CalculationManager()
 }
 
 
-CalculationManager &CalculationManager::getSingleton() {
+CalculationManager &CalculationManager::getSingleton()
+{
     static CalculationManager THE_ONE_AND_ONLY;
     return THE_ONE_AND_ONLY;
+}
+
+
+void CalculationManager::loadAlgorithms(const std::string &algorithmsDir)
+{
+    auto has_suffix= [](const std::string &str, const std::string &suffix)
+    {
+        return str.size() >= suffix.size() &&
+               str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+    };
+
+    DIR *dir = opendir(algorithmsDir.c_str());
+    struct dirent *ent;
+    if (!dir) {
+        LogW("Algorithm plugins directory could not be opened.");
+        return;
+    }
+    while ((ent = readdir(dir)) != nullptr) {
+        const std::string filename = ent->d_name;
+        if (has_suffix(filename, ".so") || has_suffix(filename, ".dll") || has_suffix(filename, ".dylib")) {
+          LogI("Reading algorithm %s", ent->d_name);
+
+
+        }
+    }
+
+    closedir(dir);
 }
 
 //-----------------------------------------------------------------------------

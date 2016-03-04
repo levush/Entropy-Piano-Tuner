@@ -54,6 +54,8 @@ class CalculationManager
 private:
     CalculationManager();                       // Constructor
 
+    void loadAlgorithms(const std::string &algorithmsDir);
+
 public:
     virtual ~CalculationManager();              // Destructor
 

@@ -1,8 +1,6 @@
 // The following lines have been added to include RtMidi
 // into the EPT project and to suppress some warnings during compilation.
 
-#include "../../core/config.h"
-#if CONFIG_ENABLE_RTMIDI
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
 
@@ -2847,5 +2845,3 @@ void MidiOutJack :: sendMessage( std::vector<unsigned char> *message )
 }
 
 #endif  // __UNIX_JACK__
-
-#endif

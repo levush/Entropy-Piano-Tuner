@@ -14,8 +14,13 @@ TARGET = entropypianotuner
 TEMPLATE = app
 CONFIG += c++11
 
-INCLUDEPATH += $$PWD/dependencies/include
-INCLUDEPATH += Qt
+include(../entropypianotuner_config.pri)
+
+# path defines
+
+INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
+INCLUDEPATH += $$EPT_THIRDPARTY_DIR
+INCLUDEPATH += Qt core
 
 Release:DESTDIR = release
 Release:OBJECTS_DIR = release/.obj
@@ -30,22 +35,29 @@ Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
 #-------------------------------------------------
-#                    Add Qwt
+#                  Thirdparty dependencies
 #-------------------------------------------------
+LIBS += -L$$EPT_THIRDPARTY_OUT_DIR
 
-QWT_CONFIG += QwtPlot
-include($$PWD/thirdparty/qwt/qwt.pri)
+getmemorysize {
+    LIBS += -lgetmemorysize
+}
 
-QWT_H = $$HEADERS
-HEADERS =
+qwt {
+    LIBS += -lqwt
+}
 
-QWT_S = $$SOURCES
-SOURCES =
+rtmidi {
+    LIBS += -lRtMidi
+}
 
-for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
-for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
-INCLUDEPATH += $$PWD/thirdparty/qwt
+timesupport {
+    LIBS += -ltimesupport
+}
 
+tinyxml2 {
+    LIBS += -ltinyxml2
+}
 
 #-------------------------------------------------
 #                      Apple
@@ -535,23 +547,6 @@ CORE_SOURCES = \
     core/core.cpp \
     core/settings.cpp \
 
-#-------------------------------------------------
-#                Third party files
-#-------------------------------------------------
-
-THIRD_PARTY_HEADERS = \
-    thirdparty/RtMidi/RtMidi.h \
-    thirdparty/tinyxml2/tinyxml2.h \
-    thirdparty/timesupport/timesupport.h \
-    thirdparty/getMemorySize/getmemorysize.h \
-
-THIRD_PARTY_SOURCES = \
-    thirdparty/RtMidi/RtMidi.cpp \
-    thirdparty/tinyxml2/tinyxml2.cpp \
-    thirdparty/timesupport/timesupport.cpp \
-    thirdparty/getMemorySize/getmemorysize.cpp \
-
-
 #---------------- complete --------------------
 
 HEADERS += \
@@ -566,7 +561,6 @@ HEADERS += \
     $$CORE_PIANO_HEADERS \
     $$CORE_CALCULATION_HEADERS \
     $$CORE_SYSTEM_HEADERS \
-    $$THIRD_PARTY_HEADERS \
 
 SOURCES += \
     $$CORE_SOURCES \
@@ -580,7 +574,6 @@ SOURCES += \
     $$CORE_PIANO_SOURCES \
     $$CORE_CALCULATION_SOURCES \
     $$CORE_SYSTEM_SOURCES \
-    $$THIRD_PARTY_SOURCES \
 
 #-------------------------------------------------
 #                   ANDROID
@@ -623,10 +616,10 @@ FORMS += \
     Qt/editpianosheetdialog.ui
 
 RESOURCES += \
-    $$PWD/translations/languages.qrc \
     $$PWD/media/media.qrc \
-    $$PWD/tutorial/tutorial.qrc \
-    $$PWD/algorithms/algorithms.qrc
+    $$EPT_TUTORIAL_DIR/tutorial.qrc \
+    $$EPT_TRANSLATIONS_DIR/languages.qrc \
+    $$EPT_ROOT_DIR/algorithms/algorithms.qrc
 
 
 

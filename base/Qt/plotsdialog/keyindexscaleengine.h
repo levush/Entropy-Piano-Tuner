@@ -17,26 +17,23 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef KEYINDEXSCALEDRAW_H
-#define KEYINDEXSCALEDRAW_H
+#ifndef KEYINDEXSCALEENGINE_H
+#define KEYINDEXSCALEENGINE_H
 
-#include "qwt_scale_draw.h"
+#include <qwt/qwt_scale_engine.h>
+#include <qwt/qwt_scale_div.h>
 
-class KeyIndexScaleDraw : public QObject, public QwtScaleDraw
+class KeyIndexScaleEngine : public QwtScaleEngine
 {
-    Q_OBJECT
 public:
-    KeyIndexScaleDraw();
+    KeyIndexScaleEngine(int maxKeys, int keyOffset);
 
-
-protected:
-    virtual void drawLabel(QPainter *p, double val) const override;
-
-public slots:
-    void setKeyWidth(double d) {mKeyWidth = d;}
+    virtual void autoScale(int maxNumSteps, double &x1, double &x2, double &stepSize) const override final;
+    virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize=0.0) const override final;
 
 private:
-    double mKeyWidth = 0;
+    const int mMaxKeys;
+    const int mKeyOffset;
 };
 
-#endif // KEYINDEXSCALEDRAW_H
+#endif // KEYINDEXSCALEENGINE_H

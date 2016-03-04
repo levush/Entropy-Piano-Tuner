@@ -1,8 +1,3 @@
-// The following line was added to include the configuration macros
-#include "../../core/config.h"
-
-//------------ Original RTMidi source starts below this line------------
-
 /**********************************************************************/
 /*! \class RtMidi
     \brief An abstract base class for realtime MIDI input/output.

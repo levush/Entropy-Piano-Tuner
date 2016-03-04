@@ -20,8 +20,8 @@
 #ifndef CENTRALPLOTFRAME_H
 #define CENTRALPLOTFRAME_H
 
-#include "qwt_plot.h"
-#include "qwt_plot_zoomer.h"
+#include "qwt/qwt_plot.h"
+#include "qwt/qwt_plot_zoomer.h"
 #include <QTouchEvent>
 #include <QTime>
 

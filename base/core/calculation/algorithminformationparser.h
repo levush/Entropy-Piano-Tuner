@@ -17,33 +17,24 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "platformtoolscore.h"
-#include "core/config.h"
-#include "core/system/eptexception.h"
-#include "core/audio/midi/NoMidiimplementation.h"
-#include "core/audio/midi/RtMidiimplementation.h"
-#include "thirdparty/getMemorySize/getmemorysize.h"
+#ifndef ALGORITHMINFORMATIONPARSER_H
+#define ALGORITHMINFORMATIONPARSER_H
 
-PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
+#include <string>
+#include <memory>
 
-PlatformToolsCore::PlatformToolsCore() {
-    EptAssert(!mSingletonPtr, "Singleton for platform tools core may not be created.");
-    mSingletonPtr = this;
-}
+#include "tinyxml2/tinyxml2.h"
 
-PlatformToolsCore *PlatformToolsCore::getSingleton() {
-    return mSingletonPtr;
-}
+#include "algorithminformation.h"
 
-std::shared_ptr<MidiAdapter> PlatformToolsCore::createMidiAdapter() const
+class AlgorithmInformationParser
 {
-#if CONFIG_ENABLE_RTMIDI
-    return std::make_shared<RtMidiImplementation>();
-#else
-    return std::make_shared<NoMidiImplementation>();
-#endif
-}
+public:
+    std::shared_ptr<const AlgorithmInformation> parse(const std::string &algorithmId) const;
 
-unsigned long long PlatformToolsCore::getInstalledPhysicalMemoryInB() const {
-    return getMemorySize();
-}
+private:
+    std::string parseLanguageString(const tinyxml2::XMLElement *element) const;
+    AlgorithmParameterDescription parseAlgorithmParameter(const tinyxml2::XMLElement *element) const;
+};
+
+#endif // ALGORITHMINFORMATIONPARSER_H

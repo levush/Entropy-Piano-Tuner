@@ -32,7 +32,7 @@
 
 #if CONFIG_ENABLE_RTMIDI
 
-#include "../../thirdparty/RtMidi/RtMidi.h"
+#include "RtMidi/RtMidi.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Interface for reading an externally connected MIDI keyboard.
