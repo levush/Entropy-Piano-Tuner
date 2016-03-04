@@ -23,6 +23,7 @@
 #include <string>
 #include <memory>
 
+#include "algorithmplugin.h"
 #include "algorithmfactorydescription.h"
 
 class Algorithm;
@@ -62,11 +63,13 @@ class AlgorithmFactory : public AlgorithmFactoryBase
 private:
     static const AlgorithmFactory mSingleton;
 
-protected:
+public:
     AlgorithmFactory(const AlgorithmFactoryDescription &description)
         : AlgorithmFactoryBase(description)
     {
     }
+
+protected:
 
     virtual std::unique_ptr<Algorithm> createAlgorithm(const Piano &piano) {
         // create the alogrithm with all required params set

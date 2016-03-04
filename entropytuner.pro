@@ -504,6 +504,7 @@ CORE_PIANO_SOURCES = \
 
 CORE_CALCULATION_HEADERS = \
     core/calculation/calculationmanager.h \
+    core/calculation/algorithmplugin.h \
     core/calculation/algorithm.h \
     core/calculation/algorithmfactory.h \
     core/calculation/algorithmfactorydescription.h \

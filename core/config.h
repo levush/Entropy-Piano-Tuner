@@ -50,7 +50,10 @@
 #define EPT_WHATS_THIS_ENABLED         1
 
 // Exclude the example algorithm
-#define EPT_EXCLUDE_EXAMPLE_ALGORITHM  1
+#define EPT_EXCLUDE_EXAMPLE_ALGORITHM  0
+
+// Build using shared libraries for plugins
+#define EPT_SHARED_LIBRARY
 
 #if __ANDROID__
 //=============================================================================
@@ -119,6 +122,17 @@
 
 #ifndef CONFIG_DIALOG_SIZE
 #   define CONFIG_DIALOG_SIZE 1
+#endif
+
+// export defines
+#ifdef WIN32
+# ifndef EPT_SHARED_LIBRARY
+#   define EPT_EXTERN __declspec(dllexport)
+# else
+#   define EPT_EXTERN __declspec(dllimport)
+# endif
+#else
+# define EPT_EXTERN // nothing
 #endif
 
 #endif // CONFIG

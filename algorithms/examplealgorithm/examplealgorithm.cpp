@@ -22,6 +22,8 @@
 // include the factory we will create later
 #include "core/calculation/algorithmfactory.h"
 
+ALGORITHM_PLUGIN(AlgorithmFactory<examplealgorithm::ExampleAlgorithm>, AlgorithmFactoryDescription("examplealgorithm"), "1.0.0")
+
 // this line adds a factory for this algorithm and automatically registers it with the given name
 // to the calculation manager
 template<>
