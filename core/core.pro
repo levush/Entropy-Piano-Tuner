@@ -15,6 +15,7 @@ DESTDIR = $$EPT_CORE_OUT_DIR
 
 INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR
 
+r=$$depends_fftw3()
 r=$$depends_getmemorysize()
 r=$$depends_libuv()
 r=$$depends_rtmidi()

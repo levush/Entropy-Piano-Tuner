@@ -6,7 +6,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia
+QT       += core gui multimedia svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -75,6 +75,7 @@ LIBS += -L$$EPT_CORE_OUT_DIR -lcore
 #-------------------------------------------------
 #                  Thirdparty dependencies
 #-------------------------------------------------
+r=$$depends_fftw3()
 r=$$depends_getmemorysize()
 r=$$depends_libuv()
 r=$$depends_qwt()
@@ -208,7 +209,7 @@ win32|win32-g++ {
 
 # linux libs
 linux-g++*:!android {
-    LIBS += -lfftw3 -lasound
+    LIBS += -lasound
 
     # older version needs explicit cxx flag
     QMAKE_CXXFLAGS += -std=c++11
@@ -218,9 +219,7 @@ linux-g++*:!android {
 }
 # android libs
 android {
-    LIBS += -lfftw3
     QT += androidextras
-    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platforms/android
 }
 
 #-------------------------------------------------
@@ -366,22 +365,22 @@ SOURCES +=  \
 
 # add android files
 android {
-    include($$PWD/platforms/android/android.pri)
+    include($$EPT_BASE_DIR/platforms/android/android.pri)
 }
 
 # add ios files
 ios {
-    include($$PWD/platforms/ios/ios.pri)
+    include($$EPT_BASE_DIR/platforms/ios/ios.pri)
 }
 
 # add macx files
 macx {
-    include($$PWD/platforms/osx/osx.pri)
+    include($$EPT_BASE_DIR/platforms/osx/osx.pri)
 }
 
 # add windows files
 win32 {
-    include($$PWD/platforms/windows/windows.pri)
+    include($$EPT_BASE_DIR/platforms/windows/windows.pri)
 }
 
 # add applenativewrapper files

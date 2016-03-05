@@ -4,6 +4,13 @@ include(../entropypianotuner_config.pri)
 
 # note: double sub dirs are required to disable conflict with system
 #       library headers (e.g. linux systems)
+
+fftw3 {
+    !contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+        SUBDIRS += fftw3
+    }
+}
+
 libuv {
     !contains(EPT_THIRDPARTY_CONFIG, system_libuv) {
         SUBDIRS += libuv/libuv
@@ -33,3 +40,5 @@ tinyxml2 {
         SUBDIRS += tinyxml2/tinyxml2
     }
 }
+
+

@@ -1,6 +1,8 @@
 #include "sharedlibrary.h"
 #include "core/system/eptexception.h"
 
+#ifdef EPT_SHARED_ALGORITHMS
+
 SharedLibrary::SharedLibrary(const std::string &path) :
     mOpen(false),
     mPath(path) {
@@ -39,3 +41,5 @@ bool SharedLibrary::sym(const char *name, void **ptr) {
     }
     return true;
 }
+
+#endif

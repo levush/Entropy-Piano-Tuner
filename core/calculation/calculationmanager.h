@@ -82,7 +82,9 @@ public:
     void setCurrentAlgorithmInformationById(const std::string &algorithmName) {mCurrentAlgorithmInformation = loadAlgorithmInformation(algorithmName);}
 
 private:
+#ifdef EPT_SHARED_ALGORITHMS
     std::vector<SharedLibraryPtr> mLoadedAlgorithmLibraries;
+#endif
     std::map<std::string, AlgorithmFactoryBase*> mAlgorithms;
     std::unique_ptr<Algorithm> mCurrentAlgorithm;
     std::shared_ptr<const AlgorithmInformation> mCurrentAlgorithmInformation;  ///< The current algorithm to use

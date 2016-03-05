@@ -11,8 +11,11 @@ CONFIG(debug, debug|release) {
 # on mobile platforms build all plugins/libs static
 android|ios {
     message(Enabling all static build)
-    EPT_CONFIG += allstatic
+    EPT_CONFIG += allstatic no_shared_algorithms
 }
+
+# add default config
+!contains(EPT_CONFIG, no_shared_algorithms):EPT_CONFIG+=shared_algorithms
 
 #------------------------------------------------
 # Path defines
@@ -31,9 +34,16 @@ EPT_THIRDPARTY_OUT_DIR = $$shadowed($$PWD)/lib
 EPT_CORE_OUT_DIR = $$shadowed($$PWD)
 EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 
+EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_ROOT_DIR/platforms/android
+
 #------------------------------------------------
 # third party modules
-CONFIG += tinyxml2 qwt libuv
+CONFIG += tinyxml2 qwt fftw3
+
+# add libuv when shared algorithms are enabled
+contains(EPT_CONFIG, shared_algorithms) {
+    CONFIG += libuv
+}
 
 win32 {
     CONFIG += timesupport getmemorysize rtmidi
@@ -67,5 +77,8 @@ linux-g++*:!android {
 contains(EPT_CONFIG, allstatic) {
     DEFINES += "EPT_ALL_STATIC=1"
 }
+
+contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1"
+contains(EPT_CONFIG, shared_algorithms):DEFINES+="EPT_SHARED_ALGORITHMS=1"
 
 LIBS += -L$$EPT_THIRDPARTY_OUT_DIR

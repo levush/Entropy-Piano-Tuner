@@ -16,7 +16,7 @@ SOURCES += \
 
 HEADERS += include/uv.h include/uv-errno.h include/uv-threadpool.h include/uv-version.h
 
-linux {
+linux|android {
     # unix specific
     SOURCES += \
                    src/unix/async.c \

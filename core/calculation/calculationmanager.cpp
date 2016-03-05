@@ -74,6 +74,9 @@ void CalculationManager::loadAlgorithms()
 
 void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorithmsDirs)
 {
+#ifdef EPT_NO_SHARED_ALGORITHMS
+    (void)algorithmsDirs;  // empty function
+#else
     auto has_suffix= [](const std::string &str, const std::string &suffix)
     {
         return str.size() >= suffix.size() &&
@@ -138,10 +141,13 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
 
         closedir(dir);
     }
+#endif
 }
 
 void CalculationManager::unloadAllAlgorithms() {
+#ifdef EPT_SHARED_ALGORITHMS
     mLoadedAlgorithmLibraries.clear();
+#endif
 }
 
 //-----------------------------------------------------------------------------

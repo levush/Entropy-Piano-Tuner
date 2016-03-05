@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 
+#ifdef EPT_SHARED_ALGORITHMS
+
 #include "uv.h"
 
 #include "log.h"
@@ -30,5 +32,7 @@ private:
 };
 
 typedef std::shared_ptr<SharedLibrary> SharedLibraryPtr;
+
+#endif
 
 #endif // SHAREDLIBRARY_H

@@ -9,9 +9,6 @@
 
 # custom settings
 include( ../../../entropypianotuner_config.pri )
-contains(EPT_CONFIG, allstatic) {
-    QWT_CONFIG -= QwtDll
-}
 
 # qmake project file for building the qwt libraries
 
@@ -20,6 +17,12 @@ include( $${QWT_ROOT}/qwtconfig.pri )
 include( $${QWT_ROOT}/qwtbuild.pri )
 include( $${QWT_ROOT}/qwtfunctions.pri )
 
+# ----------------------------------------------
+# custom define for static/dynamic build
+contains(EPT_CONFIG, allstatic) {
+    QWT_CONFIG -= QwtDll
+}
+# ----------------------------------------------
 
 TEMPLATE          = lib
 TARGET            = $$qwtLibraryTarget(qwt)
@@ -28,7 +31,6 @@ DESTDIR           = $$EPT_THIRDPARTY_OUT_DIR
 
 
 contains(QWT_CONFIG, QwtDll) {
-
     CONFIG += dll
     win32|symbian: DEFINES += QT_DLL QWT_DLL QWT_MAKEDLL
 }

@@ -24,7 +24,7 @@
 #   error "This file may only be included on android builds."
 #endif
 
-#include "Qt/platformtools.h"
+#include "app/platformtools.h"
 
 class AndroidPlatformTools : public PlatformToolsImplementation<AndroidPlatformTools> {
 private:

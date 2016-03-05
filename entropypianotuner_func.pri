@@ -1,5 +1,18 @@
 include($$PWD//entropypianotuner_config.pri)
 
+defineReplace(depends_fftw3) {
+    fftw3 {
+        !contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/fftw3/fftw3/api
+        }
+
+        LIBS += -lfftw
+    }
+
+    export(INCLUDEPATH)
+    export(LIBS)
+}
+
 defineReplace(depends_getmemorysize) {
     getmemorysize {
         !contains(EPT_THIRDPARTY_CONFIG, system_getmemorysize) {
@@ -20,7 +33,7 @@ defineReplace(depends_libuv) {
         }
 
         LIBS += -luv
-        linux:!android {
+        linux {
             LIBS += -ldl
         }
     }
