@@ -53,7 +53,7 @@ linux:!android {
     CONFIG += getmemorysize rtmidi
 
     # on linux target use library from system
-    EPT_THIRDPARTY_CONFIG += system_qwt system_tinyxml2 system_libuv
+    EPT_THIRDPARTY_CONFIG += system_fftw3 system_qwt system_tinyxml2 system_libuv
 
     # there seems to be a bug in the RtMidi dependencies which is why
     # we compile this library on our own.
