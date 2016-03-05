@@ -15,6 +15,7 @@ TEMPLATE = app
 CONFIG += c++11
 
 include(../entropypianotuner_config.pri)
+include(../entropypianotuner_func.pri)
 
 # path defines
 
@@ -22,13 +23,13 @@ INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
 INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
 
-Release:DESTDIR = release
+DESTDIR = $$EPT_CORE_OUT_DIR
+
 Release:OBJECTS_DIR = release/.obj
 Release:MOC_DIR = release/.moc
 Release:RCC_DIR = release/.rcc
 Release:UI_DIR = release/.ui
 
-Debug:DESTDIR = debug
 Debug:OBJECTS_DIR = debug/.obj
 Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
@@ -74,36 +75,13 @@ LIBS += -L$$EPT_CORE_OUT_DIR -lcore
 #-------------------------------------------------
 #                  Thirdparty dependencies
 #-------------------------------------------------
-LIBS += -L$$EPT_THIRDPARTY_OUT_DIR
+r=$$depends_getmemorysize()
+r=$$depends_libuv()
+r=$$depends_qwt()
+r=$$depends_rtmidi()
+r=$$depends_timesupport()
+r=$$depends_tinyxml2()
 
-getmemorysize {
-    LIBS += -lgetmemorysize
-}
-
-libuv {
-    LIBS += -luv
-    linux {
-        LIBS += -ldl
-    }
-    win32 {
-    }
-}
-
-qwt {
-    LIBS += -lqwt
-}
-
-rtmidi {
-    LIBS += -lRtMidi
-}
-
-timesupport {
-    LIBS += -ltimesupport
-}
-
-tinyxml2 {
-    LIBS += -ltinyxml2
-}
 
 #-------------------------------------------------
 #                      Apple

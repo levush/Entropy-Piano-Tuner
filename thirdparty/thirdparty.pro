@@ -2,26 +2,34 @@ TEMPLATE = subdirs
 
 include(../entropypianotuner_config.pri)
 
+# note: double sub dirs are required to disable conflict with system
+#       library headers (e.g. linux systems)
 libuv {
-    SUBDIRS += libuv
+    !contains(EPT_THIRDPARTY_CONFIG, system_libuv) {
+        SUBDIRS += libuv/libuv
+    }
 }
 
 qwt {
-    SUBDIRS += qwt
+    !contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
+        SUBDIRS += qwt/qwt
+    }
 }
 
 getmemorysize {
-    SUBDIRS += getmemorysize
+    SUBDIRS += getmemorysize/getmemorysize
 }
 
 rtmidi {
-    SUBDIRS += RtMidi
+    SUBDIRS += rtmidi/RtMidi
 }
 
 timesupport {
-    SUBDIRS += timesupport
+    SUBDIRS += timesupport/timesupport
 }
 
 tinyxml2 {
-    SUBDIRS += tinyxml2
+    !contains(EPT_THIRDPARTY_CONFIG, system_tinyxml2) {
+        SUBDIRS += tinyxml2/tinyxml2
+    }
 }

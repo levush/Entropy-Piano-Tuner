@@ -1,4 +1,5 @@
 include(../entropypianotuner_config.pri)
+include(../entropypianotuner_func.pri)
 
 TEMPLATE = lib
 
@@ -12,7 +13,13 @@ CONFIG += c++11
 
 DESTDIR = $$EPT_CORE_OUT_DIR
 
-INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$EPT_THIRDPARTY_DIR
+INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR
+
+r=$$depends_getmemorysize()
+r=$$depends_libuv()
+r=$$depends_rtmidi()
+r=$$depends_timesupport()
+r=$$depends_tinyxml2()
 
 
 #-------------------------------------------------

@@ -96,6 +96,6 @@ win32 {
 
 INCLUDEPATH += include src
 
-include(../../entropypianotuner_config.pri)
+include(../../../entropypianotuner_config.pri)
 
 DESTDIR = $$EPT_THIRDPARTY_OUT_DIR

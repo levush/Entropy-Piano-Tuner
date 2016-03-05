@@ -1,4 +1,5 @@
 include($$PWD/entropypianotuner_config.pri)
+include($$PWD/entropypianotuner_func.pri)
 
 TEMPLATE = subdirs
 

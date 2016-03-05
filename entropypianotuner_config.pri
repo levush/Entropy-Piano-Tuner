@@ -1,6 +1,8 @@
 #------------------------------------------------
 # Global config
 
+CONFIG += c++11
+
 # include example algorithm by default in debug builts
 CONFIG(debug, debug|release) {
     EPT_CONFIG += include_example_algorithm
@@ -34,11 +36,21 @@ EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 CONFIG += tinyxml2 qwt libuv
 
 win32 {
-    CONFIG += timesupport memorysize rtmidi
+    CONFIG += timesupport getmemorysize rtmidi
 }
 
-linux {
+linux:!android {
     CONFIG += getmemorysize rtmidi
+
+    # on linux target use library from system
+    EPT_THIRDPARTY_CONFIG += system_qwt system_tinyxml2 system_libuv
+
+    # there seems to be a bug in the RtMidi dependencies which is why
+    # we compile this library on our own.
+}
+
+android {
+    CONFIG += getmemorysize
 }
 
 macx {
@@ -47,7 +59,6 @@ macx {
 
 #--------------------------------------------------
 # global settings
-CONFIG += c++11
 
 linux-g++*:!android {
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
@@ -56,3 +67,5 @@ linux-g++*:!android {
 contains(EPT_CONFIG, allstatic) {
     DEFINES += "EPT_ALL_STATIC=1"
 }
+
+LIBS += -L$$EPT_THIRDPARTY_OUT_DIR

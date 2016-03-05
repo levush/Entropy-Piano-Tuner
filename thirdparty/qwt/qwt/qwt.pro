@@ -8,7 +8,7 @@
 ################################################################
 
 # custom settings
-include( ../../entropypianotuner_config.pri )
+include( ../../../entropypianotuner_config.pri )
 contains(EPT_CONFIG, allstatic) {
     QWT_CONFIG -= QwtDll
 }

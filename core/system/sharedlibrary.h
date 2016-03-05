@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "libuv/include/uv.h"
+#include "uv.h"
 
 #include "log.h"
 
