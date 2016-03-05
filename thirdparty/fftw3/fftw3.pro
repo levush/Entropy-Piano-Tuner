@@ -1,23 +1,10 @@
-include(../../entropypianotuner_config.pri)
+include(../../entropypianotuner_func.pri)
+$$declareSharedLibrary()
 
-TEMPLATE = lib
 TARGET = fftw
-
-DESTDIR  = $$EPT_THIRDPARTY_OUT_DIR
-
 
 # configuration
 # ----------------------------------------------------------
-# we use c++11 and no qt
-CONFIG += noqt c++11
-CONFIG -= qt
-
-# static or shared lib
-contains(EPT_CONFIG, allstatic) {
-    CONFIG += staticlib
-} else {
-    CONFIG += dll
-}
 
 # some files have the same name, this will prevent naming
 # conflicts when generating the object files

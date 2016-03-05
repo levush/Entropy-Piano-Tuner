@@ -1,8 +1,11 @@
-TEMPLATE = lib
+include(../../../entropypianotuner_func.pri)
+$$declareStaticLibrary()
+
+# library settings for uv
 
 TARGET = uv
 
-CONFIG += staticlib c++11
+INCLUDEPATH += include src
 
 SOURCES += \
         src/fs-poll.c \
@@ -92,10 +95,3 @@ win32 {
 
     LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv
 }
-
-
-INCLUDEPATH += include src
-
-include(../../../entropypianotuner_config.pri)
-
-DESTDIR = $$EPT_THIRDPARTY_OUT_DIR

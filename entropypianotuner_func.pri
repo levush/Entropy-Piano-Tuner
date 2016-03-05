@@ -1,5 +1,58 @@
 include($$PWD//entropypianotuner_config.pri)
 
+defineReplace(declareStaticLibrary) {
+    libname = $$1
+
+    TEMPLATE = lib
+    CONFIG += staticlib c++11 noqt
+    CONFIG -= qt
+    DESTDIR = $$EPT_THIRDPARTY_OUT_DIR
+
+    !isEmpty(libname) {
+        SOURCES += $${libname}.cpp
+        HEADERS += $${libname}.h
+    }
+
+    export(TEMPLATE)
+    export(CONFIG)
+    export(DESTDIR)
+    export(SOURCES)
+    export(HEADERS)
+
+    return(true)
+}
+
+defineReplace(declareSharedLibrary) {
+    libname = $$1
+
+    TEMPLATE = lib
+
+    # static or shared lib
+    contains(EPT_CONFIG, allstatic) {
+        CONFIG += staticlib
+    } else {
+        CONFIG += dll
+    }
+
+    CONFIG += c++11 noqt
+    CONFIG -= qt
+
+    DESTDIR = $$EPT_THIRDPARTY_OUT_DIR
+
+    !isEmpty(libname) {
+        SOURCES += $${libname}.cpp
+        HEADERS += $${libname}.h
+    }
+
+    export(TEMPLATE)
+    export(CONFIG)
+    export(DESTDIR)
+    export(SOURCES)
+    export(HEADERS)
+
+    return(true)
+}
+
 defineReplace(depends_fftw3) {
     fftw3 {
         !contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
@@ -11,6 +64,8 @@ defineReplace(depends_fftw3) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }
 
 defineReplace(depends_getmemorysize) {
@@ -24,6 +79,8 @@ defineReplace(depends_getmemorysize) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }
 
 defineReplace(depends_libuv) {
@@ -40,6 +97,8 @@ defineReplace(depends_libuv) {
 
     export(LIBS)
     export(INCLUDEPATH)
+
+    return(true)
 }
 
 defineReplace(depends_qwt) {
@@ -54,6 +113,8 @@ defineReplace(depends_qwt) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }
 
 defineReplace(depends_rtmidi) {
@@ -67,6 +128,8 @@ defineReplace(depends_rtmidi) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }
 
 defineReplace(depends_timesupport) {
@@ -80,6 +143,8 @@ defineReplace(depends_timesupport) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }
 
 defineReplace(depends_tinyxml2) {
@@ -93,4 +158,6 @@ defineReplace(depends_tinyxml2) {
 
     export(INCLUDEPATH)
     export(LIBS)
+
+    return(true)
 }

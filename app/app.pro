@@ -43,7 +43,7 @@ contains(EPT_CONFIG, allstatic) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR
 
-    ALG_FILE_H = "// This file was generated automatically"
+    ALG_FILE_CPP = "// This file was generated automatically"
 
     algorithmDirs = $$files($$EPT_ALGORITHMS_DIR/*)
     for(algorithmDir, algorithmDirs) {
@@ -56,15 +56,15 @@ contains(EPT_CONFIG, allstatic) {
                 message(Adding algorithm $$algBasename)
                 LIBS += -l$$algBasename
 
-                ALG_FILE_H = $$join(ALG_FILE_H,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
-                ALG_FILE_H = $$join(ALG_FILE_H,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
+                ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
+                ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
             }
         }
     }
 
     OUT_FILE = $$OUT_PWD/algorithms.gen.cpp
 
-    write_file($$OUT_FILE, ALG_FILE_H)
+    write_file($$OUT_FILE, ALG_FILE_CPP)
     SOURCES += $$OUT_FILE
 }
 
@@ -75,13 +75,13 @@ LIBS += -L$$EPT_CORE_OUT_DIR -lcore
 #-------------------------------------------------
 #                  Thirdparty dependencies
 #-------------------------------------------------
-r=$$depends_fftw3()
-r=$$depends_getmemorysize()
-r=$$depends_libuv()
-r=$$depends_qwt()
-r=$$depends_rtmidi()
-r=$$depends_timesupport()
-r=$$depends_tinyxml2()
+$$depends_fftw3()
+$$depends_getmemorysize()
+$$depends_libuv()
+$$depends_qwt()
+$$depends_rtmidi()
+$$depends_timesupport()
+$$depends_tinyxml2()
 
 
 #-------------------------------------------------
