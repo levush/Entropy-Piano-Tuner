@@ -24,12 +24,10 @@
 #ifndef ENTROPYMINIMIZER_H
 #define ENTROPYMINIMIZER_H
 
-#include "core/calculation/algorithm.h"
-#include "core/messages/messagelistener.h"
+#include "core/calculation/algorithmplugin.h"
 
 /// Namespace for all entropy minimizer components
-namespace entropyminimizer
-{
+ALGORITHM_H_START(entropyminimizer, "1.0.0")
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Iterative entropy minimization algorithm
@@ -105,6 +103,7 @@ protected:
     void writeSpectrum(int k, std::string filename, int pitch=0);
 };
 
-}  // namespace entropyminimizer
+ALGORITHM_H_END(EntropyMinimizer)
+
 
 #endif // ENTROPYMINIMIZER_H

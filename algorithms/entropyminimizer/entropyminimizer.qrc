@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/algorithms">
+        <file>entropyminimizer.xml</file>
+    </qresource>
+</RCC>

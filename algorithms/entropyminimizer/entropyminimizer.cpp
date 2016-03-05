@@ -28,7 +28,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include "core/calculation/algorithmfactory.h"
 #include "core/system/eptexception.h"
 #include "core/piano/piano.h"
 #include "core/math/mathtools.h"
@@ -40,18 +39,8 @@
 
 #include "auditorypreprocessing.h"
 
-//=============================================================================
-//                        Create algorithm factory
-//=============================================================================
 
-template<>
-const AlgorithmFactory<entropyminimizer::EntropyMinimizer>
-      AlgorithmFactory<entropyminimizer::EntropyMinimizer>::mSingleton(
-        AlgorithmFactoryDescription("entropyminimizer"));
-
-namespace entropyminimizer
-{
-
+ALGORITHM_CPP_START(entropyminimizer)
 
 //-----------------------------------------------------------------------------
 //                             Constructor
@@ -799,5 +788,4 @@ void EntropyMinimizer::writeSpectrum (int k,std::string filename, int pitch)
 #endif // CONFIG_ENABLE_XMGRACE
 }
 
-
-}  // namespace entropy minimizer
+ALGORITHM_CPP_END

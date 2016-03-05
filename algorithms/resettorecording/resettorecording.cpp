@@ -22,16 +22,9 @@
 //=============================================================================
 
 #include "resettorecording.h"
-#include "core/calculation/algorithmfactory.h"
 #include "core/system/log.h"
 
-template<>
-const AlgorithmFactory<resettorecording::ResetToRecording> AlgorithmFactory<resettorecording::ResetToRecording>::mSingleton(
-        AlgorithmFactoryDescription("resettorecording"));
-
-
-namespace resettorecording
-{
+ALGORITHM_CPP_START(resettorecording)
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -74,5 +67,4 @@ void ResetToRecording::algorithmWorkerFunction()
     }
 }
 
-
-}  // end of namespace resettorecording
+ALGORITHM_CPP_END

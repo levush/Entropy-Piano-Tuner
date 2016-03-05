@@ -24,20 +24,10 @@
 #include "pitchraise.h"
 
 #include "core/math/mathtools.h"
-#include "core/calculation/algorithmfactory.h"
 #include "core/messages/messagehandler.h"
 #include "core/messages/messagecaluclationprogress.h"
 
-//=============================================================================
-//                        Create algorithm factory
-//=============================================================================
-
-template<>
-const AlgorithmFactory<pitchraise::PitchRaise> AlgorithmFactory<pitchraise::PitchRaise>::mSingleton(
-        AlgorithmFactoryDescription("pitchraise"));
-
-namespace pitchraise
-{
+ALGORITHM_CPP_START(pitchraise)
 
 //-----------------------------------------------------------------------------
 //                             Constructor
@@ -234,6 +224,4 @@ void PitchRaise::algorithmWorkerFunction()
     }
 }
 
-
-
-}  // namespace pitchraise
+ALGORITHM_CPP_END

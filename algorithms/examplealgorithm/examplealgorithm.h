@@ -24,11 +24,10 @@
 #ifndef EXAMPLEALGORITHM_H
 #define EXAMPLEALGORITHM_H
 
-#include "core/calculation/algorithm.h"
+#include "core/calculation/algorithmplugin.h"
 
 // each algorithm has to be in its own namespace to prevent naming conflits
-namespace examplealgorithm
-{
+ALGORITHM_H_START(examplealgorithm, "1.0.0")
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Basic class to show how to implement own algorithms.
@@ -50,7 +49,7 @@ private:
     const double mConcertPitchParam;
 };
 
-}  // namespace examplealgorithm
+ALGORITHM_H_END(ExampleAlgorithm)
 
 
 #endif // EXAMPLEALGORITHM_H

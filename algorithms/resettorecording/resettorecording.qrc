@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/algorithms">
+        <file>resettorecording.xml</file>
+    </qresource>
+</RCC>

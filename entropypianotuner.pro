@@ -3,10 +3,11 @@ include($$PWD/entropypianotuner_config.pri)
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    base \
+    app \
+    core \
     algorithms \
     thirdparty \
 
-
-algorithms.depends = base
-base.depends = thirdparty
+app.depends = core algorithms thirdparty
+core.depends = thirdparty
+algorithms.depends = core

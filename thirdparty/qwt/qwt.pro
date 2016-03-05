@@ -7,19 +7,25 @@
 # modify it under the terms of the Qwt License, Version 1.0
 ################################################################
 
+# custom settings
+include( ../../entropypianotuner_config.pri )
+contains(EPT_CONFIG, allstatic) {
+    QWT_CONFIG -= QwtDll
+}
+
 # qmake project file for building the qwt libraries
 
 QWT_ROOT = $${PWD}
 include( $${QWT_ROOT}/qwtconfig.pri )
 include( $${QWT_ROOT}/qwtbuild.pri )
 include( $${QWT_ROOT}/qwtfunctions.pri )
-include( ../../entropypianotuner_config.pri )
 
 
 TEMPLATE          = lib
 TARGET            = $$qwtLibraryTarget(qwt)
 
 DESTDIR           = $$EPT_THIRDPARTY_OUT_DIR
+
 
 contains(QWT_CONFIG, QwtDll) {
 

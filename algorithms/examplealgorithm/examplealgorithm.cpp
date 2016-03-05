@@ -19,20 +19,7 @@
 
 #include "examplealgorithm.h"
 
-// include the factory we will create later
-#include "core/calculation/algorithmfactory.h"
-
-ALGORITHM_PLUGIN(AlgorithmFactory<examplealgorithm::ExampleAlgorithm>, AlgorithmFactoryDescription("examplealgorithm"), "1.0.0")
-
-// this line adds a factory for this algorithm and automatically registers it with the given name
-// to the calculation manager
-template<>
-const AlgorithmFactory<examplealgorithm::ExampleAlgorithm> AlgorithmFactory<examplealgorithm::ExampleAlgorithm>::mSingleton(
-        AlgorithmFactoryDescription("examplealgorithm"));
-
-// namespace of the algorithm to prevent naming conflicts
-namespace examplealgorithm
-{
+ALGORITHM_CPP_START(examplealgorithm)
 
 // constructor that expects the originam piano. This piano will be copied into mPiano which is why
 // you may do any changes to mPiano because it doesnt change the actual one.
@@ -73,4 +60,4 @@ void ExampleAlgorithm::algorithmWorkerFunction()
     }
 }
 
-}  // namespace examplealgorithm
+ALGORITHM_CPP_END

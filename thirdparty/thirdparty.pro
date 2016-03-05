@@ -2,22 +2,26 @@ TEMPLATE = subdirs
 
 include(../entropypianotuner_config.pri)
 
+libuv {
+    SUBDIRS += libuv
+}
+
 qwt {
-  SUBDIRS += qwt
+    SUBDIRS += qwt
 }
 
 getmemorysize {
-  SUBDIRS += getmemorysize
+    SUBDIRS += getmemorysize
 }
 
 rtmidi {
-  SUBDIRS += RtMidi
+    SUBDIRS += RtMidi
 }
 
 timesupport {
-  SUBDIRS += timesupport
+    SUBDIRS += timesupport
 }
 
 tinyxml2 {
-  SUBDIRS += tinyxml2
+    SUBDIRS += tinyxml2
 }

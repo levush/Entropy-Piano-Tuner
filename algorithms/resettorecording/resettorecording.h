@@ -24,11 +24,10 @@
 #ifndef RESETTORECORDING_H
 #define RESETTORECORDING_H
 
-#include "core/calculation/algorithm.h"
+#include "core/calculation/algorithmplugin.h"
 
 // Algorithms are always protected by their own namespace:
-namespace resettorecording
-{
+ALGORITHM_H_START(resettorecording, "1.0.0")
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Algorithm to copy the recorded pitches into the tuning curve.
@@ -55,7 +54,7 @@ protected:
     virtual void algorithmWorkerFunction() override final;
 };
 
+ALGORITHM_H_END(ResetToRecording)
 
 
-}  // namespace resettorecording
 #endif // RESETTORECORDING_H

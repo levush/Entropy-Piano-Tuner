@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/algorithms">
+        <file>pitchraise.xml</file>
+    </qresource>
+</RCC>

@@ -24,11 +24,10 @@
 #ifndef PITCHRAISE_H
 #define PITCHRAISE_H
 
-#include "core/calculation/algorithm.h"
+#include "core/calculation/algorithmplugin.h"
 
 // each algorithm has to be in its own namespace to prevent naming conflits
-namespace pitchraise
-{
+ALGORITHM_H_START(pitchraise, "1.0.0")
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Basic class to show how to implement own algorithms.
@@ -52,7 +51,7 @@ private:
     std::vector<double> mPitch;
 };
 
-}  // namespace pitchraise
+ALGORITHM_H_END(PitchRaise)
 
 
 #endif // PITCHRAISE_H

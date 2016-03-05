@@ -3,8 +3,6 @@ TEMPLATE = lib
 CONFIG += c++11
 CONFIG += staticlib
 
-QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
-
 SOURCES = RtMidi.cpp
 HEADERS = RtMidi.h
 
