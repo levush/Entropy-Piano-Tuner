@@ -7,9 +7,11 @@ TARGET = uv
 
 INCLUDEPATH += include src
 
+HEADERS += \
+        src/heap-inl.h \
+
 SOURCES += \
         src/fs-poll.c \
-        src/heap-inl.h \
         src/inet.c \
         src/queue.h \
         src/threadpool.c \
@@ -80,6 +82,7 @@ win32 {
         src/win/req.c \
         src/win/req-inl.h \
         src/win/signal.c \
+        src/win/snprintf.c \
         src/win/stream.c \
         src/win/stream-inl.h \
         src/win/tcp.c \

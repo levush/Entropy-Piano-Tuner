@@ -78,7 +78,7 @@ extern "C"
 #if defined(FFTW_DLL) && (defined(_WIN32) || defined(__WIN32__))
    /* annoying Windows syntax for shared-library declarations */
 #  if defined(COMPILING_FFTW) /* defined in api.h when compiling FFTW */
-#    define FFTW_EXTERN extern __declspec(dllexport) 
+#    define FFTW_EXTERN extern __declspec(dllexport)
 #  else /* user is calling FFTW; import symbol */
 #    define FFTW_EXTERN extern __declspec(dllimport) 
 #  endif
