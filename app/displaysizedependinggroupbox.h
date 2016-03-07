@@ -22,7 +22,8 @@
 
 #include <QGroupBox>
 #include <QLayout>
-#include "core/system/prerequisites.h"
+
+#include "prerequisites.h"
 
 class DisplaySizeDependingGroupBox : public QWidget
 {

@@ -34,13 +34,13 @@
 #       define EptAssert( a, b ) assert( (a) && (b) )
 
 #   else
-#       define EptAssert( a, b ) if( !(a) ) EPT_EXCEPT( EptException::ERR_RT_ASSERTION_FAILED, (b), __func__ )
+#       define EptAssert( a, b ) if( !(a) ) EPT_EXCEPT( EptException::ERR_RT_ASSERTION_FAILED, (b) )
 
 #   endif
 
 // EXCEPTIONS mode
-#elif OGRE_ASSERT_MODE == 2
-#   define EptAssert( a, b ) if( !(a) ) EPT_EXCEPT( EptException::ERR_RT_ASSERTION_FAILED, (b), __func__ )
+#elif EPT_ASSERT_MODE == 2
+#   define EptAssert( a, b ) if( !(a) ) EPT_EXCEPT( EptException::ERR_RT_ASSERTION_FAILED, (b) )
 
 // STANDARD mode
 #else
@@ -48,7 +48,7 @@
 
 #endif
 
-class EptException : public std::exception
+class EPT_EXTERN EptException : public std::exception
 {
 protected:
     long mLine;

@@ -29,8 +29,12 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QMap>
-#include "../core/messages/messagelistener.h"
-#include "../core/adapters/calculationadapter.h"
+
+#include "prerequisites.h"
+
+#include "core/messages/messagelistener.h"
+#include "core/adapters/calculationadapter.h"
+
 #include "displaysizedependinggroupbox.h"
 
 class AlgorithmInformation;

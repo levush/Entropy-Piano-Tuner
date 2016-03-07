@@ -29,7 +29,6 @@
 #include "messages/messagemidievent.h"
 #include "messages/messagemodechanged.h"
 #include "system/platformtoolscore.h"
-#include <assert.h>
 
 //-----------------------------------------------------------------------------
 //                              Core constructor

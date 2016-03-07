@@ -97,7 +97,7 @@ Synthesizer::Synthesizer () :
 /// of the synthesizer in an independent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::init (int sampleRate, int channels)
+void Synthesizer::init (const int sampleRate, const int channels)
 {
     PCMWriterInterface::init(sampleRate, channels);
 

@@ -24,8 +24,11 @@
 #ifndef GRAPHICSITEMFORQT_H
 #define GRAPHICSITEMFORQT_H
 
-#include "../core/drawers/graphicsitem.h"
 #include <QGraphicsItem>
+
+#include "prerequisites.h"
+
+#include "core/drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Implementation class for the GraphicsItem in Qt

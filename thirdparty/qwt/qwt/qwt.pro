@@ -19,9 +19,6 @@ include( $${QWT_ROOT}/qwtfunctions.pri )
 
 # ----------------------------------------------
 # custom define for static/dynamic build
-contains(EPT_CONFIG, allstatic) {
-    QWT_CONFIG -= QwtDll
-}
 # ----------------------------------------------
 
 TEMPLATE          = lib

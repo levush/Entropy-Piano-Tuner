@@ -20,6 +20,8 @@
 #ifndef PIANOFILEIOCSV_H
 #define PIANOFILEIOCSV_H
 
+#include "prerequisites.h"
+
 #include "pianofileiointerface.h"
 
 class PianoFileIOCsv : public PianoFileIOInterface

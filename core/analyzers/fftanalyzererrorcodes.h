@@ -23,11 +23,13 @@
 #include <memory>
 #include <vector>
 
+#include "prerequisites.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Enumeration of possible errors during the fft analysis
 ///////////////////////////////////////////////////////////////////////////////
 
-enum class FFTAnalyzerErrorTypes
+enum class EPT_EXTERN FFTAnalyzerErrorTypes
 {
     ERR_NONE,                           ///< No error occured
     ERR_FREQUENCY_OUT_OF_BOUNDS,        ///< The recorded frequency is out of the piano range
@@ -42,7 +44,7 @@ enum class FFTAnalyzerErrorTypes
 
 using TuningDeviationCurveType = std::vector<double>;
 
-struct FrequencyDetectionResultStruct
+struct EPT_EXTERN FrequencyDetectionResultStruct
 {
     FFTAnalyzerErrorTypes error = FFTAnalyzerErrorTypes::ERR_NONE;
     TuningDeviationCurveType tuningDeviationCurve;
@@ -55,6 +57,7 @@ struct FrequencyDetectionResultStruct
 };
 
 using FrequencyDetectionResult = std::shared_ptr<FrequencyDetectionResultStruct>;
+template class EPT_EXTERN std::shared_ptr<FrequencyDetectionResultStruct>;
 
 #endif // FFTANALYZERERRORCODES_H
 

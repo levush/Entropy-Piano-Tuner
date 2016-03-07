@@ -24,9 +24,7 @@
 #ifndef GRAPHICSVIEWADAPTER_H
 #define GRAPHICSVIEWADAPTER_H
 
-#include <vector>
-#include <complex>
-
+#include "prerequisites.h"
 #include "../drawers/graphicsitem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +44,7 @@
 /// such as lines, tuning markers etc., and to access them selectively.
 ///////////////////////////////////////////////////////////////////////////////
 
-class GraphicsViewAdapter
+class EPT_EXTERN GraphicsViewAdapter
 {
 public:
     using RoleType = GraphicsItem::RoleType;

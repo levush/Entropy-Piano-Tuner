@@ -29,6 +29,14 @@
 #include "../system/eptexception.h"
 
 //-----------------------------------------------------------------------------
+// constants definition
+//-----------------------------------------------------------------------------
+
+const double EPT_EXTERN MathTools::PI     = 3.14159265358979323846;
+const double EPT_EXTERN MathTools::TWO_PI = 2 * MathTools::PI;
+const double EPT_EXTERN MathTools::LOG2   = 0.69314718055994530942;
+
+//-----------------------------------------------------------------------------
 //	              Determine the raw moments of a distribution
 //-----------------------------------------------------------------------------
 
@@ -175,7 +183,7 @@ void MathTools::coarseGrainSpectrum (const std::vector<double> &X,
 int MathTools::findMaximum (const std::vector<double> &X, int i, int j)
 {
 
-    int N = X.size();
+    size_t N = X.size();
     assert (i>=0 and i<N and j>i and j<=N);
     return std::distance(X.begin(), std::max_element(X.begin()+i,X.begin()+j));
 }

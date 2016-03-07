@@ -37,11 +37,11 @@
 /// changes this message is emitted to inform all other modules of the EPT.
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageKeySelectionChanged : public Message
+class EPT_EXTERN MessageKeySelectionChanged : public Message
 {
 public:
     MessageKeySelectionChanged(int index, const Key *key, piano::KeyState keyState = piano::STATE_NORMAL);
-    ~MessageKeySelectionChanged(){};
+    ~MessageKeySelectionChanged() {}
 
     int getKeyNumber() const {return mIndex;}
     const Key *getKey() const {return mKey;}

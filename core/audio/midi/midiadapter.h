@@ -24,7 +24,7 @@
 #ifndef MIDIADAPTER_H
 #define MIDIADAPTER_H
 
-#include <string>
+#include "prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Adapter class for reading an externally connected MIDI keyboard.
@@ -40,7 +40,7 @@
 /// which is basically the time in seconds elapsed since the last event.
 ///////////////////////////////////////////////////////////////////////////////
 
-class MidiAdapter
+class EPT_EXTERN MidiAdapter
 {
 public:
 
@@ -99,5 +99,8 @@ public:
     static MidiEvent byteToEvent (int byte); ///< Convert MIDI code to MidiEvent
     void send (Data &data); ///< Send new MIDI data to the messaging system
 };
+
+typedef std::shared_ptr<MidiAdapter> MidiAdapterPtr;
+template class EPT_EXTERN std::shared_ptr<MidiAdapter>;
 
 #endif // MIDIADAPTER_H

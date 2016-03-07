@@ -24,11 +24,11 @@
 #ifndef AUDIORECORDERADAPTER_H
 #define AUDIORECORDERADAPTER_H
 
-//#include "../audiobase.h"
+#include "prerequisites.h"
+#include "../audiobase.h"
 #include "../circularbuffer.h"
 #include "stroboscope.h"
 //#include "../../messages/messagelistener.h"
-#include "../../piano/piano.h"
 
 #include <vector>
 #include <map>
@@ -53,40 +53,40 @@ class AudioRecorderAdapter : public AudioBase
 public:
     // Static constants, explained in the source file:
 
-    static const int    BUFFER_SIZE_IN_SECONDS;     // size of circular buffer
-    static const int    UPDATE_IN_MILLISECONDS;     // elementary packet size
-    static const double ATTACKRATE;                 // for sliding level
-    static const double DECAYRATE;                  // for sliding level
-    static const double LEVEL_RETRIGGER;            // level for retriggering
-    static const double LEVEL_TRIGGER;              // level where rec. starts
-    static const double LEVEL_CUTOFF;               // highest allowed level
-    static const double DB_OFF;                     // dB shift for off mark
+    EPT_EXTERN static const int    BUFFER_SIZE_IN_SECONDS;     // size of circular buffer
+    EPT_EXTERN static const int    UPDATE_IN_MILLISECONDS;     // elementary packet size
+    EPT_EXTERN static const double ATTACKRATE;                 // for sliding level
+    EPT_EXTERN static const double DECAYRATE;                  // for sliding level
+    EPT_EXTERN static const double LEVEL_RETRIGGER;            // level for retriggering
+    EPT_EXTERN static const double LEVEL_TRIGGER;              // level where rec. starts
+    EPT_EXTERN static const double LEVEL_CUTOFF;               // highest allowed level
+    EPT_EXTERN static const double DB_OFF;                     // dB shift for off mark
 
 public:
-    AudioRecorderAdapter();                 ///< Constructor
-    virtual ~AudioRecorderAdapter() {}      ///< Empty destructor
+    EPT_EXTERN AudioRecorderAdapter();                 ///< Constructor
+    EPT_EXTERN virtual ~AudioRecorderAdapter() {}      ///< Empty destructor
 
-    void resetInputLevelControl();          // Reset level control
-    void setMuted(bool muted);              // Mute the input device
+    EPT_EXTERN void resetInputLevelControl();          // Reset level control
+    EPT_EXTERN void setMuted(bool muted);              // Mute the input device
 
-    void readAll(PacketType &packet);       // Read all buffered data
-    void cutSilence (PacketType &packet);   // Cut off trailing silence
+    EPT_EXTERN void readAll(PacketType &packet);       // Read all buffered data
+    EPT_EXTERN void cutSilence (PacketType &packet);   // Cut off trailing silence
 
-    double getStopLevel() const { return mStopLevel; }
+    EPT_EXTERN double getStopLevel() const { return mStopLevel; }
 
-    void setStandby (bool flag) { mStandby = flag; }
-    void setWaitingFlag (bool flag) { mWaiting = flag; }
+    EPT_EXTERN void setStandby (bool flag) { mStandby = flag; }
+    EPT_EXTERN void setWaitingFlag (bool flag) { mWaiting = flag; }
 
-    Stroboscope* getStroboscope() { return &mStroboscope; }
+    EPT_EXTERN Stroboscope *getStroboscope() {return &mStroboscope;}
 
 protected:
     // The implementation calls the following functions:
-    void pushRawData (const PacketType &data);
-    void setSamplingRate (int rate) override;
+    EPT_EXTERN void pushRawData (const PacketType &data);
+    EPT_EXTERN virtual void setSamplingRate (int rate) override;
 
     // This class controls the input gain of the implementation
-    virtual void setDeviceInputGain(double volume) = 0;
-    virtual double getDeviceInputGain() const = 0;
+    EPT_EXTERN virtual void setDeviceInputGain(double volume) = 0;
+    EPT_EXTERN virtual double getDeviceInputGain() const = 0;
 
 
 
@@ -110,7 +110,7 @@ private:
     CircularBuffer<PCMDataType> mCurrentPacket;  ///< Local audio buffer
     mutable std::mutex mCurrentPacketMutex;         ///< Buffer access mutexbo
 
-    Stroboscope mStroboscope;           ///< Instance of stroboscope
+    Stroboscope mStroboscope;      ///< Instance of stroboscope
 
     double convertIntensityToLevel (double intensity);          // map for VU meter
     double convertLevelToIntensity (double level);              // inverse map VU meter

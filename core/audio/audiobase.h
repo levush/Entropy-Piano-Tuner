@@ -28,7 +28,7 @@
 #include <cstdint>
 #include <string>
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract base class for audio interfaces
@@ -40,7 +40,7 @@
 /// \see AudioRecorderAdapter and AudioPlayerAdapter
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioBase
+class EPT_EXTERN AudioBase
 {
 public:
     /// Floating point data type for a single PCM Value. The PCM values are

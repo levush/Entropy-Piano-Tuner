@@ -29,6 +29,7 @@
 #include <cstring>
 #include <algorithm>
 
+#include "prerequisites.h"
 #include "core/system/eptexception.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,8 +70,6 @@ private:
     std::size_t mCurrentSize;                       ///< Current size of the buffer
     std::vector<data_type> mData;                   ///< Internal cyclic data buffer
 };
-
-
 
 //=============================================================================
 //    Circular buffer implementation (contained in header because of template)

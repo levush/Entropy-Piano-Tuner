@@ -24,6 +24,7 @@
 #ifndef MESSAGELISTENER_H
 #define MESSAGELISTENER_H
 
+#include "prerequisites.h"
 #include "message.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@
 /// 'message listeners' and thus have to be derived from the present class.
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageListener
+class EPT_EXTERN MessageListener
 {
 public:
     /// Constructor, registering the present class at the MessageHandler

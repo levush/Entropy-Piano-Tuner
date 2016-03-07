@@ -23,6 +23,7 @@
 #include <string>
 #include <memory>
 
+#include "prerequisites.h"
 #include "algorithmplugin.h"
 #include "algorithmfactorydescription.h"
 
@@ -36,7 +37,7 @@ class Piano;
 /// Also it stores the name of the Algorithm
 ////////////////////////////////////////////////////////////////////////
 
-class AlgorithmFactoryBase
+class EPT_EXTERN AlgorithmFactoryBase
 {
 protected:
     AlgorithmFactoryBase(const AlgorithmFactoryDescription &description);

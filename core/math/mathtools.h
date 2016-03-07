@@ -30,52 +30,53 @@
 #include <functional>
 #include <algorithm>
 #include <limits>
-#include "../system/prerequisites.h"
+
+#include "prerequisites.h"
 
 namespace MathTools {
 
-const double PI     = 3.14159265358979323846;
-const double TWO_PI = 2 * PI;
-const double LOG2   = 0.69314718055994530942;
+extern const double EPT_EXTERN PI;
+extern const double EPT_EXTERN TWO_PI;
+extern const double EPT_EXTERN LOG2;
 
 /// Round a floating point number to an integer
 template<class T>
 int roundToInteger (T x) { return static_cast<int>(lround(x)); }
 
 /// Determine the n-th moment of a distribution stored in a vector
-double computeMoment (const std::vector<double> &v, const int n);
+EPT_EXTERN double computeMoment (const std::vector<double> &v, const int n);
 
 /// Normalize a distribution stored in a vector
-void normalize (std::vector<double> &vec);
+EPT_EXTERN void normalize (std::vector<double> &vec);
 
 /// Compute the norm of a vector
-double computeNorm (std::vector<double> &vec);
+EPT_EXTERN double computeNorm (std::vector<double> &vec);
 
 /// Map a distribution in the vector X[x] to another vector Y[y]
 /// by means of a (possibly nonlinear) function x=f(y).
-void coarseGrainSpectrum (const std::vector<double> &X,
+EPT_EXTERN void coarseGrainSpectrum (const std::vector<double> &X,
                           std::vector<double> &Y,
                           std::function<double(double y)> f,
                           double exponent=0);
 
 /// Compute the Shannon entropy of a normalized probability distribution
-double computeEntropy (const std::vector<double> &v);
+EPT_EXTERN double computeEntropy (const std::vector<double> &v);
 
 /// Compute the Renyi entropy of a normalized probability distribution
-double computeRenyiEntropy (const std::vector<double> &v, const double q);
+EPT_EXTERN double computeRenyiEntropy (const std::vector<double> &v, const double q);
 
 /// Find the component where the vector has its maximum
-int findMaximum (const std::vector<double> &X, int i, int j);
-int findMaximum (const std::vector<double> &X);
+EPT_EXTERN int findMaximum (const std::vector<double> &X, int i, int j);
+EPT_EXTERN int findMaximum (const std::vector<double> &X);
 
 /// Use a parabola to fit the maximum.
-double findSmoothedMaximum (const std::vector<double> &x);
+EPT_EXTERN double findSmoothedMaximum (const std::vector<double> &x);
 
 /// Computes the weighted arithmetric mean index of the given Y data
-double weightedArithmetricMean(const std::vector<double> &Y, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
+EPT_EXTERN double weightedArithmetricMean(const std::vector<double> &Y, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
 
 /// Restrict floating point value to an interval
-double restrictToInterval (double x, double xmin, double xmax);
+EPT_EXTERN double restrictToInterval (double x, double xmin, double xmax);
 
 /// Map a vector to a different one by a unary map
 template <typename T>

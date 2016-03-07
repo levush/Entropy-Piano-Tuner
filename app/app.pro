@@ -21,7 +21,7 @@ include(../entropypianotuner_func.pri)
 
 INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
-INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
+INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR $$EPT_CORE_DIR
 
 DESTDIR = $$EPT_CORE_OUT_DIR
 
@@ -139,21 +139,21 @@ ios {
 
 
 win32 {
-    RC_ICONS = $$PWD/appstore/icons/entropytuner.ico
+    RC_ICONS = $$EPT_APPSTORE_DIR/icons/entropytuner.ico
     DEFINES += NOMINMAX
 }
 
 winrt {
-    WINRT_MANIFEST.logo_large = $$PWD/appstore/icons/winrt/icon_150x150.png
-    WINRT_MANIFEST.logo_small = $$PWD/appstore/icons/winrt/icon_30x30.png
-    WINRT_MANIFEST.logo_store = $$PWD/appstore/icons/winrt/icon_50x50.png
-    WINRT_MANIFEST.logo_splash = $$PWD/appstore/splash/splash_620x300.png
+    WINRT_MANIFEST.logo_large = $$EPT_APPSTORE_DIR/icons/winrt/icon_150x150.png
+    WINRT_MANIFEST.logo_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_30x30.png
+    WINRT_MANIFEST.logo_store = $$EPT_APPSTORE_DIR/icons/winrt/icon_50x50.png
+    WINRT_MANIFEST.logo_splash = $$EPT_APPSTORE_DIR/splash/splash_620x300.png
     WINRT_MANIFEST.background = $${LITERAL_HASH}e5e5e5
     WINRT_MANIFEST.publisher = "Haye Hinrichsen"
     winphone:equals(WINSDK_VER, 8.1) {
-        WINRT_MANIFEST.logo_medium = $$PWD/appstore/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_small = $$PWD/appstore/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_medium = $$PWD/appstore/icons/winrt/icon_100x100.png
+        WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+        WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+        WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
     } else {
     }
     CONFIG += windeployqt
@@ -166,30 +166,7 @@ winrt {
     LIBS += -lwinmm
 }
 
-# MinGW compiler settings
-win32-g++ {
-    # Libraries
-    LIBS += -L$$PWD/dependencies/lib/win_mingw32 -llibfftw3-3
-    DLLS = $$PWD/dependencies/lib/win_mingw32/libfftw3-3.dll
-}
-
-win32:contains(QT_ARCH, i386):{
-    # this library is for static linking
-    LIBS += -L$$PWD/dependencies/lib/win_i386 -llibfftw3-3
-}
-win32:contains(QT_ARCH, x86):{
-    # this library is for static linking
-    LIBS += -L$$PWD/dependencies/lib/win_x86 -llibfftw3-3
-}
-win32:contains(QT_ARCH, arm):{
-    LIBS += -L$$PWD/dependencies/lib/win_arm32 -llibfftw3-3
-}
-win32:contains(QT_ARCH, x86_64):{
-    LIBS += -L$$PWD/dependencies/lib/win_x86_64 -llibfftw3-3
-
-    DLLS = $$PWD/dependencies/bin/win_x86_64/libfftw3-3.dll
-}
-
+# dlls
 win32|win32-g++ {
     # copy external dlls
     DLLS ~= s,/,\\,g
@@ -291,6 +268,7 @@ HEADERS  += \
     piano/pianofileiointerface.h \
     piano/pianofileioxml.h \
     piano/pianofileiocsv.h \
+    prerequisites.h
 
 SOURCES +=  \
     main.cpp\

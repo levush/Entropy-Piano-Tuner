@@ -23,6 +23,9 @@
 #include <QDialog>
 #include <QToolButton>
 #include <array>
+
+#include "prerequisites.h"
+
 #include "centralplotframe.h"
 #include "core/piano/piano.h"
 

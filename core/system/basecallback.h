@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <functional>
 
+#include "prerequisites.h"
+
 class BaseCallbackManager;
 
 ///
@@ -36,12 +38,12 @@ class BaseCallbackManager;
 ///
 class BaseCallbackInterface {
 public:
-    virtual ~BaseCallbackInterface();
+    EPT_EXTERN virtual ~BaseCallbackInterface();
 
 private:
-    void addCallbackManager(BaseCallbackManager *manager);
+    EPT_EXTERN void addCallbackManager(BaseCallbackManager *manager);
 
-    void removeCallbackManager(BaseCallbackManager *manager);
+    EPT_EXTERN void removeCallbackManager(BaseCallbackManager *manager);
 
 private:
     std::list<BaseCallbackManager *> mCallbackManager;

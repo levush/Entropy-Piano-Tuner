@@ -24,6 +24,8 @@
 #include <QLabel>
 #include <QProgressBar>
 
+#include "prerequisites.h"
+
 #include "core/audio/player/waveformgenerator.h"
 
 

@@ -26,6 +26,7 @@
 
 #include <list>
 #include <cstdint>
+#include "prerequisites.h"
 
 class GraphicsViewAdapter;
 
@@ -52,7 +53,7 @@ class GraphicsViewAdapter;
 /// should redraw the corresponding element, but not the complete panel.
 ///////////////////////////////////////////////////////////////////////////////
 
-class GraphicsItem
+class EPT_EXTERN GraphicsItem
 {
 public:
 
@@ -146,6 +147,7 @@ protected:
 
 
 using GraphicItemsList = std::list<GraphicsItem*>; ///< A list of GraphicItem (global)
+template class EPT_EXTERN std::list<GraphicsItem*>;
 
 #endif // GRAPHICSITEM_H
 

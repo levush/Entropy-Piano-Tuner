@@ -24,6 +24,7 @@
 #ifndef RECORDERLEVEL_H
 #define RECORDERLEVEL_H
 
+#include "prerequisites.h"
 #include "../messages/messagelistener.h"
 
 class AudioRecorderAdapter;
@@ -35,11 +36,11 @@ class AudioRecorderAdapter;
 /// and communicates them to the GUI
 ////////////////////////////////////////////////////////////////////////////////
 
-class RecorderLevel : public MessageListener
+class EPT_EXTERN RecorderLevel : public MessageListener
 {
 public:
-    RecorderLevel() {};
-    ~RecorderLevel() {};
+    RecorderLevel() {}
+    ~RecorderLevel() {}
 
     virtual void handleMessage(MessagePtr m) override;
 

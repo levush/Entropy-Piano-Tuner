@@ -24,7 +24,7 @@
 #ifndef TUNINGCURVEGRAPHADAPTER_H
 #define TUNINGCURVEGRAPHADAPTER_H
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 #include "drawerbase.h"
 #include "../piano/piano.h"
 #include "../messages/messagelistener.h"
@@ -75,19 +75,21 @@ private:
     };
 
 public:
-    TuningCurveGraphDrawer(GraphicsViewAdapter *graphics);  // Constructor
-    ~TuningCurveGraphDrawer(){}                             ///< Empty destructor
+    EPT_EXTERN TuningCurveGraphDrawer(GraphicsViewAdapter *graphics);  // Constructor
+    EPT_EXTERN ~TuningCurveGraphDrawer(){}                             ///< Empty destructor
 
     // Modify the tuning curve by mouse clicks:
-    void manuallyEditTuningCurveByClick (double relX, double relY);
+    EPT_EXTERN void manuallyEditTuningCurveByClick (double relX, double relY);
 
-    OperationMode getOperationMode() const {return mOperationMode;}
-
-protected:
-    virtual void draw() final;
-    virtual void handleMessage(MessagePtr m) override;
+    EPT_EXTERN OperationMode getOperationMode() const {return mOperationMode;}
+    EPT_EXTERN const Piano *getPiano() const {return mPiano;}
+    EPT_EXTERN int getNumberOfKeys() const {return mNumberOfKeys;}
 
 protected:
+    EPT_EXTERN virtual void draw() final;
+    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
+
+private:
     static const PenType gridcolor;         ///< Pen type for background grid pentype
     static const PenType middleline;        ///< Pen type for bold middle line of grid
     static const PenType centlines;         ///< Pen type for thin grid indicating cents

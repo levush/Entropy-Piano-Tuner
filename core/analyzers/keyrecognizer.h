@@ -24,6 +24,7 @@
 #ifndef KEYRECOGNIZER_H
 #define KEYRECOGNIZER_H
 
+#include "prerequisites.h"
 #include "../system/simplethreadhandler.h"
 #include "../messages/messagelistener.h"
 #include "../piano/piano.h"
@@ -37,7 +38,7 @@
 /// finished, the pure virtual function keyRecognized() will be called.
 ///////////////////////////////////////////////////////////////////////////////
 
-class KeyRecognizerCallback
+class EPT_EXTERN KeyRecognizerCallback
 {
 public:
     virtual void keyRecognized(int keyIndex, double frequency) = 0;
@@ -54,7 +55,7 @@ public:
 /// estimated frequency and the corresponding key number via a callback function.
 ////////////////////////////////////////////////////////////////////////////////
 
-class KeyRecognizer : public SimpleThreadHandler
+class EPT_EXTERN KeyRecognizer : public SimpleThreadHandler
 {
 private:
     static const int    M;                              ///< Number of bins (powers of 2,3,5)

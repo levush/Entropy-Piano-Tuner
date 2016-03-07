@@ -24,8 +24,7 @@
 #ifndef CALCULATIONADAPTER_H
 #define CALCULATIONADAPTER_H
 
-#include <vector>
-#include <string>
+#include "prerequisites.h"
 
 class Core;
 
@@ -43,7 +42,7 @@ class Core;
 /// \see CalculationManager
 ///////////////////////////////////////////////////////////////////////////////
 
-class CalculationAdapter
+class EPT_EXTERN CalculationAdapter
 {
 public:
     CalculationAdapter(Core *core);         // Constructor

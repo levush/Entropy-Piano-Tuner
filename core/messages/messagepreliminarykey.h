@@ -30,7 +30,7 @@
 /// \brief Class of a message reporting the preliminary recognition of a key
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessagePreliminaryKey : public Message
+class EPT_EXTERN MessagePreliminaryKey : public Message
 {
 public:
     MessagePreliminaryKey(int key, double f);

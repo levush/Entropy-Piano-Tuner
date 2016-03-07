@@ -20,6 +20,8 @@
 #ifndef TUNINGINDICATORGROUPBOX_H
 #define TUNINGINDICATORGROUPBOX_H
 
+#include "prerequisites.h"
+
 #include "displaysizedependinggroupbox.h"
 #include "tuningindicatorview.h"
 

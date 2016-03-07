@@ -20,12 +20,12 @@
 #ifndef ALGORITHMINFORMATION_H
 #define ALGORITHMINFORMATION_H
 
-#include <string>
-#include <vector>
-
+#include "prerequisites.h"
 #include "algorithmparameterdescription.h"
 
-class AlgorithmInformation
+template class EPT_EXTERN std::vector<AlgorithmParameterDescription>;
+
+class EPT_EXTERN AlgorithmInformation
 {
 public:
     using ParameterType = AlgorithmParameterDescription;
@@ -56,5 +56,6 @@ private:
     const std::string mAuthor;
     const ParameterListType mParameters;
 };
+
 
 #endif // ALGORITHMINFORMATION_H

@@ -21,6 +21,9 @@
 #define OPTIONSCENTRALWIDGETINTERFACE_H
 
 #include <QWidget>
+
+#include "prerequisites.h"
+
 #include "optionscontentswidgetinterface.h"
 
 namespace options {

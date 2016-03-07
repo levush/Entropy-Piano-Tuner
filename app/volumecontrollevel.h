@@ -22,7 +22,10 @@
 
 #include <QProgressBar>
 #include <QTimer>
-#include "../core/adapters/recorderlevel.h"
+
+#include "prerequisites.h"
+
+#include "core/adapters/recorderlevel.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief QProgressBar to display the current input level.

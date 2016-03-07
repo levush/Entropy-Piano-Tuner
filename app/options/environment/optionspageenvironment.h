@@ -21,6 +21,9 @@
 #define OPTIONSPAGEENVIRONMENT_H
 
 #include <QTabWidget>
+
+#include "prerequisites.h"
+
 #include "../pagesavingtabwidget.h"
 #include "../optionscentralwidgetinterface.h"
 

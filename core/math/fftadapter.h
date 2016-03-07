@@ -24,10 +24,7 @@
 #ifndef FFTADAPTER
 #define FFTADAPTER
 
-#include <complex>
-#include <vector>
-#include <map>
-#include <memory>
+#include "prerequisites.h"
 
 // Data types to be processed by the FFT software
 using FFTRealType      = double;
@@ -52,7 +49,7 @@ typedef std::map<double,double> FFTPolygon;
 /// Invalid or unset states have a invalid FFTPointer or a negative sampling
 /// rate.
 ///////////////////////////////////////////////////////////////////////////////
-struct FFTData {
+struct EPT_EXTERN FFTData {
     FFTWVector fft;         ///< The actual fft
     int samplingRate = -1;  ///< The sampling rate of the fft
 
@@ -84,6 +81,7 @@ struct FFTData {
 /// finall-FFT message by the SignalAnalyzer.
 ///////////////////////////////////////////////////////////////////////////////
 using FFTDataPointer = std::shared_ptr<FFTData>;
+template class EPT_EXTERN std::shared_ptr<FFTData>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract base class for handling fast Fourier transforms
@@ -97,7 +95,7 @@ using FFTDataPointer = std::shared_ptr<FFTData>;
 /// and comples to real. The second one is the inverse of the first one.
 ///////////////////////////////////////////////////////////////////////////////
 
-class FFTAdapter
+class EPT_EXTERN FFTAdapter
 {
 public:
 

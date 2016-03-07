@@ -36,7 +36,7 @@ class Piano;
 /// emitted to inform the other modules of the EPT.
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageProjectFile : public Message
+class EPT_EXTERN MessageProjectFile : public Message
 {
 public:
     enum Types {

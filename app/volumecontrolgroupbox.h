@@ -22,6 +22,8 @@
 
 #include <QHBoxLayout>
 
+#include "prerequisites.h"
+
 #include "displaysizedependinggroupbox.h"
 #include "volumecontrollevel.h"
 

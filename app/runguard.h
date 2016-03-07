@@ -28,6 +28,8 @@
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
+#include "prerequisites.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for checking whether the application is already running
 ///
@@ -43,7 +45,7 @@ class RunGuard
 {
 public:
     RunGuard (const QString& key);
-    ~RunGuard() {release();};
+    ~RunGuard() {release();}
 
     bool isAnotherRunning();
     bool tryToRun();

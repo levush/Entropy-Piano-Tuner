@@ -24,6 +24,7 @@
 #ifndef TUNINGINDICATORDRAWER_H
 #define TUNINGINDICATORDRAWER_H
 
+#include "prerequisites.h"
 #include "drawerbase.h"
 #include "../messages/messagelistener.h"
 #include "../analyzers/signalanalyzer.h"
@@ -44,15 +45,15 @@
 class TuningIndicatorDrawer : public DrawerBase, public MessageListener
 {
 public:
-    TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
-    ~TuningIndicatorDrawer() {}
+    EPT_EXTERN TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
+    EPT_EXTERN ~TuningIndicatorDrawer() {}
 
-    void toggleSpectralAndStroboscopeMode();
+    EPT_EXTERN void toggleSpectralAndStroboscopeMode();
 
 protected:
-    virtual void draw() override final;
-    virtual void clear() override final;
-    virtual void handleMessage(MessagePtr m) override;
+    EPT_EXTERN virtual void draw() override final;
+    EPT_EXTERN virtual void clear() override final;
+    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
 
 private:
     const Piano *mPiano;            ///< Pointer to the piano

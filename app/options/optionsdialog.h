@@ -34,6 +34,8 @@
 #include <QToolBar>
 #include <QButtonGroup>
 
+#include "prerequisites.h"
+
 class Core;
 class AudioBase;
 class AudioRecorderAdapter;

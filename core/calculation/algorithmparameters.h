@@ -25,7 +25,9 @@
 #include <map>
 #include <memory>
 
-class SingleAlgorithmParameters
+#include "prerequisites.h"
+
+class EPT_EXTERN SingleAlgorithmParameters
 {
 public:
     SingleAlgorithmParameters(const std::string &algorithmName);
@@ -60,7 +62,12 @@ private:
 typedef std::shared_ptr<SingleAlgorithmParameters> SingleAlgorithmParametersPtr;
 typedef std::shared_ptr<const SingleAlgorithmParameters> ConstSingleAlgorithmParametersPtr;
 
-class AlgorithmParameters
+template class EPT_EXTERN std::shared_ptr<SingleAlgorithmParameters>;
+template class EPT_EXTERN std::shared_ptr<const SingleAlgorithmParameters>;
+
+template class EPT_EXTERN std::vector<SingleAlgorithmParametersPtr>;
+
+class EPT_EXTERN AlgorithmParameters
 {
 public:
     SingleAlgorithmParametersPtr getPreparedParameters(const std::string &id) const;

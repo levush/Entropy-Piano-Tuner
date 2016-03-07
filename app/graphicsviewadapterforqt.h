@@ -22,7 +22,10 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include "../core/adapters/graphicsviewadapter.h"
+
+#include "prerequisites.h"
+
+#include "core/adapters/graphicsviewadapter.h"
 
 class DrawerBase;
 

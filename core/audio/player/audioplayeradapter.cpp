@@ -61,13 +61,13 @@ void AudioPlayerAdapter::exit()
 /// \param interface : Pointer to the PCM writer interface to be connected.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioPlayerAdapter::setWriter(PCMWriterInterface *interface)
+void AudioPlayerAdapter::setWriter(PCMWriterInterface *writerInterface)
 {
     // If another writer already exists destroy it
     if (mPCMWriter) mPCMWriter->exit();
 
     // Set the pointer to the new writer interface
-    mPCMWriter = interface;
+    mPCMWriter = writerInterface;
 
     // Copy sampling rate and channel count and initialize the writer
     if (mPCMWriter) mPCMWriter->init(getSamplingRate(), getChannelCount());

@@ -28,6 +28,7 @@
 #include "../system/log.h"
 #include "../math/mathtools.h"
 
+
 // Constants characterizing the logarighmically bins, do not change!
 
 const int Key::NumberOfBins  = 10800;       // Number of log. bins

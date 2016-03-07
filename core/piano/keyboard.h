@@ -24,8 +24,11 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include "prerequisites.h"
 #include "key.h"
 #include "pianodefines.h"
+
+template class EPT_EXTERN std::vector<Key>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class describing the piano keyboard, holding a collection of keys
@@ -36,7 +39,7 @@
 /// to the bass bridge.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Keyboard
+class EPT_EXTERN Keyboard
 {
 public:
     using Keys = std::vector<Key>;
@@ -46,7 +49,7 @@ public:
     ~Keyboard(){}
 
     size_t size() const         {return mKeys.size();}
-    void resize(size_t newSize) { mKeys.resize(newSize); };
+    void resize(size_t newSize) { mKeys.resize(newSize); }
 
     void changeKeyboardConfiguration (int numberOfKeys, int keyNumberOfA);
 

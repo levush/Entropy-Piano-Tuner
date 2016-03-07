@@ -23,6 +23,9 @@
 #include <QWidget>
 #include <QComboBox>
 #include <QCheckBox>
+
+#include "prerequisites.h"
+
 #include "../optionscontentswidgetinterface.h"
 #include "../optionstabcontentsvscrollarea.h"
 

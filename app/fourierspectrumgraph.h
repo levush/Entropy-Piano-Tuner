@@ -20,8 +20,11 @@
 #ifndef FOURIERSPECTRUMGRAPH_H
 #define FOURIERSPECTRUMGRAPH_H
 
+#include "prerequisites.h"
+
+#include "core/drawers/fourierspectrumgraphdrawer.h"
+
 #include "keyboard/autoscaledtokeyboardgraphicsview.h"
-#include "../core/drawers/fourierspectrumgraphdrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The QGraphicsView to display the fourier spectrum.

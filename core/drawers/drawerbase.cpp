@@ -36,11 +36,15 @@
 
 DrawerBase::DrawerBase (GraphicsViewAdapter *graphics, double intervall)
     : mGraphics(graphics),
-      mTimeLastDrawn(std::chrono::high_resolution_clock::now()),
+      mTimeLastDrawn(new system_time_point(std::chrono::high_resolution_clock::now())),
       mRedrawIntervalInSecs(intervall)
 {
 }
 
+DrawerBase::~DrawerBase ()
+{
+    delete mTimeLastDrawn;
+}
 
 //-----------------------------------------------------------------------------
 //			                        Redraw
@@ -81,11 +85,11 @@ void DrawerBase::redraw (bool force)
 bool DrawerBase::requestRedraw (bool force)
 {
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>
-            (std::chrono::high_resolution_clock::now() - mTimeLastDrawn);
+            (std::chrono::high_resolution_clock::now() - *mTimeLastDrawn);
 
     if (force or elapsed.count() >= mRedrawIntervalInSecs * 1000)
     {
-        mTimeLastDrawn = std::chrono::high_resolution_clock::now();
+        *mTimeLastDrawn = std::chrono::high_resolution_clock::now();
         return true;
     }
     return false;

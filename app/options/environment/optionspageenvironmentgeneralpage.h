@@ -24,6 +24,9 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QCheckBox>
+
+#include "prerequisites.h"
+
 #include "../optionstabcontentsvscrollarea.h"
 #include "../optionscontentswidgetinterface.h"
 

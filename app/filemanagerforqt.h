@@ -24,7 +24,9 @@
 #ifndef FILEMANAGERFORQT_H
 #define FILEMANAGERFORQT_H
 
-#include "../core/adapters/filemanager.h"
+#include "prerequisites.h"
+
+#include "core/adapters/filemanager.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Implementation of the FileManager for Qt

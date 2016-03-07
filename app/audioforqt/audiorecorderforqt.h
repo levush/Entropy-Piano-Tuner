@@ -20,10 +20,12 @@
 #ifndef AUDIORECORDERFORQT_H
 #define AUDIORECORDERFORQT_H
 
-#include "../../core/audio/recorder/audiorecorderadapter.h"
 #include <QAudioInput>
 #include <QTimer>
-#include <mutex>
+
+#include "prerequisites.h"
+
+#include "../../core/audio/recorder/audiorecorderadapter.h"
 
 class AudioRecorderForQt : public QObject, public AudioRecorderAdapter
 {

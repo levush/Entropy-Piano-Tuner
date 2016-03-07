@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QWidget>
 
+#include "prerequisites.h"
+
 #include "core/calculation/algorithmparameterdescription.h"
 #include "core/calculation/algorithmparameters.h"
 

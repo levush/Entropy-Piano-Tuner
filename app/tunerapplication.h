@@ -21,6 +21,9 @@
 #define TUNERAPPLICATION_H
 
 #include <QApplication>
+
+#include "prerequisites.h"
+
 #include "audioforqt/audiorecorderforqt.h"
 #include "audioforqt/audioplayerforqt.h"
 #include "mainwindow.h"

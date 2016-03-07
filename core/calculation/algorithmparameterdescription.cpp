@@ -18,3 +18,26 @@
  *****************************************************************************/
 
 #include "algorithmparameterdescription.h"
+
+AlgorithmParameterDescription::AlgorithmParameterDescription() :
+    mParameterType(TYPE_UNSET),
+    mID(),
+    mLabel(),
+    mDescription(),
+    mDoubleDefaultValue(0),
+    mDoubleMinValue(std::numeric_limits<double>::min()),
+    mDoubleMaxValue(std::numeric_limits<double>::max()),
+    mDoublePrecision(0),
+    mIntDefaultValue(0),
+    mIntMinValue(std::numeric_limits<int>::min()),
+    mIntMaxValue(std::numeric_limits<int>::max()),
+    mStringDefaultValue(),
+    mStringList(),
+    mDisplayLineEdit(false),
+    mDisplaySpinBox(true),
+    mDisplaySlider(true),
+    mDisplaySetDefaultButton(true),
+    mReadOnly(false),
+    mUpdateIntervalInMS(-1)
+{
+}

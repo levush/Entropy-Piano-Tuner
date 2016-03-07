@@ -23,6 +23,7 @@ android|ios {
 EPT_ROOT_DIR = $$PWD
 
 EPT_BASE_DIR = $$EPT_ROOT_DIR
+EPT_CORE_DIR = $$EPT_BASE_DIR/core
 EPT_APPSTORE_DIR = $$EPT_ROOT_DIR/appstore
 EPT_ALGORITHMS_DIR = $$EPT_ROOT_DIR/algorithms
 EPT_THIRDPARTY_DIR = $$EPT_ROOT_DIR/thirdparty
@@ -46,7 +47,7 @@ contains(EPT_CONFIG, shared_algorithms) {
 }
 
 win32 {
-    CONFIG += timesupport getmemorysize rtmidi
+    CONFIG += timesupport getmemorysize rtmidi dirent
 }
 
 linux:!android {
@@ -82,3 +83,6 @@ contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1"
 contains(EPT_CONFIG, shared_algorithms):DEFINES+="EPT_SHARED_ALGORITHMS=1"
 
 LIBS += -L$$EPT_THIRDPARTY_OUT_DIR
+
+SUBDIRS += \
+    $$PWD/thirdparty/dirent/dirent.pro

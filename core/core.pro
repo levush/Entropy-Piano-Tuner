@@ -3,6 +3,8 @@ include(../entropypianotuner_func.pri)
 
 TEMPLATE = lib
 
+QT += core
+
 contains(EPT_CONFIG, allstatic) {
     CONFIG += staticlib
 } else {
@@ -11,10 +13,12 @@ contains(EPT_CONFIG, allstatic) {
 
 CONFIG += c++11
 
+DEFINES += EPT_BUILD_CORE
 DESTDIR = $$EPT_CORE_OUT_DIR
 
 INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR
 
+$$depends_dirent()
 $$depends_fftw3()
 $$depends_getmemorysize()
 $$depends_libuv()
@@ -153,7 +157,6 @@ CORE_SYSTEM_HEADERS = \
     system/log.h \
     system/simplethreadhandler.h \
     system/eptexception.h \
-    system/prerequisites.h \
     system/timer.h \
     system/version.h \
     system/platformtoolscore.h \
@@ -232,6 +235,7 @@ CORE_HEADERS = \
     config.h \
     core.h \
     settings.h \
+    prerequisites.h \
 
 CORE_SOURCES = \
     core.cpp \
@@ -250,7 +254,7 @@ HEADERS += \
     $$CORE_ANALYZER_HEADERS \
     $$CORE_PIANO_HEADERS \
     $$CORE_CALCULATION_HEADERS \
-    $$CORE_SYSTEM_HEADERS \
+    $$CORE_SYSTEM_HEADERS
 
 SOURCES += \
     $$CORE_SOURCES \
@@ -263,6 +267,6 @@ SOURCES += \
     $$CORE_ANALYZER_SOURCES \
     $$CORE_PIANO_SOURCES \
     $$CORE_CALCULATION_SOURCES \
-    $$CORE_SYSTEM_SOURCES \
+    $$CORE_SYSTEM_SOURCES
 
 

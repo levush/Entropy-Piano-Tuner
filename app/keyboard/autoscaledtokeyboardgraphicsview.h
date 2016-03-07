@@ -22,6 +22,9 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
+
+#include "prerequisites.h"
+
 #include "keyboardgraphicsview.h"
 #include "graphicsviewadapterforqt.h"
 

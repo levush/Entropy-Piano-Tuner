@@ -22,6 +22,8 @@
 
 #include <QDialog>
 
+#include "prerequisites.h"
+
 namespace Ui {
 class LogViewer;
 }

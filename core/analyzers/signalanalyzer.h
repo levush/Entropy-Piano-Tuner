@@ -28,6 +28,7 @@
 #include <atomic>
 #include <map>
 
+#include "prerequisites.h"
 #include "../system/simplethreadhandler.h"
 #include "../messages/messagelistener.h"
 #include "../audio/circularbuffer.h"

@@ -24,7 +24,7 @@
 #ifndef FOURIERSPECTRUMGRAPHDRAWER_H
 #define FOURIERSPECTRUMGRAPHDRAWER_H
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 #include "drawerbase.h"
 #include "../piano/keyboard.h"
 #include "../messages/messagelistener.h"
@@ -52,15 +52,14 @@ public:
     };
 
 public:
-    FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics);
-    ~FourierSpectrumGraphDrawer() {}        ///< Empty destructor
+    EPT_EXTERN FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics);
+    EPT_EXTERN ~FourierSpectrumGraphDrawer() {}        ///< Empty destructor
 
 protected:
-    virtual void draw() override final;
-    virtual void clear() override final;
-    virtual void handleMessage(MessagePtr m) override;
-
-    void updateSpectrum();
+    EPT_EXTERN virtual void draw() override final;
+    EPT_EXTERN virtual void clear() override final;
+    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
+    EPT_EXTERN void updateSpectrum();
 
 private:
     double mConcertPitch;                   ///< Target freuqency of A4

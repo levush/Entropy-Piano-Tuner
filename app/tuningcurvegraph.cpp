@@ -141,11 +141,11 @@ void TuningCurveGraph::mouseReleaseEvent(QMouseEvent *event)
 
 void TuningCurveGraph::handleMouseInteraction(double relX, double relY)
 {
-    int key = mNumberOfKeys * relX;
-    if (key < 0 or key >= mNumberOfKeys) return;
+    int key = getNumberOfKeys() * relX;
+    if (key < 0 or key >= getNumberOfKeys()) return;
     if (getOperationMode() == MODE_CALCULATION)
     {
         manuallyEditTuningCurveByClick(mPressedX, relY);
     }
-    else MessageHandler::send<MessageKeySelectionChanged>(key, &mPiano->getKey(key));
+    else MessageHandler::send<MessageKeySelectionChanged>(key, &getPiano()->getKey(key));
 }

@@ -24,7 +24,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <memory>
+#include "prerequisites.h"
 
 /////////////////////////////////////////////////////////////////////////
 /// \brief The Message class
@@ -40,7 +40,7 @@
 /// for receiving messages.
 /////////////////////////////////////////////////////////////////////////
 
-class Message
+class EPT_EXTERN Message
 {
 public:
     /// Available message types:
@@ -96,5 +96,6 @@ private:
 
 
 typedef std::shared_ptr<Message> MessagePtr;    ///< Global type of a shared message pointer
+template class EPT_EXTERN std::shared_ptr<Message>;
 
 #endif // MESSAGE_H

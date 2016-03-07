@@ -20,7 +20,7 @@
 #ifndef SERVERINFO_H
 #define SERVERINFO_H
 
-#include <string>
+#include "prerequisites.h"
 
 namespace serverinfo
 {
@@ -35,9 +35,9 @@ static const std::string MAIL_ADDRESS                  = "info@" + SERVER_DOMAIN
 static const std::string VERSION_FILENAME              = "version.xml";
 static const std::string MAC_X86_64_DMG                = "EntropyPianoTuner_MacOsX_x86_64.dmg";
 
-std::string getDownloadsFileAddress(const std::string &filename);
-std::string getVersionFileAddress();
-std::string getManualFileAddress(const std::string &langCode);
+extern std::string EPT_EXTERN getDownloadsFileAddress(const std::string &filename);
+extern std::string EPT_EXTERN getVersionFileAddress();
+extern std::string EPT_EXTERN getManualFileAddress(const std::string &langCode);
 
 }  // namespace serverinfo
 

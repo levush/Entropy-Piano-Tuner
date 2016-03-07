@@ -20,6 +20,8 @@
 #ifndef PIANOFILEIOXML_H
 #define PIANOFILEIOXML_H
 
+#include "prerequisites.h"
+
 #include "pianofileiointerface.h"
 
 class PianoFileIOXml : public PianoFileIOInterface

@@ -24,7 +24,10 @@
 #ifndef OVERPULL_H
 #define OVERPULL_H
 
+#include "prerequisites.h"
 #include "../piano/piano.h"
+
+template class EPT_EXTERN std::vector<std::vector<float> >;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Class for estimating the overpull needed in a pitch raise.
@@ -49,11 +52,11 @@
 /// The instance of the overpull estimator is held by the SignalAnalyzer.
 ///////////////////////////////////////////////////////////////////////////////
 
-class OverpullEstimator
+class EPT_EXTERN OverpullEstimator
 {
 public:
     OverpullEstimator();
-    ~OverpullEstimator(){};
+    ~OverpullEstimator() {}
 
     void init (const Piano *piano);
     double getOverpull (int keynumber, const Piano *piano);

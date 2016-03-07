@@ -23,6 +23,8 @@
 #include <qwt/qwt_scale_engine.h>
 #include <qwt/qwt_scale_div.h>
 
+#include "prerequisites.h"
+
 class KeyIndexScaleEngine : public QwtScaleEngine
 {
 public:

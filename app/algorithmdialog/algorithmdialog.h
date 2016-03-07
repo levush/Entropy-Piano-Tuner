@@ -29,6 +29,7 @@
 #include <QPushButton>
 #include <memory>
 
+#include "prerequisites.h"
 #include "core/calculation/algorithminformation.h"
 #include "core/piano/piano.h"
 

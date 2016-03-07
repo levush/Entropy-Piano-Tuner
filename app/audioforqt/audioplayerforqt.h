@@ -20,8 +20,11 @@
 #ifndef AUDIOPLAYERFORQT_H
 #define AUDIOPLAYERFORQT_H
 
-#include "../../core/audio/player/audioplayeradapter.h"
 #include <QAudioOutput>
+
+#include "prerequisites.h"
+
+#include "core/audio/player/audioplayeradapter.h"
 
 class AudioPlayerThreadForQt;
 

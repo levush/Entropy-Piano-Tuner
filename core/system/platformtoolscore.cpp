@@ -35,7 +35,7 @@ PlatformToolsCore *PlatformToolsCore::getSingleton() {
     return mSingletonPtr;
 }
 
-std::shared_ptr<MidiAdapter> PlatformToolsCore::createMidiAdapter() const
+MidiAdapterPtr PlatformToolsCore::createMidiAdapter() const
 {
 #if CONFIG_ENABLE_RTMIDI
     return std::make_shared<RtMidiImplementation>();

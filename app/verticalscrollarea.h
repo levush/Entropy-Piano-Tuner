@@ -22,6 +22,8 @@
 
 #include <QScrollArea>
 
+#include "prerequisites.h"
+
 class VerticalScrollArea : public QScrollArea
 {
 public:

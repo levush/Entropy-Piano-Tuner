@@ -20,6 +20,7 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
+#include "prerequisites.h"
 #include "../system/simplethreadhandler.h"
 #include "../system/log.h"
 #include "../piano/piano.h"
@@ -35,7 +36,7 @@
 /// to increase the security and stability of the implementation.
 ////////////////////////////////////////////////////////////////////////
 
-class Algorithm : public SimpleThreadHandler
+class EPT_EXTERN Algorithm : public SimpleThreadHandler
 {
 public:
     Algorithm(const Piano &piano, const AlgorithmFactoryDescription &description);

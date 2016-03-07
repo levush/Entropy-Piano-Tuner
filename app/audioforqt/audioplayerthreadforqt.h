@@ -20,11 +20,12 @@
 #ifndef AUDIOPLAYERTHREADFORQT_H
 #define AUDIOPLAYERTHREADFORQT_H
 
-#include "audioplayerforqt.h"
 #include <QAudioOutput>
-#include <mutex>
-#include <atomic>
 #include <QThread>
+
+#include "prerequisites.h"
+
+#include "audioplayerforqt.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for the audio player thread

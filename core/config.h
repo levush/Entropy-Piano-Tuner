@@ -29,7 +29,7 @@
 //     1: release mode (throws in release mode)
 //     2: exceptions mode (no asserts, throw exception instead)
 //  else: normal mode
-#define EPT_ASSERT_MODE                2
+#define EPT_ASSERT_MODE                0
 
 // Log level:
 //     1: verbose
@@ -51,9 +51,6 @@
 
 // Exclude the example algorithm
 #define EPT_EXCLUDE_EXAMPLE_ALGORITHM  0
-
-// Build using shared libraries for plugins
-#define EPT_SHARED_LIBRARY
 
 #if __ANDROID__
 //=============================================================================
@@ -125,13 +122,16 @@
 
 // export defines
 #ifdef WIN32
-# ifndef EPT_SHARED_LIBRARY
+# ifdef EPT_BUILD_CORE
 #   define EPT_EXTERN __declspec(dllexport)
+#   define EPT_EXTERN_TEMPLATE template
 # else
 #   define EPT_EXTERN __declspec(dllimport)
+#   define EPT_EXTERN_TEMPLATE extern template
 # endif
 #else
 # define EPT_EXTERN // nothing
+# define EPT_EXTERN_TEMPLATE template
 #endif
 
 #endif // CONFIG

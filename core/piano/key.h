@@ -24,8 +24,11 @@
 #ifndef KEY_H
 #define KEY_H
 
-#include <vector>
-#include <map>
+#include "prerequisites.h"
+
+class Key;
+
+template class EPT_EXTERN std::shared_ptr<Key>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class describing a single piano key
@@ -42,7 +45,7 @@
 /// mesured, the computed, and the tuned frequency.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Key
+class EPT_EXTERN Key
 {
 public:
     // Charactereistics of the logarithmically binned spectrum

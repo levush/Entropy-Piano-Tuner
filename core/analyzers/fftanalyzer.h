@@ -24,11 +24,9 @@
 #ifndef FFTANALYZER_H
 #define FFTANALYZER_H
 
-#include <map>
-
+#include "prerequisites.h"
 #include "fftanalyzererrorcodes.h"
 #include "../piano/piano.h"
-#include "../system/prerequisites.h"
 #include "../math/fftadapter.h"
 #include "../math/fftimplementation.h"
 
@@ -40,7 +38,7 @@
 /// flag to the FFT analyzer.
 ///////////////////////////////////////////////////////////////////////////////
 
-class FFTAnalyzer
+class EPT_EXTERN FFTAnalyzer
 {
 public:
 

@@ -24,11 +24,14 @@
 #include <QUrl>
 #include <QToolButton>
 #include <memory>
-#include "../core/system/prerequisites.h"
-#include "../core/config.h"
-#include "../core/core.h"
-#include "../core/messages/messagelistener.h"
-#include "../core/adapters/modeselectoradapter.h"
+
+#include "prerequisites.h"
+
+#include "core/config.h"
+#include "core/core.h"
+#include "core/messages/messagelistener.h"
+#include "core/adapters/modeselectoradapter.h"
+
 #include "projectmanagerforqt.h"
 #include "calculationprogressgroup.h"
 #include "signalanalyzergroupbox.h"

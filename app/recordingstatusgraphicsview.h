@@ -25,7 +25,10 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsRectItem>
 #include <QTimer>
-#include "../core/messages/messagelistener.h"
+
+#include "prerequisites.h"
+
+#include "core/messages/messagelistener.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The QGraphicsView that will display the current recording status.

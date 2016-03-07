@@ -7,6 +7,9 @@
 # modify it under the terms of the Qwt License, Version 1.0
 ################################################################
 
+# Changes:
+# - QWT_DLL set by EPT configuration
+
 QWT_VER_MAJ      = 6
 QWT_VER_MIN      = 1
 QWT_VER_PAT      = 2
@@ -72,7 +75,11 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
 # it will be a static library.
 ######################################################################
 
-QWT_CONFIG           += QwtDll
+# CUSTOM CHANGE: Selection of config
+include( ../../../entropypianotuner_config.pri )
+!contains(EPT_CONFIG, allstatic) {
+    QWT_CONFIG += QwtDll
+}
 
 ######################################################################
 # QwtPlot enables all classes, that are needed to use the QwtPlot 

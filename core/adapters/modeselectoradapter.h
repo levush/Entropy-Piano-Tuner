@@ -24,7 +24,7 @@
 #ifndef MODESELECTORADAPTER_H
 #define MODESELECTORADAPTER_H
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The ModeSelectorAdapter class
@@ -36,7 +36,7 @@
 /// In Qt this class is implemented in ModeSelector (file modeselector.h).
 ///////////////////////////////////////////////////////////////////////////////
 
-class ModeSelectorAdapter
+class EPT_EXTERN ModeSelectorAdapter
 {
 public:
     ModeSelectorAdapter();

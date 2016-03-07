@@ -22,8 +22,12 @@
 
 #include <QWidget>
 #include <QComboBox>
+
+#include "prerequisites.h"
+
+#include "core/audio/midi/midiadapter.h"
+
 #include "../optionscontentswidgetinterface.h"
-#include "../../../core/audio/midi/midiadapter.h"
 
 namespace options {
 

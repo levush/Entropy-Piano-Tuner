@@ -53,10 +53,26 @@ defineReplace(declareSharedLibrary) {
     return(true)
 }
 
+defineReplace(depends_dirent) {
+    dirent {
+        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/dirent/dirent
+    }
+
+    export(INCLUDEPATH)
+
+    return(true)
+}
+
 defineReplace(depends_fftw3) {
     fftw3 {
         !contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/fftw3/fftw3/api
+        }
+
+        !contains(EPT_CONFIG, allstatic) {
+            win32 {
+                DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
+            }
         }
 
         LIBS += -lfftw
@@ -64,6 +80,7 @@ defineReplace(depends_fftw3) {
 
     export(INCLUDEPATH)
     export(LIBS)
+    export(DLLS)
 
     return(true)
 }
@@ -89,10 +106,10 @@ defineReplace(depends_libuv) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/libuv/include
         }
 
+        linux:LIBS += -ldl
+        win32:LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv -lkernel32 -ladvapi32
+
         LIBS += -luv
-        linux {
-            LIBS += -ldl
-        }
     }
 
     export(LIBS)
@@ -109,10 +126,14 @@ defineReplace(depends_qwt) {
         } else {
             LIBS += -lqwt-qt5
         }
+        !contains(EPT_CONFIG, allstatic) {
+            DEFINES += QWT_DLL
+        }
     }
 
     export(INCLUDEPATH)
     export(LIBS)
+    export(DEFINES)
 
     return(true)
 }

@@ -23,6 +23,8 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 
+#include "prerequisites.h"
+
 class KeyboardGraphicsView;
 
 ///////////////////////////////////////////////////////////////////////////////

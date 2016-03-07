@@ -24,6 +24,8 @@
 #include <QUrl>
 #include <QHBoxLayout>
 
+#include "prerequisites.h"
+
 class AboutDialog : public QDialog {
     Q_OBJECT
 public:

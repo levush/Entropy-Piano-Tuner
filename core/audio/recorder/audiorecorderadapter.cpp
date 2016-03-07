@@ -26,6 +26,7 @@
 
 #include "audiorecorderadapter.h"
 
+#include "stroboscope.h"
 #include "../../messages/messagerecorderenergychanged.h"
 #include "../../messages/messagemodechanged.h"
 #include "../../messages/messagehandler.h"

@@ -24,8 +24,12 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include <memory>
 #include <fstream>
+
+#include "prerequisites.h"
+
+class FileManager;
+template class EPT_EXTERN std::unique_ptr<FileManager>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract singleton adapter for opening files
@@ -40,7 +44,7 @@
 /// The FileManager is a singleton class, i.e., there is only a single instance.
 ///////////////////////////////////////////////////////////////////////////////
 
-class FileManager
+class EPT_EXTERN FileManager
 {
 public:
     /// \brief Constructor, setting the singleton pointer to its own instance.

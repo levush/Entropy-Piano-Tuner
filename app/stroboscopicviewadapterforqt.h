@@ -24,7 +24,10 @@
 #ifndef STROBOSCOPICVIEWADAPTERFORQT_H
 #define STROBOSCOPICVIEWADAPTERFORQT_H
 
-#include "../core/adapters/graphicsviewadapter.h"
+#include "prerequisites.h"
+
+#include "core/adapters/graphicsviewadapter.h"
+
 #include "graphicsviewadapterforqt.h"
 
 ///////////////////////////////////////////////////////////////////////////////

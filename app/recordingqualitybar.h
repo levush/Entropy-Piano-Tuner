@@ -26,7 +26,9 @@
 
 #include <QProgressBar>
 
-#include <../core/messages/messagelistener.h>
+#include "prerequisites.h"
+
+#include "core/messages/messagelistener.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Quality recording bar

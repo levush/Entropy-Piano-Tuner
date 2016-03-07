@@ -20,10 +20,13 @@
 #ifndef CENTRALPLOTFRAME_H
 #define CENTRALPLOTFRAME_H
 
-#include "qwt/qwt_plot.h"
-#include "qwt/qwt_plot_zoomer.h"
 #include <QTouchEvent>
 #include <QTime>
+
+#include <qwt/qwt_plot.h>
+#include <qwt/qwt_plot_zoomer.h>
+
+#include "prerequisites.h"
 
 class CentralPlotFrame : public QwtPlot
 {

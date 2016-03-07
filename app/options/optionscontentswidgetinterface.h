@@ -22,6 +22,8 @@
 
 #include "optionsdialog.h"
 
+#include "prerequisites.h"
+
 namespace options {
 
 class ContentsWidgetInterface {

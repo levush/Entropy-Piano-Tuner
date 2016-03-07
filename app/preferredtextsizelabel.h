@@ -22,6 +22,8 @@
 
 #include <QLabel>
 
+#include "prerequisites.h"
+
 class PreferredTextSizeLabel : public QLabel
 {
 public:

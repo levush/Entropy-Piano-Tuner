@@ -28,7 +28,12 @@
 #include <queue>
 #include <memory>
 #include <mutex>
+
+#include "prerequisites.h"
 #include "messagelistener.h"
+
+template class EPT_EXTERN std::list<MessageListener*>;
+template class EPT_EXTERN std::list<MessagePtr>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for handling and sending messages
@@ -40,7 +45,7 @@
 /// Note that "process" has to be called in the thread of the GUI.
 //////////////////////////////////////////////////////////////////////////////
 
-class MessageHandler
+class EPT_EXTERN MessageHandler
 {
 public:
     /// short function for creating and sending a message
@@ -62,7 +67,7 @@ public:
     static void sendUnique(Message::MessageTypes type) {sendUnique<Message>(type);}
 private:
     /// \brief private constructor since this class is a singleton
-    MessageHandler(){};
+    MessageHandler() {}
 
 public:
     ~MessageHandler(){}                                     ///< Empty desctructor
@@ -86,5 +91,6 @@ private:
     std::list<MessagePtr> mMessages;                        ///< Queue of messages to be submitted
     mutable std::mutex mMessageMutex;                       ///< Mutex for accessing the queue
 };
+
 
 #endif // MESSAGEHANDLER_H

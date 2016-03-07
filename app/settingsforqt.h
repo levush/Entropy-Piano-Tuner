@@ -23,7 +23,10 @@
 #include <QSettings>
 #include <QString>
 #include <vector>
-#include "../core/settings.h"
+
+#include "prerequisites.h"
+
+#include "core/settings.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Qt specific settings.

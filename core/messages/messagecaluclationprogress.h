@@ -26,6 +26,8 @@
 
 #include "message.h"
 
+#include "prerequisites.h"
+
 //////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a message reporting the calculation progress
 ///
@@ -35,7 +37,7 @@
 /// calculation progress in percent,
 /// ///////////////////////////////////////////////////////////////////////////
 
-class MessageCaluclationProgress : public Message
+class EPT_EXTERN MessageCaluclationProgress : public Message
 {
 public:
     enum MessageCalculationProgressTypes

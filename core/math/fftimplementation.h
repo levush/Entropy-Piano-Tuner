@@ -60,10 +60,10 @@
 #include <fftw3.h>
 #include <mutex>
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 
 
-class FFT_Implementation : public FFTAdapter
+class EPT_EXTERN FFT_Implementation : public FFTAdapter
 {
 public:
 

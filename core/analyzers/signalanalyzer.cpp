@@ -691,7 +691,7 @@ bool SignalAnalyzer::detectClipping(FFTWVector signal)
         else if (y<=minamp*0.99) mincnt++;
         if (y==0) nullcnt++;
     }
-    const int threshold = signal.size()/50;
+    const size_t threshold = signal.size()/50;
     if (maxcnt+mincnt > threshold)
     {
         LogW("SignalAnalyzer: High-amplitude clipping detected");
@@ -724,7 +724,7 @@ void SignalAnalyzer::createPolygon (const FFTWVector &powerspec, FFTPolygon &pol
     const double cents = 10;
     const double factor = pow(2.0,cents/2400);
 
-    int fftsize = powerspec.size();
+    size_t fftsize = powerspec.size();
     EptAssert(fftsize>0,"powerspectum has to be non-empty");
     int samplingrate = mAudioRecorder->getSamplingRate();
     auto q = [fftsize,samplingrate] (double f) { return 2*fftsize*f/samplingrate; };

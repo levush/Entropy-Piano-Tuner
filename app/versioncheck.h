@@ -21,10 +21,10 @@
 #define VERSIONCHECK_H
 
 #include <QObject>
-#include "qtconfig.h"
-
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
+
+#include "prerequisites.h"
 
 struct VersionInformation {
     QString mAppVersion;

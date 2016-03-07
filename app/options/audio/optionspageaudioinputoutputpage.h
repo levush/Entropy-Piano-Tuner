@@ -21,6 +21,9 @@
 #define OPTIONSPAGEAUDIOINPUTOUTPUTPAGE_H
 
 #include <QSpinBox>
+
+#include "prerequisites.h"
+
 #include "../optionscontentswidgetinterface.h"
 
 namespace options {

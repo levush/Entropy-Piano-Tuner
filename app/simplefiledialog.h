@@ -26,6 +26,8 @@
 #include <QDir>
 #include <QLineEdit>
 
+#include "prerequisites.h"
+
 class SimpleFileDialog : public QDialog
 {
     Q_OBJECT

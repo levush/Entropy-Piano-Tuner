@@ -24,6 +24,8 @@
 #include <QString>
 #include <QStringList>
 
+#include "prerequisites.h"
+
 #include "core/system/platformtoolscore.h"
 
 class TunerApplication;

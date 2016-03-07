@@ -20,11 +20,14 @@
 #ifndef PROJECTMANAGERFORQT_H
 #define PROJECTMANAGERFORQT_H
 
-#include "../core/adapters/projectmanageradapter.h"
 #include <QObject>
 #include <QWidget>
 #include <map>
 #include <memory>
+
+#include "prerequisites.h"
+
+#include "core/adapters/projectmanageradapter.h"
 
 #include "piano/pianofileiointerface.h"
 

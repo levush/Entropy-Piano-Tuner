@@ -22,6 +22,8 @@
 
 #include <QTabWidget>
 
+#include "prerequisites.h"
+
 ///
 /// \brief QTabWidget that stores the last visible page
 ///

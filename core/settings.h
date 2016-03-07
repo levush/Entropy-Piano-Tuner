@@ -24,10 +24,12 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <memory>
-#include <string>
-
+#include "prerequisites.h"
 #include "audio/player/soundgenerator.h"
+
+class Settings;
+
+template class EPT_EXTERN std::unique_ptr<Settings>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The Settings class
@@ -38,7 +40,7 @@
 /// This class is a singleton class (one global instance)
 ///////////////////////////////////////////////////////////////////////////////
 
-class Settings
+class EPT_EXTERN Settings
 {
 public:
     Settings();     ///< Constructor

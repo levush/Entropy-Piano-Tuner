@@ -25,7 +25,7 @@
 #ifndef PROJECTMANAGERADAPTER_H
 #define PROJECTMANAGERADAPTER_H
 
-#include <string>
+#include "prerequisites.h"
 #include "core/piano/pianodefines.h"
 #include "../messages/messagelistener.h"
 
@@ -40,7 +40,7 @@ class Piano;
 /// changes. This class provides a callback functionality for this purpose.
 ///////////////////////////////////////////////////////////////////////////////
 
-class FileChangesCallback
+class EPT_EXTERN FileChangesCallback
 {
 public:
     virtual void changesInFileUpdated(bool changes) = 0;
@@ -55,7 +55,7 @@ public:
 /// possible changes.
 ///////////////////////////////////////////////////////////////////////////////
 
-class ProjectManagerAdapter : public MessageListener
+class EPT_EXTERN ProjectManagerAdapter : public MessageListener
 {
 public:
     /// Enumeration of the possible outcomes of a typical mouse button
@@ -69,7 +69,7 @@ public:
 
 
 
-    struct FileDialogResult
+    struct EPT_EXTERN FileDialogResult
     {
         FileDialogResult(const std::wstring path = std::wstring());
         FileDialogResult(const std::wstring path, const piano::FileType fileType);

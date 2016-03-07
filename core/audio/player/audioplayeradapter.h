@@ -24,6 +24,7 @@
 #ifndef AUDIOPLAYERADAPTER_H
 #define AUDIOPLAYERADAPTER_H
 
+#include "prerequisites.h"
 #include "pcmwriterinterface.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,7 +48,7 @@
 /// PCMWriterInterface. In addition it handels a mute flag.
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioPlayerAdapter : public AudioBase
+class EPT_EXTERN AudioPlayerAdapter : public AudioBase
 {
 public:
     static const double DefaultBufferSizeMilliseconds;  ///< The default playback buffer size in milliseconds
@@ -57,7 +58,7 @@ public:
 
     virtual void exit() override;
 
-    void setWriter (PCMWriterInterface *interface);
+    void setWriter (PCMWriterInterface *writerInterface);
     PCMWriterInterface *getWriter() {return mPCMWriter;} ///< Get pointer to the PCM writer
 
     void setMuted (bool muted) { mMuted = muted; }  ///< Mute the audio player.

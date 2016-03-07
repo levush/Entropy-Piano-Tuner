@@ -22,6 +22,9 @@
 
 #include <QWidget>
 #include <QScroller>
+
+#include "prerequisites.h"
+
 #include "verticalscrollarea.h"
 
 class OptionsTabContentsVScrollArea : public VerticalScrollArea

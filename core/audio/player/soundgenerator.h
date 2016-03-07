@@ -24,7 +24,7 @@
 #ifndef SOUNDGENERATOR_H
 #define SOUNDGENERATOR_H
 
-
+#include "prerequisites.h"
 #include "synthesizer.h"
 #include "soundgenerator.h"
 #include "../midi/midiadapter.h"
@@ -41,21 +41,22 @@
 class SoundGenerator : public MessageListener
 {
 public:
-    SoundGenerator (AudioPlayerAdapter *audioAdapter);
-    ~SoundGenerator(){}
-
-    void init ();
-    void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
-
-    Synthesizer &getSynthesizer() {return mSynthesizer;}
-
     /// \brief Mode for sound generation
-    enum SoundGeneratorMode
+    enum EPT_EXTERN SoundGeneratorMode
     {
         SGM_DEACTIVATED,        ///< No sound generation
         SGM_SYNTHESIZE_KEY,     ///< Produce a sound which imitates the string
         SGM_REFERENCE_TONE,     ///< Produce a simple sine wave as reference
     };
+
+public:
+    EPT_EXTERN SoundGenerator (AudioPlayerAdapter *audioAdapter);
+    EPT_EXTERN ~SoundGenerator(){}
+
+    EPT_EXTERN void init ();
+    EPT_EXTERN void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
+
+    EPT_EXTERN Synthesizer &getSynthesizer() {return mSynthesizer;}
 
 private:
     void handleMessage(MessagePtr m) override final;

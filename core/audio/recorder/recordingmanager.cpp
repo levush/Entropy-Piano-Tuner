@@ -27,6 +27,8 @@
 #include "../../messages/messagekeyselectionchanged.h"
 #include "../../messages/messagemodechanged.h"
 
+#include "piano/piano.h"
+
 RecordingManager::RecordingManager  (AudioRecorderAdapter *audioRecorder)
  : mAudioRecorder (audioRecorder),
    mPiano(nullptr),

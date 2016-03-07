@@ -40,11 +40,11 @@
 /// of the software.
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageFinalKey : public Message
+class EPT_EXTERN MessageFinalKey : public Message
 {
 public:
     MessageFinalKey(int keyNumber, std::shared_ptr<Key> key);
-    ~MessageFinalKey(){};
+    ~MessageFinalKey() {}
 
     int getKeyNumber() { return mKeyNumber; }
     std::shared_ptr<Key> getFinalKey() const { return mKey; }

@@ -23,6 +23,8 @@
 #include <memory>
 #include <qnamespace.h>
 
+#include "prerequisites.h"
+
 enum DisplaySize {
     DS_XSMALL  = 1,          //< Normal smartphones up to 4.5'
     DS_SMALL   = 2,          //< Large smartphones down to 4.5'

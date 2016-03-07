@@ -24,9 +24,12 @@
 #ifndef TUNINGINDICATORVIEW_H
 #define TUNINGINDICATORVIEW_H
 
+#include "prerequisites.h"
+
+#include "core/drawers/tuningindicatordrawer.h"
+
 #include "graphicsviewadapterforqt.h"
 #include "stroboscopicviewadapterforqt.h"
-#include "../core/drawers/tuningindicatordrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for the Qt implementation of the tuning indicator

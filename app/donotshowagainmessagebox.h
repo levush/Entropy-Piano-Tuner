@@ -22,6 +22,8 @@
 
 #include <QMessageBox>
 
+#include "prerequisites.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief A MessageBox with a QCheckBox to remember the decision of the user.
 ///

@@ -26,8 +26,11 @@
 
 #include <QGraphicsPathItem>
 
+#include "prerequisites.h"
+
+#include "core/drawers/tuningcurvegraphdrawer.h"
+
 #include "keyboard/autoscaledtokeyboardgraphicsview.h"
-#include "../core/drawers/tuningcurvegraphdrawer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The QGraphicsView to display the tuning curve and the inharmonicity.

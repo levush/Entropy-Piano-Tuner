@@ -114,7 +114,7 @@ public:
 
     Synthesizer ();
 
-    virtual void init (int sampleRate, int channels) override final;
+    virtual void init (const int sampleRate, const int channels) override final;
     virtual void exit () override final { mWaveformGenerator.exit();}
 
     void setNumberOfKeys (int numberOfKeys);

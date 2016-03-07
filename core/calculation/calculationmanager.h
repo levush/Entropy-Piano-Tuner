@@ -27,6 +27,7 @@
 #include <memory>
 #include <vector>
 
+#include "prerequisites.h"
 #include "core/system/sharedlibrary.h"
 #include "../system/simplethreadhandler.h"
 #include "../piano/piano.h"
@@ -37,6 +38,14 @@
 class AlgorithmFactoryBase;
 class AlgorithmFactoryDescription;
 class Algorithm;
+
+#ifdef EPT_SHARED_ALGORITHMS
+template class EPT_EXTERN std::vector<SharedLibraryPtr>;
+#endif
+
+template class EPT_EXTERN std::map<std::string, AlgorithmFactoryBase*>;
+template class EPT_EXTERN std::unique_ptr<Algorithm>;
+template class EPT_EXTERN std::shared_ptr<const AlgorithmInformation>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Calculation-Manager
@@ -51,7 +60,7 @@ class Algorithm;
 /// The calculation manager is a singleton class.
 ///////////////////////////////////////////////////////////////////////////////
 
-class CalculationManager
+class EPT_EXTERN CalculationManager
 {
 private:
     CalculationManager();                       // Constructor

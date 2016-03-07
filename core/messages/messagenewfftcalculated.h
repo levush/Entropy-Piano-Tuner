@@ -27,13 +27,14 @@
 #include "message.h"
 #include "../analyzers/fftanalyzererrorcodes.h"
 #include "../math/fftadapter.h"
-#include "../system/prerequisites.h"
+
+template class EPT_EXTERN std::shared_ptr<FFTPolygon>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class of a message informing that a new FFT has been calculated
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageNewFFTCalculated : public Message
+class EPT_EXTERN MessageNewFFTCalculated : public Message
 {
 public:
     /// Type of the FFT Message

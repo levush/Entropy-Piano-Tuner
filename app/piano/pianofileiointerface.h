@@ -22,6 +22,8 @@
 
 #include <QIODevice>
 
+#include "prerequisites.h"
+
 #include "core/piano/piano.h"
 
 class PianoFileIOInterface

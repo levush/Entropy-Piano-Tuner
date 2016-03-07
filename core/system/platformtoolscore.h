@@ -22,9 +22,10 @@
 
 #include <memory>
 
+#include "prerequisites.h"
 #include "core/audio/midi/midiadapter.h"
 
-class PlatformToolsCore
+class EPT_EXTERN PlatformToolsCore
 {
 private:
     static PlatformToolsCore* mSingletonPtr;
@@ -35,7 +36,7 @@ protected:
 public:
     static PlatformToolsCore *getSingleton();
 
-    virtual std::shared_ptr<MidiAdapter> createMidiAdapter() const;
+    virtual MidiAdapterPtr createMidiAdapter() const;
 
     /// Returns the physical memory, can be used to detect low memory devices
     virtual unsigned long long getInstalledPhysicalMemoryInB() const;

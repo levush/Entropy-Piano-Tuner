@@ -25,7 +25,7 @@
 #define MESSAGEMODECHANGED_H
 
 #include "message.h"
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Message reporting a change of the operation mode
@@ -35,7 +35,7 @@
 /// changes, this message informs the other components of the EPT
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageModeChanged : public Message
+class EPT_EXTERN MessageModeChanged : public Message
 {
 public:
     MessageModeChanged(OperationMode mode, OperationMode previousMode);

@@ -33,17 +33,19 @@ std::shared_ptr<Log> Log::mLog;
 
 Log::Log() {
     mLog = std::shared_ptr<Log>(this);
+    mLogStream = new std::ofstream;
 }
 
 Log::~Log()
 {
-    mLogStream.close();
+    mLogStream->close();
+    delete mLogStream;
 }
 
 void Log::createLogFile()
 {
     FileManager::getSingleton().open(
-                mLogStream,
+                *mLogStream,
                 FileManager::getSingleton().getLogFilePath(LOG_NAME));
     writeToLogfile(LEVEL_INFORMATION, "Log file for entropy tuner\n\n", __LINE__, __FILE__, __func__);
 }
@@ -51,8 +53,8 @@ void Log::createLogFile()
 const char* Log::simplify (const char* filename)
 {
     const char* pattern = "Entropy-Piano-Tuner/";
-    int patternsize = strlen(pattern);
-    int len = strlen(filename);
+    size_t patternsize = strlen(pattern);
+    size_t len = strlen(filename);
     if (len > 0)
     {
         const char *substring = strstr(filename, pattern);
@@ -118,7 +120,7 @@ void Log::impl_error(const char *l) {
 
 void Log::writeToLogfile(ELevel level, const char *text, int line, const char *file, const char *function)
 {
-    if (mLogStream.is_open() == false) return;
+    if (mLogStream->is_open() == false) return;
 
     // current time
     std::time_t t = std::time(0); //obtain the current time_t value
@@ -135,28 +137,28 @@ void Log::writeToLogfile(ELevel level, const char *text, int line, const char *f
     // write level to log file
     switch (level) {
     case LEVEL_VERBOSE:
-        mLogStream << "V/";
+        *mLogStream << "V/";
         break;
     case LEVEL_DEBUG:
-        mLogStream << "D/";
+        *mLogStream << "D/";
         break;
     case LEVEL_INFORMATION:
-        mLogStream << "I/";
+        *mLogStream << "I/";
         break;
     case LEVEL_WARNING:
-        mLogStream << "W/";
+        *mLogStream << "W/";
         break;
     case LEVEL_ERROR:
-        mLogStream << "E/";
+        *mLogStream << "E/";
         break;
     }
 
     // write time to log file:
-    mLogStream << tmdescr << ":\t";
+    *mLogStream << tmdescr << ":\t";
 
-    mLogStream << "In file " << simplify(file) << " in function " << function << " at line " << line << std::endl;
+    *mLogStream << "In file " << simplify(file) << " in function " << function << " at line " << line << std::endl;
 
     // write to the log file
-    mLogStream << "\t\t" << text << std::endl << std::endl;
-    mLogStream.flush();
+    *mLogStream << "\t\t" << text << std::endl << std::endl;
+    mLogStream->flush();
 }

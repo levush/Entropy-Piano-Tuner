@@ -25,7 +25,7 @@
 
 #include <QCryptographicHash>
 
-#include "core/system/prerequisites.h"
+#include "core/prerequisites.h"
 
 //-----------------------------------------------------------------------------
 //                              Constructor

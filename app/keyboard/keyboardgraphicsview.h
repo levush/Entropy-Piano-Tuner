@@ -24,9 +24,11 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsPixmapItem>
-#include "../core/system/log.h"
-#include "../core/piano/keyboard.h"
-#include "../core/messages/messagelistener.h"
+
+#include "prerequisites.h"
+
+#include "core/piano/keyboard.h"
+#include "core/messages/messagelistener.h"
 
 class AutoScaledToKeyboardGraphicsView;
 

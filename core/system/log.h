@@ -64,7 +64,11 @@
 #   define LogE(...)
 #endif
 
-class Log
+class Log;
+
+template class EPT_EXTERN std::shared_ptr<Log>;
+
+class EPT_EXTERN Log
 {
 public:
     static const std::string LOG_NAME;
@@ -105,7 +109,10 @@ private:
 
 private:
     static std::shared_ptr<Log> mLog;
-    std::ofstream mLogStream;
+
+    // use pointer due to warning C4267 on windows
+    std::ofstream *mLogStream;
+
     static const char* simplify (const char* filename);
 };
 

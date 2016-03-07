@@ -22,6 +22,8 @@
 
 #include <QSlider>
 
+#include "prerequisites.h"
+
 class DoubleSlider : public QSlider
 {
     Q_OBJECT

@@ -22,7 +22,10 @@
 
 #include <QDialog>
 #include <QProgressDialog>
-#include "../core/adapters/coreinitialisationadapter.h"
+
+#include "prerequisites.h"
+
+#include "core/adapters/coreinitialisationadapter.h"
 
 
 class InitializeDialog;

@@ -27,6 +27,7 @@
 #include <string>
 #include <fstream>
 
+#include "prerequisites.h"
 #include "keyboard.h"
 #include "pianodefines.h"
 #include "core/calculation/algorithmparameters.h"
@@ -38,7 +39,7 @@
 /// It contains variables such as name, serial number,
 ////////////////////////////////////////////////////////////////////////
 
-class Piano
+class EPT_EXTERN Piano
 {
 public:
     static const int DEFAULT_NUMBER_OF_KEYS;
@@ -48,7 +49,7 @@ public:
 
 public:
     Piano();
-    ~Piano() {};
+    ~Piano() {}
 
     using Keys = std::vector<Key>;
 

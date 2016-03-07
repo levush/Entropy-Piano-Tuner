@@ -20,11 +20,10 @@
 #ifndef ALGORITHMPARAMETERDESCRIPTION_H
 #define ALGORITHMPARAMETERDESCRIPTION_H
 
-#include <string>
-#include <vector>
-#include <limits>
 
-class AlgorithmParameterDescription
+#include "prerequisites.h"
+
+class EPT_EXTERN AlgorithmParameterDescription
 {
 public:
     using StringParameterList = std::vector<std::pair<std::string, std::string> >;
@@ -37,6 +36,8 @@ public:
     };
 
 public:
+    AlgorithmParameterDescription();
+
     const std::string &getID() const {return mID;}
     std::string &getID() {return mID;}
 
@@ -104,32 +105,32 @@ public:
     void setUpdateIntervalInMS(int i) {mUpdateIntervalInMS = i;}
 
 private:
-    Type mParameterType = TYPE_UNSET;
+    Type mParameterType;
     std::string mID;
 
     std::string mLabel;
     std::string mDescription;
 
-    double mDoubleDefaultValue = 0;
-    double mDoubleMinValue = std::numeric_limits<double>::min();
-    double mDoubleMaxValue = std::numeric_limits<double>::max();
-    int    mDoublePrecision = 0;
+    double mDoubleDefaultValue;
+    double mDoubleMinValue;
+    double mDoubleMaxValue;
+    int    mDoublePrecision;
 
-    int    mIntDefaultValue = 0;
-    int    mIntMinValue = std::numeric_limits<int>::min();
-    int    mIntMaxValue = std::numeric_limits<int>::max();
+    int    mIntDefaultValue;
+    int    mIntMinValue;
+    int    mIntMaxValue;
 
     std::string mStringDefaultValue;
     StringParameterList mStringList;
 
-    bool   mDisplayLineEdit = false;
-    bool   mDisplaySpinBox  = true;
-    bool   mDisplaySlider   = true;
-    bool   mDisplaySetDefaultButton = true;
+    bool   mDisplayLineEdit;
+    bool   mDisplaySpinBox;
+    bool   mDisplaySlider;
+    bool   mDisplaySetDefaultButton;
 
-    bool   mReadOnly        = false;
+    bool   mReadOnly;
 
-    int    mUpdateIntervalInMS = -1;
+    int    mUpdateIntervalInMS;
 };
 
 #endif // ALGORITHMPARAMETERDESCRIPTION_H

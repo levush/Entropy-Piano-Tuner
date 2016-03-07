@@ -35,6 +35,11 @@
 #include "piano/pianomanager.h"
 #include "system/log.h"
 
+template class EPT_EXTERN std::unique_ptr<ProjectManagerAdapter>;
+template class EPT_EXTERN std::unique_ptr<SoundGenerator>;
+template class EPT_EXTERN std::unique_ptr<SignalAnalyzer>;
+template class EPT_EXTERN std::shared_ptr<MidiAdapter>;
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief CORE : Class managing the core
 ///
@@ -44,38 +49,39 @@
 
 class Core
 {
+    // Note msvc: export (EPT_EXTERN) only required fields
 public:
-    Core(ProjectManagerAdapter *projectManager,
+    EPT_EXTERN Core(ProjectManagerAdapter *projectManager,
          AudioRecorderAdapter *recorderAdapter,
          AudioPlayerAdapter *playerAdapter,
          Log *log = new Log());
-    ~Core();
+    EPT_EXTERN ~Core();
 
-    void setEnableSoundGenerator(bool enable);
+    EPT_EXTERN void setEnableSoundGenerator(bool enable);
 
 
-    void init (CoreInitialisationAdapter *initAdapter);
-    void exit();
-    void start();
-    void stop();
+    EPT_EXTERN void init (CoreInitialisationAdapter *initAdapter);
+    EPT_EXTERN void exit();
+    EPT_EXTERN void start();
+    EPT_EXTERN void stop();
 
     /// Function telling wether the core is already initialized.
-    bool isInitialized() const {return mInitialized;}
+    EPT_EXTERN bool isInitialized() const {return mInitialized;}
 
     // Getter functions
-    ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
-    AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
-    AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
-    SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
-    PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}  
-    MidiAdapter *getMidiInterface()             {return mMidi.get();}
+    EPT_EXTERN ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
+    EPT_EXTERN AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
+    EPT_EXTERN AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
+    EPT_EXTERN SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
+    EPT_EXTERN PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
+    EPT_EXTERN MidiAdapter *getMidiInterface()             {return mMidi.get();}
 
 private:
     bool mInitialized;
 
-    // modules
     bool mEnableSoundGenerator = true;
 
+    // modules
     std::unique_ptr<ProjectManagerAdapter> mProjectManager;
     AudioRecorderAdapter *mRecorderAdapter;
     AudioPlayerAdapter *mPlayerAdapter;

@@ -25,6 +25,8 @@
 #include <QFont>
 #include <array>
 
+#include "prerequisites.h"
+
 #include "core/piano/pianodefines.h"
 
 class GraphicsKeyItem : public QGraphicsRectItem

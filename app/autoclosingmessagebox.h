@@ -21,7 +21,10 @@
 #define AUTOCLOSINGMESSAGEBOX_H
 
 #include <QMessageBox>
-#include "../core/messages/messagelistener.h"
+
+#include "prerequisites.h"
+
+#include "core/messages/messagelistener.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

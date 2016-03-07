@@ -31,11 +31,11 @@
 /// \brief Message reporting a frequency deviation during tuning
 ///////////////////////////////////////////////////////////////////////////////
 
-class MessageTuningDeviation : public Message
+class EPT_EXTERN MessageTuningDeviation : public Message
 {
 public:
     MessageTuningDeviation(FrequencyDetectionResult result);
-    ~MessageTuningDeviation(){};
+    ~MessageTuningDeviation() {}
 
     FrequencyDetectionResult getResult() const {return mResult;}
 

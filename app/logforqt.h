@@ -20,7 +20,9 @@
 #ifndef LOGFORQT_H
 #define LOGFORQT_H
 
-#include "../core/system/log.h"
+#include "prerequisites.h"
+
+#include "core/system/log.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Implementation for the log in Qt.

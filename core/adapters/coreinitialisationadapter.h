@@ -24,8 +24,11 @@
 #ifndef COREINITIALISATIONADAPTER_H
 #define COREINITIALISATIONADAPTER_H
 
-#include "../system/eptexception.h"
-#include <memory>
+#include "prerequisites.h"
+#include "system/eptexception.h"
+
+class CoreInitialisationAdapter;
+template class EPT_EXTERN std::unique_ptr<CoreInitialisationAdapter>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Core initialization adapter (singleton class).
@@ -46,7 +49,7 @@
 /// \see QtCoreInitialisation
 ///////////////////////////////////////////////////////////////////////////////
 
-class CoreInitialisationAdapter
+class EPT_EXTERN CoreInitialisationAdapter
 {
 private:
     static std::unique_ptr<CoreInitialisationAdapter> mSingleton;

@@ -22,6 +22,8 @@
 
 #include <QDialog>
 
+#include "prerequisites.h"
+
 class Piano;
 
 namespace Ui {

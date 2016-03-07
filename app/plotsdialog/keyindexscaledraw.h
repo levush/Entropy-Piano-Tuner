@@ -22,6 +22,8 @@
 
 #include <qwt/qwt_scale_draw.h>
 
+#include "prerequisites.h"
+
 class KeyIndexScaleDraw : public QObject, public QwtScaleDraw
 {
     Q_OBJECT

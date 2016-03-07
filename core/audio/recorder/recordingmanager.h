@@ -24,8 +24,12 @@
 #ifndef RECORDINGMANAGER_H
 #define RECORDINGMANAGER_H
 
+#include "prerequisites.h"
 #include "../../messages/messagelistener.h"
 #include "audiorecorderadapter.h"
+
+class Piano;
+class Key;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Recording manager
@@ -35,13 +39,13 @@
 /// stroboscopic tuning indicator.
 ////////////////////////////////////////////////////////////////////////////////
 
-class RecordingManager :  public MessageListener
+class EPT_EXTERN RecordingManager :  public MessageListener
 {
 public:
     RecordingManager (AudioRecorderAdapter *audioRecorder);
 
-    void init () {};
-    void exit () {};
+    void init () {}
+    void exit () {}
 
 private:
     virtual void handleMessage(MessagePtr m);

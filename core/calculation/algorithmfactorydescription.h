@@ -22,10 +22,10 @@
 
 #include <string>
 #include <map>
-#include <algorithm>
 
+#include "prerequisites.h"
 
-class AlgorithmFactoryDescription
+class EPT_EXTERN AlgorithmFactoryDescription
 {
 public:
     AlgorithmFactoryDescription(const std::string &algorithmName, const std::string &version);

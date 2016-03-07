@@ -24,11 +24,14 @@
 #ifndef PIANOMANAGER_H
 #define PIANOMANAGER_H
 
-#include "../system/prerequisites.h"
+#include "prerequisites.h"
 #include "core/system/eptexception.h"
 #include "piano.h"
 #include "../messages/messagelistener.h"
 #include "../adapters/modeselectoradapter.h"
+
+class PianoManager;
+template class EPT_EXTERN std::unique_ptr<PianoManager>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The PianoManager class
@@ -37,7 +40,7 @@
 /// process.
 ///////////////////////////////////////////////////////////////////////////////
 
-class PianoManager : public MessageListener
+class EPT_EXTERN PianoManager : public MessageListener
 {
 private:
     static std::unique_ptr<PianoManager> THE_ONE_AND_ONLY;

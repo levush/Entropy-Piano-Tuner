@@ -20,11 +20,48 @@
 #ifndef PREREQUISITES
 #define PREREQUISITES
 
+#include "config.h"
+
+#if defined(QT_CORE_LIB)
+#include <QString>
+#endif
+
+#include <string>
+#include <vector>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <atomic>
+#include <thread>
+#include <limits>
+#include <utility>
+#include <complex>
+
 // additional defines for windows (msvc)
 #if defined(_WIN32) || defined(_WIN64)
 #include <iso646.h>
 using uint = unsigned int;
 #endif
+
+// export std templates
+EPT_EXTERN_TEMPLATE class EPT_EXTERN std::basic_string<wchar_t>;
+#if !defined(QT_CORE_LIB)
+// export std::string on our own
+EPT_EXTERN_TEMPLATE class EPT_EXTERN std::basic_string<char>;
+#endif
+template class EPT_EXTERN std::vector<double>;
+template class EPT_EXTERN std::vector<float>;
+template class EPT_EXTERN std::map<std::string, double>;
+template class EPT_EXTERN std::map<std::string, int>;
+template class EPT_EXTERN std::map<std::string, std::string>;
+template class EPT_EXTERN std::map<double, double>;
+template class EPT_EXTERN std::map<int, int>;
+template struct EPT_EXTERN std::atomic<bool>;
+template class EPT_EXTERN std::vector<std::pair<std::string, std::string> >;
+template class EPT_EXTERN std::complex<double>;
+template class EPT_EXTERN std::vector<std::complex<double>>;
+class EPT_EXTERN std::mutex;
+class EPT_EXTERN std::thread;
 
 // define snprintf for windows
 #ifdef _MSC_VER
@@ -32,9 +69,9 @@ using uint = unsigned int;
 #include <stdarg.h>
 #include <stdio.h>
 
-#define snprintf c99_snprintf
+#if !defined(snprintf) && defined(_MSC_VER) && _MSC_VER < 1900
 
-inline int c99_vsnprintf(char* str, size_t size, const char* format, va_list ap)
+inline int snprintf(char* str, size_t size, const char* format, va_list ap)
 {
     int count = -1;
 
@@ -46,17 +83,18 @@ inline int c99_vsnprintf(char* str, size_t size, const char* format, va_list ap)
     return count;
 }
 
-inline int c99_snprintf(char* str, size_t size, const char* format, ...)
+inline int snprintf(char* str, size_t size, const char* format, ...)
 {
     int count;
     va_list ap;
 
     va_start(ap, format);
-    count = c99_vsnprintf(str, size, format, ap);
+    count = snprintf(str, size, format, ap);
     va_end(ap);
 
     return count;
 }
+#endif // snprintf
 
 #endif // _MSC_VER
 

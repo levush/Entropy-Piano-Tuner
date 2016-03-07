@@ -29,6 +29,7 @@
 #include <atomic>
 #include <chrono>
 
+#include "prerequisites.h"
 #include "log.h"
 #include "eptexception.h"
 
@@ -53,7 +54,7 @@
 /// idle in the workerFunction() call the member function msleep().
 ///////////////////////////////////////////////////////////////////////////////
 
-class SimpleThreadHandler
+class EPT_EXTERN SimpleThreadHandler
 {
     // IMPORTANT:
     // Note, that virtual functions have to be defined in header
