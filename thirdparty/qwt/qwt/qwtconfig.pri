@@ -76,10 +76,7 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
 ######################################################################
 
 # CUSTOM CHANGE: Selection of config
-include( ../../../entropypianotuner_config.pri )
-!contains(EPT_CONFIG, allstatic) {
-    QWT_CONFIG += QwtDll
-}
+QWT_CONFIG += QwtDll
 
 ######################################################################
 # QwtPlot enables all classes, that are needed to use the QwtPlot 

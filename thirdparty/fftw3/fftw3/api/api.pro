@@ -2,13 +2,14 @@ include(../../fftw3_func.pri)
 
 $$fftw3Core()
 
-TARGET = fftw
+TARGET = fftw3
 TEMPLATE = lib
 
 DESTDIR = $$FFTW_DESTDIR
 CONFIG += $$FFTW_LIB_MODE_CONFIG
 
-LIBS += -lkernel -ldftscalarcodelets -ldftscalar -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft
+gcc:LIBS += -Xlinker -start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker -end-group
+else:LIBS += -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel
 
 HEADERS += \
     api.h \

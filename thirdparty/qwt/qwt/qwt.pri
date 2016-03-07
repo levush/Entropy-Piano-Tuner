@@ -185,7 +185,8 @@ contains(QWT_CONFIG, QwtPlot) {
 
 greaterThan(QT_MAJOR_VERSION, 4) {
 
-    winrt|winphone {
+    winrt|winphone|android|ios {
+        DEFINES += QT_NO_PRINTER
     }
     else {
         QT += printsupport

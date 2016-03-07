@@ -38,7 +38,6 @@
 template class EPT_EXTERN std::unique_ptr<ProjectManagerAdapter>;
 template class EPT_EXTERN std::unique_ptr<SoundGenerator>;
 template class EPT_EXTERN std::unique_ptr<SignalAnalyzer>;
-template class EPT_EXTERN std::shared_ptr<MidiAdapter>;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief CORE : Class managing the core
@@ -88,7 +87,7 @@ private:
     std::unique_ptr<SoundGenerator> mSoundGenerator;
     RecordingManager mRecordingManager;
     SignalAnalyzer mSignalAnalyzer;
-    std::shared_ptr<MidiAdapter> mMidi;
+    MidiAdapterPtr mMidi;
 };
 
 #endif // CORE_H

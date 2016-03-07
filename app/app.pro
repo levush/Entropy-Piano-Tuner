@@ -6,10 +6,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia svg
+# Qt modules
+QT       += core gui multimedia svg widgets opengl concurrent
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+# Target and config
 TARGET = entropypianotuner
 TEMPLATE = app
 CONFIG += c++11
@@ -34,6 +34,7 @@ Debug:OBJECTS_DIR = debug/.obj
 Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
+
 
 #-------------------------------------------------
 #                    ALGORITHMS
@@ -82,7 +83,6 @@ $$depends_qwt()
 $$depends_rtmidi()
 $$depends_timesupport()
 $$depends_tinyxml2()
-
 
 #-------------------------------------------------
 #                      Apple

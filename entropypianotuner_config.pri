@@ -75,14 +75,8 @@ linux-g++*:!android {
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
 }
 
-contains(EPT_CONFIG, allstatic) {
-    DEFINES += "EPT_ALL_STATIC=1"
-}
 
-contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1"
+contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1" "EPT_STATIC_ALGORITHMS=1"
 contains(EPT_CONFIG, shared_algorithms):DEFINES+="EPT_SHARED_ALGORITHMS=1"
 
 LIBS += -L$$EPT_THIRDPARTY_OUT_DIR
-
-SUBDIRS += \
-    $$PWD/thirdparty/dirent/dirent.pro

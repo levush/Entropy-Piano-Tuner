@@ -1,4 +1,5 @@
-include($$PWD//entropypianotuner_config.pri)
+include($$PWD/entropypianotuner_config.pri)
+include($$PWD/thirdparty/fftw3/fftw3_export.pri)
 
 defineReplace(declareStaticLibrary) {
     libname = $$1
@@ -75,12 +76,17 @@ defineReplace(depends_fftw3) {
             }
         }
 
-        LIBS += -lfftw
+        LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
+
+        android {
+            ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+        }
     }
 
     export(INCLUDEPATH)
     export(LIBS)
     export(DLLS)
+    export(ANDROID_EXTRA_LIBS)
 
     return(true)
 }
@@ -126,14 +132,18 @@ defineReplace(depends_qwt) {
         } else {
             LIBS += -lqwt-qt5
         }
-        !contains(EPT_CONFIG, allstatic) {
-            DEFINES += QWT_DLL
+
+        DEFINES += QWT_DLL
+
+        android {
+            ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
         }
     }
 
     export(INCLUDEPATH)
     export(LIBS)
     export(DEFINES)
+    export(ANDROID_EXTRA_LIBS)
 
     return(true)
 }
