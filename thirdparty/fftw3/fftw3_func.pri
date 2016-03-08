@@ -26,6 +26,7 @@ defineReplace(fftw3Core) {
     export(CONFIG)
     export(INCLUDEPATH)
     export(LIBS)
+    export(DEFINES)
 
     return(true)
 }
@@ -60,6 +61,7 @@ defineReplace(fftw3SubPart) {
     export(DESTDIR)
     export(INCLUDEPATH)
     export(LIBS)
+    export(DEFINES)
 
     return(true)
 }

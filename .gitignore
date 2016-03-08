@@ -32,7 +32,7 @@ docs/latex*
 *.autosave
 log
 publish
-/Qt/.directory
+.publish*
 .directory
 
 

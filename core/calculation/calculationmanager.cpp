@@ -95,7 +95,7 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
         while ((ent = readdir(dir)) != nullptr) {
             const std::string filename = algorithmsDir + "/" + std::string(ent->d_name);
             if (has_suffix(filename, ".so") || has_suffix(filename, ".dll") || has_suffix(filename, ".dylib")) {
-                LogI("Reading algorithm %s", ent->d_name);
+                LogI("Reading algorithm %s", filename.c_str());
 
                 SharedLibraryPtr lib(new SharedLibrary(filename));
                 if (lib->is_open()) {
