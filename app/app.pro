@@ -73,14 +73,27 @@ contains(EPT_CONFIG, allstatic) {
 #-------------------------------------------------
 #                  Thirdparty dependencies
 #-------------------------------------------------
-$$depends_fftw3()
-$$depends_core()
+
+# swap when using the system fftw3 (on linux)
+# I dont know the reason, but elsewise there are
+# linker errors
+contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+    # this is the order required for linux (system lib)
+    $$depends_core()
+    $$depends_fftw3()
+} else {
+    # this is the order required for android
+    $$depends_fftw3()
+    $$depends_core()
+}
+
 $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_qwt()
 $$depends_rtmidi()
 $$depends_timesupport()
 $$depends_tinyxml2()
+
 
 #-------------------------------------------------
 #                      Apple
@@ -185,9 +198,6 @@ win32|win32-g++ {
 # linux libs
 linux-g++*:!android {
     LIBS += -lasound
-
-    # older version needs explicit cxx flag
-    QMAKE_CXXFLAGS += -std=c++11
 
     # additional defines in debug modus
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Werror -Wpedantic

@@ -14,11 +14,16 @@ defineReplace(declareStaticLibrary) {
         HEADERS += $${libname}.h
     }
 
+    linux-g++*:!android {
+        QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Werror -Wpedantic
+    }
+
     export(TEMPLATE)
     export(CONFIG)
     export(DESTDIR)
     export(SOURCES)
     export(HEADERS)
+    export(QMAKE_CXXFLAGS_DEBUG)
 
     return(true)
 }
@@ -46,12 +51,16 @@ defineReplace(declareSharedLibrary) {
         HEADERS += $${libname}.h
     }
 
+    linux-g++*:!android {
+        QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Werror -Wpedantic
+    }
+
     export(TEMPLATE)
     export(CONFIG)
     export(DESTDIR)
     export(SOURCES)
     export(HEADERS)
-    export(ANDROID_EXTRA_LIBS)
+    export(QMAKE_CXXFLAGS_DEBUG)
 
     return(true)
 }
@@ -87,20 +96,20 @@ defineReplace(depends_dirent) {
 
 defineReplace(depends_fftw3) {
     fftw3 {
-        !contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+        contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+            LIBS += -lfftw3
+        } else {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/fftw3/fftw3/api
-        }
+            LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
 
-        !contains(EPT_CONFIG, allstatic) {
-            win32 {
-                DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
+            !contains(EPT_CONFIG, allstatic) {
+                win32 {
+                    DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
+                }
             }
-        }
-
-        LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
-
-        android {
-            ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+            android {
+                ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+            }
         }
     }
 

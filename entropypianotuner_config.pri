@@ -12,6 +12,9 @@ CONFIG(debug, debug|release) {
 android|ios|winrt|winphone: EPT_CONFIG += no_shared_algorithms static_algorithms
 else:                       EPT_CONFIG += shared_algorithms no_static_algorithms
 
+# on linux build static core
+linux:!android: EPT_CONFIG += static_core
+
 #------------------------------------------------
 # Path defines
 

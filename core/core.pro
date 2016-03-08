@@ -1,23 +1,32 @@
 include(../entropypianotuner_config.pri)
 include(../entropypianotuner_func.pri)
 
+# create the core as a lib
 TEMPLATE = lib
 
+# on msvc compilers we need to instanciate std::string,
+# but this is already done in Qt
+# If we use Qt and core in the same subproject (app) the
+# compiler does not know which one to use.
+# Therefore also use the instance of Qt in the core
 QT += core
 
-contains(EPT_CONFIG, allstatic) {
-    CONFIG += staticlib
-} else {
-    CONFIG += dll
-}
+# configuration
+contains(EPT_CONFIG, static_core):CONFIG += staticlib
+else:CONFIG += dll
 
 CONFIG += c++11
 
+# add this define to set dllimport/dllexport for msvc
 DEFINES += EPT_BUILD_CORE
+
+# set the destiantion dir
 DESTDIR = $$EPT_CORE_OUT_DIR
 
-INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR
+# basic include dirs
+INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$PWD
 
+# Dependencies
 $$depends_dirent()
 $$depends_fftw3()
 $$depends_getmemorysize()
@@ -26,6 +35,10 @@ $$depends_rtmidi()
 $$depends_timesupport()
 $$depends_tinyxml2()
 
+# debugging flags: all warnings and check arrays, etc
+linux-g++*:!android {
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Wpedantic
+}
 
 #-------------------------------------------------
 #                  Core files

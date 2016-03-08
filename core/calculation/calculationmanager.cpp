@@ -71,6 +71,11 @@ void CalculationManager::loadAlgorithms()
                                                 "../algorithms",
                                                 "../../algorithms"
                                             };
+#ifdef __unix
+    // add system directories on unix systems
+    search_dirs.push_back("/usr/lib/entropypianotuner/algorithms");
+    search_dirs.push_back("~/.entropypianotuner/algorithms");
+#endif
     loadAlgorithms(search_dirs);
 
 }
