@@ -8,7 +8,8 @@ TEMPLATE = lib
 DESTDIR = $$FFTW_DESTDIR
 CONFIG += $$FFTW_LIB_MODE_CONFIG
 
-gcc:LIBS += -Xlinker -Wl,--start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker --end-group
+win32-g++:LIBS += -Xlinker -Wl,--start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker --end-group
+gcc:LIBS += -Xlinker -start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker -end-group
 else:LIBS += -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel
 
 HEADERS += \

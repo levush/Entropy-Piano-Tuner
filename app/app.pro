@@ -21,7 +21,7 @@ include(../entropypianotuner_func.pri)
 
 INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
-INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR $$EPT_CORE_DIR
+INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
 
 DESTDIR = $$EPT_CORE_OUT_DIR
 
@@ -70,13 +70,11 @@ contains(EPT_CONFIG, allstatic) {
 }
 
 
-# core lib
-LIBS += -L$$EPT_CORE_OUT_DIR -lcore
-
 #-------------------------------------------------
 #                  Thirdparty dependencies
 #-------------------------------------------------
 $$depends_fftw3()
+$$depends_core()
 $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_qwt()

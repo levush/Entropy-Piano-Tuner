@@ -3,7 +3,8 @@ include(fftw3_config.pri)
 FFTW_LIB_PATH += -L$$FFTW_DESTDIR
 
 contains(FFTW_LIB_MODE_CONFIG, staticlib) {
-    gcc:FFTW_EXTERN_LIBS += -Xlinker -Wl,--start-group -lfftw3 -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker --end-group
+    win32-g++:FFTW_EXTERN_LIBS += -Xlinker -Wl,--start-group -lfftw3 -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker --end-group
+    g++:FFTW_EXTERN_LIBS += -Xlinker -start-group -lfftw3 -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker -end-group
     else:FFTW_EXTERN_LIBS += -lfftw3 -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel
 
     FFTW_LIB_PATH += -L$$FFTW_SUBPART_OUT

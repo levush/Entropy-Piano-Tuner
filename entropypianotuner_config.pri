@@ -8,14 +8,9 @@ CONFIG(debug, debug|release) {
     EPT_CONFIG += include_example_algorithm
 }
 
-# on mobile platforms build all plugins/libs static
-android|ios|winrt|winphone {
-    message(Enabling all static build)
-    EPT_CONFIG += no_shared_algorithms static_algorithms
-}
-
-# add default config
-!contains(EPT_CONFIG, no_shared_algorithms):EPT_CONFIG+=shared_algorithms
+# on mobile platforms use static algorithm build
+android|ios|winrt|winphone: EPT_CONFIG += no_shared_algorithms static_algorithms
+else:                       EPT_CONFIG += shared_algorithms no_static_algorithms
 
 #------------------------------------------------
 # Path defines

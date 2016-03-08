@@ -33,6 +33,7 @@ defineReplace(declareSharedLibrary) {
         CONFIG += staticlib
     } else {
         CONFIG += dll
+
     }
 
     CONFIG += c++11 noqt
@@ -50,6 +51,26 @@ defineReplace(declareSharedLibrary) {
     export(DESTDIR)
     export(SOURCES)
     export(HEADERS)
+    export(ANDROID_EXTRA_LIBS)
+
+    return(true)
+}
+
+defineReplace(depends_core) {
+    !contains(EPT_CONFIG, allstatic) {
+        android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
+        win32:DLLS += $$EPT_CORE_OUT_DIR/libcore.dll
+
+        LIBS += -L$$EPT_CORE_OUT_DIR
+        LIBS += -lcore
+
+        INCLUDEPATH += $$EPT_CORE_DIR
+    }
+
+    export(DLLS)
+    export(INCLUDEPATH)
+    export(LIBS)
+    export(ANDROID_EXTRA_LIBS)
 
     return(true)
 }
