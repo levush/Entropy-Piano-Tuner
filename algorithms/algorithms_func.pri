@@ -5,7 +5,7 @@ defineReplace(declareAlgorithm) {
 
     TEMPLATE = lib
 
-    contains(EPT_CONFIG, allstatic) {
+    contains(EPT_CONFIG, static_algorithms) {
         CONFIG += staticlib
     } else {
         CONFIG += dll

@@ -25,7 +25,10 @@
 
 #include <iostream>
 #include <cmath>
+
+#ifdef EPT_SHARED_ALGORITHMS
 #include <dirent.h>
+#endif
 
 #include "../config.h"
 #include "../system/log.h"

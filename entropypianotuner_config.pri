@@ -9,9 +9,9 @@ CONFIG(debug, debug|release) {
 }
 
 # on mobile platforms build all plugins/libs static
-android|ios {
+android|ios|winrt|winphone {
     message(Enabling all static build)
-    EPT_CONFIG += allstatic no_shared_algorithms
+    EPT_CONFIG += no_shared_algorithms static_algorithms
 }
 
 # add default config
@@ -39,15 +39,18 @@ EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_ROOT_DIR/platforms/android
 
 #------------------------------------------------
 # third party modules
-CONFIG += tinyxml2 qwt fftw3
+CONFIG += tinyxml2 qwt fftw3 getmemorysize
 
 # add libuv when shared algorithms are enabled
 contains(EPT_CONFIG, shared_algorithms) {
     CONFIG += libuv
 }
 
-win32 {
-    CONFIG += timesupport getmemorysize rtmidi dirent
+winrt|winphone {
+    CONFIG += timesupport
+}
+else:win32 {
+    CONFIG += timesupport rtmidi dirent
 }
 
 linux:!android {
