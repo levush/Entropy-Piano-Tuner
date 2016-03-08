@@ -38,11 +38,11 @@
 /// It is completely driven by messages. It is some kind of SoundGenerationManager.
 ///////////////////////////////////////////////////////////////////////////////
 
-class SoundGenerator : public MessageListener
+class EPT_EXTERN SoundGenerator : public MessageListener
 {
 public:
     /// \brief Mode for sound generation
-    enum EPT_EXTERN SoundGeneratorMode
+    enum SoundGeneratorMode
     {
         SGM_DEACTIVATED,        ///< No sound generation
         SGM_SYNTHESIZE_KEY,     ///< Produce a sound which imitates the string
@@ -50,13 +50,13 @@ public:
     };
 
 public:
-    EPT_EXTERN SoundGenerator (AudioPlayerAdapter *audioAdapter);
-    EPT_EXTERN ~SoundGenerator(){}
+    SoundGenerator (AudioPlayerAdapter *audioAdapter);
+    ~SoundGenerator(){}
 
-    EPT_EXTERN void init ();
-    EPT_EXTERN void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
+    void init ();
+    void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
 
-    EPT_EXTERN Synthesizer &getSynthesizer() {return mSynthesizer;}
+    Synthesizer &getSynthesizer() {return mSynthesizer;}
 
 private:
     void handleMessage(MessagePtr m) override final;

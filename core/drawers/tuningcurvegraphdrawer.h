@@ -44,7 +44,7 @@ using RoleType = GraphicsItem::RoleType;
 /// a different role is assigned to each marker.
 ///////////////////////////////////////////////////////////////////////////////
 
-class TuningCurveGraphDrawer : public DrawerBase, public MessageListener
+class EPT_EXTERN TuningCurveGraphDrawer : public DrawerBase, public MessageListener
 {
 protected:
     static const int rangeInCents;
@@ -75,19 +75,19 @@ private:
     };
 
 public:
-    EPT_EXTERN TuningCurveGraphDrawer(GraphicsViewAdapter *graphics);  // Constructor
-    EPT_EXTERN ~TuningCurveGraphDrawer(){}                             ///< Empty destructor
+    TuningCurveGraphDrawer(GraphicsViewAdapter *graphics);  // Constructor
+    ~TuningCurveGraphDrawer(){}                             ///< Empty destructor
 
     // Modify the tuning curve by mouse clicks:
-    EPT_EXTERN void manuallyEditTuningCurveByClick (double relX, double relY);
+    void manuallyEditTuningCurveByClick (double relX, double relY);
 
-    EPT_EXTERN OperationMode getOperationMode() const {return mOperationMode;}
-    EPT_EXTERN const Piano *getPiano() const {return mPiano;}
-    EPT_EXTERN int getNumberOfKeys() const {return mNumberOfKeys;}
+    OperationMode getOperationMode() const {return mOperationMode;}
+    const Piano *getPiano() const {return mPiano;}
+    int getNumberOfKeys() const {return mNumberOfKeys;}
 
 protected:
-    EPT_EXTERN virtual void draw() final;
-    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
+    virtual void draw() final;
+    virtual void handleMessage(MessagePtr m) override;
 
 private:
     static const PenType gridcolor;         ///< Pen type for background grid pentype

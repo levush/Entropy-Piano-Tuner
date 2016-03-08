@@ -65,15 +65,15 @@ public:
     EPT_EXTERN void stop();
 
     /// Function telling wether the core is already initialized.
-    EPT_EXTERN bool isInitialized() const {return mInitialized;}
+    bool isInitialized() const {return mInitialized;}
 
     // Getter functions
-    EPT_EXTERN ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
-    EPT_EXTERN AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
-    EPT_EXTERN AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
-    EPT_EXTERN SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
-    EPT_EXTERN PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
-    EPT_EXTERN MidiAdapter *getMidiInterface()             {return mMidi.get();}
+    ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
+    AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
+    AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
+    SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
+    PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
+    MidiAdapter *getMidiInterface()             {return mMidi.get();}
 
 private:
     bool mInitialized;

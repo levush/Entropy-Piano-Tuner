@@ -112,10 +112,10 @@ defineReplace(depends_libuv) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/libuv/include
         }
 
-        linux:LIBS += -ldl
-        win32:LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv -lkernel32 -ladvapi32
-
         LIBS += -luv
+
+        linux:LIBS += -ldl
+        win32|win32-g++:LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv -lkernel32 -ladvapi32
     }
 
     export(LIBS)

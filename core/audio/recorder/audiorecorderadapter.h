@@ -48,45 +48,45 @@
 /// The adapter incorporates an autonomous fully automatic level control.
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioRecorderAdapter : public AudioBase
+class EPT_EXTERN AudioRecorderAdapter : public AudioBase
 {
 public:
     // Static constants, explained in the source file:
 
-    EPT_EXTERN static const int    BUFFER_SIZE_IN_SECONDS;     // size of circular buffer
-    EPT_EXTERN static const int    UPDATE_IN_MILLISECONDS;     // elementary packet size
-    EPT_EXTERN static const double ATTACKRATE;                 // for sliding level
-    EPT_EXTERN static const double DECAYRATE;                  // for sliding level
-    EPT_EXTERN static const double LEVEL_RETRIGGER;            // level for retriggering
-    EPT_EXTERN static const double LEVEL_TRIGGER;              // level where rec. starts
-    EPT_EXTERN static const double LEVEL_CUTOFF;               // highest allowed level
-    EPT_EXTERN static const double DB_OFF;                     // dB shift for off mark
+    static const int    BUFFER_SIZE_IN_SECONDS;     // size of circular buffer
+    static const int    UPDATE_IN_MILLISECONDS;     // elementary packet size
+    static const double ATTACKRATE;                 // for sliding level
+    static const double DECAYRATE;                  // for sliding level
+    static const double LEVEL_RETRIGGER;            // level for retriggering
+    static const double LEVEL_TRIGGER;              // level where rec. starts
+    static const double LEVEL_CUTOFF;               // highest allowed level
+    static const double DB_OFF;                     // dB shift for off mark
 
 public:
-    EPT_EXTERN AudioRecorderAdapter();                 ///< Constructor
-    EPT_EXTERN virtual ~AudioRecorderAdapter() {}      ///< Empty destructor
+    AudioRecorderAdapter();                 ///< Constructor
+    virtual ~AudioRecorderAdapter() {}                 ///< Empty destructor
 
-    EPT_EXTERN void resetInputLevelControl();          // Reset level control
-    EPT_EXTERN void setMuted(bool muted);              // Mute the input device
+    void resetInputLevelControl();          // Reset level control
+    void setMuted(bool muted);              // Mute the input device
 
-    EPT_EXTERN void readAll(PacketType &packet);       // Read all buffered data
-    EPT_EXTERN void cutSilence (PacketType &packet);   // Cut off trailing silence
+    void readAll(PacketType &packet);       // Read all buffered data
+    void cutSilence (PacketType &packet);   // Cut off trailing silence
 
-    EPT_EXTERN double getStopLevel() const { return mStopLevel; }
+    double getStopLevel() const { return mStopLevel; }
 
-    EPT_EXTERN void setStandby (bool flag) { mStandby = flag; }
-    EPT_EXTERN void setWaitingFlag (bool flag) { mWaiting = flag; }
+    void setStandby (bool flag) { mStandby = flag; }
+    void setWaitingFlag (bool flag) { mWaiting = flag; }
 
-    EPT_EXTERN Stroboscope *getStroboscope() {return &mStroboscope;}
+    Stroboscope *getStroboscope() {return &mStroboscope;}
 
 protected:
     // The implementation calls the following functions:
-    EPT_EXTERN void pushRawData (const PacketType &data);
-    EPT_EXTERN virtual void setSamplingRate (int rate) override;
+    void pushRawData (const PacketType &data);
+    virtual void setSamplingRate (int rate) override;
 
     // This class controls the input gain of the implementation
-    EPT_EXTERN virtual void setDeviceInputGain(double volume) = 0;
-    EPT_EXTERN virtual double getDeviceInputGain() const = 0;
+    virtual void setDeviceInputGain(double volume) = 0;
+    virtual double getDeviceInputGain() const = 0;
 
 
 

@@ -39,7 +39,7 @@
 /// The FourierSpectrumGraphDrawer is completely driven by messages.
 ///////////////////////////////////////////////////////////////////////////////
 
-class FourierSpectrumGraphDrawer : public DrawerBase, public MessageListener
+class EPT_EXTERN FourierSpectrumGraphDrawer : public DrawerBase, public MessageListener
 {
 public:
     static const double updateInterval;     ///< Update interval at least 1 sec
@@ -52,14 +52,14 @@ public:
     };
 
 public:
-    EPT_EXTERN FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics);
-    EPT_EXTERN ~FourierSpectrumGraphDrawer() {}        ///< Empty destructor
+    FourierSpectrumGraphDrawer(GraphicsViewAdapter *graphics);
+    ~FourierSpectrumGraphDrawer() {}        ///< Empty destructor
 
 protected:
-    EPT_EXTERN virtual void draw() override final;
-    EPT_EXTERN virtual void clear() override final;
-    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
-    EPT_EXTERN void updateSpectrum();
+    virtual void draw() override final;
+    virtual void clear() override final;
+    virtual void handleMessage(MessagePtr m) override;
+    void updateSpectrum();
 
 private:
     double mConcertPitch;                   ///< Target freuqency of A4

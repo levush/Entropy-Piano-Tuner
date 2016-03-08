@@ -28,6 +28,8 @@
 
 class BaseCallbackManager;
 
+template class EPT_EXTERN std::list<BaseCallbackManager *>;
+
 ///
 /// \brief Base class for a callback implementation
 ///
@@ -36,14 +38,14 @@ class BaseCallbackManager;
 ///
 /// Upon destruction it will automatically remove itself from its manager.
 ///
-class BaseCallbackInterface {
+class EPT_EXTERN BaseCallbackInterface {
 public:
-    EPT_EXTERN virtual ~BaseCallbackInterface();
+    virtual ~BaseCallbackInterface();
 
 private:
-    EPT_EXTERN void addCallbackManager(BaseCallbackManager *manager);
+    void addCallbackManager(BaseCallbackManager *manager);
 
-    EPT_EXTERN void removeCallbackManager(BaseCallbackManager *manager);
+    void removeCallbackManager(BaseCallbackManager *manager);
 
 private:
     std::list<BaseCallbackManager *> mCallbackManager;

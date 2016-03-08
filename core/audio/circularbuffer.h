@@ -231,5 +231,11 @@ void CircularBuffer<data_type>::resize(std::size_t maximum_size)
                 mCurrentSize * sizeof(data_type));
 }
 
+//-----------------------------------------------------------------------------
+//                           Explicit instance
+//-----------------------------------------------------------------------------
+
+template class EPT_EXTERN CircularBuffer<double>;
+template class EPT_EXTERN CircularBuffer<float>;
 
 #endif // CIRCULAR_BUFFER

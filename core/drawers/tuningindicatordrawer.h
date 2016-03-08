@@ -42,18 +42,18 @@
 /// \see TuningIndicatorView
 ///////////////////////////////////////////////////////////////////////////////
 
-class TuningIndicatorDrawer : public DrawerBase, public MessageListener
+class EPT_EXTERN TuningIndicatorDrawer : public DrawerBase, public MessageListener
 {
 public:
-    EPT_EXTERN TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
-    EPT_EXTERN ~TuningIndicatorDrawer() {}
+    TuningIndicatorDrawer(GraphicsViewAdapter *graphics);
+    ~TuningIndicatorDrawer() {}
 
-    EPT_EXTERN void toggleSpectralAndStroboscopeMode();
+    void toggleSpectralAndStroboscopeMode();
 
 protected:
-    EPT_EXTERN virtual void draw() override final;
-    EPT_EXTERN virtual void clear() override final;
-    EPT_EXTERN virtual void handleMessage(MessagePtr m) override;
+    virtual void draw() override final;
+    virtual void clear() override final;
+    virtual void handleMessage(MessagePtr m) override;
 
 private:
     const Piano *mPiano;            ///< Pointer to the piano

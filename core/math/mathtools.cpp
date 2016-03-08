@@ -32,9 +32,9 @@
 // constants definition
 //-----------------------------------------------------------------------------
 
-const double EPT_EXTERN MathTools::PI     = 3.14159265358979323846;
-const double EPT_EXTERN MathTools::TWO_PI = 2 * MathTools::PI;
-const double EPT_EXTERN MathTools::LOG2   = 0.69314718055994530942;
+const double MathTools::PI     = 3.14159265358979323846;
+const double MathTools::TWO_PI = 2 * MathTools::PI;
+const double MathTools::LOG2   = 0.69314718055994530942;
 
 //-----------------------------------------------------------------------------
 //	              Determine the raw moments of a distribution

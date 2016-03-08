@@ -121,7 +121,7 @@
 #endif
 
 // export defines
-#ifdef WIN32
+#if defined(_WIN32)
 # ifdef EPT_BUILD_CORE
 #   define EPT_EXTERN __declspec(dllexport)
 #   define EPT_EXTERN_TEMPLATE template

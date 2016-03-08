@@ -43,6 +43,9 @@
 using uint = unsigned int;
 #endif
 
+#if defined(_MSC_VER)
+// msvc compiler required to implement template classes
+
 // export std templates
 EPT_EXTERN_TEMPLATE class EPT_EXTERN std::basic_string<wchar_t>;
 #if !defined(QT_CORE_LIB)
@@ -63,7 +66,9 @@ template class EPT_EXTERN std::vector<std::complex<double>>;
 class EPT_EXTERN std::mutex;
 class EPT_EXTERN std::thread;
 
-// define snprintf for windows
+#endif
+
+// define snprintf for windows visual studio compiler
 #ifdef _MSC_VER
 
 #include <stdarg.h>
