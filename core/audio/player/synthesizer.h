@@ -24,6 +24,8 @@
 #ifndef SYNTHESIZER_H
 #define SYNTHESIZER_H
 
+#include "prerequisites.h"
+
 #include "audioplayeradapter.h"
 #include "waveformgenerator.h"
 #include "pcmwriterinterface.h"
@@ -106,7 +108,7 @@ struct Tone
 /// differences and phase shifts between the two stereo channels.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Synthesizer : public PCMWriterInterface
+class EPT_EXTERN Synthesizer : public PCMWriterInterface
 {
 public:
 

@@ -25,14 +25,14 @@
 #define SIGNALANALYZER_H
 
 #include <fftw3.h>
-#include <atomic>
-#include <map>
 
 #include "prerequisites.h"
-#include "../system/simplethreadhandler.h"
-#include "../messages/messagelistener.h"
-#include "../audio/circularbuffer.h"
-#include "../math/fftimplementation.h"
+
+#include "system/simplethreadhandler.h"
+#include "messages/messagelistener.h"
+#include "audio/circularbuffer.h"
+#include "math/fftimplementation.h"
+
 #include "fftanalyzer.h"
 #include "keyrecognizer.h"
 #include "overpull.h"
@@ -52,7 +52,7 @@ class AudioRecorderAdapter;
 /// are included as well.
 ///////////////////////////////////////////////////////////////////////////////
 
-class SignalAnalyzer :
+class EPT_EXTERN SignalAnalyzer :
         public SimpleThreadHandler,
         public MessageListener,
         private KeyRecognizerCallback

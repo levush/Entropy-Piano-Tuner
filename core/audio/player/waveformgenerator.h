@@ -24,9 +24,11 @@
 #ifndef WAVEFORMGENERATOR_H
 #define WAVEFORMGENERATOR_H
 
-#include "../../system/simplethreadhandler.h"
-#include "../../system/basecallback.h"
-#include "../../math/fftimplementation.h"
+#include "prerequisites.h"
+
+#include "system/simplethreadhandler.h"
+#include "system/basecallback.h"
+#include "math/fftimplementation.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,7 @@
 ///
 /// Implements callback functions called by the WaveformGenerator.
 ////////////////////////////////////////////////////////////////////////////////
-class WaveformGeneratorStatusCallback : public BaseCallbackInterface
+class EPT_EXTERN WaveformGeneratorStatusCallback : public BaseCallbackInterface
 {
 public:
     ///
@@ -59,7 +61,7 @@ public:
 /// The WaveformGenerator runs in an independent thread with normal priority.
 ////////////////////////////////////////////////////////////////////////////////
 
-class WaveformGenerator :
+class EPT_EXTERN WaveformGenerator :
         public SimpleThreadHandler,
         public CallbackManager<WaveformGeneratorStatusCallback>
 {
@@ -68,6 +70,8 @@ public:
     using Spectrum = std::map<double,double>;   // type of spectrum
 
     WaveformGenerator();
+    virtual ~WaveformGenerator() {}
+
     void init (int numberOfKeys, int samplerate);
     void exit () { stop(); }
     void preCalculate (int keynumber, const Spectrum &spectrum);
@@ -90,7 +94,7 @@ private:
     std::mutex mQueueMutex;                 ///< Access mutex for waveform request queue
 
 private:
-    void workerFunction();
+    virtual void workerFunction() override;
 
     /// Helper function to compute the waveform time based on the installed memory
     double convertAvailablePhysicalMemoryToWaveformTime();
