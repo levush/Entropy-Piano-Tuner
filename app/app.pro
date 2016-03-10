@@ -44,7 +44,7 @@ Debug:UI_DIR = debug/.ui
 # will instantiate the algorithms (create a static variable of each AlgorithmFactory)
 # the algorithm will automatically add itself to the CalculationManager
 # if the Constructor is called.
-contains(EPT_CONFIG, allstatic) {
+contains(EPT_CONFIG, static_algorithms) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR
 

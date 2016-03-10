@@ -34,7 +34,7 @@ struct AlgorithmPluginDetails {
   GetAlgorithmFactoryFunc factoryFunc;
 };
 
-#if EPT_ALL_STATIC
+#if defined(EPT_STATIC_ALGORITHMS)
 
 // we need QResource for Q_INIT_RESOURCE
 #  include <QResource>
