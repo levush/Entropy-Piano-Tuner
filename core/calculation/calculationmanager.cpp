@@ -135,12 +135,12 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
                     }
 
                     // Instantiate the plugin
+                    // Upon first call the AlgorithmFactory will register itself in the constructor
+                    // to the CalculationManager
                     AlgorithmFactoryBase *factory = reinterpret_cast<AlgorithmFactoryBase*>(info->factoryFunc());
-
 
                     // store lib
                     mLoadedAlgorithmLibraries.push_back(lib);
-                    registerFactory(info->description.getAlgorithmName(), factory);
                 } else {
                     LogW("Algorithm could not be added.");
                 }

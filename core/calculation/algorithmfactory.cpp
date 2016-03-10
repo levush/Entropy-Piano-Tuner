@@ -25,10 +25,8 @@
 AlgorithmFactoryBase::AlgorithmFactoryBase(const AlgorithmFactoryDescription &description) :
     mDescription(description)
 {
-#ifdef EPT_ALL_STATIC
-    // register class itself upon creation if this is a static library
+    // register class itself upon creation
     CalculationManager::getSingleton().registerFactory(description.getAlgorithmName(), this);
-#endif
 }
 
 

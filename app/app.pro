@@ -39,7 +39,10 @@ Debug:UI_DIR = debug/.ui
 #-------------------------------------------------
 #                    ALGORITHMS
 #-------------------------------------------------
-# link if static build
+# when we statically link the alogrithms, we create a c++ file that
+# will instantiate the algorithms (create a static variable of each AlgorithmFactory)
+# the algorithm will automatically add itself to the CalculationManager
+# if the Constructor is called.
 contains(EPT_CONFIG, allstatic) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR
