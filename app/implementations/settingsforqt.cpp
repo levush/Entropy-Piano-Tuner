@@ -18,9 +18,10 @@
  *****************************************************************************/
 
 #include "settingsforqt.h"
-#include <assert.h>
-#include "../core/audio/recorder/audiorecorderadapter.h"
-#include "donotshowagainmessagebox.h"
+
+#include "core/audio/recorder/audiorecorderadapter.h"
+
+#include "dialogs/donotshowagainmessagebox.h"
 #include "options/optionsdialog.h"
 
 

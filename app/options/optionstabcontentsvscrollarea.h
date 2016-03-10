@@ -25,7 +25,7 @@
 
 #include "prerequisites.h"
 
-#include "verticalscrollarea.h"
+#include "widgets/verticalscrollarea.h"
 
 class OptionsTabContentsVScrollArea : public VerticalScrollArea
 {

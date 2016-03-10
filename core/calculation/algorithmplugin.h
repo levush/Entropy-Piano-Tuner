@@ -57,11 +57,15 @@ struct AlgorithmPluginDetails {
 #  define ALGORITHM_INIT_RESOURCE_FUNC(algorithmName)
 #  define ALGORITHM_INIT_FUNC_NAME(algorithmName)
 
+//
+// Notes: Do not auto register the factory, be cause of conflicts with
+//        static variables being not shared between lib and core
+//        Instead add the factory during the loading in CalculationManager
 #  define ALGORITHM_CPP_START(algorithmName)                          \
     extern "C" {                                                      \
         ALGORITHM_PLUGIN_EXPORT AlgorithmFactoryBase *getFactory()    \
         {                                                             \
-            static algorithmName::Factory mSingleton(algorithmName::getFactoryDescription());       \
+            static algorithmName::Factory mSingleton(algorithmName::getFactoryDescription(), false);       \
             return &mSingleton;                                       \
         }                                                             \
         ALGORITHM_PLUGIN_EXPORT AlgorithmPluginDetails exports =      \

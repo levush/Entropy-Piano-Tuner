@@ -51,17 +51,19 @@
 #include <QResource>
 #include <QDialogButtonBox>
 #include <QScroller>
-#include "qtconfig.h"
-#include "logforqt.h"
-#include "editpianosheetdialog.h"
-#include "logviewer.h"
-#include "settingsforqt.h"
+
+#include "dialogs/aboutdialog.h"
+#include "dialogs/autoclosingmessagebox.h"
+#include "dialogs/donotshowagainmessagebox.h"
+#include "dialogs/editpianosheet/editpianosheetdialog.h"
+#include "dialogs/log/logviewer.h"
+#include "dialogs/plotsdialog/plotsdialog.h"
+#include "implementations/logforqt.h"
+#include "implementations/settingsforqt.h"
 #include "options/optionsdialog.h"
-#include "donotshowagainmessagebox.h"
-#include "autoclosingmessagebox.h"
-#include "aboutdialog.h"
+
+#include "qtconfig.h"
 #include "displaysize.h"
-#include "plotsdialog/plotsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

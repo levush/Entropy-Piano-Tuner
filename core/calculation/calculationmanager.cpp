@@ -39,6 +39,8 @@
 #include "algorithmfactory.h"
 #include "algorithminformationparser.h"
 
+std::unique_ptr<CalculationManager> CalculationManager::mInstance;
+
 //-----------------------------------------------------------------------------
 //                               Constructor
 //-----------------------------------------------------------------------------
@@ -60,8 +62,8 @@ CalculationManager::~CalculationManager()
 
 CalculationManager &CalculationManager::getSingleton()
 {
-    static CalculationManager THE_ONE_AND_ONLY;
-    return THE_ONE_AND_ONLY;
+    if (!mInstance) {mInstance.reset(new CalculationManager);}
+    return *mInstance;
 }
 
 void CalculationManager::loadAlgorithms()
@@ -140,6 +142,7 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
                     AlgorithmFactoryBase *factory = reinterpret_cast<AlgorithmFactoryBase*>(info->factoryFunc());
 
                     // store lib
+                    this->registerFactory(factory->getDescription().getAlgorithmName(), factory);
                     mLoadedAlgorithmLibraries.push_back(lib);
                 } else {
                     LogW("Algorithm could not be added.");
@@ -200,13 +203,6 @@ void CalculationManager::registerFactory(const std::string &name, AlgorithmFacto
     if (mAlgorithms.count(name) == 1) {
         EPT_EXCEPT(EptException::ERR_DUPLICATE_ITEM, "An algorithm with name '" + name + "' already exists.");
     }
-
-#if EPT_EXCLUDE_EXAMPLE_ALGORITHM
-    // exclude example algorithm(s)
-    if (name.find("example") != std::string::npos) {
-        return;
-    }
-#endif
 
     mAlgorithms[name] = factory;
 }

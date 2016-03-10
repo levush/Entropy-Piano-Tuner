@@ -51,15 +51,17 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QMessageBox>
-#include "tunerapplication.h"
-#include "qdebug.h"
-#include "../core/config.h"
-#include "../core/system/serverinfo.h"
+#include <qdebug.h>
+
+#include "core/system/serverinfo.h"
+#include "core/system/eptexception.h"
+#include "core/config.h"
+
+#include "implementations/settingsforqt.h"
+#include "implementations/platformtools.h"
 #include "qtconfig.h"
-#include "../core/system/eptexception.h"
-#include "settingsforqt.h"
-#include "platformtools.h"
 #include "runguard.h"
+#include "tunerapplication.h"
 
 int main(int argc, char *argv[])
 {

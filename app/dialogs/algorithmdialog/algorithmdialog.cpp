@@ -34,17 +34,16 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "doubleslider.h"
-#include "displaysize.h"
-
-#include "qtconfig.h"
 #include "core/config.h"
 #include "core/calculation/algorithmfactorydescription.h"
 #include "core/calculation/calculationmanager.h"
 #include "core/calculation/algorithminformation.h"
 #include "core/piano/piano.h"
 
+#include "widgets/doubleslider.h"
 #include "algorithmdialogparameterupdatetimer.h"
+#include "displaysize.h"
+#include "qtconfig.h"
 
 AlgorithmDialog::AlgorithmIdList AlgorithmDialog::mAlgorithmNames;
 

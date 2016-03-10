@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "projectmanagerforqt.h"
-#include "editpianosheetdialog.h"
+#include "dialogs/editpianosheet/editpianosheetdialog.h"
 #include <QDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -29,12 +29,13 @@
 #include <QAndroidJniEnvironment>
 #endif
 
+#include "core/system/log.h"
+#include "core/config.h"
+
 #include "qtconfig.h"
 #include "settingsforqt.h"
-#include "../core/system/log.h"
-#include "../core/config.h"
 #include "mainwindow.h"
-#include "simplefiledialog.h"
+#include "dialogs/simplefiledialog.h"
 
 #include "piano/pianofileiocsv.h"
 #include "piano/pianofileioxml.h"

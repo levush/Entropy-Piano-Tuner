@@ -22,7 +22,8 @@
 
 #include "prerequisites.h"
 
-#include "displaysizedependinggroupbox.h"
+#include "widgets/displaysizedependinggroupbox.h"
+
 #include "tuningindicatorview.h"
 
 class TuningIndicatorGroupBox : public DisplaySizeDependingGroupBox

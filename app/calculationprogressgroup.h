@@ -35,7 +35,7 @@
 #include "core/messages/messagelistener.h"
 #include "core/adapters/calculationadapter.h"
 
-#include "displaysizedependinggroupbox.h"
+#include "widgets/displaysizedependinggroupbox.h"
 
 class AlgorithmInformation;
 

@@ -18,10 +18,13 @@
  *****************************************************************************/
 
 #include "optionspageenvironmenttuningpage.h"
-#include "core/audio/player/soundgenerator.h"
-#include "../../settingsforqt.h"
-#include "preferredtextsizelabel.h"
+
 #include <QGridLayout>
+
+#include "core/audio/player/soundgenerator.h"
+
+#include "implementations/settingsforqt.h"
+#include "widgets/preferredtextsizelabel.h"
 
 namespace options {
 

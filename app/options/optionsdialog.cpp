@@ -25,17 +25,19 @@
 #include <QToolBar>
 #include <assert.h>
 #include <QDebug>
-#include "../core/system/log.h"
-#include "../core/config.h"
-#include "../core/core.h"
-#include "../core/adapters/projectmanageradapter.h"
-#include "mainwindow.h"
+
+#include "core/adapters/projectmanageradapter.h"
+#include "core/messages/messagehandler.h"
+#include "core/system/log.h"
+#include "core/config.h"
+#include "core/core.h"
+
 #include "audio/optionspageaudio.h"
 #include "environment/optionspageenvironment.h"
-#include "../settingsforqt.h"
-#include "qtconfig.h"
+#include "implementations/settingsforqt.h"
 #include "displaysize.h"
-#include "../core/messages/messagehandler.h"
+#include "mainwindow.h"
+#include "qtconfig.h"
 
 namespace options {
 

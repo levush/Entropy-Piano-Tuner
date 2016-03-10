@@ -216,11 +216,11 @@ android {
 
 
 HEADERS  += \
-    plotsdialog/centralplotframe.h \
-    plotsdialog/keyindexscaleengine.h \
-    plotsdialog/keyindexscaledraw.h \
-    preferredtextsizelabel.h \
-    verticalscrollarea.h \
+    dialogs/plotsdialog/centralplotframe.h \
+    dialogs/plotsdialog/keyindexscaleengine.h \
+    dialogs/plotsdialog/keyindexscaledraw.h \
+    widgets/preferredtextsizelabel.h \
+    widgets/verticalscrollarea.h \
     options/optionstabcontentsvscrollarea.h \
     tuningindicatorview.h \
     stroboscopicviewadapterforqt.h \
@@ -233,15 +233,15 @@ HEADERS  += \
     tuningcurvegraph.h \
     keyboard/autoscaledtokeyboardgraphicsview.h \
     graphicsviewadapterforqt.h \
-    projectmanagerforqt.h \
-    logforqt.h \
+    implementations/projectmanagerforqt.h \
+    implementations/logforqt.h \
     audioforqt/audioplayerforqt.h \
     audioforqt/audiorecorderforqt.h \
-    filemanagerforqt.h \
-    initializedialog.h \
-    logviewer.h \
+    implementations/filemanagerforqt.h \
+    dialogs/initializedialog.h \
+    dialogs/log/logviewer.h \
     recordingstatusgraphicsview.h \
-    settingsforqt.h \
+    implementations/settingsforqt.h \
     options/optionsdialog.h \
     keyboard/keyboardgraphicsview.h \
     options/optionscentralwidgetinterface.h \
@@ -251,29 +251,29 @@ HEADERS  += \
     options/audio/optionspageaudioinputoutputpage.h \
     options/environment/optionspageenvironment.h \
     options/environment/optionspageenvironmentgeneralpage.h \
-    platformtools.h \
-    donotshowagainmessagebox.h \
+    implementations/platformtools.h \
+    dialogs/donotshowagainmessagebox.h \
     keyboard/fullscreenkeyboarddialog.h \
     calculationprogressgroup.h \
     recordingqualitybar.h \
-    autoclosingmessagebox.h \
+    dialogs/autoclosingmessagebox.h \
     graphicsitemforqt.h \
-    editpianosheetdialog.h \
+    dialogs/editpianosheet/editpianosheetdialog.h \
     options/environment/optionspageenvironmenttuningpage.h \
-    doubleslider.h \
-    simplefiledialog.h \
-    algorithmdialog/algorithmdialog.h \
-    algorithmdialog/algorithmdialogparameterupdatetimer.h \
+    widgets/doubleslider.h \
+    dialogs/simplefiledialog.h \
+    dialogs/algorithmdialog/algorithmdialog.h \
+    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.h \
     qtconfig.h \
     keyboard/graphicskeyitem.h \
-    aboutdialog.h \
+    dialogs/aboutdialog.h \
     versioncheck.h \
     runguard.h \
     displaysize.h \
-    displaysizedependinggroupbox.h \
+    widgets/displaysizedependinggroupbox.h \
     signalanalyzergroupbox.h \
     volumecontrolgroupbox.h \
-    plotsdialog/plotsdialog.h \
+    dialogs/plotsdialog/plotsdialog.h \
     progressdisplay.h \
     options/pagesavingtabwidget.h \
     piano/pianofileiointerface.h \
@@ -290,15 +290,15 @@ SOURCES +=  \
     tuningcurvegraph.cpp \
     keyboard/autoscaledtokeyboardgraphicsview.cpp \
     graphicsviewadapterforqt.cpp \
-    projectmanagerforqt.cpp \
-    logforqt.cpp \
+    implementations/projectmanagerforqt.cpp \
+    implementations/logforqt.cpp \
     audioforqt/audioplayerforqt.cpp \
     audioforqt/audiorecorderforqt.cpp \
-    filemanagerforqt.cpp \
-    initializedialog.cpp \
-    logviewer.cpp \
+    implementations/filemanagerforqt.cpp \
+    dialogs/initializedialog.cpp \
+    dialogs/log/logviewer.cpp \
     recordingstatusgraphicsview.cpp \
-    settingsforqt.cpp \
+    implementations/settingsforqt.cpp \
     options/optionsdialog.cpp \
     keyboard/keyboardgraphicsview.cpp \
     options/optionscentralwidgetinterface.cpp \
@@ -308,33 +308,33 @@ SOURCES +=  \
     options/audio/optionspageaudioinputoutputpage.cpp \
     options/environment/optionspageenvironment.cpp \
     options/environment/optionspageenvironmentgeneralpage.cpp \
-    platformtools.cpp \
-    donotshowagainmessagebox.cpp \
+    implementations/platformtools.cpp \
+    dialogs/donotshowagainmessagebox.cpp \
     keyboard/fullscreenkeyboarddialog.cpp \
     calculationprogressgroup.cpp \
     recordingqualitybar.cpp \
-    autoclosingmessagebox.cpp \
+    dialogs/autoclosingmessagebox.cpp \
     graphicsitemforqt.cpp \
-    editpianosheetdialog.cpp \
+    dialogs/editpianosheet/editpianosheetdialog.cpp \
     options/environment/optionspageenvironmenttuningpage.cpp \
-    doubleslider.cpp \
-    simplefiledialog.cpp \
-    algorithmdialog/algorithmdialog.cpp \
-    algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
+    widgets/doubleslider.cpp \
+    dialogs/simplefiledialog.cpp \
+    dialogs/algorithmdialog/algorithmdialog.cpp \
+    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
     keyboard/graphicskeyitem.cpp \
-    aboutdialog.cpp \
+    dialogs/aboutdialog.cpp \
     versioncheck.cpp \
     runguard.cpp \
     displaysize.cpp \
-    displaysizedependinggroupbox.cpp \
+    widgets/displaysizedependinggroupbox.cpp \
     signalanalyzergroupbox.cpp \
     volumecontrolgroupbox.cpp \
-    plotsdialog/plotsdialog.cpp \
-    plotsdialog/centralplotframe.cpp \
-    plotsdialog/keyindexscaleengine.cpp \
-    plotsdialog/keyindexscaledraw.cpp \
-    preferredtextsizelabel.cpp \
-    verticalscrollarea.cpp \
+    dialogs/plotsdialog/plotsdialog.cpp \
+    dialogs/plotsdialog/centralplotframe.cpp \
+    dialogs/plotsdialog/keyindexscaleengine.cpp \
+    dialogs/plotsdialog/keyindexscaledraw.cpp \
+    widgets/preferredtextsizelabel.cpp \
+    widgets/verticalscrollarea.cpp \
     options/optionstabcontentsvscrollarea.cpp \
     tuningindicatorview.cpp \
     stroboscopicviewadapterforqt.cpp \
@@ -384,8 +384,8 @@ mac {
 
 FORMS += \
     mainwindow.ui \
-    logviewer.ui \
-    editpianosheetdialog.ui
+    dialogs/log/logviewer.ui \
+    dialogs/editpianosheet/editpianosheetdialog.ui
 
 RESOURCES += \
     $$EPT_BASE_DIR/media/media.qrc \

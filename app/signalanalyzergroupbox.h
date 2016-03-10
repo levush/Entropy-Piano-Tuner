@@ -24,7 +24,7 @@
 
 #include "prerequisites.h"
 
-#include "displaysizedependinggroupbox.h"
+#include "widgets/displaysizedependinggroupbox.h"
 
 
 class SignalAnalyzerGroupBox : public DisplaySizeDependingGroupBox

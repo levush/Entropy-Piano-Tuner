@@ -32,7 +32,7 @@
 #include "core/messages/messagelistener.h"
 #include "core/adapters/modeselectoradapter.h"
 
-#include "projectmanagerforqt.h"
+#include "implementations/projectmanagerforqt.h"
 #include "calculationprogressgroup.h"
 #include "signalanalyzergroupbox.h"
 #include "volumecontrolgroupbox.h"

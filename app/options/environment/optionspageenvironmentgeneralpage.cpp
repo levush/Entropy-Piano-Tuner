@@ -18,13 +18,15 @@
  *****************************************************************************/
 
 #include "optionspageenvironmentgeneralpage.h"
-#include "../../settingsforqt.h"
-#include "../../donotshowagainmessagebox.h"
+
 #include <QMessageBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
 #include <QFormLayout>
+
+#include "dialogs/donotshowagainmessagebox.h"
+#include "implementations/settingsforqt.h"
 
 namespace options {
 

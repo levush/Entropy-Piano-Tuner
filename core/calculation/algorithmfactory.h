@@ -40,10 +40,12 @@ class Piano;
 class EPT_EXTERN AlgorithmFactoryBase
 {
 protected:
-    AlgorithmFactoryBase(const AlgorithmFactoryDescription &description);
+    AlgorithmFactoryBase(const AlgorithmFactoryDescription &description, bool autoRegister = true);
 
 public:
     virtual std::unique_ptr<Algorithm> createAlgorithm(const Piano &piano) = 0;
+
+    const AlgorithmFactoryDescription &getDescription() const {return mDescription;}
 
 protected:
     AlgorithmFactoryDescription mDescription;
@@ -64,8 +66,8 @@ class AlgorithmFactory : public AlgorithmFactoryBase
 private:
 
 public:
-    AlgorithmFactory(const AlgorithmFactoryDescription &description)
-        : AlgorithmFactoryBase(description)
+    AlgorithmFactory(const AlgorithmFactoryDescription &description, bool autoRegister = true)
+        : AlgorithmFactoryBase(description, autoRegister)
     {
     }
 

@@ -18,9 +18,12 @@
  *****************************************************************************/
 
 #include "donotshowagainmessagebox.h"
+
 #include <QCheckBox>
-#include "settingsforqt.h"
-#include "../core/system/eptexception.h"
+
+#include "core/system/eptexception.h"
+
+#include "implementations/settingsforqt.h"
 
 DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &text, QWidget *parent) :
     QMessageBox(parent),

@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 #include "tunerapplication.h"
+
 #include <iostream>
 #include <QDebug>
 #include <QThread>
@@ -28,15 +29,17 @@
 #include <QStandardPaths>
 #include <QScreen>
 #include <QMessageBox>
-#include "../core/config.h"
-#include "../core/messages/messagehandler.h"
-#include "filemanagerforqt.h"
-#include "platformtools.h"
-#include "projectmanagerforqt.h"
-#include "logforqt.h"
-#include "settingsforqt.h"
-#include "../core/system/eptexception.h"
-#include "logviewer.h"
+
+#include "core/messages/messagehandler.h"
+#include "core/system/eptexception.h"
+#include "core/config.h"
+
+#include "dialogs/log/logviewer.h"
+#include "implementations/filemanagerforqt.h"
+#include "implementations/logforqt.h"
+#include "implementations/platformtools.h"
+#include "implementations/projectmanagerforqt.h"
+#include "implementations/settingsforqt.h"
 
 TunerApplication *TunerApplication::mSingleton(nullptr);
 

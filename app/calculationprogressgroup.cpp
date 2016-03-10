@@ -32,13 +32,15 @@
 #include <QScrollArea>
 #include <QSlider>
 #include <QFontMetrics>
-#include "../core/system/log.h"
-#include "../core/calculation/calculationmanager.h"
-#include "../core/calculation/algorithmfactorydescription.h"
-#include "../core/messages/messagecaluclationprogress.h"
-#include "../core/piano/pianomanager.h"
-#include "settingsforqt.h"
-#include "algorithmdialog/algorithmdialog.h"
+
+#include "core/calculation/calculationmanager.h"
+#include "core/calculation/algorithmfactorydescription.h"
+#include "core/messages/messagecaluclationprogress.h"
+#include "core/piano/pianomanager.h"
+#include "core/system/log.h"
+
+#include "dialogs/algorithmdialog/algorithmdialog.h"
+#include "implementations/settingsforqt.h"
 #include "displaysize.h"
 
 //-----------------------------------------------------------------------------

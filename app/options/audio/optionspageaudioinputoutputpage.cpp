@@ -18,14 +18,17 @@
  *****************************************************************************/
 
 #include "optionspageaudioinputoutputpage.h"
+
 #include <QMessageBox>
-#include "../../../core/core.h"
-#include "../../../core/audio/player/audioplayeradapter.h"
+
+#include "core/audio/player/audioplayeradapter.h"
+#include "core/audio/recorder/audiorecorderadapter.h"
 #include "core/config.h"
-#include "../../../core/audio/recorder/audiorecorderadapter.h"
-#include "../../volumecontrollevel.h"
-#include "../../mainwindow.h"
-#include "../../settingsforqt.h"
+#include "core/core.h"
+
+#include "implementations/settingsforqt.h"
+#include "volumecontrollevel.h"
+#include "mainwindow.h"
 
 namespace options {
 

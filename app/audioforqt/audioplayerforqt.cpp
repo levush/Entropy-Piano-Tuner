@@ -18,10 +18,11 @@
  *****************************************************************************/
 
 #include "audioplayerforqt.h"
-#include "audioplayerthreadforqt.h"
 
-#include "../core/system/log.h"
-#include "settingsforqt.h"
+#include "core/system/log.h"
+
+#include "audioplayerthreadforqt.h"
+#include "implementations/settingsforqt.h"
 
 //-----------------------------------------------------------------------------
 //                              Constructor

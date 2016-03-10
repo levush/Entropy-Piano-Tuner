@@ -22,11 +22,13 @@
 #include "algorithminformation.h"
 #include "core/system/eptexception.h"
 
-AlgorithmFactoryBase::AlgorithmFactoryBase(const AlgorithmFactoryDescription &description) :
+AlgorithmFactoryBase::AlgorithmFactoryBase(const AlgorithmFactoryDescription &description, bool autoRegister) :
     mDescription(description)
 {
-    // register class itself upon creation
-    CalculationManager::getSingleton().registerFactory(description.getAlgorithmName(), this);
+    if (autoRegister) {
+      // register class itself upon creation
+      CalculationManager::getSingleton().registerFactory(description.getAlgorithmName(), this);
+    }
 }
 
 

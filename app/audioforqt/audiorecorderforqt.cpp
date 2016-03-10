@@ -21,9 +21,11 @@
 #include <qdebug.h>
 #include <QTimer>
 #include <assert.h>
-#include "../core/system/log.h"
-#include "settingsforqt.h"
-#include "donotshowagainmessagebox.h"
+
+#include "core/system/log.h"
+
+#include "implementations/settingsforqt.h"
+#include "dialogs/donotshowagainmessagebox.h"
 
 const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING = std::numeric_limits<AudioRecorderForQt::DataFormat>::max();
 // const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING  = 1;

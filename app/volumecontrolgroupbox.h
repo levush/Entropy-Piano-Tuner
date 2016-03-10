@@ -24,7 +24,8 @@
 
 #include "prerequisites.h"
 
-#include "displaysizedependinggroupbox.h"
+#include "widgets/displaysizedependinggroupbox.h"
+
 #include "volumecontrollevel.h"
 
 class VolumeControlGroupBox : public DisplaySizeDependingGroupBox

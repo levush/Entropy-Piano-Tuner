@@ -22,9 +22,12 @@
 #include <QFile>
 #include <QScroller>
 #include <QClipboard>
-#include "../core/config.h"
-#include "logforqt.h"
-#include "filemanagerforqt.h"
+
+#include "core/config.h"
+
+#include "implementations/logforqt.h"
+#include "implementations/filemanagerforqt.h"
+
 #include "ui_logviewer.h"
 #include "qtconfig.h"
 

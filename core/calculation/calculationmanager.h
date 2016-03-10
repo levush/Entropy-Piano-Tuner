@@ -63,6 +63,9 @@ template class EPT_EXTERN std::shared_ptr<const AlgorithmInformation>;
 class EPT_EXTERN CalculationManager
 {
 private:
+    static std::unique_ptr<CalculationManager> mInstance;
+
+private:
     CalculationManager();                       // Constructor
 
     void loadAlgorithms(const std::vector<std::string> &algorithmsDirs);
@@ -72,6 +75,7 @@ public:
     virtual ~CalculationManager();              // Destructor
 
     static CalculationManager &getSingleton();
+    static void selfDelete() {CalculationManager::mInstance.reset();}      // Delete the calculation manager
 
     void loadAlgorithms();
 
