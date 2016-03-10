@@ -28,8 +28,8 @@
 
 #include "core/drawers/tuningindicatordrawer.h"
 
-#include "graphicsviewadapterforqt.h"
-#include "stroboscopicviewadapterforqt.h"
+#include "drawers/stroboscopicviewadapterforqt.h"
+#include "implementations/graphicsviewadapterforqt.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for the Qt implementation of the tuning indicator

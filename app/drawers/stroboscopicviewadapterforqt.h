@@ -28,7 +28,7 @@
 
 #include "core/adapters/graphicsviewadapter.h"
 
-#include "graphicsviewadapterforqt.h"
+#include "implementations/graphicsviewadapterforqt.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Stroboscopic view adapter for Qt

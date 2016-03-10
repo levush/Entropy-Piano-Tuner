@@ -7,7 +7,8 @@
 #-------------------------------------------------
 
 # Qt modules
-QT       += core gui multimedia svg widgets opengl concurrent
+QT          += core gui multimedia svg widgets opengl concurrent
+android:QT  += androidextras
 
 # Target and config
 TARGET = entropypianotuner
@@ -175,9 +176,6 @@ winrt {
 } else:winphone {
 } else:win32 {
     # windows desktop
-
-    # windows multimedia is required for rt midi
-    LIBS += -lwinmm
 }
 
 # dlls
@@ -200,155 +198,150 @@ win32|win32-g++ {
 
 # linux libs
 linux-g++*:!android {
-    LIBS += -lasound
-
     # additional defines in debug modus
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG -Wall -Werror -Wpedantic
 }
-# android libs
-android {
-    QT += androidextras
-}
 
 #-------------------------------------------------
-#                   Qt files
+#               Files to build the app
 #-------------------------------------------------
 
 
 HEADERS  += \
-    dialogs/plotsdialog/centralplotframe.h \
-    dialogs/plotsdialog/keyindexscaleengine.h \
-    dialogs/plotsdialog/keyindexscaledraw.h \
-    widgets/preferredtextsizelabel.h \
-    widgets/verticalscrollarea.h \
-    options/optionstabcontentsvscrollarea.h \
-    tuningindicatorview.h \
-    stroboscopicviewadapterforqt.h \
-    tuningindicatorgroupbox.h \
-    audioforqt/audioplayerthreadforqt.h \
-    mainwindow.h \
-    volumecontrollevel.h \
-    tunerapplication.h \
-    fourierspectrumgraph.h \
-    tuningcurvegraph.h \
-    keyboard/autoscaledtokeyboardgraphicsview.h \
-    graphicsviewadapterforqt.h \
-    implementations/projectmanagerforqt.h \
-    implementations/logforqt.h \
     audioforqt/audioplayerforqt.h \
+    audioforqt/audioplayerthreadforqt.h \
     audioforqt/audiorecorderforqt.h \
-    implementations/filemanagerforqt.h \
-    dialogs/initializedialog.h \
+    dialogs/algorithmdialog/algorithmdialog.h \
+    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.h \
+    dialogs/editpianosheet/editpianosheetdialog.h \
     dialogs/log/logviewer.h \
-    recordingstatusgraphicsview.h \
+    dialogs/plotsdialog/centralplotframe.h \
+    dialogs/plotsdialog/keyindexscaledraw.h \
+    dialogs/plotsdialog/keyindexscaleengine.h \
+    dialogs/plotsdialog/plotsdialog.h \
+    dialogs/aboutdialog.h \
+    dialogs/autoclosingmessagebox.h \
+    dialogs/donotshowagainmessagebox.h \
+    dialogs/initializedialog.h \
+    dialogs/simplefiledialog.h \
+    drawers/fourierspectrumgraph.h \
+    drawers/stroboscopicviewadapterforqt.h \
+    drawers/tuningcurvegraph.h \
+    drawers/tuningindicatorview.h \
+    implementations/filemanagerforqt.h \
+    implementations/graphicsitemforqt.h \
+    implementations/graphicsviewadapterforqt.h \
+    implementations/logforqt.h \
+    implementations/platformtools.h \
+    implementations/projectmanagerforqt.h \
     implementations/settingsforqt.h \
-    options/optionsdialog.h \
+    keyboard/autoscaledtokeyboardgraphicsview.h \
+    keyboard/fullscreenkeyboarddialog.h \
+    keyboard/graphicskeyitem.h \
     keyboard/keyboardgraphicsview.h \
-    options/optionscentralwidgetinterface.h \
-    options/optionscontentswidgetinterface.h \
+    mainwindow/calculationprogressgroup.h \
+    mainwindow/mainwindow.h \
+    mainwindow/progressdisplay.h \
+    mainwindow/signalanalyzergroupbox.h \
+    mainwindow/tuningindicatorgroupbox.h \
+    mainwindow/recordingqualitybar.h \
+    mainwindow/recordingstatusgraphicsview.h \
+    mainwindow/volumecontrolgroupbox.h \
+    mainwindow/volumecontrollevel.h \
     options/audio/optionspageaudio.h \
     options/audio/optionspageaudiomidipage.h \
     options/audio/optionspageaudioinputoutputpage.h \
     options/environment/optionspageenvironment.h \
     options/environment/optionspageenvironmentgeneralpage.h \
-    implementations/platformtools.h \
-    dialogs/donotshowagainmessagebox.h \
-    keyboard/fullscreenkeyboarddialog.h \
-    calculationprogressgroup.h \
-    recordingqualitybar.h \
-    dialogs/autoclosingmessagebox.h \
-    graphicsitemforqt.h \
-    dialogs/editpianosheet/editpianosheetdialog.h \
     options/environment/optionspageenvironmenttuningpage.h \
-    widgets/doubleslider.h \
-    dialogs/simplefiledialog.h \
-    dialogs/algorithmdialog/algorithmdialog.h \
-    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.h \
-    qtconfig.h \
-    keyboard/graphicskeyitem.h \
-    dialogs/aboutdialog.h \
-    versioncheck.h \
-    runguard.h \
-    displaysize.h \
-    widgets/displaysizedependinggroupbox.h \
-    signalanalyzergroupbox.h \
-    volumecontrolgroupbox.h \
-    dialogs/plotsdialog/plotsdialog.h \
-    progressdisplay.h \
+    options/optionscentralwidgetinterface.h \
+    options/optionscontentswidgetinterface.h \
+    options/optionsdialog.h \
+    options/optionstabcontentsvscrollarea.h \
     options/pagesavingtabwidget.h \
     piano/pianofileiointerface.h \
     piano/pianofileioxml.h \
     piano/pianofileiocsv.h \
-    prerequisites.h
+    widgets/displaysizedependinggroupbox.h \
+    widgets/doubleslider.h \
+    widgets/preferredtextsizelabel.h \
+    widgets/verticalscrollarea.h \
+    displaysize.h \
+    prerequisites.h \
+    qtconfig.h \
+    runguard.h \
+    tunerapplication.h \
+    versioncheck.h \
+
 
 SOURCES +=  \
-    main.cpp\
-    mainwindow.cpp \
-    volumecontrollevel.cpp \
-    tunerapplication.cpp \
-    fourierspectrumgraph.cpp \
-    tuningcurvegraph.cpp \
-    keyboard/autoscaledtokeyboardgraphicsview.cpp \
-    graphicsviewadapterforqt.cpp \
-    implementations/projectmanagerforqt.cpp \
-    implementations/logforqt.cpp \
     audioforqt/audioplayerforqt.cpp \
+    audioforqt/audioplayerthreadforqt.cpp \
     audioforqt/audiorecorderforqt.cpp \
-    implementations/filemanagerforqt.cpp \
-    dialogs/initializedialog.cpp \
+    dialogs/algorithmdialog/algorithmdialog.cpp \
+    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
+    dialogs/editpianosheet/editpianosheetdialog.cpp \
     dialogs/log/logviewer.cpp \
-    recordingstatusgraphicsview.cpp \
+    dialogs/plotsdialog/plotsdialog.cpp \
+    dialogs/plotsdialog/centralplotframe.cpp \
+    dialogs/plotsdialog/keyindexscaleengine.cpp \
+    dialogs/plotsdialog/keyindexscaledraw.cpp \
+    dialogs/aboutdialog.cpp \
+    dialogs/autoclosingmessagebox.cpp \
+    dialogs/donotshowagainmessagebox.cpp \
+    dialogs/initializedialog.cpp \
+    dialogs/simplefiledialog.cpp \
+    drawers/fourierspectrumgraph.cpp \
+    drawers/stroboscopicviewadapterforqt.cpp \
+    drawers/tuningcurvegraph.cpp \
+    drawers/tuningindicatorview.cpp \
+    implementations/filemanagerforqt.cpp \
+    implementations/graphicsitemforqt.cpp \
+    implementations/graphicsviewadapterforqt.cpp \
+    implementations/logforqt.cpp \
+    implementations/platformtools.cpp \
+    implementations/projectmanagerforqt.cpp \
     implementations/settingsforqt.cpp \
-    options/optionsdialog.cpp \
+    keyboard/autoscaledtokeyboardgraphicsview.cpp \
+    keyboard/fullscreenkeyboarddialog.cpp \
+    keyboard/graphicskeyitem.cpp \
     keyboard/keyboardgraphicsview.cpp \
-    options/optionscentralwidgetinterface.cpp \
-    options/optionscontentswidgetinterface.cpp \
+    mainwindow/calculationprogressgroup.cpp \
+    mainwindow/mainwindow.cpp \
+    mainwindow/progressdisplay.cpp \
+    mainwindow/recordingqualitybar.cpp \
+    mainwindow/recordingstatusgraphicsview.cpp \
+    mainwindow/signalanalyzergroupbox.cpp \
+    mainwindow/tuningindicatorgroupbox.cpp \
+    mainwindow/volumecontrolgroupbox.cpp \
+    mainwindow/volumecontrollevel.cpp \
     options/audio/optionspageaudio.cpp \
     options/audio/optionspageaudiomidipage.cpp \
     options/audio/optionspageaudioinputoutputpage.cpp \
     options/environment/optionspageenvironment.cpp \
     options/environment/optionspageenvironmentgeneralpage.cpp \
-    implementations/platformtools.cpp \
-    dialogs/donotshowagainmessagebox.cpp \
-    keyboard/fullscreenkeyboarddialog.cpp \
-    calculationprogressgroup.cpp \
-    recordingqualitybar.cpp \
-    dialogs/autoclosingmessagebox.cpp \
-    graphicsitemforqt.cpp \
-    dialogs/editpianosheet/editpianosheetdialog.cpp \
     options/environment/optionspageenvironmenttuningpage.cpp \
-    widgets/doubleslider.cpp \
-    dialogs/simplefiledialog.cpp \
-    dialogs/algorithmdialog/algorithmdialog.cpp \
-    dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
-    keyboard/graphicskeyitem.cpp \
-    dialogs/aboutdialog.cpp \
-    versioncheck.cpp \
-    runguard.cpp \
-    displaysize.cpp \
-    widgets/displaysizedependinggroupbox.cpp \
-    signalanalyzergroupbox.cpp \
-    volumecontrolgroupbox.cpp \
-    dialogs/plotsdialog/plotsdialog.cpp \
-    dialogs/plotsdialog/centralplotframe.cpp \
-    dialogs/plotsdialog/keyindexscaleengine.cpp \
-    dialogs/plotsdialog/keyindexscaledraw.cpp \
-    widgets/preferredtextsizelabel.cpp \
-    widgets/verticalscrollarea.cpp \
+    options/optionscentralwidgetinterface.cpp \
+    options/optionscontentswidgetinterface.cpp \
+    options/optionsdialog.cpp \
     options/optionstabcontentsvscrollarea.cpp \
-    tuningindicatorview.cpp \
-    stroboscopicviewadapterforqt.cpp \
-    tuningindicatorgroupbox.cpp \
-    audioforqt/audioplayerthreadforqt.cpp \
-    progressdisplay.cpp \
     options/pagesavingtabwidget.cpp \
     piano/pianofileiointerface.cpp \
     piano/pianofileioxml.cpp \
     piano/pianofileiocsv.cpp \
+    widgets/displaysizedependinggroupbox.cpp \
+    widgets/doubleslider.cpp \
+    widgets/preferredtextsizelabel.cpp \
+    widgets/verticalscrollarea.cpp \
+    displaysize.cpp \
+    main.cpp \
+    runguard.cpp \
+    tunerapplication.cpp \
+    versioncheck.cpp \
 
 
 #-------------------------------------------------
-#                   ANDROID
+#            Platform specific includes
 #-------------------------------------------------
 
 
@@ -372,20 +365,15 @@ win32 {
     include($$EPT_BASE_DIR/platforms/windows/windows.pri)
 }
 
-# add applenativewrapper files
-mac {
-    HEADERS +=
-    OBJECTIVE_SOURCES +=
-}
-
 #-------------------------------------------------
 #               Forms and Resources
 #-------------------------------------------------
 
 FORMS += \
-    mainwindow.ui \
+    dialogs/editpianosheet/editpianosheetdialog.ui \
     dialogs/log/logviewer.ui \
-    dialogs/editpianosheet/editpianosheetdialog.ui
+    mainwindow/mainwindow.ui \
+
 
 RESOURCES += \
     $$EPT_BASE_DIR/media/media.qrc \
@@ -400,14 +388,14 @@ RESOURCES += \
 
 
 TRANSLATIONS = \
-    translations/piano_tuner_de.ts \
-    translations/piano_tuner_es.ts \
-    translations/piano_tuner_pl.ts \
-    translations/piano_tuner_pt.ts \
-    translations/piano_tuner_ru.ts \
-    translations/piano_tuner_ko.ts \
-    translations/piano_tuner_zh.ts \
-    translations/piano_tuner_fr.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_de.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_es.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_pl.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_pt.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_ru.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_ko.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_zh.ts \
+    $$EPT_TRANSLATIONS_DIR/piano_tuner_fr.ts \
 
 
 #-------------------------------------------------
@@ -418,15 +406,15 @@ TRANSLATIONS = \
 target.path = $$PREFIX/bin
 
 pixmaps.path = $$PREFIX/share/pixmaps
-pixmaps.files += $$PWD/appstore/icons/entropypianotuner.png
+pixmaps.files += $$EPT_APPSTORE_DIR/icons/entropypianotuner.png
 
 icons.path = $$PREFIX/share/icons/hicolor/256x256/mimetypes
-icons.files += $$PWD/appstore/icons/application-ept.png
+icons.files += $$EPT_APPSTORE_DIR/icons/application-ept.png
 
 mime.path = $$PREFIX/share/mime/packages
-mime.files += $$PWD/appstore/installer/scripts/entropypianotuner-mime.xml
+mime.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner-mime.xml
 
 application.path = $$PREFIX/share/applications
-application.files += $$PWD/appstore/installer/scripts/entropypianotuner.desktop
+application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
 
 INSTALLS += target pixmaps icons mime application

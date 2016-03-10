@@ -35,8 +35,8 @@
 #include "audio/optionspageaudio.h"
 #include "environment/optionspageenvironment.h"
 #include "implementations/settingsforqt.h"
+#include "mainwindow/mainwindow.h"
 #include "displaysize.h"
-#include "mainwindow.h"
 #include "qtconfig.h"
 
 namespace options {

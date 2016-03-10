@@ -20,7 +20,7 @@
 #ifndef IOSPLATFORMTOOLS_H
 #define IOSPLATFORMTOOLS_H
 
-#include "Qt/platformtools.h"
+#include "implementations/platformtools.h"
 
 class IOsPlatformTools : PlatformToolsImplementation<IOsPlatformTools> {
 private:

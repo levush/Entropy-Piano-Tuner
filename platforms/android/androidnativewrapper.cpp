@@ -18,10 +18,13 @@
  *****************************************************************************/
 
 #include "androidnativewrapper.h"
-#include "platformtools.h"
+
+#include <QDebug>
+
 #include "core/messages/messagehandler.h"
 #include "core/messages/messagemidievent.h"
-#include <QDebug>
+
+#include "implementations/platformtools.h"
 
 
 // connect java_openFile method

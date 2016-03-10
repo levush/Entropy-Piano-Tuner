@@ -24,7 +24,7 @@
 #   error "This file may only be included on windows platforms."
 #endif
 
-#include "platformtools.h"
+#include "implementations/platformtools.h"
 
 class WindowsPlatformTools : public PlatformToolsImplementation<WindowsPlatformTools> {
 public:

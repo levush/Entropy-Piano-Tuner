@@ -27,8 +27,8 @@
 #include "core/core.h"
 
 #include "implementations/settingsforqt.h"
-#include "volumecontrollevel.h"
-#include "mainwindow.h"
+#include "mainwindow/volumecontrollevel.h"
+#include "mainwindow/mainwindow.h"
 
 namespace options {
 

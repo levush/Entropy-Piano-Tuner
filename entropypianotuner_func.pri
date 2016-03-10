@@ -185,6 +185,10 @@ defineReplace(depends_rtmidi) {
         }
 
         LIBS += -lRtMidi
+
+        # additional libs for platforms
+        win32: LIBS+= -lwinmm
+        linux: LIBS += -lasound
     }
 
     export(INCLUDEPATH)

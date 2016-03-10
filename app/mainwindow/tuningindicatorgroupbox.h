@@ -22,9 +22,9 @@
 
 #include "prerequisites.h"
 
+#include "drawers/tuningindicatorview.h"
 #include "widgets/displaysizedependinggroupbox.h"
 
-#include "tuningindicatorview.h"
 
 class TuningIndicatorGroupBox : public DisplaySizeDependingGroupBox
 {

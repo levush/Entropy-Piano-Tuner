@@ -25,8 +25,9 @@
 
 #include "prerequisites.h"
 
+#include "implementations/graphicsviewadapterforqt.h"
+
 #include "keyboardgraphicsview.h"
-#include "graphicsviewadapterforqt.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

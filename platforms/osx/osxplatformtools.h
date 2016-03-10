@@ -26,7 +26,7 @@
 #   error "This file may only be included on Mac Os X devices."
 #endif
 
-#include "Qt/platformtools.h"
+#include "implementations/platformtools.h"
 
 class OsXPlatformTools : public PlatformToolsImplementation<OsXPlatformTools> {
 private:

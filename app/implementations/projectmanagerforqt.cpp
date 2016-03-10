@@ -32,13 +32,13 @@
 #include "core/system/log.h"
 #include "core/config.h"
 
-#include "qtconfig.h"
-#include "settingsforqt.h"
-#include "mainwindow.h"
 #include "dialogs/simplefiledialog.h"
-
+#include "implementations/settingsforqt.h"
+#include "mainwindow/mainwindow.h"
 #include "piano/pianofileiocsv.h"
 #include "piano/pianofileioxml.h"
+
+#include "qtconfig.h"
 
 ProjectManagerForQt::ProjectManagerForQt(MainWindow *mainwindow)
     : ProjectManagerAdapter(),

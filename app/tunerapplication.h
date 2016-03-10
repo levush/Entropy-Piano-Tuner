@@ -27,7 +27,7 @@
 #include "audioforqt/audiorecorderforqt.h"
 #include "audioforqt/audioplayerforqt.h"
 #include "dialogs/initializedialog.h"
-#include "mainwindow.h"
+#include "mainwindow/mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The main application singleton class.
