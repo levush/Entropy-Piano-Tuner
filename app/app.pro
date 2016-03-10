@@ -44,27 +44,19 @@ Debug:UI_DIR = debug/.ui
 # will instantiate the algorithms (create a static variable of each AlgorithmFactory)
 # the algorithm will automatically add itself to the CalculationManager
 # if the Constructor is called.
+include($$EPT_ROOT_DIR/algorithms/algorithms_config.pri)
 contains(EPT_CONFIG, static_algorithms) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR
 
     ALG_FILE_CPP = "// This file was generated automatically"
 
-    algorithmDirs = $$files($$EPT_ALGORITHMS_DIR/*)
-    for(algorithmDir, algorithmDirs) {
-        algorithmFiles = $$files($$algorithmDir/*)
-        for(algorithmFile, algorithmFiles) {
-            res = $$find(algorithmFile, "\.pro")
-            !isEmpty(res) {
-                algBasename = $$basename(res)
-                algBasename = $$replace(algBasename, "\.pro", "")
-                message(Adding algorithm $$algBasename)
-                LIBS += -l$$algBasename
+    for(algBasename, ALGORITHM_NAMES) {
+        message(Adding algorithm $$algBasename)
+        LIBS += -l$$algBasename
 
-                ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
-                ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
-            }
-        }
+        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
+        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
     }
 
     OUT_FILE = $$OUT_PWD/algorithms.gen.cpp

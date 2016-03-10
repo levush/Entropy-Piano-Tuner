@@ -1,9 +1,6 @@
 include(algorithms_func.pri)
+include(algorithms_config.pri)
 
 TEMPLATE = subdirs
 
-SUBDIRS += entropyminimizer pitchraise resettorecording
-
-contains(EPT_CONFIG, include_example_algorithm) {
-    SUBDIRS += examplealgorithm
-}
+SUBDIRS += $$ALGORITHM_NAMES

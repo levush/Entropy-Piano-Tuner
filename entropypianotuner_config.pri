@@ -4,9 +4,6 @@
 CONFIG += c++11
 
 # include example algorithm by default in debug builts
-CONFIG(debug, debug|release) {
-    EPT_CONFIG += include_example_algorithm
-}
 
 # on mobile platforms use static algorithm build
 android|ios|winrt|winphone: EPT_CONFIG += no_shared_algorithms static_algorithms
