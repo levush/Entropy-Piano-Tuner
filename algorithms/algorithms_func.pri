@@ -11,6 +11,7 @@ defineReplace(declareAlgorithm) {
         CONFIG += dll
     }
 
+    TARGET = $$algorithmName
     CONFIG += c++11
 
     DESTDIR = $$EPT_ALGORITHMS_OUT_DIR
@@ -40,9 +41,12 @@ defineReplace(declareAlgorithm) {
 
     # installation of shared lib
     contains(CONFIG, dll) {
-      target.path = $$PREFIX/lib/entropypianotuner/algorithms
+      target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner/algorithms
 
       INSTALLS += target
+
+      export(target.path)
+      export(INSTALLS)
     }
 
     # export all variables
@@ -55,7 +59,6 @@ defineReplace(declareAlgorithm) {
     export(HEADERS)
     export(DISTFILES)
     export(RESOURCES)
-    export(INSTALLS)
     export(QMAKE_CXXFLAGS_DEBUG)
 
     # required return value is always true
