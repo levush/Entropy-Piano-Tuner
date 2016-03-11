@@ -38,6 +38,13 @@ defineReplace(declareAlgorithm) {
 
     RESOURCES += $${algorithmName}.qrc
 
+    # installation of shared lib
+    contains(CONFIG, dll) {
+      target.path = $$PREFIX/lib/entropypianotuner/algorithms
+
+      INSTALLS += target
+    }
+
     # export all variables
     export(TEMPLATE)
     export(CONFIG)
@@ -48,6 +55,7 @@ defineReplace(declareAlgorithm) {
     export(HEADERS)
     export(DISTFILES)
     export(RESOURCES)
+    export(INSTALLS)
     export(QMAKE_CXXFLAGS_DEBUG)
 
     # required return value is always true
