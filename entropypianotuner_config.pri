@@ -36,6 +36,11 @@ EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 
 EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_ROOT_DIR/platforms/android
 
+# Install paths if not defines
+isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=bin
+isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=shared
+isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
+
 #------------------------------------------------
 # third party modules
 CONFIG += tinyxml2 qwt fftw3 getmemorysize

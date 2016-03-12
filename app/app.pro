@@ -395,18 +395,18 @@ TRANSLATIONS = \
 #-------------------------------------------------
 
 
-target.path = $$PREFIX/bin
+target.path = $$EPT_INSTALL_BIN_DIR
 
-pixmaps.path = $$PREFIX/share/pixmaps
+pixmaps.path = $$EPT_INSTALL_DATA_DIR/pixmaps
 pixmaps.files += $$EPT_APPSTORE_DIR/icons/entropypianotuner.png
 
-icons.path = $$PREFIX/share/icons/hicolor/256x256/mimetypes
+icons.path = $$EPT_INSTALL_DATA_DIR/icons/hicolor/256x256/mimetypes
 icons.files += $$EPT_APPSTORE_DIR/icons/application-ept.png
 
-mime.path = $$PREFIX/share/mime/packages
+mime.path = $$EPT_INSTALL_DATA_DIR/mime/packages
 mime.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner-mime.xml
 
-application.path = $$PREFIX/share/applications
+application.path = $$EPT_INSTALL_DATA_DIR/applications
 application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
 
 INSTALLS += target pixmaps icons mime application

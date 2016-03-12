@@ -11,6 +11,7 @@ defineReplace(declareAlgorithm) {
         CONFIG += dll
     }
 
+    TARGET = $$algorithmName
     CONFIG += c++11
 
     DESTDIR = $$EPT_ALGORITHMS_OUT_DIR
@@ -37,6 +38,16 @@ defineReplace(declareAlgorithm) {
     write_file($${algorithmName}.qrc, RESOURCES_FILE_TEXT)
 
     RESOURCES += $${algorithmName}.qrc
+
+    # installation of shared lib
+    contains(CONFIG, dll) {
+      target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner/algorithms
+
+      INSTALLS += target
+
+      export(target.path)
+      export(INSTALLS)
+    }
 
     # export all variables
     export(TEMPLATE)
