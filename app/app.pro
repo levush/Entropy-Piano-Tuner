@@ -7,7 +7,8 @@
 #-------------------------------------------------
 
 # Qt modules
-QT          += core gui multimedia svg widgets opengl concurrent
+QT          += core gui multimedia widgets opengl concurrent
+qtHaveModule(svg):QT += svg
 android:QT  += androidextras
 
 # Target and config
