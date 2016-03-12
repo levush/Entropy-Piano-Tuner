@@ -1,3 +1,7 @@
+# Include guard
+isEmpty(EPT_CONFIG_INCLUDED):EPT_CONFIG_INCLUDED=true
+else:return()
+
 #------------------------------------------------
 # Global config
 
@@ -50,12 +54,6 @@ else:win32 {
 
 linux:!android {
     CONFIG += getmemorysize rtmidi
-
-    # on linux target use library from system
-    EPT_THIRDPARTY_CONFIG += system_fftw3 system_qwt system_tinyxml2 system_libuv
-
-    # there seems to be a bug in the RtMidi dependencies which is why
-    # we compile this library on our own.
 }
 
 android {
@@ -65,6 +63,17 @@ android {
 macx {
     CONFIG += getmemorysize rtmidi
 }
+
+# run tests
+load(configure)
+
+# use modules that are installed on the system
+qtCompileTest(qwt_exists):  EPT_THIRDPARTY_CONFIG+=system_qwt
+
+packagesExist(qwt):       EPT_THIRDPARTY_CONFIG+=system_qwt
+packagesExist(tinyxml2):  EPT_THIRDPARTY_CONFIG+=system_tinyxml2
+packagesExist(fftw3):     EPT_THIRDPARTY_CONFIG+=system_fftw3
+packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 
 #--------------------------------------------------
 # global settings
