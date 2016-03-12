@@ -70,6 +70,13 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
 # QWT_INSTALL_FEATURES  = $$[QT_INSTALL_PREFIX]/features
 
 ######################################################################
+# Install the library
+# this is a custom change
+######################################################################
+
+#QWT_CONFIG += QwtInstall
+
+######################################################################
 # Build the static/shared libraries.
 # If QwtDll is enabled, a shared library is built, otherwise
 # it will be a static library.

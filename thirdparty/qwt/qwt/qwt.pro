@@ -7,6 +7,10 @@
 # modify it under the terms of the Qwt License, Version 1.0
 ################################################################
 
+# custom changes:
+#  - settings
+#  - QwtInstall as QWT_CONFIG (installing is disabled because this is not used as lib here)
+
 # custom settings
 include( ../../../entropypianotuner_config.pri )
 
@@ -43,66 +47,67 @@ contains(QWT_CONFIG, QwtFramework) {
 include ( $${PWD}/qwt.pri )
 
 # Install directives
+    contains(QWT_CONFIG, QwtInstall) {
+    target.path    = $${QWT_INSTALL_LIBS}
+    INSTALLS       = target
 
-target.path    = $${QWT_INSTALL_LIBS}
-INSTALLS       = target 
+    CONFIG(lib_bundle) {
 
-CONFIG(lib_bundle) {
-
-    FRAMEWORK_HEADERS.version = Versions
-    FRAMEWORK_HEADERS.files = $${HEADERS}
-    FRAMEWORK_HEADERS.path = Headers
-    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
-}
-else {
-
-    headers.files  = $${HEADERS}
-    headers.path   = $${QWT_INSTALL_HEADERS}
-    INSTALLS += headers
-}
-
-contains(QWT_CONFIG, QwtPkgConfig) {
-
-    CONFIG     += create_pc create_prl no_install_prl
-
-    QMAKE_PKGCONFIG_NAME = Qwt$${QWT_VER_MAJ}
-    QMAKE_PKGCONFIG_DESCRIPTION = Qt Widgets for Technical Applications
-
-    QMAKE_PKGCONFIG_LIBDIR = $${QWT_INSTALL_LIBS}
-    QMAKE_PKGCONFIG_INCDIR = $${QWT_INSTALL_HEADERS}
-
-    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
-
-    greaterThan(QT_MAJOR_VERSION, 4) {
-
-        QMAKE_PKGCONFIG_FILE = Qt$${QT_MAJOR_VERSION}$${QMAKE_PKGCONFIG_NAME}
-        QMAKE_PKGCONFIG_REQUIRES = Qt5Widgets Qt5Concurrent Qt5PrintSupport
-
-        contains(QWT_CONFIG, QwtSvg) {
-            QMAKE_PKGCONFIG_REQUIRES += Qt5Svg
-        }
-
-        contains(QWT_CONFIG, QwtOpenGL) {
-            QMAKE_PKGCONFIG_REQUIRES += Qt5OpenGL
-        }
-
-        QMAKE_DISTCLEAN += $${DESTDIR}/$${QMAKE_PKGCONFIG_DESTDIR}/$${QMAKE_PKGCONFIG_FILE}.pc
+        FRAMEWORK_HEADERS.version = Versions
+        FRAMEWORK_HEADERS.files = $${HEADERS}
+        FRAMEWORK_HEADERS.path = Headers
+        QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
     }
     else {
 
-        # there is no QMAKE_PKGCONFIG_FILE fo Qt4
-        QMAKE_PKGCONFIG_REQUIRES = QtGui 
-
-        contains(QWT_CONFIG, QwtSvg) {
-            QMAKE_PKGCONFIG_REQUIRES += QtSvg
-        }
-
-        contains(QWT_CONFIG, QwtOpenGL) {
-            QMAKE_PKGCONFIG_REQUIRES += QtOpenGL
-        }
-
-        QMAKE_DISTCLEAN += $${DESTDIR}/$${QMAKE_PKGCONFIG_DESTDIR}/$${TARGET}.pc
+        headers.files  = $${HEADERS}
+        headers.path   = $${QWT_INSTALL_HEADERS}
+        INSTALLS += headers
     }
 
-    QMAKE_DISTCLEAN += $${DESTDIR}/libqwt.prl
+    contains(QWT_CONFIG, QwtPkgConfig) {
+
+        CONFIG     += create_pc create_prl no_install_prl
+
+        QMAKE_PKGCONFIG_NAME = Qwt$${QWT_VER_MAJ}
+        QMAKE_PKGCONFIG_DESCRIPTION = Qt Widgets for Technical Applications
+
+        QMAKE_PKGCONFIG_LIBDIR = $${QWT_INSTALL_LIBS}
+        QMAKE_PKGCONFIG_INCDIR = $${QWT_INSTALL_HEADERS}
+
+        QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+
+        greaterThan(QT_MAJOR_VERSION, 4) {
+
+            QMAKE_PKGCONFIG_FILE = Qt$${QT_MAJOR_VERSION}$${QMAKE_PKGCONFIG_NAME}
+            QMAKE_PKGCONFIG_REQUIRES = Qt5Widgets Qt5Concurrent Qt5PrintSupport
+
+            contains(QWT_CONFIG, QwtSvg) {
+                QMAKE_PKGCONFIG_REQUIRES += Qt5Svg
+            }
+
+            contains(QWT_CONFIG, QwtOpenGL) {
+                QMAKE_PKGCONFIG_REQUIRES += Qt5OpenGL
+            }
+
+            QMAKE_DISTCLEAN += $${DESTDIR}/$${QMAKE_PKGCONFIG_DESTDIR}/$${QMAKE_PKGCONFIG_FILE}.pc
+        }
+        else {
+
+            # there is no QMAKE_PKGCONFIG_FILE fo Qt4
+            QMAKE_PKGCONFIG_REQUIRES = QtGui
+
+            contains(QWT_CONFIG, QwtSvg) {
+                QMAKE_PKGCONFIG_REQUIRES += QtSvg
+            }
+
+            contains(QWT_CONFIG, QwtOpenGL) {
+                QMAKE_PKGCONFIG_REQUIRES += QtOpenGL
+            }
+
+            QMAKE_DISTCLEAN += $${DESTDIR}/$${QMAKE_PKGCONFIG_DESTDIR}/$${TARGET}.pc
+        }
+
+        QMAKE_DISTCLEAN += $${DESTDIR}/libqwt.prl
+    }
 }
