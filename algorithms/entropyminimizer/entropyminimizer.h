@@ -27,7 +27,7 @@
 #include "core/calculation/algorithmplugin.h"
 
 /// Namespace for all entropy minimizer components
-ALGORITHM_H_START(entropyminimizer, "1.0.0")
+ALGORITHM_H_START(entropyminimizer)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Iterative entropy minimization algorithm

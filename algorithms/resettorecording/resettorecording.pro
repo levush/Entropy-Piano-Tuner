@@ -1,3 +1,3 @@
 include(../algorithms_func.pri)
 
-$$declareAlgorithm(resettorecording)
+$$declareAlgorithm(resettorecording, 1.0.0)

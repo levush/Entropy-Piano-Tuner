@@ -27,7 +27,7 @@
 #include "core/calculation/algorithmplugin.h"
 
 // Algorithms are always protected by their own namespace:
-ALGORITHM_H_START(resettorecording, "1.0.0")
+ALGORITHM_H_START(resettorecording)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Algorithm to copy the recorded pitches into the tuning curve.

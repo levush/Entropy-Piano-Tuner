@@ -215,6 +215,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     //applyFormLayoutFormat(layout);
 
     layout->addRow(new QLabel(tr("Name:")), new QLabel(QString::fromStdString(info.getName())));
+    layout->addRow(new QLabel(tr("Version:")), new QLabel(QString::fromStdString(info.getVersion())));
     layout->addRow(new QLabel(tr("Author:")), new QLabel(QString::fromStdString(info.getAuthor())));
     layout->addRow(new QLabel(tr("Year:")), new QLabel(QString("%1").arg(info.getYear())));
 

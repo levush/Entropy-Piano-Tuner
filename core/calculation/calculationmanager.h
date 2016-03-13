@@ -85,9 +85,10 @@ public:
     void registerFactory(const std::string &name, AlgorithmFactoryBase* factory);
 
     const std::map<std::string, AlgorithmFactoryBase*> &getAlgorithms() const {return mAlgorithms;}
-    std::shared_ptr<const AlgorithmInformation> loadAlgorithmInformation(const std::string &algorithmName) const;
+    std::shared_ptr<const AlgorithmInformation> loadAlgorithmInformation(const std::__cxx11::string &algorithmName) const;
     bool hasAlgorithm(const std::string &id) const;
     std::string getDefaultAlgorithmId() const;
+    const AlgorithmFactoryDescription &getAlgorithmFactoryDescriptionById(const std::string &id) const;
 
     const std::string &getCurrentAlgorithmId() {return getCurrentAlgorithmInformation()->getId();}
     const std::shared_ptr<const AlgorithmInformation> getCurrentAlgorithmInformation();

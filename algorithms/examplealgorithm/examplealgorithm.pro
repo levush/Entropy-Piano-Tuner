@@ -1,3 +1,3 @@
 include(../algorithms_func.pri)
 
-$$declareAlgorithm(examplealgorithm)
+$$declareAlgorithm(examplealgorithm, 1.0.0)

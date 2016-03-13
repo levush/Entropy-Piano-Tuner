@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <regex>
 
 #ifdef EPT_SHARED_ALGORITHMS
 #include <dirent.h>
@@ -87,10 +88,46 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
 #ifdef EPT_NO_SHARED_ALGORITHMS
     (void)algorithmsDirs;  // empty function
 #else
-    auto has_suffix= [](const std::string &str, const std::string &suffix)
-    {
-        return str.size() >= suffix.size() &&
-               str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+
+    auto contains_version = [](const std::string &str, const std::string &type) {
+        const size_t pos = str.find(type);
+        if (pos == std::string::npos) {return false;}
+
+        const std::string ending = str.substr(pos);
+        const std::string regex_str = type + "(\\.[0-9]+){1,3}";
+        std::regex reg(regex_str);
+        std::smatch pieces_match;
+
+        return std::regex_match(ending, pieces_match, reg);
+    };
+
+    auto is_library_type = [contains_version](const std::string &str, const std::string &suffix) {
+        if (contains_version(str, suffix)) {return true;}
+
+        return false;
+    };
+
+    auto is_library = [is_library_type](const std::string &str) {
+        return is_library_type(str, ".so") || is_library_type(str, ".dll") || is_library_type(str, ".dylib");
+    };
+
+    auto parse_version = [](const std::string &str, int &major, int &minor, int &patch) {
+        std::array<int *, 3> v_out = {{&major, &minor, &patch}};
+
+        const std::string regex_str = "(([0-9]+)\\.)?(([0-9]+)\\.)?([0-9]+)";
+        std::regex reg(regex_str);
+        std::smatch pieces_match;
+
+        EptAssert(std::regex_match(str, pieces_match, reg), "RegEx must match.");
+
+        int out_index = 0;
+        for (size_t i = 1; i < pieces_match.size(); ++i) {
+            std::string m = pieces_match[i];
+            if (m.find(".") != std::string::npos) {continue;}
+
+            *v_out[out_index] = std::atoi(m.c_str());
+            ++out_index;
+        }
     };
 
     for (auto algorithmsDir : algorithmsDirs) {
@@ -104,7 +141,7 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
         }
         while ((ent = readdir(dir)) != nullptr) {
             const std::string filename = algorithmsDir + "/" + std::string(ent->d_name);
-            if (has_suffix(filename, ".so") || has_suffix(filename, ".dll") || has_suffix(filename, ".dylib")) {
+            if (is_library(filename)) {
                 LogI("Reading algorithm %s", filename.c_str());
 
                 SharedLibraryPtr lib(new SharedLibrary(filename));
@@ -134,6 +171,22 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
                         LogW("Plugin ABI version mismatch. Expected %i, got %i.",
                              ALGORITHM_PLUGIN_API_VERSION, info->apiVersion);
                         continue;
+                    }
+
+                    int cmajor = 0, cminor = 0, cpatch = 0;
+                    int nmajor = 0, nminor = 0, npatch = 0;
+                    // check if algorithms already exists
+                    if (hasAlgorithm(info->description.getAlgorithmName())) {
+                        // check version
+                        parse_version(info->description.getVersion(), nmajor, nminor, npatch);
+                        parse_version(getAlgorithmFactoryDescriptionById(info->description.getAlgorithmName()).getVersion(), cmajor, cminor, cpatch);
+
+                        if (nmajor > cmajor || (nmajor == cmajor && nminor > cminor) || (nmajor == cmajor && nminor == cminor && npatch > cpatch)) {
+                            LogI("Overwriting algorithm with newer version");
+                        } else {
+                            LogI("Algorithm already present, skipping.");
+                            continue;
+                        }
                     }
 
                     // Instantiate the plugin
@@ -211,7 +264,7 @@ std::shared_ptr<const AlgorithmInformation> CalculationManager::loadAlgorithmInf
 {
     // open the xml file for this algorithm and return the information in the current language
     AlgorithmInformationParser parser;
-    return parser.parse(algorithmName);
+    return parser.parse(getAlgorithmFactoryDescriptionById(algorithmName));
 }
 
 bool CalculationManager::hasAlgorithm(const std::string &id) const {
@@ -221,6 +274,11 @@ bool CalculationManager::hasAlgorithm(const std::string &id) const {
 std::string CalculationManager::getDefaultAlgorithmId() const {
     EptAssert(hasAlgorithm("entropyminimizer"), "Default algorithm does not exits.");
     return "entropyminimizer";
+}
+
+const AlgorithmFactoryDescription &CalculationManager::getAlgorithmFactoryDescriptionById(const std::string &id) const {
+    EptAssert(hasAlgorithm(id), "Algorithm does not exist");
+    return mAlgorithms.at(id)->getDescription();
 }
 
 const std::shared_ptr<const AlgorithmInformation> CalculationManager::getCurrentAlgorithmInformation() {

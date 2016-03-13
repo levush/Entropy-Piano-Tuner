@@ -25,12 +25,13 @@
 
 #include "tinyxml2.h"
 
+#include "algorithmfactorydescription.h"
 #include "algorithminformation.h"
 
 class AlgorithmInformationParser
 {
 public:
-    std::shared_ptr<const AlgorithmInformation> parse(const std::string &algorithmId) const;
+    std::shared_ptr<const AlgorithmInformation> parse(const AlgorithmFactoryDescription &algorithmFactory) const;
 
 private:
     std::string parseLanguageString(const tinyxml2::XMLElement *element) const;

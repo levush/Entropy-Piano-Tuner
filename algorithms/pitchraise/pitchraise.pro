@@ -1,3 +1,3 @@
 include(../algorithms_func.pri)
 
-$$declareAlgorithm(pitchraise)
+$$declareAlgorithm(pitchraise, 1.0.0)

@@ -27,7 +27,7 @@
 #include "core/calculation/algorithmplugin.h"
 
 // each algorithm has to be in its own namespace to prevent naming conflits
-ALGORITHM_H_START(examplealgorithm, "1.0.0")
+ALGORITHM_H_START(examplealgorithm)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Basic class to show how to implement own algorithms.

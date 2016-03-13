@@ -2,6 +2,9 @@ include(../entropypianotuner_func.pri)
 
 defineReplace(declareAlgorithm) {
     algorithmName = $$1
+    VERSION = $$2
+
+    DEFINES += "EPT_ALGORITHM_VERSION_NAME=\\\"$${VERSION}\\\""
 
     TEMPLATE = lib
 
@@ -57,6 +60,7 @@ defineReplace(declareAlgorithm) {
     export(LIBS)
     export(SOURCES)
     export(HEADERS)
+    export(DEFINES)
     export(DISTFILES)
     export(RESOURCES)
     export(QMAKE_CXXFLAGS_DEBUG)

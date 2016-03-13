@@ -30,7 +30,10 @@
 using tinyxml2::XMLDocument;
 using tinyxml2::XMLElement;
 
-std::shared_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(const std::string &algorithmId) const {
+std::shared_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(const AlgorithmFactoryDescription &algorithmFactory) const {
+    const std::string &algorithmId(algorithmFactory.getAlgorithmName());
+    const std::string &algorithmVersion(algorithmFactory.getVersion());
+
     XMLDocument document;
 
     std::string fileContent(FileManager::getSingleton().getAlgorithmInformationFileContent(algorithmId));
@@ -68,7 +71,7 @@ std::shared_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(co
     }
 
     return std::shared_ptr<const AlgorithmInformation>(
-                new AlgorithmInformation(algorithmId, name, description, year, author, params));
+                new AlgorithmInformation(algorithmId, algorithmVersion, name, description, year, author, params));
 }
 
 std::string AlgorithmInformationParser::parseLanguageString(const tinyxml2::XMLElement *element) const {

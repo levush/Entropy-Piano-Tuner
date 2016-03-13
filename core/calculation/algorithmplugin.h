@@ -21,6 +21,7 @@ class AlgorithmFactoryBase;
 #  define ALGORITHM_PLUGIN_EXPORT  // empty
 #endif
 
+#define ALGORITHM_STRINGIFY(x) #x
 
 // Define a type for the static function pointer.
 EPT_EXTERN typedef AlgorithmFactoryBase* (*GetAlgorithmFactoryFunc)();
@@ -33,6 +34,7 @@ struct AlgorithmPluginDetails {
   AlgorithmFactoryDescription description;
   GetAlgorithmFactoryFunc factoryFunc;
 };
+
 
 #if defined(EPT_STATIC_ALGORITHMS)
 
@@ -82,18 +84,23 @@ struct AlgorithmPluginDetails {
 #  define ALGORITHM_CPP_END }
 #endif
 
-#define ALGORITHM_H_START(algorithmName, algorithmVersion)              \
+#define ALGORITHM_H_START(algorithmName)                                \
     ALGORITHM_INIT_RESOURCE_FUNC(algorithmName)                         \
     namespace algorithmName {                                           \
                                                                         \
+    inline std::string getAlgorithmVersion() {                          \
+        return EPT_ALGORITHM_VERSION_NAME;                              \
+    }                                                                   \
+                                                                        \
     inline AlgorithmFactoryDescription getFactoryDescription() {        \
-        return AlgorithmFactoryDescription(#algorithmName, algorithmVersion);\
+        return AlgorithmFactoryDescription(#algorithmName, getAlgorithmVersion()); \
     }                                                                   \
                                                                         \
     inline AlgorithmFactoryDescription getInitFactoryDescription() {    \
         ALGORITHM_INIT_FUNC_NAME(algorithmName)                         \
         return getFactoryDescription();                                 \
     }                                                                   \
+                                                                        \
 
 #define ALGORITHM_H_END(Class)                                          \
     typedef AlgorithmFactory<Class> Factory; }

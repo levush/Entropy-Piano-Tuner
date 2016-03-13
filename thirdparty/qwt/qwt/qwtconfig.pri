@@ -9,6 +9,7 @@
 
 # Changes:
 # - QWT_DLL set by EPT configuration
+# - QwtInstall as QWT_CONFIG
 
 QWT_VER_MAJ      = 6
 QWT_VER_MIN      = 1

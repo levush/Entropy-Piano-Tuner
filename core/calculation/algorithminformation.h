@@ -33,6 +33,7 @@ public:
 
 public:
     AlgorithmInformation(const std::string id,
+                         const std::string version,
                          const std::string name,
                          const std::string description,
                          const int year,
@@ -42,6 +43,7 @@ public:
 
     const std::string &getId() const {return mId;}
     const std::string &getName() const {return mName;}
+    const std::string &getVersion() const {return mVersion;}
     const std::string &getDescription() const {return mDescription;}
     int getYear() const {return mYear;}
     const std::string &getAuthor() const {return mAuthor;}
@@ -51,6 +53,7 @@ public:
 private:
     const std::string mId;
     const std::string mName;
+    const std::string mVersion;
     const std::string mDescription;
     const int          mYear;
     const std::string mAuthor;
