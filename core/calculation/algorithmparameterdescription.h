@@ -27,7 +27,7 @@
 class AlgorithmParameterDescription
 {
 public:
-    using StringParameterList = std::vector<std::pair<std::string, std::string> >;
+    using StringParameterList = std::vector<std::pair<std::string, std::wstring> >;
 public:
     enum Type {
         TYPE_UNSET,
@@ -40,11 +40,11 @@ public:
     const std::string &getID() const {return mID;}
     std::string &getID() {return mID;}
 
-    const std::string &getLabel() const {return mLabel;}
-    std::string &getLabel() {return mLabel;}
+    const std::wstring &getLabel() const {return mLabel;}
+    std::wstring &getLabel() {return mLabel;}
 
-    const std::string &getDescription() const {return mDescription;}
-    std::string &getDescription() {return mDescription;}
+    const std::wstring &getDescription() const {return mDescription;}
+    std::wstring &getDescription() {return mDescription;}
 
     Type getType() const {return mParameterType;}
     void setType(Type t) {mParameterType = t;}
@@ -107,8 +107,8 @@ private:
     Type mParameterType = TYPE_UNSET;
     std::string mID;
 
-    std::string mLabel;
-    std::string mDescription;
+    std::wstring mLabel;
+    std::wstring mDescription;
 
     double mDoubleDefaultValue = 0;
     double mDoubleMinValue = std::numeric_limits<double>::min();

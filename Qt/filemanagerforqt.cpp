@@ -84,7 +84,7 @@ std::string FileManagerForQt::getLogFilePath(const std::string &logname) const
 /// \return The whole content of the corresponding XML file in a single string.
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string FileManagerForQt::getAlgorithmInformationFileContent (const std::string &algorithmId) const
+std::wstring FileManagerForQt::getAlgorithmInformationFileContent (const std::string &algorithmId) const
 {
     QFile file(QString::fromStdString(":/algorithms/" + algorithmId + "/" + algorithmId + ".xml"));
 
@@ -97,5 +97,5 @@ std::string FileManagerForQt::getAlgorithmInformationFileContent (const std::str
         EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, "File '" + algorithmId + "' could not be opened.");
 
     QTextStream stream(&file);
-    return stream.readAll().toStdString();
+    return stream.readAll().toStdWString();
 }

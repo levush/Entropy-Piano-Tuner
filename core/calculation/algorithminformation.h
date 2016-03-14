@@ -33,27 +33,27 @@ public:
 
 public:
     AlgorithmInformation(const std::string id,
-                         const std::string name,
-                         const std::string description,
-                         const int year,
-                         const std::string author,
+                         const std::wstring name,
+                         const std::wstring description,
+                         const std::wstring year,
+                         const std::wstring author,
                          const ParameterListType &parameters);
     ~AlgorithmInformation();
 
     const std::string &getId() const {return mId;}
-    const std::string &getName() const {return mName;}
-    const std::string &getDescription() const {return mDescription;}
-    int getYear() const {return mYear;}
-    const std::string &getAuthor() const {return mAuthor;}
+    const std::wstring &getName() const {return mName;}
+    const std::wstring &getDescription() const {return mDescription;}
+    const std::wstring &getYear() const {return mYear;}
+    const std::wstring &getAuthor() const {return mAuthor;}
     const ParameterListType &getParameters() const {return mParameters;}
     const ParameterType &getParameter(const std::string &id) const;
 
 private:
     const std::string mId;
-    const std::string mName;
-    const std::string mDescription;
-    const int          mYear;
-    const std::string mAuthor;
+    const std::wstring mName;
+    const std::wstring mDescription;
+    const std::wstring mYear;
+    const std::wstring mAuthor;
     const ParameterListType mParameters;
 };
 

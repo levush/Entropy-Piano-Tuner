@@ -84,7 +84,7 @@ public:
     /// \return String containing the information of the corresponding XML file
     ///////////////////////////////////////////////////////////////////////////
 
-    virtual std::string getAlgorithmInformationFileContent (const std::string &algorithmId) const = 0;
+    virtual std::wstring getAlgorithmInformationFileContent (const std::string &algorithmId) const = 0;
 
 private:
     static std::unique_ptr<FileManager> mSingleton; ///< Singleton unique pointer

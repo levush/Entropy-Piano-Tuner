@@ -228,7 +228,7 @@ void CalculationProgressGroup::updateTitle()
     if (mGroupBox)
     {
         auto algorithm = CalculationManager::getSingleton().getCurrentAlgorithmInformation();
-        mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdString(algorithm->getName())));
+        mGroupBox->setTitle(tr("Calculation with: %1").arg(QString::fromStdWString(algorithm->getName())));
     }
 }
 
