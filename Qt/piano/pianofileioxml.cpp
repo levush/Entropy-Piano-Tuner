@@ -39,70 +39,58 @@ const PianoFileIOXml::FileVersionType PianoFileIOXml::MIN_SUPPORTED_FILE_VERSION
 void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
     EptAssert(device, "QIODevice may not be null");
 
+    XmlWriterInterfacePtr writerPtr(XmlFactory::getDefaultWriter());
+    XmlWriterInterface &writer(*writerPtr);
 
-    QXmlStreamWriter writer(device);
-
-    writer.setAutoFormatting(true);
     writer.writeStartDocument();
 
     // root
-    writer.writeStartElement(FILE_TYPE_NAME);
-    writer.writeAttribute("version", QString::number(CURRENT_FILE_VERSION));
+    writer.writeStartElement(FILE_TYPE_NAME.toStdString());
+    writer.writeAttribute("version", CURRENT_FILE_VERSION);
 
     // piano
     // ----------------------------------------------------------------------------------------
     writer.writeStartElement("piano");
 
-    writer.writeAttribute("concertPitch", QString::number(piano.getConcertPitch()));
-    writer.writeAttribute("type", QString::number(piano.getPianoType()));
+    writer.writeAttribute("concertPitch", piano.getConcertPitch());
+    writer.writeAttribute("type", piano.getPianoType());
 
-    writer.writeTextElement("name", QString::fromStdWString(piano.getName()));
-    writer.writeTextElement("serialNumber", QString::fromStdWString(piano.getSerialNumber()));
-    writer.writeTextElement("manufactionYear", QString::fromStdWString(piano.getManufactionYear()));
-    writer.writeTextElement("manufactionLocation", QString::fromStdWString(piano.getManufactionLocation()));
-    writer.writeTextElement("tuningLocation", QString::fromStdWString(piano.getTuningLocation()));
-    writer.writeTextElement("tuningTimestamp", QString::fromStdWString(piano.getTuningTime()));
+    writer.writeTextElement("name", piano.getName());
+    writer.writeTextElement("serialNumber", piano.getSerialNumber());
+    writer.writeTextElement("manufactionYear", piano.getManufactionYear());
+    writer.writeTextElement("manufactionLocation", piano.getManufactionLocation());
+    writer.writeTextElement("tuningLocation", piano.getTuningLocation());
+    writer.writeTextElement("tuningTimestamp", piano.getTuningTime());
 
     // keyboard
     writer.writeStartElement("keyboard");
     const Keyboard &keyboard = piano.getKeyboard();
 
-    writer.writeAttribute("numberOfKeys", QString::number(keyboard.getNumberOfKeys()));
-    writer.writeAttribute("keyNumberOfA", QString::number(keyboard.getKeyNumberOfA4()));
-    writer.writeAttribute("numberOfBassKeys", QString::number(keyboard.getNumberOfBassKeys()));
+    writer.writeAttribute("numberOfKeys", keyboard.getNumberOfKeys());
+    writer.writeAttribute("keyNumberOfA", keyboard.getKeyNumberOfA4());
+    writer.writeAttribute("numberOfBassKeys", keyboard.getNumberOfBassKeys());
 
     for (size_t keyIndex = 0; keyIndex < keyboard.size(); ++keyIndex) {
         const Key &key = keyboard[keyIndex];
         writer.writeStartElement("key");
 
-        writer.writeAttribute("key", QString::number(keyIndex));
-        writer.writeAttribute("recordedFrequency", QString::number(key.getRecordedFrequency()));
-        writer.writeAttribute("measuredInharmonicity", QString::number(key.getMeasuredInharmonicity()));
-        writer.writeAttribute("computedFrequency", QString::number(key.getComputedFrequency()));
-        writer.writeAttribute("tunedFrequency", QString::number(key.getTunedFrequency()));
-        writer.writeAttribute("recorded", key.isRecorded() ? "1" : "0");
-        writer.writeAttribute("quality", QString::number(key.getRecognitionQuality()));
+        writer.writeAttribute("key", static_cast<int>(keyIndex));
+        writer.writeAttribute("recordedFrequency", key.getRecordedFrequency());
+        writer.writeAttribute("measuredInharmonicity", key.getMeasuredInharmonicity());
+        writer.writeAttribute("computedFrequency", key.getComputedFrequency());
+        writer.writeAttribute("tunedFrequency", key.getTunedFrequency());
+        writer.writeAttribute("recorded", key.isRecorded());
+        writer.writeAttribute("quality", key.getRecognitionQuality());
 
         // spectrum
         const Key::SpectrumType &spectrum(key.getSpectrum());
-        QString tsstring;
-        QTextStream ts(&tsstring);
-        ts.setCodec(writer.codec());
-        ts.setLocale(QLocale(QLocale::English));
-        for (size_t spec = 0; spec < spectrum.size() - 1; ++spec) {
-            // all but last with space
-            ts << spectrum[spec] << " ";
-        }
-        // last without space
-        ts << spectrum[spectrum.size() - 1];
-
-        writer.writeTextElement("spectrum", tsstring);
+        writer.writeDoubleListElement("spectrum", spectrum);
 
         // peaks
         for (auto peak : key.getPeaks()) {
             writer.writeStartElement("peak");
-            writer.writeAttribute("frequency", QString::number(peak.first));
-            writer.writeAttribute("intensity", QString::number(peak.second));
+            writer.writeAttribute("frequency", peak.first);
+            writer.writeAttribute("intensity", peak.second);
             writer.writeEndElement();  // peak
         }
 
@@ -120,13 +108,13 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
     const std::vector<SingleAlgorithmParametersPtr> &parameters = piano.getAlgorithmParameters().getParameters();
 
     if (currentAlgorithm.empty() == false) {
-        writer.writeAttribute("current", QString::fromStdString(currentAlgorithm));
+        writer.writeAttribute("current", currentAlgorithm);
     }
 
     for (const SingleAlgorithmParametersPtr ad : parameters) {
         writer.writeStartElement("algorithm");
 
-        writer.writeAttribute("name", QString::fromStdString(ad->getAlgorithmName()));
+        writer.writeAttribute("name", ad->getAlgorithmName());
 
         auto doubleParameters = ad->getDoubleParameters();
         for (const auto &dp : doubleParameters) {
@@ -134,8 +122,8 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
 
             writer.writeAttribute("type", "double");
 
-            writer.writeAttribute("name", QString::fromStdString(dp.first));
-            writer.writeCharacters(QString::number(dp.second));
+            writer.writeAttribute("name", dp.first);
+            writer.writeCharacters(dp.second);
 
             writer.writeEndElement();  // parameter
         }
@@ -146,8 +134,8 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
 
             writer.writeAttribute("type", "int");
 
-            writer.writeAttribute("name", QString::fromStdString(ip.first));
-            writer.writeCharacters(QString::number(ip.second));
+            writer.writeAttribute("name", ip.first);
+            writer.writeCharacters(ip.second);
 
             writer.writeEndElement();  // parameter
         }
@@ -158,8 +146,8 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
 
             writer.writeAttribute("type", "string");
 
-            writer.writeAttribute("name", QString::fromStdString(sp.first));
-            writer.writeCharacters(QString::fromStdString(sp.second));
+            writer.writeAttribute("name", sp.first);
+            writer.writeCharacters(sp.second);
 
             writer.writeEndElement();  // parameter
         }
@@ -180,6 +168,11 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
     if (writer.hasError()) {
         EPT_EXCEPT(EptException::ERR_CANNOT_WRITE_TO_FILE, "An error occured when writing to an xml stream.")
     }
+
+    std::wstring content = writer.close();
+    QTextStream stream(device);
+    stream << QString::fromStdWString(content);
+    stream.flush();
 
     LogI("Successfully written xml to QIODevice");
 }

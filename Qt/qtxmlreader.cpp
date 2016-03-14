@@ -79,8 +79,6 @@ bool QtXmlReader::readNext() {
 }
 
 bool QtXmlReader::hasError() {
-    EptAssert(isOpen(), "Reader must be open");
-
     return mReader.hasError();
 }
 

@@ -257,6 +257,7 @@ HEADERS  += \
     Qt/piano/pianofileioxml.h \
     Qt/piano/pianofileiocsv.h \
     Qt/qtxmlreader.h \
+    Qt/qtxmlwriter.h \
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -323,6 +324,7 @@ SOURCES +=  \
     Qt/piano/pianofileioxml.cpp \
     Qt/piano/pianofileiocsv.cpp \
     Qt/qtxmlreader.cpp \
+    Qt/qtxmlwriter.cpp \
 
 
 #-------------------------------------------------
@@ -397,6 +399,7 @@ CORE_ADAPTER_HEADERS = \
     core/adapters/filemanager.h \
     core/adapters/coreinitialisationadapter.h \
     core/adapters/xmlreaderinterface.h \
+    core/adapters/xmlwriterinterface.h \
     core/adapters/xmlfactory.h \
 
 CORE_ADAPTER_SOURCES = \
@@ -408,6 +411,7 @@ CORE_ADAPTER_SOURCES = \
     core/adapters/coreinitialisationadapter.cpp \
     core/adapters/graphicsviewadapter.cpp \
     core/adapters/xmlreaderinterface.cpp \
+    core/adapters/xmlwriterinterface.cpp \
     core/adapters/xmlfactory.cpp \
 
 #---------------- Audio -----------------

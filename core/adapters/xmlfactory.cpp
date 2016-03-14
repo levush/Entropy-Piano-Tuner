@@ -24,3 +24,11 @@ XmlReaderInterfacePtr XmlFactory::getDefaultReader() {
 
     return mSingleton->mReaderInterfaces.front()->createInstance();
 }
+
+XmlWriterInterfacePtr XmlFactory::getDefaultWriter() {
+    if (getSingletonPtr()->mWriterInterfaces.size() == 0) {
+        EPT_EXCEPT(EptException::ERR_INTERNAL_ERROR, "No xml writer has been registered!");
+    }
+
+    return mSingleton->mWriterInterfaces.front()->createInstance();
+}
