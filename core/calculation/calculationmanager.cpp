@@ -77,6 +77,7 @@ void CalculationManager::loadAlgorithms()
 #ifdef __unix
     // add system directories on unix systems
     search_dirs.push_back("/usr/lib/entropypianotuner/algorithms");
+    search_durs.push_back("/usr/lib64/enrtopypianotuner/algorithms");
     search_dirs.push_back("~/.entropypianotuner/algorithms");
 #endif
     loadAlgorithms(search_dirs);
