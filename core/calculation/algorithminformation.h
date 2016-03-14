@@ -52,8 +52,8 @@ public:
 
 private:
     const std::string mId;
-    const std::string mName;
     const std::string mVersion;
+    const std::string mName;
     const std::string mDescription;
     const int          mYear;
     const std::string mAuthor;
