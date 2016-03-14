@@ -37,10 +37,10 @@ QWT_CONFIG += QwtPlot
 include($$PWD/thirdparty/qwt/qwt.pri)
 
 QWT_H = $$HEADERS
-HEADERS =
+HEADERS = \
 
 QWT_S = $$SOURCES
-SOURCES =
+SOURCES = \
 
 for(file, QWT_H):HEADERS += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
 for(file, QWT_S):SOURCES += $$replace(file, qwt, $$PWD/thirdparty/qwt/qwt)
@@ -256,6 +256,7 @@ HEADERS  += \
     Qt/piano/pianofileiointerface.h \
     Qt/piano/pianofileioxml.h \
     Qt/piano/pianofileiocsv.h \
+    Qt/qtxmlreader.h \
 
 SOURCES +=  \
     Qt/main.cpp\
@@ -321,6 +322,7 @@ SOURCES +=  \
     Qt/piano/pianofileiointerface.cpp \
     Qt/piano/pianofileioxml.cpp \
     Qt/piano/pianofileiocsv.cpp \
+    Qt/qtxmlreader.cpp \
 
 
 #-------------------------------------------------
@@ -394,6 +396,8 @@ CORE_ADAPTER_HEADERS = \
     core/adapters/graphicsviewadapter.h \
     core/adapters/filemanager.h \
     core/adapters/coreinitialisationadapter.h \
+    core/adapters/xmlreaderinterface.h \
+    core/adapters/xmlfactory.h \
 
 CORE_ADAPTER_SOURCES = \
     core/adapters/calculationadapter.cpp \
@@ -403,6 +407,8 @@ CORE_ADAPTER_SOURCES = \
     core/adapters/filemanager.cpp \
     core/adapters/coreinitialisationadapter.cpp \
     core/adapters/graphicsviewadapter.cpp \
+    core/adapters/xmlreaderinterface.cpp \
+    core/adapters/xmlfactory.cpp \
 
 #---------------- Audio -----------------
 
