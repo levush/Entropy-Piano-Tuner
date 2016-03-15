@@ -97,5 +97,8 @@ std::wstring FileManagerForQt::getAlgorithmInformationFileContent (const std::st
         EPT_EXCEPT(EptException::ERR_CANNOT_READ_FROM_FILE, "File '" + algorithmId + "' could not be opened.");
 
     QTextStream stream(&file);
-    return stream.readAll().toStdWString();
+    stream.setCodec("UTF-8");
+    stream.setAutoDetectUnicode(true);
+    QString content = stream.readAll();
+    return content.toStdWString();
 }
