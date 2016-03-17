@@ -14,7 +14,7 @@ private:
     XmlFactory();
 
 public:
-    static const std::unique_ptr<XmlFactory> &getSingletonPtr();
+    static XmlFactory *getSingletonPtr();
 
     void registerReader(XmlReaderFactoryBase *reader) {mReaderInterfaces.push_back(reader);}
     void registerWriter(XmlWriterFactoryBase *writer) {mWriterInterfaces.push_back(writer);}
@@ -23,8 +23,6 @@ public:
     static XmlWriterInterfacePtr getDefaultWriter();
 
 private:
-    static std::unique_ptr<XmlFactory> mSingleton;
-
     std::vector<XmlReaderFactoryBase*> mReaderInterfaces;
     std::vector<XmlWriterFactoryBase*> mWriterInterfaces;
 };
