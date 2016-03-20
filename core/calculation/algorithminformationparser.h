@@ -28,14 +28,16 @@
 #include "algorithmfactorydescription.h"
 #include "algorithminformation.h"
 
+#include "core/adapters/xmlfactory.h"
+
 class AlgorithmInformationParser
 {
 public:
     std::shared_ptr<const AlgorithmInformation> parse(const AlgorithmFactoryDescription &algorithmFactory) const;
 
 private:
-    std::string parseLanguageString(const tinyxml2::XMLElement *element) const;
-    AlgorithmParameterDescription parseAlgorithmParameter(const tinyxml2::XMLElement *element) const;
+    std::wstring parseLanguageString(XmlReaderInterface &reader) const;
+    AlgorithmParameterDescription parseAlgorithmParameter(XmlReaderInterface &reader) const;
 };
 
 #endif // ALGORITHMINFORMATIONPARSER_H

@@ -111,6 +111,9 @@ CORE_ADAPTER_HEADERS = \
     adapters/graphicsviewadapter.h \
     adapters/filemanager.h \
     adapters/coreinitialisationadapter.h \
+    adapters/xmlfactory.h \
+    adapters/xmlreaderinterface.h \
+    adapters/xmlwriterinterface.h \
 
 CORE_ADAPTER_SOURCES = \
     adapters/calculationadapter.cpp \
@@ -120,6 +123,9 @@ CORE_ADAPTER_SOURCES = \
     adapters/filemanager.cpp \
     adapters/coreinitialisationadapter.cpp \
     adapters/graphicsviewadapter.cpp \
+    adapters/xmlfactory.cpp \
+    adapters/xmlreaderinterface.cpp \
+    adapters/xmlwriterinterface.cpp \
 
 #---------------- Audio -----------------
 

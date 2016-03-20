@@ -227,6 +227,8 @@ HEADERS  += \
     implementations/logforqt.h \
     implementations/platformtools.h \
     implementations/projectmanagerforqt.h \
+    implementations/qtxmlreader.h \
+    implementations/qtxmlwriter.h \
     implementations/settingsforqt.h \
     keyboard/autoscaledtokeyboardgraphicsview.h \
     keyboard/fullscreenkeyboarddialog.h \
@@ -294,6 +296,8 @@ SOURCES +=  \
     implementations/logforqt.cpp \
     implementations/platformtools.cpp \
     implementations/projectmanagerforqt.cpp \
+    implementations/qtxmlreader.cpp \
+    implementations/qtxmlwriter.cpp \
     implementations/settingsforqt.cpp \
     keyboard/autoscaledtokeyboardgraphicsview.cpp \
     keyboard/fullscreenkeyboarddialog.cpp \

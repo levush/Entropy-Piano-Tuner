@@ -65,7 +65,7 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
             const std::string &name = desc.first;
             try {
                 auto info(std::move(CalculationManager::getSingleton().loadAlgorithmInformation(name)));
-                mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdString(info->getName())));
+                mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdWString(info->getName())));
             } catch (...) {
                 LogW("Error during loading and adding the algorithm '%s'. Skipping...", name.c_str());
             }
@@ -197,7 +197,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     const AlgorithmInformation &info(*mCurrentAlgorithmInformation.get());
     const SingleAlgorithmParameters &description = *mCurrentAlgorithmParameters;
 
-    setWindowTitle(tr("Info of algorithm: %1").arg(QString::fromStdString(info.getName())));
+    setWindowTitle(tr("Info of algorithm: %1").arg(QString::fromStdWString(info.getName())));
 
     QWidget *scrollContentWidget = new QWidget;
     scrollContentWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -214,12 +214,12 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
     infoGroupBox->setLayout(layout);
     //applyFormLayoutFormat(layout);
 
-    layout->addRow(new QLabel(tr("Name:")), new QLabel(QString::fromStdString(info.getName())));
+    layout->addRow(new QLabel(tr("Name:")), new QLabel(QString::fromStdWString(info.getName())));
     layout->addRow(new QLabel(tr("Version:")), new QLabel(QString::fromStdString(info.getVersion())));
-    layout->addRow(new QLabel(tr("Author:")), new QLabel(QString::fromStdString(info.getAuthor())));
-    layout->addRow(new QLabel(tr("Year:")), new QLabel(QString("%1").arg(info.getYear())));
+    layout->addRow(new QLabel(tr("Author:")), new QLabel(QString::fromStdWString(info.getAuthor())));
+    layout->addRow(new QLabel(tr("Year:")), new QLabel(QString::fromStdWString(info.getYear())));
 
-    QLabel *descriptionLabel = new QLabel(QString::fromStdString(info.getDescription()));
+    QLabel *descriptionLabel = new QLabel(QString::fromStdWString(info.getDescription()));
     descriptionLabel->setWordWrap(true);
     descriptionLabel->setAlignment(Qt::AlignTop);
     layout->addRow(new QLabel(tr("Description:")), descriptionLabel);
@@ -354,7 +354,7 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 dataLayout->addWidget(cb);
 
                 for (const auto &p : param.getStringList()) {
-                    cb->addItem(QString::fromStdString(p.second), QString::fromStdString(p.first));
+                    cb->addItem(QString::fromStdWString(p.second), QString::fromStdString(p.first));
                 }
                 int defaultIndex = cb->findData(QString::fromStdString(param.getStringDefaultValue()));
                 if (description.hasStringParameter(param.getID())) {
@@ -370,10 +370,10 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
             EptAssert(dataWidget, "A data widget has to exist.");
 
             // create label
-            QLabel *label = new QLabel(QString::fromStdString(param.getLabel()));
+            QLabel *label = new QLabel(QString::fromStdWString(param.getLabel()));
 
             // apply tool tip and whats this
-            dataWidget->setWhatsThis(QString::fromStdString(param.getDescription()));
+            dataWidget->setWhatsThis(QString::fromStdWString(param.getDescription()));
             dataWidget->setToolTip(dataWidget->whatsThis());
             label->setWhatsThis(dataWidget->whatsThis());
             label->setToolTip(dataWidget->toolTip());
