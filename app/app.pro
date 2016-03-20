@@ -405,7 +405,7 @@ target.path = $$EPT_INSTALL_BIN_DIR
 pixmaps.path = $$EPT_INSTALL_DATA_DIR/pixmaps
 pixmaps.files += $$EPT_APPSTORE_DIR/icons/entropypianotuner.png
 
-icons.path = $$EPT_INSTALL_DATA_DIR/icons/hicolor/256x256/mimetypes
+icons.path = $$EPT_INSTALL_DATA_DIR/icons/hicolor/128x128/mimetypes
 icons.files += $$EPT_APPSTORE_DIR/icons/application-ept.png
 
 mime.path = $$EPT_INSTALL_DATA_DIR/mime/packages
