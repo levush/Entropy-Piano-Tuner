@@ -211,18 +211,3 @@ defineReplace(depends_timesupport) {
 
     return(true)
 }
-
-defineReplace(depends_tinyxml2) {
-    tinyxml2 {
-        !contains(EPT_THIRDPARTY_CONFIG, system_tinyxml2) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/tinyxml2/tinyxml2
-        }
-
-        LIBS += -ltinyxml2
-    }
-
-    export(INCLUDEPATH)
-    export(LIBS)
-
-    return(true)
-}

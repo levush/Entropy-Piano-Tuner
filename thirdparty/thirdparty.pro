@@ -36,11 +36,3 @@ rtmidi {
 timesupport {
     SUBDIRS += timesupport/timesupport
 }
-
-tinyxml2 {
-    !contains(EPT_THIRDPARTY_CONFIG, system_tinyxml2) {
-        SUBDIRS += tinyxml2/tinyxml2
-    }
-}
-
-

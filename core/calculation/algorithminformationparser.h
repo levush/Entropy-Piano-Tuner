@@ -23,8 +23,6 @@
 #include <string>
 #include <memory>
 
-#include "tinyxml2.h"
-
 #include "algorithmfactorydescription.h"
 #include "algorithminformation.h"
 

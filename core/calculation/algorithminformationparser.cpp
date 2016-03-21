@@ -27,9 +27,6 @@
 #include "../settings.h"
 #include "../adapters/filemanager.h"
 
-using tinyxml2::XMLDocument;
-using tinyxml2::XMLElement;
-
 std::shared_ptr<const AlgorithmInformation> AlgorithmInformationParser::parse(const AlgorithmFactoryDescription &algorithmFactory) const {
     const std::string &algorithmId(algorithmFactory.getAlgorithmName());
     const std::string &algorithmVersion(algorithmFactory.getVersion());

@@ -77,7 +77,6 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
 
     QString dependenciesText = tr("Based on");
     dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"http://qwt.sf.net\">Qwt</a>, <a href=\"http://fftw.org\">fftw3</a>");
-    dependenciesText.append(", <a href=\"http://www.grinninglizard.com/tinyxml2\">tinyxml2</a>");
 #ifdef EPT_SHARED_ALGORITHMS
     dependenciesText.append(", <a href=\"http://libuv.org\">libuv</a>");
 #endif

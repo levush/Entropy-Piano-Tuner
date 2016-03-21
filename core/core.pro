@@ -33,7 +33,6 @@ $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_rtmidi()
 $$depends_timesupport()
-$$depends_tinyxml2()
 
 # debugging flags: all warnings and check arrays, etc
 linux-g++*:!android {

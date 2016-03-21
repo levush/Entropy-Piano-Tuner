@@ -43,7 +43,7 @@ isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
 
 #------------------------------------------------
 # third party modules
-CONFIG += tinyxml2 qwt fftw3 getmemorysize
+CONFIG += qwt fftw3 getmemorysize
 
 # add libuv when shared algorithms are enabled
 contains(EPT_CONFIG, shared_algorithms) {
@@ -76,7 +76,6 @@ load(configure)
 qtCompileTest(qwt_exists):  EPT_THIRDPARTY_CONFIG+=system_qwt
 
 packagesExist(qwt):       EPT_THIRDPARTY_CONFIG+=system_qwt
-packagesExist(tinyxml2):  EPT_THIRDPARTY_CONFIG+=system_tinyxml2
 packagesExist(fftw3):     EPT_THIRDPARTY_CONFIG+=system_fftw3
 packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 
