@@ -4,6 +4,7 @@ defineReplace(declareAlgorithm) {
     algorithmName = $$1
     VERSION = $$2
 
+    DEFINES += "EPT_ALGORITHM_NAME=\\\"$${algorithmName}\\\""
     DEFINES += "EPT_ALGORITHM_VERSION_NAME=\\\"$${VERSION}\\\""
 
     TEMPLATE = lib

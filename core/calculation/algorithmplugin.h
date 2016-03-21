@@ -35,7 +35,31 @@ struct AlgorithmPluginDetails {
   GetAlgorithmFactoryFunc factoryFunc;
 };
 
+// ================================================================================
+// Header defines
 
+// general
+#define ALGORITHM_H_START(algorithmName)                                \
+    ALGORITHM_INIT_RESOURCE_FUNC(algorithmName)                         \
+    namespace algorithmName {                                           \
+                                                                        \
+    ALGORITHM_PLUGIN_EXPORT std::string getAlgorithmVersion();          \
+                                                                        \
+    inline AlgorithmFactoryDescription getFactoryDescription() {        \
+        return AlgorithmFactoryDescription(#algorithmName, getAlgorithmVersion()); \
+    }                                                                   \
+                                                                        \
+    inline AlgorithmFactoryDescription getInitFactoryDescription() {    \
+        ALGORITHM_INIT_FUNC_NAME(algorithmName)                         \
+        return getFactoryDescription();                                 \
+    }                                                                   \
+                                                                        \
+
+#define ALGORITHM_H_END(Class)                                          \
+    typedef AlgorithmFactory<Class> Factory; }
+
+
+// static extra defines
 #if defined(EPT_STATIC_ALGORITHMS)
 
 // we need QResource for Q_INIT_RESOURCE
@@ -48,17 +72,34 @@ struct AlgorithmPluginDetails {
 #  define ALGORITHM_INIT_FUNC_NAME(algorithmName)                       \
     initResource##algorithmName();                                      \
 
+#endif
 
-// empty plugin
+
+// ==================================================================================
+// CPP defines
+
+// general implementations (must be included in namespace)
+#define ALGORITHM_DECLARATIONS                                          \
+    std::string getAlgorithmVersion() {                                 \
+        return EPT_ALGORITHM_VERSION_NAME;                              \
+    }                                                                   \
+
+#if defined(EPT_STATIC_ALGORITHMS)
+
+// start
 #  define ALGORITHM_CPP_START(algorithmName)                          \
-    namespace algorithmName {
+    namespace algorithmName {                                         \
+        ALGORITHM_DECLARATIONS
 
+// end
 #  define ALGORITHM_CPP_END }
 
 #else
 #  define ALGORITHM_INIT_RESOURCE_FUNC(algorithmName)
 #  define ALGORITHM_INIT_FUNC_NAME(algorithmName)
 
+
+// start
 //
 // Notes: Do not auto register the factory, be cause of conflicts with
 //        static variables being not shared between lib and core
@@ -79,32 +120,13 @@ struct AlgorithmPluginDetails {
             getFactory                                                \
         };                                                            \
     }                                                                 \
-    namespace algorithmName {
+    namespace algorithmName {                                         \
+        ALGORITHM_DECLARATIONS
 
+
+// end
 #  define ALGORITHM_CPP_END }
 #endif
-
-#define ALGORITHM_H_START(algorithmName)                                \
-    ALGORITHM_INIT_RESOURCE_FUNC(algorithmName)                         \
-    namespace algorithmName {                                           \
-                                                                        \
-    inline std::string getAlgorithmVersion() {                          \
-        return EPT_ALGORITHM_VERSION_NAME;                              \
-    }                                                                   \
-                                                                        \
-    inline AlgorithmFactoryDescription getFactoryDescription() {        \
-        return AlgorithmFactoryDescription(#algorithmName, getAlgorithmVersion()); \
-    }                                                                   \
-                                                                        \
-    inline AlgorithmFactoryDescription getInitFactoryDescription() {    \
-        ALGORITHM_INIT_FUNC_NAME(algorithmName)                         \
-        return getFactoryDescription();                                 \
-    }                                                                   \
-                                                                        \
-
-#define ALGORITHM_H_END(Class)                                          \
-    typedef AlgorithmFactory<Class> Factory; }
-
 
 
 #endif // ALGORITHMPLUGIN_H
