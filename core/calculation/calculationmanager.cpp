@@ -113,21 +113,25 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
     };
 
     auto parse_version = [](const std::string &str, int &major, int &minor, int &patch) {
-        std::array<int *, 3> v_out = {{&major, &minor, &patch}};
+        try {
+            std::array<int *, 3> v_out = {{&major, &minor, &patch}};
 
-        const std::string regex_str = "(([0-9]+)\\.)?(([0-9]+)\\.)?([0-9]+)";
-        std::regex reg(regex_str);
-        std::smatch pieces_match;
+            const std::string regex_str = "(([0-9]+)\\.)?(([0-9]+)\\.)?([0-9]+)";
+            std::regex reg(regex_str);
+            std::smatch pieces_match;
 
-        EptAssert(std::regex_match(str, pieces_match, reg), "RegEx must match.");
+            EptAssert(std::regex_match(str, pieces_match, reg), "RegEx must match.");
 
-        int out_index = 0;
-        for (size_t i = 1; i < pieces_match.size(); ++i) {
-            std::string m = pieces_match[i];
-            if (m.find(".") != std::string::npos) {continue;}
+            int out_index = 0;
+            for (size_t i = 1; i < pieces_match.size(); ++i) {
+                std::string m = pieces_match[i];
+                if (m.find(".") != std::string::npos) {continue;}
 
-            *v_out[out_index] = std::atoi(m.c_str());
-            ++out_index;
+                *v_out[out_index] = std::atoi(m.c_str());
+                ++out_index;
+            }
+        } catch (const std::regex_error &e) {
+            LogE("Regex Error (code %d): %s", e.code(), e.what());
         }
     };
 
