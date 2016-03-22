@@ -21,7 +21,7 @@ SOURCES += \
 
 HEADERS += include/uv.h include/uv-errno.h include/uv-threadpool.h include/uv-version.h
 
-linux|android {
+linux|android|mac {
     # unix specific
     SOURCES += \
                    src/unix/async.c \
@@ -45,7 +45,9 @@ linux|android {
                    src/unix/timer.c \
                    src/unix/tty.c \
                    src/unix/udp.c
+}
 
+linux|android {
     # linux specific
 
     SOURCES += \
@@ -58,6 +60,22 @@ linux|android {
     HEADERS += \
         include/uv-linux.h
 
+}
+
+mac {
+    # darwin specific
+
+    SOURCES += \
+        src/unix/darwin.c \
+        src/unix/darwin-proctitle.c \
+        src/unix/fsevents.c \
+        src/unix/kqueue.c \
+        src/unix/proctitle.c
+
+    HEADERS += include/uv-darwin.h
+
+    DEFINES += "_DARWIN_USE_64_BIT_INODE=1"
+    DEFINES += "_DARWIN_UNLIMITED_SELECT=1"
 }
 
 win32 {

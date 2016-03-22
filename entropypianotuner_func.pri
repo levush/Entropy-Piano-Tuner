@@ -154,9 +154,31 @@ defineReplace(depends_libuv) {
     return(true)
 }
 
+defineReplace(depends_pgmidi) {
+    pgmidi {
+        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/pgmidi/PgMidi
+        LIBS += -lPgMidi
+        LIBS += -framework UIKit -framework Foundation -framework CoreMIDI
+    }
+
+    export(INCLUDEPATH)
+    export(LIBS)
+
+    return(true)
+}
+
 defineReplace(depends_qwt) {
     qwt {
-        !contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
+        macx {
+            contains(EPT_CONFIG, static_qwt) {
+                INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
+                LIBS += -lqwt
+            } else {
+                # use framework on mac
+                LIBS += -F$$EPT_THIRDPARTY_OUT_DIR -framework qwt
+                INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
+            }
+        } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
             LIBS += -lqwt
         } else {

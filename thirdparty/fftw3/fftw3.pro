@@ -23,5 +23,19 @@ contains(QMAKE_TARGET.arch, x86_64) {
     DEFINES += "HAVE_SSE2=1"
 }
 
-# Global header
-HEADERS += config.h
+# Global header depends on platform (do not forget to set include path in fftw3_config.pri)
+android {
+    HEADERS += android/config.h
+}
+else:linux {
+    HEADERS += linux/config.h
+}
+else:ios {
+    HEADERS += ios/config.h
+}
+else:macx {
+    HEADERS += osx/config.h
+}
+else:win {
+    HEADERS += windows/config.h
+}

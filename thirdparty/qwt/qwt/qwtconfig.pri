@@ -11,6 +11,9 @@
 # - QWT_DLL set by EPT configuration
 # - QwtInstall as QWT_CONFIG
 
+include(../../../entropypianotuner_config.pri)
+
+
 QWT_VER_MAJ      = 6
 QWT_VER_MIN      = 1
 QWT_VER_PAT      = 2
@@ -83,8 +86,7 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
 # it will be a static library.
 ######################################################################
 
-# CUSTOM CHANGE: Selection of config
-QWT_CONFIG += QwtDll
+# CUSTOM CHANGE: set in entropypianotuner_config.pri
 
 ######################################################################
 # QwtPlot enables all classes, that are needed to use the QwtPlot 

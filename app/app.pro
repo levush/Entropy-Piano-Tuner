@@ -97,11 +97,10 @@ $$depends_timesupport()
 
 # MacOS X (no iOS)
 macx {
-    LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
-    LIBS += -framework CoreFoundation -framework CoreAudio -framework CoreMidi
+    LIBS += -framework CoreFoundation -framework CoreAudio -framework CoreMidi -framework IOKit
 
     # icons
-    ICON = $$PWD/appstore/icons/entropytuner.icns
+    ICON = $$EPT_ROOT_DIR/appstore/icons/entropytuner.icns
 
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/osx/Info.plist
@@ -112,9 +111,6 @@ ios {
     # the following line is needed with XCode 7 bug 58926
     QMAKE_MAC_SDK = iphoneos
 
-    iphonesimulator {
-        LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
-    }
     iphoneos {
         LIBS += -L$$PWD/dependencies/lib/ios -lfftw3_armv7
         # in release mode also arm64 is required
@@ -126,7 +122,7 @@ ios {
     QMAKE_INFO_PLIST = $$PWD/platforms/ios/Info.plist
 
     # app icons
-    ios_icon.files = $$files($$PWD/appstore/icons/ios/AppIcon*.png)
+    ios_icon.files = $$files($$EPT_BASE_DIR/appstore/icons/ios/AppIcon*.png)
     QMAKE_BUNDLE_DATA += ios_icon
 
     # lauch screen file
@@ -343,22 +339,22 @@ SOURCES +=  \
 
 # add android files
 android {
-    include($$EPT_BASE_DIR/platforms/android/android.pri)
+    include($$PWD/platforms/android/android.pri)
 }
 
 # add ios files
 ios {
-    include($$EPT_BASE_DIR/platforms/ios/ios.pri)
+    include($$PWD/platforms/ios/ios.pri)
 }
 
 # add macx files
 macx {
-    include($$EPT_BASE_DIR/platforms/osx/osx.pri)
+    include($$PWD/platforms/osx/osx.pri)
 }
 
 # add windows files
 win32 {
-    include($$EPT_BASE_DIR/platforms/windows/windows.pri)
+    include($$PWD/platforms/windows/windows.pri)
 }
 
 #-------------------------------------------------

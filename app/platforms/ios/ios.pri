@@ -11,4 +11,4 @@ SOURCES += \
     $$PWD/iosmidiadapter.cpp
 
 # include pgmidi
-include($$PWD/../../thirdparty/PGMidi/pgmidi.pri)
+$$depends_pgmidi()

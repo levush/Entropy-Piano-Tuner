@@ -1,3 +1,6 @@
+include(../../../entropypianotuner_func.pri)
+$$declareStaticLibrary()
+
 HEADERS += \
     $$PWD/iOSVersionDetection.h \
     $$PWD/PGArc.h \

@@ -18,12 +18,14 @@
  *****************************************************************************/
 
 #include "iosnativewrapper.h"
+
 #include "core/system/log.h"
 #include "core/system/eptexception.h"
-#include "tunerapplication.h"
-#include "Qt/platformtools.h"
 #include "core/messages/messagehandler.h"
 #include "core/messages/messagemidievent.h"
+
+#include "tunerapplication.h"
+#include "platformtools.h"
 
 #import <UIKit/UIKit.h>
 #import "PGMidi.h"

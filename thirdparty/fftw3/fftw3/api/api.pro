@@ -8,8 +8,10 @@ TEMPLATE = lib
 DESTDIR = $$FFTW_DESTDIR
 CONFIG += $$FFTW_LIB_MODE_CONFIG
 
+# there are circular dependencies, which is why we have to use the '{start/end}-group' flag on linux/mingw gcc/ld. No problems on msvc or darwin clang
+# the linking against all libs is required for dynamic build, for a static build all the libraries will have to be included in the
 win32-g++:LIBS += -Wl,--start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Wl,--end-group
-else:gcc:LIBS += -Xlinker -start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker -end-group
+else:linux-g++|android-g++:LIBS += -Xlinker -start-group -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel -Xlinker -end-group
 else:LIBS += -ldftscalar -ldftscalarcodelets -ldft -lrdftscalar -lrdftscalarr2cf -lrdftscalarr2r -lrdftscalarr2cb -lrdft -lreodft -lkernel
 
 HEADERS += \

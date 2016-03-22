@@ -23,6 +23,7 @@
 
 #include "calculationmanager.h"
 
+#include <array>
 #include <iostream>
 #include <cmath>
 #include <regex>
@@ -39,8 +40,6 @@
 #include "../messages/messagechangetuningcurve.h"
 #include "algorithmfactory.h"
 #include "algorithminformationparser.h"
-
-std::unique_ptr<CalculationManager> CalculationManager::mInstance;
 
 //-----------------------------------------------------------------------------
 //                               Constructor
@@ -60,11 +59,23 @@ CalculationManager::~CalculationManager()
     unloadAllAlgorithms();
 }
 
+std::unique_ptr<CalculationManager> &CalculationManager::getSingletonPtr()
+{
+    static std::unique_ptr<CalculationManager> mInstance;
+    return mInstance;
+}
 
 CalculationManager &CalculationManager::getSingleton()
 {
-    if (!mInstance) {mInstance.reset(new CalculationManager);}
-    return *mInstance;
+    if (!getSingletonPtr()) {
+        getSingletonPtr().reset(new CalculationManager);
+    }
+
+    return *getSingletonPtr();
+}
+
+void CalculationManager::selfDelete() {
+    getSingletonPtr().reset();
 }
 
 void CalculationManager::loadAlgorithms()
