@@ -36,6 +36,6 @@ else:ios {
 else:macx {
     HEADERS += osx/config.h
 }
-else:win {
+else:win32 {
     HEADERS += windows/config.h
 }

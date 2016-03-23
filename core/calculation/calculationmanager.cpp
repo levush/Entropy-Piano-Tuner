@@ -101,10 +101,15 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
     (void)algorithmsDirs;  // empty function
 #else
 
-    auto contains_version = [](const std::string &str, const std::string &type) {
+    auto is_library_ending = [](const std::string &str, const std::string &type) {
         const size_t pos = str.find(type);
+        // file does not contain file ending
         if (pos == std::string::npos) {return false;}
 
+        // library ends without version (not required)
+        if (str.size() - pos == type.size()) {return true;}
+
+        // check if end matches a version
         const std::string ending = str.substr(pos);
         const std::string regex_str = type + "(\\.[0-9]+){1,3}";
         std::regex reg(regex_str);
@@ -113,8 +118,8 @@ void CalculationManager::loadAlgorithms(const std::vector<std::string> &algorith
         return std::regex_match(ending, pieces_match, reg);
     };
 
-    auto is_library_type = [contains_version](const std::string &str, const std::string &suffix) {
-        if (contains_version(str, suffix)) {return true;}
+    auto is_library_type = [is_library_ending](const std::string &str, const std::string &suffix) {
+        if (is_library_ending(str, suffix)) {return true;}
 
         return false;
     };

@@ -24,6 +24,6 @@ else:ios {
 else:macx {
     INCLUDEPATH += $$PWD/osx
 }
-else:win {
+else:win32 {
     INCLUDEPATH += $$PWD/windows
 }

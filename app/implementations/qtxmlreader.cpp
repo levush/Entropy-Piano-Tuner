@@ -8,7 +8,7 @@
 
 DECLARE_XML_READER_INTERFACE(QtXmlReader)
 
-bool QtXmlReader::QtXmlReader::openFile(const std::wstring &path) {
+bool QtXmlReader::openFile(const std::wstring &path) {
     mReader.clear();
 
     QFile file(QString::fromStdWString(path));

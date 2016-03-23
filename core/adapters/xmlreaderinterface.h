@@ -1,13 +1,11 @@
 #ifndef XMLREADERINTERFACE_H
 #define XMLREADERINTERFACE_H
 
-#include <string>
-#include <memory>
-#include <vector>
+#include "prerequisites.h"
 
 #include "core/system/eptexception.h"
 
-class XmlReaderInterface
+class EPT_EXTERN XmlReaderInterface
 {
 public:
     virtual bool openFile(const std::wstring &path) = 0;
@@ -102,7 +100,7 @@ public:
 
 typedef std::shared_ptr<XmlReaderInterface> XmlReaderInterfacePtr;
 
-class XmlReaderFactoryBase {
+class EPT_EXTERN XmlReaderFactoryBase {
 protected:
     XmlReaderFactoryBase(const std::string &mId);
 

@@ -1,11 +1,9 @@
 #ifndef XMLWRITERINTERFACE_H
 #define XMLWRITERINTERFACE_H
 
-#include <string>
-#include <vector>
-#include <memory>
+#include "prerequisites.h"
 
-class XmlWriterInterface
+class EPT_EXTERN XmlWriterInterface
 {
 public:
     virtual bool open() = 0;
@@ -36,7 +34,7 @@ public:
 
 typedef std::shared_ptr<XmlWriterInterface> XmlWriterInterfacePtr;
 
-class XmlWriterFactoryBase {
+class EPT_EXTERN XmlWriterFactoryBase {
 protected:
     XmlWriterFactoryBase(const std::string &mId);
 

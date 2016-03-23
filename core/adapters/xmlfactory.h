@@ -1,14 +1,15 @@
 #ifndef XMLFACTORY_H
 #define XMLFACTORY_H
 
-#include <memory>
-#include <vector>
+#include "prerequisites.h"
 
 #include "xmlreaderinterface.h"
 #include "xmlwriterinterface.h"
 
+EPT_EXTERN_TEMPLATE class std::vector<XmlReaderFactoryBase*>;
+EPT_EXTERN_TEMPLATE class std::vector<XmlWriterFactoryBase*>;
 
-class XmlFactory
+class EPT_EXTERN XmlFactory
 {
 private:
     XmlFactory();
