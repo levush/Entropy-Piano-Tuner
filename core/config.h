@@ -120,8 +120,8 @@
 #   define CONFIG_DIALOG_SIZE 1
 #endif
 
-// export defines
-#if defined(_WIN32)
+// export defines for dynamic dlls on windows
+#if defined(_WIN32) && defined(EPT_DYNAMIC_CORE)
 # ifdef EPT_BUILD_CORE
 #   define EPT_EXTERN __declspec(dllexport)
 #   define EPT_EXTERN_TEMPLATE template

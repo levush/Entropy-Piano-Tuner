@@ -24,6 +24,8 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include "prerequisites.h"
+
 #include "audio/player/soundgenerator.h"
 #include "audio/recorder/audiorecorderadapter.h"
 #include "audio/recorder/recordingmanager.h"
@@ -46,23 +48,23 @@ template class EPT_EXTERN std::unique_ptr<SignalAnalyzer>;
 /// GUI. The GUI is connected by impementing a number of virtual adapters.
 ///////////////////////////////////////////////////////////////////////////////
 
-class Core
+class EPT_EXTERN Core
 {
     // Note msvc: export (EPT_EXTERN) only required fields
 public:
-    EPT_EXTERN Core(ProjectManagerAdapter *projectManager,
+    Core(ProjectManagerAdapter *projectManager,
          AudioRecorderAdapter *recorderAdapter,
          AudioPlayerAdapter *playerAdapter,
          Log *log = new Log());
-    EPT_EXTERN ~Core();
+    ~Core();
 
-    EPT_EXTERN void setEnableSoundGenerator(bool enable);
+    void setEnableSoundGenerator(bool enable);
 
 
-    EPT_EXTERN void init (CoreInitialisationAdapter *initAdapter);
-    EPT_EXTERN void exit();
-    EPT_EXTERN void start();
-    EPT_EXTERN void stop();
+    void init (CoreInitialisationAdapter *initAdapter);
+    void exit();
+    void start();
+    void stop();
 
     /// Function telling wether the core is already initialized.
     bool isInitialized() const {return mInitialized;}

@@ -66,15 +66,16 @@ defineReplace(declareSharedLibrary) {
 }
 
 defineReplace(depends_core) {
-    !contains(EPT_CONFIG, allstatic) {
+    contains(EPT_CONFIG, static_core) {
+    } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
         win32:DLLS += $$EPT_CORE_OUT_DIR/libcore.dll
-
-        LIBS += -L$$EPT_CORE_OUT_DIR
-        LIBS += -lcore
-
-        INCLUDEPATH += $$EPT_CORE_DIR
     }
+
+    LIBS += -L$$EPT_CORE_OUT_DIR
+    LIBS += -lcore
+
+    INCLUDEPATH += $$EPT_CORE_DIR
 
     export(DLLS)
     export(INCLUDEPATH)
@@ -101,11 +102,13 @@ defineReplace(depends_fftw3) {
         } else {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/fftw3/fftw3/api
             LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
+        }
 
-            !contains(EPT_CONFIG, allstatic) {
-                win32 {
-                    DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
-                }
+        # copy dlls or shared library
+        contains(EPT_CONFIG, static_fftw) {
+        } else {
+            win32 {
+                DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
             }
             android {
                 ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
@@ -169,32 +172,42 @@ defineReplace(depends_pgmidi) {
 
 defineReplace(depends_qwt) {
     qwt {
-        macx {
+        win32 {
+            CONFIG(debug, debug|release){
+                LIBS += -lqwtd
+            } else {
+                LIBS += -lqwt
+            }
+        } else:macx {
             contains(EPT_CONFIG, static_qwt) {
-                INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
                 LIBS += -lqwt
             } else {
                 # use framework on mac
                 LIBS += -F$$EPT_THIRDPARTY_OUT_DIR -framework qwt
-                INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
             }
         } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
             LIBS += -lqwt
         } else {
             LIBS += -lqwt-qt5
         }
 
-        DEFINES += QWT_DLL
+        contains(EPT_CONFIG, system_qwt) {
+        } else {
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
+        }
 
-        android {
-            ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
+        contains(EPT_CONFIG, static_qwt) {
+        } else {
+            DEFINES += QWT_DLL
+            android: ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
+            win32: DLLS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
         }
     }
 
     export(INCLUDEPATH)
     export(LIBS)
     export(DEFINES)
+    export(DLLS)
     export(ANDROID_EXTRA_LIBS)
 
     return(true)

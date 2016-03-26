@@ -66,8 +66,8 @@
 int main(int argc, char *argv[])
 {
 
-    // only single instance also on desktop (on mobile platforms this is handled already)
-#ifdef Q_OS_DESKTOP
+    // only single instance also on desktop (on mobile platforms this is handled already, winphone needs an "extra sausage")
+#if defined(Q_OS_DESKTOP) && !defined(Q_OS_WINPHONE)
     RunGuard guard("entropypianotuner_runguard");
     if ( !guard.tryToRun() ) {
         // a QApplication is required for showing message boxes

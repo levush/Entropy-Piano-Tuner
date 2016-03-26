@@ -45,8 +45,9 @@ Debug:UI_DIR = debug/.ui
 # will instantiate the algorithms (create a static variable of each AlgorithmFactory)
 # the algorithm will automatically add itself to the CalculationManager
 # if the Constructor is called.
+# !build_pass ensures that the file generation is only executed once
 include($$EPT_ROOT_DIR/algorithms/algorithms_config.pri)
-contains(EPT_CONFIG, static_algorithms) {
+!build_pass:contains(EPT_CONFIG, static_algorithms) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR
 
@@ -89,7 +90,7 @@ $$depends_libuv()
 $$depends_qwt()
 $$depends_rtmidi()
 $$depends_timesupport()
-
+$$depends_core()
 
 #-------------------------------------------------
 #                      Apple
@@ -153,14 +154,14 @@ winrt {
     WINRT_MANIFEST.logo_splash = $$EPT_APPSTORE_DIR/splash/splash_620x300.png
     WINRT_MANIFEST.background = $${LITERAL_HASH}e5e5e5
     WINRT_MANIFEST.publisher = "Haye Hinrichsen"
-    winphone:equals(WINSDK_VER, 8.1) {
+    #winphone:equals(WINSDK_VER, 8.1) {
         WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
         WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
         WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-    } else {
-    }
+    #} else {
+    #}
     CONFIG += windeployqt
-    WINDEPLOYQT_OPTIONS = -no-svg -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
+    WINDEPLOYQT_OPTIONS = -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
 } else:winphone {
 } else:win32 {
     # windows desktop
@@ -170,7 +171,7 @@ winrt {
 win32|win32-g++ {
     # copy external dlls
     DLLS ~= s,/,\\,g
-    DESTDIR_WIN = $$OUT_PWD/$$DESTDIR
+    DESTDIR_WIN = $$DESTDIR
     DESTDIR_WIN ~= s,/,\\,g
     for(FILE,DLLS){
         QMAKE_POST_LINK += $$quote(cmd /c $$QMAKE_COPY $${FILE} $${DESTDIR_WIN} $$escape_expand(\n\t))
@@ -394,19 +395,20 @@ TRANSLATIONS = \
 #                      INSTALL
 #-------------------------------------------------
 
+contains(EPT_CONFIG, install) {
+    target.path = $$EPT_INSTALL_BIN_DIR
 
-target.path = $$EPT_INSTALL_BIN_DIR
+    pixmaps.path = $$EPT_INSTALL_DATA_DIR/pixmaps
+    pixmaps.files += $$EPT_APPSTORE_DIR/icons/entropypianotuner.png
 
-pixmaps.path = $$EPT_INSTALL_DATA_DIR/pixmaps
-pixmaps.files += $$EPT_APPSTORE_DIR/icons/entropypianotuner.png
+    icons.path = $$EPT_INSTALL_DATA_DIR/icons/hicolor/128x128/mimetypes
+    icons.files += $$EPT_APPSTORE_DIR/icons/application-ept.png
 
-icons.path = $$EPT_INSTALL_DATA_DIR/icons/hicolor/128x128/mimetypes
-icons.files += $$EPT_APPSTORE_DIR/icons/application-ept.png
+    mime.path = $$EPT_INSTALL_DATA_DIR/mime/packages
+    mime.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner-mime.xml
 
-mime.path = $$EPT_INSTALL_DATA_DIR/mime/packages
-mime.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner-mime.xml
+    application.path = $$EPT_INSTALL_DATA_DIR/applications
+    application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
 
-application.path = $$EPT_INSTALL_DATA_DIR/applications
-application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
-
-INSTALLS += target pixmaps icons mime application
+    INSTALLS += target pixmaps icons mime application
+}

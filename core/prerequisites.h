@@ -60,6 +60,7 @@ template class EPT_EXTERN std::map<std::string, std::string>;
 template class EPT_EXTERN std::map<double, double>;
 template class EPT_EXTERN std::map<int, int>;
 template struct EPT_EXTERN std::atomic<bool>;
+template struct EPT_EXTERN std::pair<std::string, std::string>;
 template class EPT_EXTERN std::vector<std::pair<std::string, std::string> >;
 template class EPT_EXTERN std::complex<double>;
 template class EPT_EXTERN std::vector<std::complex<double>>;

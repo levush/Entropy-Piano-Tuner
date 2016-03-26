@@ -17,7 +17,11 @@ else:                                EPT_CONFIG += shared_algorithms no_static_a
 linux:!android: EPT_CONFIG += static_core
 
 # application packages use all static build
-macx|ios:       EPT_CONFIG += static_core static_qwt static_fftw static_algorithms
+macx|ios|winrt|winphone:       EPT_CONFIG += static_core static_qwt static_fftw static_algorithms
+
+# add install rules
+winrt|winphone: EPT_CONFIG += no_install
+else: EPT_CONFIG += install
 
 #------------------------------------------------
 # Path defines
@@ -107,3 +111,6 @@ LIBS += -L$$EPT_THIRDPARTY_OUT_DIR
 # set QWT_CONFIG for static/dynamic build
 contains(EPT_CONFIG, static_qwt):QWT_CONFIG += QwtStatic
 else:QWT_CONFIG += QwtDll
+
+contains(EPT_CONFIG, static_core):DEFINES += EPT_STATIC_CORE
+else:DEFINES += EPT_DYNAMIC_CORE
