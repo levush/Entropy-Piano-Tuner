@@ -90,7 +90,6 @@ $$depends_libuv()
 $$depends_qwt()
 $$depends_rtmidi()
 $$depends_timesupport()
-$$depends_core()
 
 #-------------------------------------------------
 #                      Apple
