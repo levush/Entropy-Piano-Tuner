@@ -12,7 +12,6 @@ SOURCES += \
     cpy2d.c \
     cpy2d-pair.c \
     ct.c \
-    debug.c \
     extract-reim.c \
     hash.c \
     iabs.c \
@@ -46,3 +45,7 @@ SOURCES += \
     transpose.c \
     trig.c \
     twiddle.c \
+
+# empty files, that dont need to be compiled
+# including them causes a linker errur (... has no symbols) under iOS
+# debug.c

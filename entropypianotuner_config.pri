@@ -98,11 +98,17 @@ packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 #--------------------------------------------------
 # global settings
 
+# additional debug flags
 linux-g++*:!android {
     QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
 }
 
+# additional linker flags
 
+# Do not show some warnings (they are errors on iOS, but can be ignored)
+QMAKE_RANLIB += -no_warning_for_no_symbols
+
+# config
 contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1" "EPT_STATIC_ALGORITHMS=1"
 contains(EPT_CONFIG, shared_algorithms):DEFINES+="EPT_SHARED_ALGORITHMS=1"
 

@@ -190,7 +190,12 @@ CORE_SYSTEM_SOURCES = \
     system/platformtoolscore.cpp \
     system/serverinfo.cpp \
     system/basecallback.cpp \
-    system/sharedlibrary.cpp \
+
+# shared library is only required on shared algorithm builds
+# General include causes linker error on iOS (... has no symbols)
+contains(EPT_CONFIG, shared_algorithms) {
+    CORE_SYSTEM_SOURCES += system/sharedlibrary.cpp
+}
 
 #--------------- Analyzers -----------------
 

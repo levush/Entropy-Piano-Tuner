@@ -42,7 +42,6 @@ SOURCES += \
     execute-split-dft.c \
     execute.c \
     export-wisdom-to-file.c \
-    f77api.c \
     flops.c \
     forget-wisdom.c \
     import-system-wisdom.c \
@@ -96,3 +95,6 @@ SOURCES += \
     version.c \
 
 
+# empty files, that dont need to be compiled
+# including them causes a linker errur (... has no symbols) under iOS
+# f77api.c
