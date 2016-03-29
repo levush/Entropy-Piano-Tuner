@@ -143,8 +143,12 @@ std::string QtXmlReader::queryStringAttribute(const std::string &id) {
     return mReader.attributes().value(QString::fromStdString(id)).toString().toStdString();
 }
 
-std::wstring QtXmlReader::queryElementText() {
+std::wstring QtXmlReader::queryWStringText() {
     return mReader.readElementText().toStdWString();
+}
+
+std::string QtXmlReader::queryStringText() {
+    return mReader.readElementText().toStdString();
 }
 
 std::vector<double> QtXmlReader::queryDoubleVectorText() {
@@ -162,4 +166,12 @@ std::vector<double> QtXmlReader::queryDoubleVectorText() {
     }
 
     return out;
+}
+
+double QtXmlReader::queryDoubleText() {
+    return mReader.readElementText().toDouble();
+}
+
+int QtXmlReader::queryIntText() {
+    return mReader.readElementText().toInt();
 }

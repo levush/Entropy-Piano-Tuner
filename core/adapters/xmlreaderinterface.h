@@ -93,8 +93,11 @@ public:
         return queryStringAttribute(id);
     }
 
-    virtual std::wstring queryElementText() = 0;
+    virtual std::wstring queryWStringText() = 0;
+    virtual std::string queryStringText() = 0;
     virtual std::vector<double> queryDoubleVectorText() = 0;
+    virtual double queryDoubleText() = 0;
+    virtual int queryIntText() = 0;
 
 };
 

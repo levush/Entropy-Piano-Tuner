@@ -82,11 +82,11 @@ std::wstring AlgorithmInformationParser::parseLanguageString(XmlReaderInterface 
 
         if (reader.hasAttribute("lang")) {
             if (languageId == reader.queryStringAttribute("lang")) {
-                return reader.queryElementText();
+                return reader.queryWStringText();
             }
         } else {
             // default
-            defaultLanguageString = reader.queryElementText();
+            defaultLanguageString = reader.queryWStringText();
 
             if (languageId == "en") {
                 // default language is en
