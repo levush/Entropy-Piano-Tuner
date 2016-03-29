@@ -231,17 +231,17 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                 }
 
                 if (reader.name() == "name") {
-                    piano.setName(reader.queryElementText());
+                    piano.setName(reader.queryWStringText());
                 } else if (reader.name() == "serialNumber") {
-                    piano.setSerialNumber(reader.queryElementText());
+                    piano.setSerialNumber(reader.queryWStringText());
                 } else if (reader.name() == "manufactionYear") {
-                    piano.setManufactureYear(reader.queryElementText());
+                    piano.setManufactureYear(reader.queryWStringText());
                 } else if (reader.name() == "manufactionLocation") {
-                    piano.setManufactureLocation(reader.queryElementText());
+                    piano.setManufactureLocation(reader.queryWStringText());
                 } else if (reader.name() == "tuningLocation") {
-                    piano.setTuningLocation(reader.queryElementText());
+                    piano.setTuningLocation(reader.queryWStringText());
                 } else if (reader.name() == "tuningTimestamp") {
-                    std::wstring text = reader.queryElementText();
+                    std::wstring text = reader.queryWStringText();
                     if (text.size() > 0) {
                         piano.setTuningTime(text);
                     } else {
@@ -361,11 +361,11 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                                     std::string id = reader.queryStringAttribute("name");
 
                                     if (type == "double") {
-                                        ad->setDoubleParameter(id, reader.queryRealAttribute("value"));
+                                        ad->setDoubleParameter(id, reader.queryDoubleText());
                                     } else if (type == "int") {
-                                        ad->setIntParameter(id, reader.queryIntAttribute("value"));
+                                        ad->setIntParameter(id, reader.queryIntText());
                                     } else if (type == "string") {
-                                        ad->setStringParameter(id, reader.queryStringAttribute("value"));
+                                        ad->setStringParameter(id, reader.queryStringText());
                                     } else {
                                         LogW("Unknown parameter type '%s' with id '%s' and value '%s'", type.c_str(), id.c_str(), reader.queryStringAttribute("value").c_str());
                                     }

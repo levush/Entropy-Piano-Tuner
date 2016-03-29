@@ -29,8 +29,12 @@ public:
     virtual double queryRealAttribute(const std::string &id) override final;
     virtual std::wstring queryWStringAttribute(const std::string &id) override final;
     virtual std::string queryStringAttribute(const std::string &id) override final;
-    virtual std::wstring queryElementText() override final;
+
+    virtual std::wstring queryWStringText() override final;
+    virtual std::string queryStringText() override final;
     virtual std::vector<double> queryDoubleVectorText() override final;
+    virtual double queryDoubleText() override final;
+    virtual int queryIntText() override final;
 
 
 private:

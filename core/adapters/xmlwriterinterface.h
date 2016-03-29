@@ -20,6 +20,7 @@ public:
 
     virtual void writeAttribute(const std::string &name, const double &value) = 0;
     virtual void writeAttribute(const std::string &name, const int &value) = 0;
+    void writeAttribute(const std::string &name, const char *value);
     virtual void writeAttribute(const std::string &name, const std::string &value) = 0;
     virtual void writeAttribute(const std::string &name, const std::wstring &value) = 0;
     virtual void writeAttribute(const std::string &name, const bool &value) = 0;
