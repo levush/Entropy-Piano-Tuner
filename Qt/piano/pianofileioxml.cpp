@@ -367,7 +367,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                                     } else if (type == "string") {
                                         ad->setStringParameter(id, reader.queryStringText());
                                     } else {
-                                        LogW("Unknown parameter type '%s' with id '%s' and value '%s'", type.c_str(), id.c_str(), reader.queryStringAttribute("value").c_str());
+                                        LogW("Unknown parameter type '%s' with id '%s'", type.c_str(), id.c_str());
                                     }
 
                                 } else {
