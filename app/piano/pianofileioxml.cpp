@@ -169,8 +169,10 @@ void PianoFileIOXml::write(QIODevice *device, const Piano &piano) const {
         EPT_EXCEPT(EptException::ERR_CANNOT_WRITE_TO_FILE, "An error occured when writing to an xml stream.")
     }
 
+    // write content as UTF-8
     std::wstring content = writer.close();
     QTextStream stream(device);
+    stream.setCodec("UTF-8");
     stream << QString::fromStdWString(content);
     stream.flush();
 
@@ -185,10 +187,14 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
     // preparation
     mFileVersion = UNSET_FILE_VERSION;
 
-    // read
+    // create reader
     XmlReaderInterfacePtr readerPtr = XmlFactory::getDefaultReader();
     XmlReaderInterface &reader(*readerPtr);
-    reader.openString(QString(device->readAll()).toStdWString());
+
+    // read all as UTF-8
+    QTextStream stream(device);
+    stream.setCodec("UTF-8");
+    reader.openString(stream.readAll().toStdWString());
 
     while (!reader.atEnd()) {
         // read only start elements
@@ -367,7 +373,7 @@ void PianoFileIOXml::read(QIODevice *device, Piano &piano) {
                                     } else if (type == "string") {
                                         ad->setStringParameter(id, reader.queryStringText());
                                     } else {
-                                        LogW("Unknown parameter type '%s' with id '%s' and value '%s'", type.c_str(), id.c_str(), reader.queryStringAttribute("value").c_str());
+                                        LogW("Unknown parameter type '%s' with id '%s'", type.c_str(), id.c_str());
                                     }
 
                                 } else {
