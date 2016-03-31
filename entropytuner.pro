@@ -54,7 +54,7 @@ INCLUDEPATH += $$PWD/thirdparty/qwt
 # MacOS X (no iOS)
 macx {
     LIBS += -L$$PWD/dependencies/lib/macos -lfftw3
-    LIBS += -framework CoreFoundation -framework CoreAudio -framework CoreMidi
+    LIBS += -framework CoreFoundation -framework CoreAudio -framework CoreMidi -framework IOKit
 
     # icons
     ICON = $$PWD/appstore/icons/entropytuner.icns
