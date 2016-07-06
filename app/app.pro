@@ -25,7 +25,7 @@ INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
 INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
 
-DESTDIR = $$EPT_CORE_OUT_DIR
+# DESTDIR = $$EPT_CORE_OUT_DIR
 
 Release:OBJECTS_DIR = release/.obj
 Release:MOC_DIR = release/.moc
@@ -47,24 +47,33 @@ Debug:UI_DIR = debug/.ui
 # if the Constructor is called.
 # !build_pass ensures that the file generation is only executed once
 include($$EPT_ROOT_DIR/algorithms/algorithms_config.pri)
-!build_pass:contains(EPT_CONFIG, static_algorithms) {
-    LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
-    INCLUDEPATH += $$EPT_ALGORITHMS_DIR
-
-    ALG_FILE_CPP = "// This file was generated automatically"
-
-    for(algBasename, ALGORITHM_NAMES) {
-        message(Adding algorithm $$algBasename)
-        LIBS += -l$$algBasename
-
-        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
-        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
-    }
-
+contains(EPT_CONFIG, static_algorithms) {
+    # define the output c++ file that will be added to the source,
+    # but only created once during the build_pass
     OUT_FILE = $$OUT_PWD/algorithms.gen.cpp
 
-    write_file($$OUT_FILE, ALG_FILE_CPP)
+    # create the static cpp file that initilizes all algorithms
+    !build_pass {
+        ALG_FILE_CPP = "// This file was generated automatically"
+
+        for(algBasename, ALGORITHM_NAMES) {
+            message(Adding algorithm $$algBasename)
+
+            ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
+            ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
+        }
+
+
+        write_file($$OUT_FILE, ALG_FILE_CPP)
+    }
+
+    # add to sources, and add include/library paths and libs
     SOURCES += $$OUT_FILE
+    INCLUDEPATH += $$EPT_ALGORITHMS_DIR
+    LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
+    for(algBasename, ALGORITHM_NAMES) {
+        LIBS += -l$$algBasename
+    }
 }
 
 

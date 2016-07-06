@@ -25,7 +25,6 @@
 #define COREINITIALISATIONADAPTER_H
 
 #include "prerequisites.h"
-#include "system/eptexception.h"
 
 class CoreInitialisationAdapter;
 template class EPT_EXTERN std::unique_ptr<CoreInitialisationAdapter>;
