@@ -156,20 +156,24 @@ win32 {
 }
 
 winrt {
+    WINRT_MANIFEST.identity = "28869HayeHinrichsen.EntropyPianoTuner"
+    WINRT_MANIFEST.publisherid = "CN=1A48CBB8-649C-4CBD-908D-A767026541C7"
+    WINRT_MANIFEST.name = "Entropy Piano Tuner"
+    WINRT_MANIFEST.publisher = "Haye Hinrichsen"
     WINRT_MANIFEST.logo_large = $$EPT_APPSTORE_DIR/icons/winrt/icon_150x150.png
     WINRT_MANIFEST.logo_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_30x30.png
     WINRT_MANIFEST.logo_store = $$EPT_APPSTORE_DIR/icons/winrt/icon_50x50.png
     WINRT_MANIFEST.logo_splash = $$EPT_APPSTORE_DIR/splash/splash_620x300.png
     WINRT_MANIFEST.background = $${LITERAL_HASH}e5e5e5
-    WINRT_MANIFEST.publisher = "Haye Hinrichsen"
-    #winphone:equals(WINSDK_VER, 8.1) {
-        WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-    #} else {
-    #}
-    CONFIG += windeployqt
+    WINRT_MANIFEST.version = 1.0.0.0
+    WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.capabilities_device = microphone
+
     WINDEPLOYQT_OPTIONS = -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
+
+    CONFIG += windeployqt
 } else:winphone {
 } else:win32 {
     # windows desktop
