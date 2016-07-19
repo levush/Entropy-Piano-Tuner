@@ -37,12 +37,14 @@ IF NOT "%1"=="" (
 
 mkdir %publishdir%
 
+cd %windowsstoredir%
+
 :: create the mapping file
 call %tunerdir%\\scripts\\windows\\BatchSubstitute.bat @BUILD_DIR@ %builddir% %windowsstoredir%\Mapping.template > Mapping.txt
 
 set appx=%publishdir%\\%outname%_%postfix%.appx
-:: create a package out of the files that are defined in the mapping.txt
-%sdkBinDir%\\makeappx.exe pack /f Mapping.txt /p %appx%
+:: create a package out of the files that are defined in the mapping.txt (/o to overwrite existing)
+%sdkBinDir%\\makeappx.exe pack /o /f Mapping.txt /p %appx%
 
 :: sign the package with the cert
 %sdkBinDir%\\signtool.exe sign /a /fd SHA256 /p %cert_pass% /f %cert_pfx% /v %appx%

@@ -50,7 +50,7 @@ IF NOT "%1"=="" (
 )
 
 :: prepare paths
-set postfix=%winkitarch%
+set postfix=%vcplatform%
 set builddir=%tunerdir%\\.build_%postfix%
 set qtbindir=%QtHome%\\%qtversion%\bin
 set winkitbindir=%WinKitPath%\\%winkitarch%
@@ -93,6 +93,7 @@ if %build%==1 (
 	call jom %jomargs%
 	call jom %jomargs% || exit /b
 	
+	
 	echo Build finished.
 )
 
@@ -100,8 +101,20 @@ if %build%==1 (
 if %createPackage%==1 (
 	echo Creating package.
 	
+	if "%password%"=="" (
+		echo Error:	Required certificate password.
+		echo Set password of the certificate via "-pwd password"
+		goto :eof
+	)
+	
+	
+	:: erase mp:PhoneIdentity tag in ApplicationManifest file
+	cd %binarydir%
+	copy AppxManifest.xml AppxManifest.xml.bak
+	type AppxManifest.xml.bak | findstr /v mp:PhoneIdentity > AppxManifest.xml
+	
 	call windeployqt %binary%
-	call createPackage -pwd %password% -k %winkitbindir% -d %binarydir% -postfix %postfix%
+	call %windowsstoredir%\createPackage -pwd %password% -k %winkitbindir% -d %binarydir% -postfix %postfix%
 )
 
 endlocal
