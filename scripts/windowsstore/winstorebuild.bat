@@ -110,10 +110,19 @@ if %createPackage%==1 (
 	
 	:: erase mp:PhoneIdentity tag in ApplicationManifest file
 	cd %binarydir%
-	copy AppxManifest.xml AppxManifest.xml.bak
-	type AppxManifest.xml.bak | findstr /v mp:PhoneIdentity > AppxManifest.xml
+	
+	echo Fixing AppxManifest.xml
+	copy AppxManifest.xml AppxManifest.xml.bak || exit /b
+	
+	:: remove file that in not required, but causes errors on package creation
+	type AppxManifest.xml.bak | findstr /v mp:PhoneIdentity > AppxManifest.xml.bak2
+	
+	:: fix slashes to backslashes in files (windows uses \)
+	call %tunerdir%\scripts\windows\BatchSubstitute.bat "assets/" "assets\" AppxManifest.xml.bak2 > AppxManifest.xml
 	
 	call windeployqt %binary%
+	
+	cd %windowsstoredir%
 	call %windowsstoredir%\createPackage -pwd %password% -k %winkitbindir% -d %binarydir% -postfix %postfix%
 )
 
