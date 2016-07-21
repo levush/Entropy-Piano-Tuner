@@ -1,5 +1,7 @@
 @echo off
 
+set password=
+
 :: loop through arguments
 : argsloop
 IF NOT "%1"=="" (
