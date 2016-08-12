@@ -42,3 +42,4 @@
 "@BUILD_DIR@\Qt5Network.dll"          "Qt5Network.dll"
 "@BUILD_DIR@\Qt5Svg.dll"          "Qt5Svg.dll"
 "@BUILD_DIR@\Qt5Widgets.dll"          "Qt5Widgets.dll"
+"@BUILD_DIR@\..\..\lib\winrtbridge.dll"    "winrtbridge.dll"

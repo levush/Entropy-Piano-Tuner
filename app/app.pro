@@ -366,7 +366,9 @@ macx {
 }
 
 # add windows files
-win32 {
+winrt {
+    include($$PWD/platforms/winrt/winrt.pri)
+}else:win32 {
     include($$PWD/platforms/windows/windows.pri)
 }
 

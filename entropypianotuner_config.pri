@@ -60,7 +60,7 @@ contains(EPT_CONFIG, shared_algorithms) {
 }
 
 winrt|winphone {
-    CONFIG += timesupport
+    CONFIG += timesupport winrtbridge
 }
 else:win32 {
     CONFIG += timesupport rtmidi dirent
