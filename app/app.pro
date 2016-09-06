@@ -25,7 +25,7 @@ INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
 INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
 
-# DESTDIR = $$EPT_CORE_OUT_DIR
+DESTDIR = $$EPT_CORE_OUT_DIR
 
 Release:OBJECTS_DIR = release/.obj
 Release:MOC_DIR = release/.moc
@@ -170,17 +170,21 @@ winrt {
     WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
     WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
     WINRT_MANIFEST.capabilities_device = microphone
+    WINRT_MANIFEST = $$EPT_ROOT_DIR/scripts/windowsstore/AppxManifest.xml.in
 
     WINDEPLOYQT_OPTIONS = -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
 
     CONFIG += windeployqt
+
+    # add winrtbridge to required dlls for copying
+    DLLS += $$EPT_THIRDPARTY_OUT_DIR/winrtbridge.dll
 } else:winphone {
 } else:win32 {
     # windows desktop
 }
 
 # dlls
-win32|win32-g++ {
+winrt|winphone|win32|win32-g++ {
     # copy external dlls
     DLLS ~= s,/,\\,g
     DESTDIR_WIN = $$DESTDIR
