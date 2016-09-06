@@ -1,8 +1,10 @@
 #ifndef MIDIDEVICEWATCHER_H
 #define MIDIDEVICEWATCHER_H
 
+#include <Windows.ApplicationModel.core.h>
 #include <collection.h>
 #include <ppltasks.h>
+#include <wrl.h>
 
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
@@ -14,6 +16,8 @@ using namespace Windows::Devices::Enumeration;
 using namespace Platform::Collections;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::Xaml::Navigation;
+using namespace Windows::ApplicationModel::Core;
+using namespace Microsoft::WRL;
 using namespace concurrency;
 
 HRESULT __stdcall GetActivationFactoryByPCWSTR(void*,Guid&, void**);

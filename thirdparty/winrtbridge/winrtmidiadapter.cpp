@@ -4,8 +4,8 @@
 
 #include "mididevicewatcher.h"
 
-using namespace Windows::Devices::Midi;
 using namespace Windows::UI::Core;
+using namespace Windows::Devices::Midi;
 
 namespace {
     MidiDeviceWatcher ^ _midiInDeviceWatcher;
@@ -24,10 +24,11 @@ WinRTMidiAdapter::WinRTMidiAdapter()
 }
 
 void WinRTMidiAdapter::init() {
-    //CoreWindow::GetForCurrentThread()->Activate();
-    //auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-    //_midiInDeviceWatcher = ref new MidiDeviceWatcher(MidiInPort::GetDeviceSelector(), Windows::UI::Core::CoreWindow::GetForCurrentThread()->Dispatcher, _inPortsList);
-    //_midiInDeviceWatcher->Start();
+    auto currentView = Windows::ApplicationModel::Core::CoreApplication::MainView;
+    auto coreWindow = currentView->CoreWindow;
+    auto dispatcher = coreWindow->Dispatcher;
+    _midiInDeviceWatcher = ref new MidiDeviceWatcher(MidiInPort::GetDeviceSelector(), dispatcher, _inPortsList);
+    _midiInDeviceWatcher->Start();
 
     mCurrentPort = -1;
 }
