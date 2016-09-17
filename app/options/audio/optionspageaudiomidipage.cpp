@@ -34,6 +34,7 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
     inputLayout->addWidget(mDeviceSelection = new QComboBox(), 0, 1);
 
     int numberOfPorts = mMidiInterface->GetNumberOfPorts();
+    mDeviceSelection->addItem(tr("Disable"), QVariant::fromValue(-1));
     for (int i = 0; i < numberOfPorts; ++i) {
         mDeviceSelection->addItem(QString::fromStdString(mMidiInterface->GetPortName(i)), QVariant::fromValue(i));
     }
@@ -44,7 +45,8 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
     if (numberOfPorts == 0) {
         this->setDisabled(true);
     }
-    mDeviceSelection->setCurrentIndex(mMidiInterface->getCurrentPort());
+    int defaultIndex = mDeviceSelection->findData(QVariant::fromValue(mMidiInterface->getCurrentPort()));
+    mDeviceSelection->setCurrentIndex(defaultIndex);
 
     // notify if changes are made
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
@@ -53,7 +55,10 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
 void PageAudioMidi::apply() {
     if (mDeviceSelection->currentIndex() >= 0) {
         int midiPort = mDeviceSelection->currentData().toInt();
-        mMidiInterface->OpenPort(midiPort);
+        LogI("Opening Midi Port: %i", midiPort);
+        if (!mMidiInterface->OpenPort(midiPort)) {
+            LogW("Midi Port could not be opened.");
+        }
     }
 }
 

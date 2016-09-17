@@ -1,4 +1,5 @@
 #include "mididevicewatcher.h"
+#include "winrtnativehelper.h"
 
 using namespace Platform::Collections;
 using namespace Windows::UI::Core;
@@ -6,15 +7,6 @@ using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
 
 using namespace Windows::Devices::Midi;
-
-HRESULT __stdcall GetActivationFactoryByPCWSTR(void*,Guid&, void**);
-namespace __winRT
-{
-    HRESULT __stdcall __getActivationFactoryByPCWSTR(const void* str, ::Platform::Guid& pGuid, void** ppActivationFactory)
-    {
-        return GetActivationFactoryByPCWSTR(const_cast<void*>(str), pGuid, ppActivationFactory);
-    }
-}
 
 MidiDeviceWatcher::MidiDeviceWatcher(String ^ midiSelector, CoreDispatcher ^ dispatcher,
     IVector<String ^> ^ portList)

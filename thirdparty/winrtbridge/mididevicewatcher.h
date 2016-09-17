@@ -20,12 +20,6 @@ using namespace Windows::ApplicationModel::Core;
 using namespace Microsoft::WRL;
 using namespace concurrency;
 
-HRESULT __stdcall GetActivationFactoryByPCWSTR(void*,Guid&, void**);
-namespace __winRT
-{
-    HRESULT __stdcall __getActivationFactoryByPCWSTR(const void* str, ::Platform::Guid& pGuid, void** ppActivationFactory);
-}
-
 ref class MidiDeviceWatcher sealed
 {
 public:

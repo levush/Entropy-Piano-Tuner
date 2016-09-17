@@ -3,8 +3,11 @@
 #include <memory>
 #include <assert.h>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #include "mididevicewatcher.h"
+#include "winrtnativehelper.h"
 
 using namespace Windows::UI::Core;
 using namespace Windows::Devices::Midi;
@@ -36,7 +39,7 @@ namespace {
             int byte1 = 0;
             int byte2 = 0;
 
-            //_inCallback->sendMidiEvent(byte0, byte1, byte2, 0);
+            _inCallback->sendMidiEvent(byte0, byte1, byte2, 0);
         }
     }
 }
@@ -46,7 +49,7 @@ WinRTMidiAdapter::WinRTMidiAdapter(WinRTMidiAdapterCallback *cb)
 {
     assert(nullptr != cb);
     _inPortsList = ref new Vector<String ^ >();
-    //_inCallback = cb;
+    _inCallback = cb;
 }
 
 WinRTMidiAdapter::~WinRTMidiAdapter() {
@@ -59,6 +62,10 @@ void WinRTMidiAdapter::init() {
     auto dispatcher = coreWindow->Dispatcher;
     _midiInDeviceWatcher = ref new MidiDeviceWatcher(MidiInPort::GetDeviceSelector(), dispatcher, _inPortsList);
     _midiInDeviceWatcher->Start();
+
+    //Sleep(500);
+    // Hack: Wait some time for connected midi devices.
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     mCurrentPort = -1;
 }
@@ -85,12 +92,26 @@ bool WinRTMidiAdapter::OpenPort(int i, std::string AppName) {
     }
 
     DeviceInformationCollection^ devInfoCollection = _midiInDeviceWatcher->GetDeviceInformationCollection();
-    assert(nullptr != devInfoCollection);
-    DeviceInformation^ devInfo = devInfoCollection->GetAt(mCurrentPort);
-    assert(nullptr != devInfoCollection);
-    //_midiInPort = MidiInPort::FromIdAsync(devInfo->Id)->GetResults();
-    //assert(nullptr != _midiInPort);
-    //_midiInPort->MessageReceived += ref new TypedEventHandler<MidiInPort ^,MidiMessageReceivedEventArgs^>(&MidiInPort_MessageReceived);
+    if (devInfoCollection) {
+        DeviceInformation^ devInfo = devInfoCollection->GetAt(mCurrentPort);
+        assert(nullptr != devInfo);
+        auto task = create_task(MidiInPort::FromIdAsync(devInfo->Id));
+
+        // get results
+        try
+        {
+            // block until port is created
+            _midiInPort = task.get();
+            //_midiInPort->MessageReceived += ref new TypedEventHandler<MidiInPort ^,MidiMessageReceivedEventArgs^>(&MidiInPort_MessageReceived);
+        }
+        catch (Platform::Exception^ ex)
+        {
+            return false;
+        }
+        //assert(nullptr != _midiInPort);
+    } else {
+        return false;
+    }
 
     return true;
 }

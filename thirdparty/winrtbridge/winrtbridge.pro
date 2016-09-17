@@ -7,10 +7,12 @@ QMAKE_CXXFLAGS += -ZW /AI $$WINRTPACKAGES
 
 SOURCES += \
     $$PWD/mididevicewatcher.cpp \
-    winrtmidiadapter.cpp
+    winrtmidiadapter.cpp \
+    winrtnativehelper.cpp
 
 HEADERS += \
     $$PWD/mididevicewatcher.h \
-    winrtmidiadapter.h
+    winrtmidiadapter.h \
+    winrtnativehelper.h
 
 DEFINES += WINRTBRIDGE_BUILD

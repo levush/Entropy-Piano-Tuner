@@ -149,10 +149,12 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
     mMidi->init();
 
     initAdapter->updateProgress (87);   // Open the default MIDI port
-    std::stringstream ss;
-    ss << "There are " << mMidi->GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi->GetPortNames();
-    LogI("%s", ss.str().c_str());
-    mMidi->OpenPort();
+    LogI("There are %i connected Midi device(s): %s", mMidi->GetNumberOfPorts(), mMidi->GetPortNames().c_str());
+    if (!mMidi->OpenPort()) {
+        LogW("Midi port could not be opened.");
+    } else {
+        LogI("Midi port opened.");
+    }
 
     initAdapter->updateProgress (100);
 
