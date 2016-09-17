@@ -5,7 +5,7 @@
 
 #include <winrtmidiadapter.h>
 
-class WinRTMidiAdapterInterface : public MidiAdapter
+class WinRTMidiAdapterInterface : public MidiAdapter, WinRTMidiAdapterCallback
 {
 public:
     WinRTMidiAdapterInterface();
@@ -18,6 +18,9 @@ public:
     bool OpenPort (int i, std::string AppName="") {return mAdapter.OpenPort(i, AppName);}
     bool OpenPort (std::string AppName="") {return mAdapter.OpenPort(AppName);}
     int getCurrentPort() const {return mAdapter.getCurrentPort();}
+
+protected:
+    virtual void sendMidiEvent(int byte0, int byte1, int byte2, double deltaTime) override final;
 
 private:
     WinRTMidiAdapter mAdapter;

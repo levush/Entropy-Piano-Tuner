@@ -3,10 +3,17 @@
 
 #include "winrtbridge.h"
 
+class WINRTBRIDGE_EXTERN WinRTMidiAdapterCallback
+{
+public:
+    virtual void sendMidiEvent(int byte0, int byte1, int byte2, double deltaTime) = 0;
+};
+
 class WINRTBRIDGE_EXTERN WinRTMidiAdapter
 {
 public:
-    WinRTMidiAdapter();
+    WinRTMidiAdapter(WinRTMidiAdapterCallback *cb);
+    ~WinRTMidiAdapter();
 
     void init();
     void exit();
