@@ -16,31 +16,114 @@ namespace {
     MidiDeviceWatcher ^ _midiInDeviceWatcher;
     Vector<String ^ > ^ _inPortsList;
     MidiInPort ^ _midiInPort;
-    WinRTMidiAdapterCallback *_inCallback = nullptr;
+
+    WinRTMidiAdapterCallback * _rawCallback = nullptr;
+
+    ref class MidiMessageCallbackWrapper sealed {
+    public:
+        MidiMessageCallbackWrapper()
+        {
+        }
+
+        void onMessageReceived(MidiInPort^ sender, MidiMessageReceivedEventArgs^ args) {
+            if (_rawCallback) {
+                IMidiMessage^ midiMessage = args->Message;
+                switch (midiMessage->Type) {
+                case MidiMessageType::NoteOff: {
+                    MidiNoteOffMessage^ noteOff = static_cast<MidiNoteOffMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0x80, noteOff->Note, noteOff->Velocity, 0);
+                    break;
+                }
+                case MidiMessageType::NoteOn: {
+                    MidiNoteOnMessage^ noteOn = static_cast<MidiNoteOnMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0x90, noteOn->Note, noteOn->Velocity, 0);
+                    break;
+                }
+                case MidiMessageType::PolyphonicKeyPressure: {
+                    MidiPolyphonicKeyPressureMessage^ polyKeyMessage = static_cast<MidiPolyphonicKeyPressureMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0xA0, polyKeyMessage->Note, polyKeyMessage->Pressure, 0);
+                    break;
+                }
+                case MidiMessageType::ControlChange: {
+                    MidiControlChangeMessage^ controlMessage = static_cast<MidiControlChangeMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0xB0, controlMessage->Controller, controlMessage->ControlValue, 0);
+                    break;
+                }
+                case MidiMessageType::ProgramChange: {
+                    MidiProgramChangeMessage^ programMessage = static_cast<MidiProgramChangeMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0xC0, programMessage->Program, 0, 0);
+                    break;
+                }
+                case MidiMessageType::ChannelPressure: {
+                    MidiChannelPressureMessage^ channelPressureMessage = static_cast<MidiChannelPressureMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0xD0, channelPressureMessage->Pressure, 0, 0);
+                    break;
+                }
+                case MidiMessageType::PitchBendChange: {
+                    MidiPitchBendChangeMessage^ pitchBendMessage = static_cast<MidiPitchBendChangeMessage ^>(midiMessage);
+                    _rawCallback->sendMidiEvent(0xD0, pitchBendMessage->Channel, 0, 0);
+                    break;
+                }
+                case MidiMessageType::SystemExclusive: {
+                    MidiSystemExclusiveMessage^ sysExMessage = static_cast<MidiSystemExclusiveMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::MidiTimeCode: {
+                    MidiTimeCodeMessage^ mtcMessage = static_cast<MidiTimeCodeMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::SongPositionPointer: {
+                    MidiSongPositionPointerMessage^ songPositionMessage = static_cast<MidiSongPositionPointerMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::SongSelect: {
+                    MidiSongSelectMessage^ songSelectMessage = static_cast<MidiSongSelectMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::TuneRequest: {
+                    MidiTuneRequestMessage^ tuneRequestMessage = static_cast<MidiTuneRequestMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::TimingClock: {
+                    MidiTimingClockMessage^ timingClockMessage = static_cast<MidiTimingClockMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::Start: {
+                    MidiStartMessage^ startMessage = static_cast<MidiStartMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::Continue: {
+                    MidiContinueMessage^ continueMessage = static_cast<MidiContinueMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::Stop: {
+                    MidiStopMessage^ stopMessage = static_cast<MidiStopMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::ActiveSensing: {
+                    MidiActiveSensingMessage^ activeSensingMessage = static_cast<MidiActiveSensingMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::SystemReset: {
+                    MidiSystemResetMessage^ systemResetMessage = static_cast<MidiSystemResetMessage ^>(midiMessage);
+                    break;
+                }
+                case MidiMessageType::None:
+                default:
+                    break;
+                }
+            }
+        }
+
+    private:
+    };
+
+    MidiMessageCallbackWrapper ^ _inCallback = nullptr;
 
     std::string convert(Platform::String ^ str) {
         std::wstring fooW(str->Begin());
         return std::string(fooW.begin(), fooW.end());
 
-    }
-
-    void MidiInPort_MessageReceived(MidiInPort ^ sender, MidiMessageReceivedEventArgs ^ args) {
-        if (_inCallback) {
-            /*auto m = args->Message;
-            auto raw = m->RawData;
-            auto timestamp = m->Timestamp;
-            int length = raw->Length;
-            std::vector<unsigned char> data(length);
-
-            std::cout << "Midi: " << length << std::endl;
-            auto reader = ::Windows::Storage::Streams::DataReader::FromBuffer(raw);
-            reader->ReadBytes(::Platform::ArrayReference<unsigned char>(data.data(), data.size()));*/
-            int byte0 = 0;
-            int byte1 = 0;
-            int byte2 = 0;
-
-            _inCallback->sendMidiEvent(byte0, byte1, byte2, 0);
-        }
     }
 }
 
@@ -49,11 +132,13 @@ WinRTMidiAdapter::WinRTMidiAdapter(WinRTMidiAdapterCallback *cb)
 {
     assert(nullptr != cb);
     _inPortsList = ref new Vector<String ^ >();
-    _inCallback = cb;
+    _inCallback = ref new MidiMessageCallbackWrapper();
+    _rawCallback = cb;
 }
 
 WinRTMidiAdapter::~WinRTMidiAdapter() {
     _inCallback = nullptr;
+    _rawCallback = nullptr;
 }
 
 void WinRTMidiAdapter::init() {
@@ -95,19 +180,13 @@ bool WinRTMidiAdapter::OpenPort(int i, std::string AppName) {
     if (devInfoCollection) {
         DeviceInformation^ devInfo = devInfoCollection->GetAt(mCurrentPort);
         assert(nullptr != devInfo);
-        auto task = create_task(MidiInPort::FromIdAsync(devInfo->Id));
-
-        // get results
-        try
+        auto task = create_task(MidiInPort::FromIdAsync(devInfo->Id)).then([this](MidiInPort^ inPort)
         {
-            // block until port is created
-            _midiInPort = task.get();
-            //_midiInPort->MessageReceived += ref new TypedEventHandler<MidiInPort ^,MidiMessageReceivedEventArgs^>(&MidiInPort_MessageReceived);
-        }
-        catch (Platform::Exception^ ex)
-        {
-            return false;
-        }
+            _midiInPort = inPort;
+            if (nullptr != inPort) {
+                inPort->MessageReceived += ref new TypedEventHandler<MidiInPort ^,MidiMessageReceivedEventArgs^>(_inCallback, &MidiMessageCallbackWrapper::onMessageReceived);
+            }
+        });
         //assert(nullptr != _midiInPort);
     } else {
         return false;
