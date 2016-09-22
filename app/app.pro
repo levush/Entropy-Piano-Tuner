@@ -23,7 +23,7 @@ include(../entropypianotuner_func.pri)
 
 INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
-INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR
+INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR $$EPT_MODULES_DIR
 
 DESTDIR = $$EPT_CORE_OUT_DIR
 
@@ -46,7 +46,7 @@ Debug:UI_DIR = debug/.ui
 # the algorithm will automatically add itself to the CalculationManager
 # if the Constructor is called.
 # !build_pass ensures that the file generation is only executed once
-include($$EPT_ROOT_DIR/algorithms/algorithms_config.pri)
+include($$EPT_ALGORITHMS_DIR/algorithms_config.pri)
 !build_pass:contains(EPT_CONFIG, static_algorithms) {
     LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
     INCLUDEPATH += $$EPT_ALGORITHMS_DIR

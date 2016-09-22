@@ -22,6 +22,7 @@
 #include "core/system/eptexception.h"
 #include "core/audio/midi/NoMidiimplementation.h"
 #include "core/audio/midi/RtMidiimplementation.h"
+#include "core/audio/midi/midiimplementation.h"
 #include "getmemorysize/getmemorysize.h"
 
 PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
@@ -38,7 +39,7 @@ PlatformToolsCore *PlatformToolsCore::getSingleton() {
 MidiAdapterPtr PlatformToolsCore::createMidiAdapter() const
 {
 #if CONFIG_ENABLE_RTMIDI
-    return std::make_shared<RtMidiImplementation>();
+    return std::make_shared<MidiImplementation>();
 #else
     return std::make_shared<NoMidiImplementation>();
 #endif

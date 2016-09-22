@@ -1,4 +1,4 @@
-include(../entropypianotuner_func.pri)
+include(../../entropypianotuner_func.pri)
 
 defineReplace(declareAlgorithm) {
     algorithmName = $$1
@@ -20,7 +20,7 @@ defineReplace(declareAlgorithm) {
 
     DESTDIR = $$EPT_ALGORITHMS_OUT_DIR
 
-    INCLUDEPATH += $$EPT_BASE_DIR
+    INCLUDEPATH += $$EPT_BASE_DIR $$EPT_MODULES_DIR
 
     # library
     $$depends_core()

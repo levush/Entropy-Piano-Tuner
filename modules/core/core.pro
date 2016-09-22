@@ -1,5 +1,5 @@
-include(../entropypianotuner_config.pri)
-include(../entropypianotuner_func.pri)
+include(../../entropypianotuner_config.pri)
+include(../../entropypianotuner_func.pri)
 
 # create the core as a lib
 TEMPLATE = lib
@@ -24,7 +24,7 @@ DEFINES += EPT_BUILD_CORE
 DESTDIR = $$EPT_CORE_OUT_DIR
 
 # basic include dirs
-INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$PWD
+INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$EPT_MODULES_DIR $$PWD
 
 # Dependencies
 $$depends_dirent()
@@ -33,6 +33,8 @@ $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_rtmidi()
 $$depends_timesupport()
+
+LIBS += -L$$EPT_CORE_OUT_DIR/modules/midi -lmidi
 
 # debugging flags: all warnings and check arrays, etc
 linux-g++*:!android {
@@ -277,7 +279,8 @@ HEADERS += \
     $$CORE_ANALYZER_HEADERS \
     $$CORE_PIANO_HEADERS \
     $$CORE_CALCULATION_HEADERS \
-    $$CORE_SYSTEM_HEADERS
+    $$CORE_SYSTEM_HEADERS \
+    audio/midi/midiimplementation.h
 
 SOURCES += \
     $$CORE_SOURCES \
@@ -290,6 +293,7 @@ SOURCES += \
     $$CORE_ANALYZER_SOURCES \
     $$CORE_PIANO_SOURCES \
     $$CORE_CALCULATION_SOURCES \
-    $$CORE_SYSTEM_SOURCES
+    $$CORE_SYSTEM_SOURCES \
+    audio/midi/midiimplementation.cpp
 
 

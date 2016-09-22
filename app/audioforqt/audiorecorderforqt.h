@@ -25,7 +25,7 @@
 
 #include "prerequisites.h"
 
-#include "../../core/audio/recorder/audiorecorderadapter.h"
+#include "core/audio/recorder/audiorecorderadapter.h"
 
 class AudioRecorderForQt : public QObject, public AudioRecorderAdapter
 {

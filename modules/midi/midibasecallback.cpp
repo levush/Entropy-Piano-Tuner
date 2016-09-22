@@ -17,26 +17,34 @@
  * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "optionspageaudio.h"
-#include "optionspageaudioinputoutputpage.h"
-#include "optionspageaudiomidipage.h"
-#include "core/core.h"
+#include "midibasecallback.h"
 
-namespace options {
+namespace midi {
 
-PageAudio::PageAudio(OptionsDialog *optionsDialog) :
-    PageSavingTabWidget("audio"),
-    CentralWidgetInterface(this)
+BaseCallbackInterface::~BaseCallbackInterface()
 {
-    this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioInput), tr("Input device"));
-    this->addTab(new PageAudioInputOutput(optionsDialog, QAudio::AudioOutput), tr("Output device"));
-    this->addTab(new PageAudioMidi(optionsDialog, optionsDialog->getCore()->getMidiInterface()), tr("Midi"));
-
-    restorePageFromSettings();
+    while (mCallbackManager.size() > 0) {
+        auto cm = mCallbackManager.front();
+        mCallbackManager.pop_front();
+        removeCallbackManager(cm);
+    }
 }
 
-void PageAudio::apply() {
-    dynamic_cast<ContentsWidgetInterface*>(currentWidget())->apply();
+void BaseCallbackInterface::addCallbackManager(BaseCallbackManager *manager)
+{
+    auto it = std::find(mCallbackManager.begin(), mCallbackManager.end(), manager);
+    if (it == mCallbackManager.end()) {
+        mCallbackManager.push_back(manager);
+        manager->addListener(this);
+    }
 }
 
-}  // namespace options
+void BaseCallbackInterface::removeCallbackManager(BaseCallbackManager *manager) {
+    auto it = std::find(mCallbackManager.begin(), mCallbackManager.end(), manager);
+    if (it != mCallbackManager.end()) {
+        mCallbackManager.erase(it);
+        manager->removeListener(this);
+    }
+}
+
+}  // namespace midi

@@ -5,10 +5,8 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
     app \
-    core \
-    algorithms \
+    modules \
     thirdparty \
 
-app.depends = core algorithms thirdparty
-core.depends = thirdparty
-algorithms.depends = core
+app.depends = modules thirdparty
+modules.depends = thirdparty

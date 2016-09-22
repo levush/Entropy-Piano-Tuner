@@ -74,6 +74,7 @@ defineReplace(depends_core) {
 
     LIBS += -L$$EPT_CORE_OUT_DIR
     LIBS += -lcore
+    LIBS += -L$$EPT_CORE_OUT_DIR/modules/midi -lmidi
 
     INCLUDEPATH += $$EPT_CORE_DIR
 
