@@ -10,7 +10,7 @@ DISTFILES += \
     $$EPT_ANDROID_PACKAGE_SOURCE_DIR/res/values/libs.xml \
     $$EPT_ANDROID_PACKAGE_SOURCE_DIR/build.gradle \
     $$EPT_ANDROID_PACKAGE_SOURCE_DIR/src/org/uniwue/tp3/TunerApplication.java \
-    $$EPT_ANDROID_PACKAGE_SOURCE_DIR/src/org/uniwue/tp3/UsbMidiDriverAdapter.java \
+    $$EPT_ANDROID_PACKAGE_SOURCE_DIR/src/org/modules/midi/UsbMidiDriverAdapter.java \
 
 HEADERS += \
     $$PWD/androidplatformtools.h \

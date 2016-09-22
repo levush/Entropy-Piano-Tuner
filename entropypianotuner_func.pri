@@ -69,6 +69,7 @@ defineReplace(depends_core) {
     contains(EPT_CONFIG, static_core) {
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
+        android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/modules/midi/libmidi.so
         win32:DLLS += $$EPT_CORE_OUT_DIR/libcore.dll
     }
 

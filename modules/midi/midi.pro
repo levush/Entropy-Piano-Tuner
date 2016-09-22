@@ -24,12 +24,9 @@ HEADERS += \
     midiinputlistener.h \
     midioutputsender.h \
     midideviceidentifier.h \
-    rtmidi/rtmidimanager.h \
     midiprerequisites.h \
-    rtmidi/rtmidideviceidentifier.h \
-    rtmidi/rtmidiinputdevice.h \
     midibasecallback.h \
-    midisystem.h
+    midisystem.h \
 
 SOURCES += \
     midimanager.cpp \
@@ -37,11 +34,34 @@ SOURCES += \
     midiinputdevice.cpp \
     midioutputdevice.cpp \
     midideviceidentifier.cpp \
-    rtmidi/rtmidimanager.cpp \
-    rtmidi/rtmidideviceidentifier.cpp \
-    rtmidi/rtmidiinputdevice.cpp \
     midibasecallback.cpp \
-    midisystem.cpp
+    midisystem.cpp \
+
+android {
+    DEFINES += MIDI_USE_ANDROID
+
+    HEADERS += \
+        android/androidmidimanager.h \
+        android/androidnativewrapper.h
+
+    SOURCES += \
+        android/androidmidimanager.cpp \
+        android/androidnativewrapper.cpp
+
+} else:linux {
+    DEFINES += MIDI_USE_RTMIDI
+
+    HEADERS += \
+        rtmidi/rtmidimanager.h \
+        rtmidi/rtmidideviceidentifier.h \
+        rtmidi/rtmidiinputdevice.h \
+
+    SOURCES += \
+        rtmidi/rtmidimanager.cpp \
+        rtmidi/rtmidideviceidentifier.cpp \
+        rtmidi/rtmidiinputdevice.cpp \
+
+    $$depends_rtmidi()
+}
 
 
-$$depends_rtmidi()

@@ -34,6 +34,8 @@ import android.app.ActivityManager.MemoryInfo;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
+import org.modules.midi.UsbMidiDriverAdapter;
+
 /**
  * Custom activity
  */
