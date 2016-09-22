@@ -146,13 +146,24 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
     mRecordingManager.init();
 
     initAdapter->updateProgress (75);   // Initialze the MIDI system
-    mMidi->init();
+    midi::MidiConfiguration config;
+    config.mEnableOutput = false;
+    midi::MidiResult r = midi::manager().init(config);
+    if (r != midi::OK) {
+        LogW("Midi backend could not be initialized. Error code: %d", r);
+    } else {
+        LogI("MIDI backend initialized.")
+    }
 
     initAdapter->updateProgress (87);   // Open the default MIDI port
-    std::stringstream ss;
-    ss << "There are " << mMidi->GetNumberOfPorts() << " connected Midi devices:" << std::endl << mMidi->GetPortNames();
-    LogI("%s", ss.str().c_str());
-    mMidi->OpenPort();
+    midi::MidiInputDevicePtr midiDevice;
+    std::tie(r, midiDevice) = midi::manager().createDefaultInputDevice();
+    if (r != midi::OK) {
+        LogI("Could not connect to default midi device. Code: %d", r);
+    } else {
+        LogI("Connected to MIDI device %s", midiDevice->id()->humanReadable().c_str());
+        midiDevice->addListener(mMidi.get());
+    }
 
     initAdapter->updateProgress (100);
 
@@ -174,7 +185,12 @@ void Core::exit()
 {
     if (not mInitialized) return;
     stop();
-    mMidi->exit();
+
+    auto r = midi::manager().exit();
+    if (r != midi::OK) {
+        LogW("Midi backend could not be closed. Error code: %d", r);
+    }
+
     mRecordingManager.exit();
     if (mSoundGenerator) {mSoundGenerator->exit();}
     mSignalAnalyzer.exit();

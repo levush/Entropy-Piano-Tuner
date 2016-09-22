@@ -186,7 +186,13 @@ void SoundGenerator::handleMessage(MessagePtr m)
             {
                 case MidiAdapter::MIDI_KEY_PRESS:
                 {
-                    handleMidiKeypress(data); // see following function
+                    if (data.byte2 == 0) {
+                        // 0 volume will be handled as release
+                        int key = data.byte1-69+mKeyNumberOfA4;
+                        mSynthesizer.releaseSound(key);
+                    } else {
+                        handleMidiKeypress(data); // see following function
+                    }
                     break;
                 }
                 case MidiAdapter::MIDI_KEY_RELEASE:

@@ -30,28 +30,6 @@
 #include "../../messages/messagemidievent.h"
 
 
-//---------------------0--------------------------------------------------------
-//                Return a list of all available Midi devices
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// \return List all available Midi devices in a single string
-///////////////////////////////////////////////////////////////////////////////
-
-std::string MidiAdapter::GetPortNames()
-{
-    const int ports = GetNumberOfPorts();
-    std::stringstream s;
-    if (ports > 0)
-    {
-        s << GetPortName(0);
-        for (int i = 1; i < GetNumberOfPorts(); ++i) s << ", " << GetPortName(i);
-        return s.str();
-    }
-    else return "No MIDI ports available.";
-}
-
-
 //-----------------------------------------------------------------------------
 //                Convert the MIDI command byte to a MidiEvent
 //-----------------------------------------------------------------------------
@@ -83,7 +61,12 @@ MidiAdapter::MidiEvent MidiAdapter::byteToEvent(int byte)
 
 void MidiAdapter::send (Data &data)
 {
-    LogI("Midi event with data %d %d %d %lf",
+    LogD("Midi event with data %d %d %d %lf",
          (int)(data.event), data.byte1, data.byte2, data.deltatime);
     MessageHandler::send<MessageMidiEvent>(data);
+}
+
+void MidiAdapter::receiveMessage(int cmd, int byte1, int byte2) {
+    Data data = {byteToEvent(cmd), byte1, byte2, 0.0};
+    send(data);
 }

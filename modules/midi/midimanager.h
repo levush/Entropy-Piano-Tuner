@@ -14,7 +14,16 @@
 
 namespace midi {
 
-class MidiManager
+class MidiConfiguration {
+public:
+    bool mEnableInput = true;
+    bool mEnableOutput = true;
+
+    bool mSingleInputDevice = true;
+    bool mSingleOutputDevice = true;
+};
+
+class MidiManager : protected MidiConfiguration
 {
 public:
     typedef std::pair<MidiResult, MidiInputDevicePtr> MidiInDevRes;
@@ -27,7 +36,7 @@ public:
     virtual ~MidiManager();
 
 public:
-    virtual MidiResult init(bool input = true, bool output = true) = 0;
+    MidiResult init(const MidiConfiguration &config);
     virtual MidiResult exit() = 0;
 
     virtual std::vector<MidiDeviceID> listAvailableInputDevices() const = 0;
@@ -45,13 +54,18 @@ public:
     MidiInDevRes createInputDevice(const MidiDeviceID id);
     MidiOutDevRes createOutputDevice(const MidiDeviceID id);
 
-    void deleteDevice(MidiInputDevicePtr device);
-    void deleteDevice(MidiOutputDevicePtr device);
-    void deleteDevice(const MidiDeviceID id);
+    MidiResult deleteAllInputDevices();
+    MidiResult deleteAllOutputDevices();
+    MidiResult deleteDevice(MidiInputDevicePtr device);
+    MidiResult deleteDevice(MidiOutputDevicePtr device);
+    MidiResult deleteDevice(const MidiDeviceID id);
 
 protected:
+    virtual MidiResult init_impl() = 0;
     virtual MidiInDevRes createInputDevice_impl(const MidiDeviceID id) = 0;
     virtual MidiOutDevRes createOutputDevice_impl(const MidiDeviceID id) = 0;
+    virtual MidiResult deleteDevice_impl(MidiInputDevicePtr device) = 0;
+    virtual MidiResult deleteDevice_impl(MidiOutputDevicePtr device) = 0;
 
 protected:
     std::list<MidiInputDevicePtr> mMidiInputDevices;

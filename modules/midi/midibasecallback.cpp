@@ -35,7 +35,7 @@ void BaseCallbackInterface::addCallbackManager(BaseCallbackManager *manager)
     auto it = std::find(mCallbackManager.begin(), mCallbackManager.end(), manager);
     if (it == mCallbackManager.end()) {
         mCallbackManager.push_back(manager);
-        manager->addListener(this);
+        manager->addListenerLocked(this);
     }
 }
 
@@ -43,7 +43,7 @@ void BaseCallbackInterface::removeCallbackManager(BaseCallbackManager *manager) 
     auto it = std::find(mCallbackManager.begin(), mCallbackManager.end(), manager);
     if (it != mCallbackManager.end()) {
         mCallbackManager.erase(it);
-        manager->removeListener(this);
+        manager->removeListenerLocked(this);
     }
 }
 

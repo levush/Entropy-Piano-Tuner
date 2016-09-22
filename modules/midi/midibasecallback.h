@@ -23,6 +23,7 @@
 #include <list>
 #include <algorithm>
 #include <functional>
+#include <mutex>
 
 namespace midi {
 
@@ -82,11 +83,13 @@ public:
     /// It will add this as callback manager to the given listener.
     ///
     void addListener(BaseCallbackInterface *listener) {
+        mAccessMutex.lock();
         auto it = std::find(mListeners.begin(), mListeners.end(), listener);
         if (it == mListeners.end()) {
             mListeners.push_back(listener);
             listener->addCallbackManager(this);
         }
+        mAccessMutex.unlock();
     }
 
     ///
@@ -96,6 +99,31 @@ public:
     /// It will remove this as callback manager of the given listener.
     ///
     void removeListener(BaseCallbackInterface *listener) {
+        mAccessMutex.lock();
+        auto it = std::find(mListeners.begin(), mListeners.end(), listener);
+        if (it != mListeners.end()) {
+            mListeners.erase(it);
+            listener->removeCallbackManager(this);
+        }
+        mAccessMutex.unlock();
+    }
+     ///
+    /// \brief Returns a constant list of all listeners
+    /// \return mListeners
+    ///
+    const std::list<BaseCallbackInterface*> &listeners() const {return mListeners;}
+
+private:
+    void addListenerLocked(BaseCallbackInterface *listener) {
+        auto it = std::find(mListeners.begin(), mListeners.end(), listener);
+        if (it == mListeners.end()) {
+            mListeners.push_back(listener);
+            listener->addCallbackManager(this);
+        }
+    }
+
+
+    void removeListenerLocked(BaseCallbackInterface *listener) {
         auto it = std::find(mListeners.begin(), mListeners.end(), listener);
         if (it != mListeners.end()) {
             mListeners.erase(it);
@@ -103,15 +131,16 @@ public:
         }
     }
 
-    ///
-    /// \brief Returns a constant list of all listeners
-    /// \return mListeners
-    ///
-    const std::list<BaseCallbackInterface*> &listeners() const {return mListeners;}
-private:
 
+protected:
     /// The listeners
     std::list<BaseCallbackInterface*> mListeners;
+
+    /// Mutex
+    mutable std::mutex mAccessMutex;
+
+
+    friend class BaseCallbackInterface;
 };
 
 ///
@@ -128,9 +157,11 @@ protected:
     /// Calls the given method on all listeners using a std::function
     ///
     template <typename ...Args>
-    void invokeCallback(std::function<void (CallbackClass&, Args...)> func, Args... args)
-    {
-        for (auto listener : listeners())
+    void invokeCallback(std::function<void (CallbackClass&, Args...)> func, Args... args) {
+        mAccessMutex.lock();
+        std::list<BaseCallbackInterface*> list_copy = listeners();
+        mAccessMutex.unlock();
+        for (auto listener : list_copy)
         {
             CallbackClass *cb = dynamic_cast<CallbackClass*>(listener);
             func(cb, args...);
@@ -144,12 +175,16 @@ protected:
     ///
     template<typename ... Args>
     void invokeCallback(void (CallbackClass::*fptr)(Args...), Args... args) const {
-        for (auto listener : listeners())
+        mAccessMutex.lock();
+        std::list<BaseCallbackInterface*> list_copy = listeners();
+        mAccessMutex.unlock();
+        for (auto listener : list_copy)
         {
             CallbackClass *cb = dynamic_cast<CallbackClass*>(listener);
             (cb->*fptr)(args...);
         }
     }
+
 };
 
 }  // namespace midi

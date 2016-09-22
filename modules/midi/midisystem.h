@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "midimanager.h"
+#include "midiinputlistener.h"
 
 namespace midi {
 
@@ -25,7 +26,7 @@ private:
     std::unique_ptr<MidiManager> mManager;
 };
 
-static MidiManager &manager() {
+inline static MidiManager &manager() {
     return MidiSystem::instance().manager();
 }
 

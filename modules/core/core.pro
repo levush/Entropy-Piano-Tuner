@@ -31,7 +31,6 @@ $$depends_dirent()
 $$depends_fftw3()
 $$depends_getmemorysize()
 $$depends_libuv()
-$$depends_rtmidi()
 $$depends_timesupport()
 
 LIBS += -L$$EPT_CORE_OUT_DIR/modules/midi -lmidi
@@ -140,8 +139,6 @@ CORE_AUDIO_HEADERS = \
     audio/player/synthesizer.h \
     audio/player/waveformgenerator.h \
     audio/midi/midiadapter.h \
-    audio/midi/RtMidiimplementation.h \
-    audio/midi/NoMidiimplementation.h \
     audio/recorder/audiorecorderadapter.h \
     audio/recorder/stroboscope.h \
     audio/recorder/recordingmanager.h \
@@ -154,8 +151,6 @@ CORE_AUDIO_SOURCES = \
     audio/player/synthesizer.cpp \
     audio/player/waveformgenerator.cpp \
     audio/midi/midiadapter.cpp \
-    audio/midi/RtMidiimplementation.cpp \
-    audio/midi/NoMidiimplementation.cpp \
     audio/recorder/audiorecorderadapter.cpp \
     audio/recorder/stroboscope.cpp \
     audio/recorder/recordingmanager.cpp \
@@ -280,7 +275,6 @@ HEADERS += \
     $$CORE_PIANO_HEADERS \
     $$CORE_CALCULATION_HEADERS \
     $$CORE_SYSTEM_HEADERS \
-    audio/midi/midiimplementation.h
 
 SOURCES += \
     $$CORE_SOURCES \
@@ -294,6 +288,5 @@ SOURCES += \
     $$CORE_PIANO_SOURCES \
     $$CORE_CALCULATION_SOURCES \
     $$CORE_SYSTEM_SOURCES \
-    audio/midi/midiimplementation.cpp
 
 

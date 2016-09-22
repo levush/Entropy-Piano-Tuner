@@ -20,6 +20,13 @@
 #include "optionspageaudiomidipage.h"
 #include <QGridLayout>
 #include <QLabel>
+#include <QMessageBox>
+
+#include "midi/midisystem.h"
+#include "midi/midimanager.h"
+
+Q_DECLARE_SMART_POINTER_METATYPE(std::shared_ptr)
+Q_DECLARE_METATYPE(midi::MidiDeviceID)
 
 namespace options {
 
@@ -33,18 +40,24 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
     inputLayout->addWidget(new QLabel(tr("Midi device")), 0, 0);
     inputLayout->addWidget(mDeviceSelection = new QComboBox(), 0, 1);
 
-    int numberOfPorts = mMidiInterface->GetNumberOfPorts();
-    for (int i = 0; i < numberOfPorts; ++i) {
-        mDeviceSelection->addItem(QString::fromStdString(mMidiInterface->GetPortName(i)), QVariant::fromValue(i));
+    mDeviceSelection->addItem(tr("Disabled"), QVariant::fromValue(midi::MidiDeviceID()));
+
+    int curIndex = 0;
+    std::vector<midi::MidiDeviceID> inputDevices = midi::manager().listAvailableInputDevices();
+    for (midi::MidiDeviceID device : inputDevices) {
+        mDeviceSelection->addItem(QString::fromStdString(device->humanReadable()), QVariant::fromValue(device));
+        if (device->equals(midi::manager().getConnectedInputDevice()->id())) {
+            curIndex = mDeviceSelection->count() - 1;
+        }
     }
 
 
     inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
 
-    if (numberOfPorts == 0) {
+    if (inputDevices.size() == 0) {
         this->setDisabled(true);
     }
-    mDeviceSelection->setCurrentIndex(mMidiInterface->getCurrentPort());
+    mDeviceSelection->setCurrentIndex(curIndex);
 
     // notify if changes are made
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
@@ -52,8 +65,29 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
 
 void PageAudioMidi::apply() {
     if (mDeviceSelection->currentIndex() >= 0) {
-        int midiPort = mDeviceSelection->currentData().toInt();
-        mMidiInterface->OpenPort(midiPort);
+        midi::MidiDeviceID midiPort = mDeviceSelection->currentData().value<midi::MidiDeviceID>();
+        if (!midiPort) {
+            midi::MidiResult r = midi::manager().deleteAllInputDevices();
+            if (r != midi::OK) {
+                LogW("Could not delete all input devices. Code: %d", r);
+            } else {
+                LogI("Disconnected from midi devices.");
+            }
+        } else {
+            midi::MidiResult r;
+            midi::MidiInputDevicePtr device;
+            std::tie(r, device) = midi::manager().createInputDevice(midiPort);
+            device->addListener(mMidiInterface);
+            if (r != midi::OK) {
+                QMessageBox::warning(this, tr("MIDI error"),
+                                     tr("Could not connect to midi device '%1'. Error code: %2'").arg(
+                                         QString::fromStdString(midiPort->humanReadable()),
+                                         QString::number(r)));
+                LogW("Could not connect to midi device '%s'. Error code: %d", midiPort->humanReadable().c_str(), r);
+            } else {
+                LogI("Connected to midi device '%s'", midiPort->humanReadable().c_str());
+            }
+        }
     }
 }
 

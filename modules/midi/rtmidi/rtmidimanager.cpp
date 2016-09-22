@@ -10,8 +10,8 @@ namespace midi {
 RtMidiManager::RtMidiManager() {
 }
 
-MidiResult RtMidiManager::init(bool input, bool output) {
-    if (input && !mRtMidiIn) {
+MidiResult RtMidiManager::init_impl() {
+    if (mEnableInput && !mRtMidiIn) {
         try {
             mRtMidiIn.reset(new RtMidiIn());
         } catch (const RtMidiError &error) {
@@ -24,7 +24,7 @@ MidiResult RtMidiManager::init(bool input, bool output) {
         }
     }
 
-    if (output && !mRtMidiOut) {
+    if (mEnableOutput && !mRtMidiOut) {
         try {
             mRtMidiOut.reset(new RtMidiOut());
         } catch (const RtMidiError &error) {
@@ -133,6 +133,23 @@ MidiManager::MidiOutDevRes RtMidiManager::createOutputDevice_impl(const MidiDevi
 
     return std::make_pair(MIDI_UNIMPLEMENTED, MidiOutputDevicePtr());
 }
+
+MidiResult RtMidiManager::deleteDevice_impl(MidiInputDevicePtr device) {
+    if (!mRtMidiIn) {return MIDI_INPUT_DISABLED;}
+
+    MIDI_UNUSED(device);
+    mRtMidiIn->closePort();
+    return OK;
+}
+
+MidiResult RtMidiManager::deleteDevice_impl(MidiOutputDevicePtr device) {
+    if (!mRtMidiIn) {return MIDI_OUTPUT_DISABLED;}
+
+    MIDI_UNUSED(device);
+    mRtMidiOut->closePort();
+    return OK;
+}
+
 
 
 MidiResult RtMidiManager::clearInputQueue() {

@@ -26,6 +26,8 @@
 
 #include "prerequisites.h"
 
+#include "midi/midisystem.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Adapter class for reading an externally connected MIDI keyboard.
 ///
@@ -40,23 +42,12 @@
 /// which is basically the time in seconds elapsed since the last event.
 ///////////////////////////////////////////////////////////////////////////////
 
-class EPT_EXTERN MidiAdapter
+class EPT_EXTERN MidiAdapter : public midi::MidiInputListener
 {
 public:
 
     MidiAdapter() {}                                            ///< Constructor without function
     ~MidiAdapter() {}                                           ///< Destructor without function
-
-    virtual void init() = 0;                                    ///< Initialisation of the implementation
-    virtual void exit() = 0;                                    ///< Shut down the implementation
-
-    virtual int GetNumberOfPorts () = 0;                        ///< Get the number of available input devices
-    virtual std::string GetPortName   (int i) = 0;              ///< Get the name of device number i (starting with zero)
-    virtual std::string GetPortNames  ();                       ///< Get a list of all available input devices
-    virtual bool OpenPort (int i, std::string AppName="")=0;    ///< Open Midi input device number i
-    virtual bool OpenPort (std::string AppName="") = 0;         ///< Open Midi device with the highest port number
-
-    virtual int getCurrentPort() const = 0;                     ///< Get the current port number
 
     ///////////////////////////////////////////////////////////////////////////
     /// \brief Enumeration of the possible MIDI events
@@ -98,6 +89,10 @@ public:
     // The following functions have to be public because of access from iosnativewrapper
     static MidiEvent byteToEvent (int byte); ///< Convert MIDI code to MidiEvent
     void send (Data &data); ///< Send new MIDI data to the messaging system
+
+
+private:
+    virtual void receiveMessage(int cmd, int byte1, int byte2) override final;
 };
 
 typedef std::shared_ptr<MidiAdapter> MidiAdapterPtr;
