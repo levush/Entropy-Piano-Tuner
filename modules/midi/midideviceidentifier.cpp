@@ -2,8 +2,9 @@
 
 namespace midi {
 
-MidiDeviceIdentifier::MidiDeviceIdentifier(const std::__cxx11::string &humanReadable)
-    : mHumanReadable(humanReadable) {
+MidiDeviceIdentifier::MidiDeviceIdentifier(const MidiType type, const std::string &humanReadable)
+    : mType(type)
+    , mHumanReadable(humanReadable) {
 
 }
 

@@ -59,7 +59,7 @@ std::vector<MidiDeviceID> RtMidiManager::listAvailableInputDevices() const {
             auto name = mRtMidiIn->getPortName(i);
             if (name.find("RtMidi") == std::string::npos) {
                 // skip RtMidi device
-                devices.push_back(std::make_shared<RtMidiDeviceIdentifier>(name));
+                devices.push_back(std::make_shared<RtMidiDeviceIdentifier>(INPUT, name));
             }
         }
     } catch (const RtMidiError& error) {
@@ -80,7 +80,7 @@ std::vector<MidiDeviceID> RtMidiManager::listAvailableOutputDevices() const {
             auto name = mRtMidiOut->getPortName(i);
             if (name.find("RtMidi") == std::string::npos) {
                 // skip RtMidi device
-                devices.push_back(std::make_shared<RtMidiDeviceIdentifier>(name));
+                devices.push_back(std::make_shared<RtMidiDeviceIdentifier>(OUTPUT, name));
             }
         }
     } catch (const RtMidiError& error) {
@@ -117,7 +117,7 @@ MidiManager::MidiInDevRes RtMidiManager::createInputDevice_impl(const MidiDevice
             // clear events
             clearInputQueue();
             // create device
-            auto device = std::make_shared<RtMidiInputDevice>(std::make_shared<RtMidiDeviceIdentifier>(deviceId));
+            auto device = std::make_shared<RtMidiInputDevice>(std::make_shared<RtMidiDeviceIdentifier>(INPUT, deviceId));
             // connect it to the input source
             mRtMidiIn->setCallback(&staticCallback, device.get());
             // return the newly created input device

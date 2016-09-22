@@ -25,6 +25,11 @@ enum MidiResult {
     BACKEND_ERROR,
 };
 
+enum MidiType {
+    INPUT,
+    OUTPUT,
+};
+
 }
 
 #endif // MIDIPREREQUISITES_H

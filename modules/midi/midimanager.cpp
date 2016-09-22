@@ -142,15 +142,21 @@ MidiResult MidiManager::deleteDevice(MidiOutputDevicePtr device) {
 }
 
 MidiResult MidiManager::deleteDevice(const MidiDeviceID id) {
-    for (MidiInputDevicePtr dev : mMidiInputDevices) {
-        if (dev->id()->equals(id)) {
-            return deleteDevice(dev);
-        }
+    if (!id) {
+        return OK;
     }
 
-    for (MidiOutputDevicePtr dev : mMidiOutputDevices) {
-        if (dev->id()->equals(id)) {
-            return deleteDevice(dev);
+    if (id->type() == INPUT) {
+        for (MidiInputDevicePtr dev : mMidiInputDevices) {
+            if (dev->id()->equals(id)) {
+                return deleteDevice(dev);
+            }
+        }
+    } else if (id->type() == OUTPUT) {
+        for (MidiOutputDevicePtr dev : mMidiOutputDevices) {
+            if (dev->id()->equals(id)) {
+                return deleteDevice(dev);
+            }
         }
     }
 

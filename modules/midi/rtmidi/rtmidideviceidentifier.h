@@ -10,7 +10,7 @@ namespace midi {
 class RtMidiDeviceIdentifier : public MidiDeviceIdentifier
 {
 public:
-    RtMidiDeviceIdentifier(const std::string &id);
+    RtMidiDeviceIdentifier(const MidiType type, const std::string &id);
 
     const std::string &id() const {return mID;}
 
