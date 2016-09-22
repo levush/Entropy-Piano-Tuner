@@ -25,7 +25,7 @@ protected:
     virtual MidiResult deleteDevice_impl(MidiInputDevicePtr device) override final;
     virtual MidiResult deleteDevice_impl(MidiOutputDevicePtr device) override final;
 private:
-    jobject mUsbMidiDriver = 0;
+    mutable jobject mUsbMidiDriver = 0;
 };
 
 }  // namespace midi

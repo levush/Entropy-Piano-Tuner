@@ -30,7 +30,14 @@ MidiResult AndroidMidiManager::exit() {
 }
 
 std::vector<MidiDeviceID> AndroidMidiManager::listAvailableInputDevices() const {
+    std::vector<std::string> device_names(android_listAvailableInputDevices(mUsbMidiDriver));
     std::vector<MidiDeviceID> devices;
+    devices.reserve(device_names.size());
+
+    for (const std::string &device_name : device_names) {
+        devices.push_back(std::make_shared<MidiDeviceIdentifier>(INPUT, device_name));
+    }
+
     return devices;
 }
 

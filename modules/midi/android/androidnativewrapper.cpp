@@ -4,6 +4,7 @@
 
 #include <jni.h>
 #include <android/log.h>
+#include <sstream>
 
 namespace midi {
 
@@ -65,6 +66,26 @@ JNIEXPORT void JNICALL releaseAndroidManagerJNI(jobject usbmanager) {
     if (usbmanager) {
         env->DeleteLocalRef(usbmanager);
     }
+}
+
+std::vector<std::string> android_listAvailableInputDevices(jobject usbmanager) {
+    JNIEnv* env;
+    s_javaVM->AttachCurrentThread(&env, NULL);
+
+    jmethodID method = env->GetMethodID(g_midiClass, "getInputDeviceNames", "()Ljava/lang/String;");
+    jstring names = static_cast<jstring>(env->CallObjectMethod(usbmanager, method));
+    const char* raw = env->GetStringUTFChars(names, 0);
+    std::istringstream namesfill(raw);
+    env->ReleaseStringUTFChars(names, raw);
+
+    // split namesfill
+    std::vector<std::string> res;
+    std::string temp;
+    while (std::getline(namesfill, temp)) {
+        res.push_back(temp);
+    }
+
+    return res;
 }
 
 }  // namespace midi

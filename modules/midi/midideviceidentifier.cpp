@@ -8,4 +8,9 @@ MidiDeviceIdentifier::MidiDeviceIdentifier(const MidiType type, const std::strin
 
 }
 
+bool MidiDeviceIdentifier::equals(const MidiDeviceID other) {
+    if (!other) {return false;}
+    return other->mHumanReadable == mHumanReadable && other->mType == mType;
+}
+
 }  // namespace midi

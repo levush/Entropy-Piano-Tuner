@@ -18,7 +18,7 @@ public:
     const std::string &humanReadable() const {return mHumanReadable;}
     MidiType type() const {return mType;}
 
-    virtual bool equals(const MidiDeviceID other) = 0;
+    virtual bool equals(const MidiDeviceID other);
 
 protected:
     const MidiType mType;
