@@ -41,14 +41,15 @@ public:
 
     void apply() override final;
 
-protected:
+protected slots:
     void updateMidiInputDevices();
 
-    virtual void inputDeviceAttached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
-    virtual void inputDeviceDetached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
+protected:
+    virtual void inputDeviceAttached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceDetached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
 
-    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); updateMidiInputDevices();}
-    virtual void inputDeviceDeleted(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
+    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceDeleted(midi::MidiDeviceID id) override {MIDI_UNUSED(id) QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
 private:
     MidiAdapter *mMidiInterface;
 

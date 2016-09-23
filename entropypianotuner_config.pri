@@ -39,8 +39,9 @@ EPT_DEPENDENCIES_DIR = $$EPT_ROOT_DIR/dependencies
 EPT_TRANSLATIONS_DIR = $$EPT_BASE_DIR/translations
 EPT_TUTORIAL_DIR = $$EPT_ROOT_DIR/tutorial
 
+EPT_ROOT_OUT_DIR = $$shadowed($$PWD)
 EPT_THIRDPARTY_OUT_DIR = $$shadowed($$PWD)/lib
-EPT_CORE_OUT_DIR = $$shadowed($$PWD)
+EPT_CORE_OUT_DIR = $$shadowed($$PWD)/lib
 EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 
 EPT_PLATFORMS_DIR = $$EPT_APP_DIR/platforms

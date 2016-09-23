@@ -33,7 +33,7 @@ $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_timesupport()
 
-LIBS += -L$$EPT_CORE_OUT_DIR/modules/midi -lmidi
+LIBS += -L$$EPT_ROOT_OUT_DIR/modules/midi -lmidi
 
 # debugging flags: all warnings and check arrays, etc
 linux-g++*:!android {
