@@ -203,7 +203,7 @@ defineReplace(depends_qwt) {
         } else {
             DEFINES += QWT_DLL
             android: ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
-            win32: DLLS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
+            win32: DLLS += $$EPT_THIRDPARTY_OUT_DIR/qwt.dll
         }
     }
 

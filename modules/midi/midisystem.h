@@ -9,8 +9,6 @@
 
 namespace midi {
 
-MIDI_EXTERN_TEMPLATE class std::unique_ptr<MidiManager>;
-
 class MIDI_EXTERN MidiSystem
 {
 public:
