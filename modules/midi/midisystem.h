@@ -11,10 +11,7 @@ namespace midi {
 class MidiSystem
 {
 public:
-    static MidiSystem &instance() {
-        static MidiSystem singleton;
-        return singleton;
-    }
+    static MidiSystem &instance();
 
     MidiManager &manager() {
         return *mManager;

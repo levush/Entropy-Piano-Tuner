@@ -10,6 +10,11 @@
 
 namespace midi {
 
+MidiSystem &MidiSystem::instance() {
+  static std::unique_ptr<MidiSystem> singleton(new MidiSystem);
+  return *singleton;
+}
+
 MidiSystem::MidiSystem() {
     mManager.reset(new MidiManagerImplementation());
 }

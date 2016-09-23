@@ -42,7 +42,7 @@ MidiDeviceID MidiManager::getConnectedOutputDeviceID() const {
 MidiManager::MidiInDevRes MidiManager::createDefaultInputDevice() {
     auto devices = listAvailableInputDevices();
     if (devices.size() == 0) {
-        return std::make_pair(MIDI_OUTPUT_NO_DEVICES, MidiInputDevicePtr());
+        return std::make_pair(MIDI_INPUT_NO_DEVICES, MidiInputDevicePtr());
     } else {
         return createInputDevice(devices.back());
     }
@@ -179,6 +179,30 @@ MidiResult MidiManager::deleteDevice(const MidiDeviceID id) {
     }
 
     return MIDI_DEVICE_ID_NOT_FOUND;
+}
+
+MidiManager::MidiInDevRes MidiManager::findMidiInputDevice(MidiDeviceID id) {
+    if (!id) {return std::make_pair(MIDI_INPUT_DEVICE_ID_NOT_FOUND, MidiInputDevicePtr());}
+    if (id->type() != INPUT) {return std::make_pair(MIDI_INPUT_OUTPUT_DEVICE_MISMATCH, MidiInputDevicePtr());}
+
+    for (MidiInputDevicePtr dev : mMidiInputDevices) {
+        if (dev->id()->equals(id)) {
+            return std::make_pair(OK, dev);
+        }
+    }
+    return std::make_pair(MIDI_INPUT_DEVICE_ID_NOT_FOUND, MidiInputDevicePtr());
+}
+
+MidiManager::MidiOutDevRes MidiManager::findMidiOutputDevice(MidiDeviceID id) {
+    if (!id) {return std::make_pair(MIDI_OUTPUT_DEVICE_ID_NOT_FOUND, MidiOutputDevicePtr());}
+    if (id->type() != OUTPUT) {return std::make_pair(MIDI_INPUT_OUTPUT_DEVICE_MISMATCH, MidiOutputDevicePtr());}
+
+    for (MidiOutputDevicePtr dev : mMidiOutputDevices) {
+        if (dev->id()->equals(id)) {
+            return std::make_pair(OK, dev);
+        }
+    }
+    return std::make_pair(MIDI_OUTPUT_DEVICE_ID_NOT_FOUND, MidiOutputDevicePtr());
 }
 
 void MidiManager::inputDeviceAttached(MidiDeviceID id) {

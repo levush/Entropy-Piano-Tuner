@@ -27,7 +27,9 @@ HEADERS += \
     midiprerequisites.h \
     midibasecallback.h \
     midisystem.h \
-    mididevicewatcher.h
+    mididevicewatcher.h \
+    android/jniobject.h \
+    android/jnienvironment.h
 
 SOURCES += \
     midimanager.cpp \
@@ -37,18 +39,22 @@ SOURCES += \
     midideviceidentifier.cpp \
     midibasecallback.cpp \
     midisystem.cpp \
-    mididevicewatcher.cpp
+    mididevicewatcher.cpp \
+    android/jniobject.cpp \
+    android/jnienvironment.cpp
 
 android {
     DEFINES += MIDI_USE_ANDROID
 
     HEADERS += \
         android/androidmidimanager.h \
-        android/androidnativewrapper.h
+        android/androidnativewrapper.h \
+        android/androidmidiinputdevice.h
 
     SOURCES += \
         android/androidmidimanager.cpp \
-        android/androidnativewrapper.cpp
+        android/androidnativewrapper.cpp \
+        android/androidmidiinputdevice.cpp
 
 } else:linux {
     DEFINES += MIDI_USE_RTMIDI

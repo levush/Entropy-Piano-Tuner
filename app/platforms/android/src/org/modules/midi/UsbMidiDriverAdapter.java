@@ -33,10 +33,6 @@
  import jp.kshoji.driver.midi.util.UsbMidiDriver;
 
  public class UsbMidiDriverAdapter {
-     static {
-         System.loadLibrary("midi");
-     }
-
      private static UsbMidiDriverAdapter mUsbMidiDriverAdapter;
      private UsbMidiDriver usbMidiDriver;
 
@@ -52,12 +48,11 @@
      private MidiOutputDevice mCurrentOutputDevice = null;
 
      // Native methods
-     public static native void java_sendMidiMessage(int event, int byte1, int byte2, double deltaTime);
-     public static native void java_availableInputDevicesChanged();
-     public static native void java_inputConnectionStatusChanged(String deviceName);
-
-     public static native void java_availableOutputDevicesChanged();
-     public static native void java_outputConnectionStatusChanged(String deviceName);
+     public static native void java_sendMidiMessage(String deviceName, int event, int byte1, int byte2);
+     public static native void java_inputDeviceAttached(String deviceName);
+     public static native void java_inputDeviceDetached(String deviceName);
+     public static native void java_outputDeviceAttached(String deviceName);
+     public static native void java_outputDeviceDetached(String deviceName);
 
      public UsbMidiDriverAdapter() {
          mUsbMidiDriverAdapter = this;
@@ -78,13 +73,13 @@
              @Override
              public void onMidiInputDeviceAttached(MidiInputDevice midiInputDevice) {
                  mInputDevices.add(midiInputDevice);
-                 java_availableInputDevicesChanged();
+                 java_inputDeviceAttached(getDeviceName(midiInputDevice));
              }
 
              @Override
              public void onMidiOutputDeviceAttached(final MidiOutputDevice midiOutputDevice) {
                  mOutputDevices.add(midiOutputDevice);
-                 java_availableOutputDevicesChanged();
+                 java_outputDeviceAttached(getDeviceName(midiOutputDevice));
              }
 
              @Override
@@ -98,66 +93,64 @@
 
              @Override
              public void onMidiInputDeviceDetached(MidiInputDevice midiInputDevice) {
+                 java_inputDeviceDetached(getDeviceName(midiInputDevice));
                  if (midiInputDevice == mCurrentInputDevice) {
-                     java_inputConnectionStatusChanged(getDeviceName(mCurrentInputDevice));
                      mCurrentInputDevice = null;
                  }
 
                  mInputDevices.remove(midiInputDevice);
-                 java_availableInputDevicesChanged();
              }
 
              @Override
              public void onMidiOutputDeviceDetached(final MidiOutputDevice midiOutputDevice) {
+                 java_outputDeviceDetached(getDeviceName(midiOutputDevice));
                  if (midiOutputDevice == mCurrentOutputDevice) {
-                     java_outputConnectionStatusChanged(getDeviceName(mCurrentOutputDevice));
                      mCurrentOutputDevice = null;
                  }
 
                  mOutputDevices.remove(midiOutputDevice);
-                 java_availableOutputDevicesChanged();
              }
 
              @Override
              public void onMidiNoteOff(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0x80, note, velocity, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0x80, note, velocity);
              }
 
              @Override
              public void onMidiNoteOn(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0x90, note, velocity, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0x90, note, velocity);
              }
 
              @Override
              public void onMidiPolyphonicAftertouch(final MidiInputDevice sender, int cable, int channel, int note, int pressure) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0xA0, note, pressure, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0xA0, note, pressure);
              }
 
              @Override
              public void onMidiControlChange(final MidiInputDevice sender, int cable, int channel, int function, int value) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0xB0, function, value, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0xB0, function, value);
              }
 
              @Override
              public void onMidiProgramChange(final MidiInputDevice sender, int cable, int channel, int program) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0xC0, program, 0, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0xC0, program, 0);
              }
 
              @Override
              public void onMidiChannelAftertouch(final MidiInputDevice sender, int cable, int channel, int pressure) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0xD0, pressure, 0, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0xD0, pressure, 0);
              }
 
              @Override
              public void onMidiPitchWheel(final MidiInputDevice sender, int cable, int channel, int amount) {
                  if (mCurrentInputDevice == sender)
-                     java_sendMidiMessage(0xE0, amount, 0, 0);
+                     java_sendMidiMessage(getDeviceName(sender), 0xE0, amount, 0);
              }
 
              @Override
@@ -306,12 +299,26 @@
          return true;
      }
 
+     public boolean disconnectInputDevice(String name) {
+         MidiInputDevice device = getInputDeviceByName(name);
+         if (device == null) {return false;}
+         device.suspend();
+         return true;
+     }
+
      public boolean connectOutputDevice(String name) {
          suspendAllOutputDevices();
 
          mCurrentOutputDevice = getOutputDeviceByName(name);
          if (mCurrentOutputDevice == null) {return false;}
          mCurrentOutputDevice.resume();
+         return true;
+     }
+
+     public boolean disconnectOutputDevice(String name) {
+         MidiOutputDevice device = getOutputDeviceByName(name);
+         if (device == null) {return false;}
+         device.suspend();
          return true;
      }
 

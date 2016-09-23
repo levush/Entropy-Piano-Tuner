@@ -72,6 +72,9 @@ public:
     MidiResult deleteDevice(MidiOutputDevicePtr device);
     MidiResult deleteDevice(const MidiDeviceID id);
 
+    MidiInDevRes findMidiInputDevice(MidiDeviceID id);
+    MidiOutDevRes findMidiOutputDevice(MidiDeviceID id);
+
 protected:
     virtual MidiResult init_impl() = 0;
     virtual MidiInDevRes createInputDevice_impl(const MidiDeviceID id) = 0;

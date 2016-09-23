@@ -1,8 +1,8 @@
 #ifndef ANDROIDMIDIMANAGER_H
 #define ANDROIDMIDIMANAGER_H
 
-#include <jni.h>
 
+#include "jniobject.h"
 #include "midimanager.h"
 
 namespace midi {
@@ -11,6 +11,14 @@ class AndroidMidiManager : public MidiManager {
 public:
     AndroidMidiManager();
     virtual ~AndroidMidiManager();
+
+    void midiInputDeviceAttached(const std::string &id);
+    void midiOutputDeviceAttached(const std::string &id);
+
+    void midiInputDeviceDetached(const std::string &id);
+    void midiOutputDeviceDetached(const std::string &id);
+
+    void receiveMidiEvent(const std::string &id, int cmd, int byte1, int byte2);
 protected:
     virtual MidiResult init_impl() override final;
     virtual MidiResult exit() override final;
@@ -25,7 +33,7 @@ protected:
     virtual MidiResult deleteDevice_impl(MidiInputDevicePtr device) override final;
     virtual MidiResult deleteDevice_impl(MidiOutputDevicePtr device) override final;
 private:
-    mutable jobject mUsbMidiDriver = 0;
+    mutable JNIObject mUsbMidiDriver = 0;
 };
 
 }  // namespace midi

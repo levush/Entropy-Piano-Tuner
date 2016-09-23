@@ -5,12 +5,20 @@
 #include <vector>
 #include <string>
 
+#include "jniobject.h"
+#include "midiprerequisites.h"
+#include "midimanager.h"
+
 namespace midi {
 
-void initAndroidManagerJNI(jobject *usbmanager);
-void releaseAndroidManagerJNI(jobject usbmanager);
+bool android_registerNatives(JNIEnv* env);
 
-std::vector<std::string> android_listAvailableInputDevices(jobject usbmanager);
+void initAndroidManagerJNI(JNIObject *usbmanager);
+void releaseAndroidManagerJNI(JNIObject usbmanager);
+
+std::vector<std::string> android_listAvailableInputDevices(JNIObject usbmanager);
+MidiManager::MidiInDevRes android_createInputDevice(const std::string &id, JNIObject usbmanager);
+MidiResult android_deleteInputDevice(const std::string &id, JNIObject usbmanager);
 
 }  // namespace midi
 

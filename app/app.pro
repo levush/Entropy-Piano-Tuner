@@ -37,7 +37,6 @@ Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
-
 #-------------------------------------------------
 #                    ALGORITHMS
 #-------------------------------------------------
