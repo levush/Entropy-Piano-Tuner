@@ -37,10 +37,14 @@ MidiResult RtMidiManager::init_impl() {
         }
     }
 
+    mMidiDeviceWatcher.start();
+
     return OK;
 }
 
 MidiResult RtMidiManager::exit() {
+    mMidiDeviceWatcher.stop();
+
     mRtMidiIn.reset();
     mRtMidiOut.reset();
 

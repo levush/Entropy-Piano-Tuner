@@ -27,6 +27,7 @@ HEADERS += \
     midiprerequisites.h \
     midibasecallback.h \
     midisystem.h \
+    mididevicewatcher.h
 
 SOURCES += \
     midimanager.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
     midideviceidentifier.cpp \
     midibasecallback.cpp \
     midisystem.cpp \
+    mididevicewatcher.cpp
 
 android {
     DEFINES += MIDI_USE_ANDROID

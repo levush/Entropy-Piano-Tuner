@@ -3,7 +3,7 @@
 namespace midi {
 
 MidiManager::MidiManager() {
-
+    addListener(this);
 }
 
 MidiManager::~MidiManager() {
@@ -22,9 +22,21 @@ MidiInputDevicePtr MidiManager::getConnectedInputDevice() const {
     return mMidiInputDevices.front();
 }
 
+MidiDeviceID MidiManager::getConnectedInputDeviceID() const {
+    MidiInputDevicePtr device(getConnectedInputDevice());
+    if (!device) {return MidiDeviceID();}
+    return device->id();
+}
+
 MidiOutputDevicePtr MidiManager::getConnectedOutputDevice() const {
     if (mMidiOutputDevices.size() == 0) {return MidiOutputDevicePtr();}
     return mMidiOutputDevices.front();
+}
+
+MidiDeviceID MidiManager::getConnectedOutputDeviceID() const {
+    MidiOutputDevicePtr device(getConnectedOutputDevice());
+    if (!device) {return MidiDeviceID();}
+    return device->id();
 }
 
 MidiManager::MidiInDevRes MidiManager::createDefaultInputDevice() {
@@ -68,6 +80,8 @@ MidiManager::MidiInDevRes MidiManager::createInputDevice(const MidiDeviceID id) 
         mMidiInputDevices.push_back(r.second);
     }
 
+    invokeCallback(&MidiManagerListener::inputDeviceCreated, r.second);
+
     return r;
 }
 
@@ -91,6 +105,8 @@ MidiManager::MidiOutDevRes MidiManager::createOutputDevice(const MidiDeviceID id
     if (r.first == OK) {
         mMidiOutputDevices.push_back(r.second);
     }
+
+    invokeCallback(&MidiManagerListener::outputDeviceCreated, r.second);
 
     return r;
 }
@@ -127,6 +143,7 @@ MidiResult MidiManager::deleteDevice(MidiInputDevicePtr device) {
     }
 
     mMidiInputDevices.erase(it_r);
+    invokeCallback(&MidiManagerListener::inputDeviceDeleted, device->id());
     return deleteDevice_impl(device);
 }
 
@@ -138,6 +155,7 @@ MidiResult MidiManager::deleteDevice(MidiOutputDevicePtr device) {
     }
 
     mMidiOutputDevices.erase(it_r);
+    invokeCallback(&MidiManagerListener::outputDeviceDeleted, device->id());
     return deleteDevice_impl(device);
 }
 
@@ -161,6 +179,32 @@ MidiResult MidiManager::deleteDevice(const MidiDeviceID id) {
     }
 
     return MIDI_DEVICE_ID_NOT_FOUND;
+}
+
+void MidiManager::inputDeviceAttached(MidiDeviceID id) {
+    if (mAutoConnectInputDevice) {
+        createInputDevice(id);
+    }
+}
+
+void MidiManager::outputDeviceAttached(MidiDeviceID id) {
+    if (mAutoConnectOutputDevice) {
+        createOutputDevice(id);
+    }
+}
+
+void MidiManager::inputDeviceDetached(MidiDeviceID id) {
+    deleteDevice(id);
+    if (mAutoConnectInputDevice) {
+        createDefaultInputDevice();
+    }
+}
+
+void MidiManager::outputDeviceDetached(MidiDeviceID id) {
+    deleteDevice(id);
+    if (mAutoConnectOutputDevice) {
+        createDefaultOutputDevice();
+    }
 }
 
 }  // namespace midi

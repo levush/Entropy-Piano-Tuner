@@ -39,28 +39,14 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
 
     inputLayout->addWidget(new QLabel(tr("Midi device")), 0, 0);
     inputLayout->addWidget(mDeviceSelection = new QComboBox(), 0, 1);
-
-    mDeviceSelection->addItem(tr("Disabled"), QVariant::fromValue(midi::MidiDeviceID()));
-
-    int curIndex = 0;
-    std::vector<midi::MidiDeviceID> inputDevices = midi::manager().listAvailableInputDevices();
-    for (midi::MidiDeviceID device : inputDevices) {
-        mDeviceSelection->addItem(QString::fromStdString(device->humanReadable()), QVariant::fromValue(device));
-        if (device->equals(midi::manager().getConnectedInputDevice()->id())) {
-            curIndex = mDeviceSelection->count() - 1;
-        }
-    }
-
-
     inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
 
-    if (inputDevices.size() == 0) {
-        this->setDisabled(true);
-    }
-    mDeviceSelection->setCurrentIndex(curIndex);
+    updateMidiInputDevices();
 
     // notify if changes are made
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
+
+    midi::manager().addListener(this);
 }
 
 void PageAudioMidi::apply() {
@@ -77,7 +63,6 @@ void PageAudioMidi::apply() {
             midi::MidiResult r;
             midi::MidiInputDevicePtr device;
             std::tie(r, device) = midi::manager().createInputDevice(midiPort);
-            device->addListener(mMidiInterface);
             if (r != midi::OK) {
                 QMessageBox::warning(this, tr("MIDI error"),
                                      tr("Could not connect to midi device '%1'. Error code: %2'").arg(
@@ -89,6 +74,29 @@ void PageAudioMidi::apply() {
             }
         }
     }
+}
+
+void PageAudioMidi::updateMidiInputDevices() {
+    bool oldBlock = mDeviceSelection->blockSignals(true);
+
+    mDeviceSelection->clear();
+    mDeviceSelection->addItem(tr("Disabled"), QVariant::fromValue(midi::MidiDeviceID()));
+
+    int curIndex = 0;
+    std::vector<midi::MidiDeviceID> inputDevices = midi::manager().listAvailableInputDevices();
+    for (midi::MidiDeviceID device : inputDevices) {
+        mDeviceSelection->addItem(QString::fromStdString(device->humanReadable()), QVariant::fromValue(device));
+        if (device->equals(midi::manager().getConnectedInputDeviceID())) {
+            curIndex = mDeviceSelection->count() - 1;
+        }
+    }
+
+    if (inputDevices.size() == 0) {
+        this->setDisabled(true);
+    }
+    mDeviceSelection->setCurrentIndex(curIndex);
+
+    mDeviceSelection->blockSignals(oldBlock);
 }
 
 }  // namespace midi

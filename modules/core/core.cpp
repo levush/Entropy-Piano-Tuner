@@ -55,6 +55,7 @@ Core::Core(ProjectManagerAdapter *projectManager,
 {
     new PianoManager;
     mMidi = PlatformToolsCore::getSingleton()->createMidiAdapter();
+    midi::manager().addListener(mMidi.get());
 
     // load algorithm plugins
 #ifdef EPT_ALL_STATIC
@@ -162,7 +163,6 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
         LogI("Could not connect to default midi device. Code: %d", r);
     } else {
         LogI("Connected to MIDI device %s", midiDevice->id()->humanReadable().c_str());
-        midiDevice->addListener(mMidi.get());
     }
 
     initAdapter->updateProgress (100);

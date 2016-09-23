@@ -42,7 +42,9 @@
 /// which is basically the time in seconds elapsed since the last event.
 ///////////////////////////////////////////////////////////////////////////////
 
-class EPT_EXTERN MidiAdapter : public midi::MidiInputListener
+class EPT_EXTERN MidiAdapter
+        : public midi::MidiInputListener
+        , public midi::MidiManagerListener
 {
 public:
 
@@ -92,6 +94,12 @@ public:
 
 
 private:
+    // MidiManagerListener
+    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override final {
+        device->addListener(this);
+    }
+
+    // MidiInputListener
     virtual void receiveMessage(int cmd, int byte1, int byte2) override final;
 };
 

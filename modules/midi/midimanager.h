@@ -11,6 +11,8 @@
 #include "midiinputdevice.h"
 #include "midioutputdevice.h"
 #include "midideviceidentifier.h"
+#include "midimanagerlistener.h"
+#include "mididevicewatcher.h"
 
 namespace midi {
 
@@ -19,11 +21,19 @@ public:
     bool mEnableInput = true;
     bool mEnableOutput = true;
 
+    bool mAutoConnectInputDevice = true;
+    bool mAutoConnectOutputDevice = true;
+
+protected:
+    // These variables can not be changed yet, only one device supported
     bool mSingleInputDevice = true;
     bool mSingleOutputDevice = true;
 };
 
-class MidiManager : protected MidiConfiguration
+class MidiManager
+        : protected MidiConfiguration
+        , public CallbackManager<MidiManagerListener>
+        , public MidiManagerListener                // Listen to itself to handle auto conenct
 {
 public:
     typedef std::pair<MidiResult, MidiInputDevicePtr> MidiInDevRes;
@@ -43,9 +53,11 @@ public:
     virtual std::vector<MidiDeviceID> listAvailableOutputDevices() const = 0;
 
     MidiInputDevicePtr getConnectedInputDevice() const;
+    MidiDeviceID getConnectedInputDeviceID() const;
     std::list<MidiInputDevicePtr> getConnectedInputDevices() const {return mMidiInputDevices;}
 
     MidiOutputDevicePtr getConnectedOutputDevice() const;
+    MidiDeviceID getConnectedOutputDeviceID() const;
     std::list<MidiOutputDevicePtr> getConnectedOutputDevices() const {return mMidiOutputDevices;}
 
     MidiInDevRes createDefaultInputDevice();
@@ -67,9 +79,20 @@ protected:
     virtual MidiResult deleteDevice_impl(MidiInputDevicePtr device) = 0;
     virtual MidiResult deleteDevice_impl(MidiOutputDevicePtr device) = 0;
 
+
+    virtual void inputDeviceAttached(MidiDeviceID id) override;
+    virtual void outputDeviceAttached(MidiDeviceID id) override;
+
+    virtual void inputDeviceDetached(MidiDeviceID id) override;
+    virtual void outputDeviceDetached(MidiDeviceID id) override;
+
+
 protected:
     std::list<MidiInputDevicePtr> mMidiInputDevices;
     std::list<MidiOutputDevicePtr> mMidiOutputDevices;
+
+    MidiDeviceWatcher mMidiDeviceWatcher;
+    friend class MidiDeviceWatcher;
 };
 
 }  // namespace midi

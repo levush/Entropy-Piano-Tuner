@@ -31,13 +31,24 @@
 
 namespace options {
 
-class PageAudioMidi : public QWidget, public ContentsWidgetInterface {
+class PageAudioMidi
+        : public QWidget
+        , public ContentsWidgetInterface
+        , public midi::MidiManagerListener {
     Q_OBJECT
 public:
     PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInterface);
 
     void apply() override final;
 
+protected:
+    void updateMidiInputDevices();
+
+    virtual void inputDeviceAttached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
+    virtual void inputDeviceDetached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
+
+    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); updateMidiInputDevices();}
+    virtual void inputDeviceDeleted(midi::MidiDeviceID id) override {MIDI_UNUSED(id); updateMidiInputDevices();}
 private:
     MidiAdapter *mMidiInterface;
 

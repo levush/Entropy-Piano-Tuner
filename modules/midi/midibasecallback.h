@@ -53,6 +53,10 @@ private:
     friend class BaseCallbackManager;
 };
 
+template <class CallbackClass>
+class CallbackInterface : public BaseCallbackInterface {
+};
+
 ///
 /// \brief Base class for managing callback interfaces
 ///
@@ -76,6 +80,7 @@ public:
         }
     }
 
+protected:
     ///
     /// \brief Adds a new listener to this manager
     /// \param listener The listener to add
@@ -107,11 +112,6 @@ public:
         }
         mAccessMutex.unlock();
     }
-     ///
-    /// \brief Returns a constant list of all listeners
-    /// \return mListeners
-    ///
-    const std::list<BaseCallbackInterface*> &listeners() const {return mListeners;}
 
 private:
     void addListenerLocked(BaseCallbackInterface *listener) {
@@ -149,7 +149,24 @@ protected:
 /// Inherit this if you want to add callback listeners of a specific type to that class
 ///
 template <class CallbackClass>
-class CallbackManager : public BaseCallbackManager {
+class CallbackManager : private BaseCallbackManager {
+public:
+    void addListener(CallbackInterface<CallbackClass> *listener) {
+        BaseCallbackManager::addListener(listener);
+    }
+
+    void removeListener(CallbackInterface<CallbackClass> *listener) {
+        BaseCallbackManager::removeListener(listener);
+    }
+
+    const std::list<CallbackClass*> listeners() const {
+        std::list<const CallbackClass*> l;
+        for (auto i : mListeners) {
+            l.push_back(static_cast<const CallbackClass*>(i));
+        }
+        return l;
+    }
+
 protected:
     ///
     /// \brief Invokes a method
@@ -159,7 +176,7 @@ protected:
     template <typename ...Args>
     void invokeCallback(std::function<void (CallbackClass&, Args...)> func, Args... args) {
         mAccessMutex.lock();
-        std::list<BaseCallbackInterface*> list_copy = listeners();
+        std::list<BaseCallbackInterface*> list_copy = mListeners;
         mAccessMutex.unlock();
         for (auto listener : list_copy)
         {
@@ -176,7 +193,7 @@ protected:
     template<typename ... Args>
     void invokeCallback(void (CallbackClass::*fptr)(Args...), Args... args) const {
         mAccessMutex.lock();
-        std::list<BaseCallbackInterface*> list_copy = listeners();
+        std::list<BaseCallbackInterface*> list_copy = mListeners;
         mAccessMutex.unlock();
         for (auto listener : list_copy)
         {
