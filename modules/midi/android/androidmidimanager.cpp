@@ -47,7 +47,7 @@ MidiResult AndroidMidiManager::init_impl() {
     return OK;
 }
 
-MidiResult AndroidMidiManager::exit() {
+MidiResult AndroidMidiManager::exit_impl() {
     releaseAndroidManagerJNI(mUsbMidiDriver);
     mUsbMidiDriver = 0;
 
@@ -76,7 +76,7 @@ AndroidMidiManager::MidiInDevRes AndroidMidiManager::createInputDevice_impl(cons
 }
 
 AndroidMidiManager::MidiOutDevRes AndroidMidiManager::createOutputDevice_impl(const MidiDeviceID id) {
-    return std::make_pair(OK, MidiOutputDevicePtr());
+    return android_createOutputDevice(id->humanReadable(), mUsbMidiDriver);
 }
 
 MidiResult AndroidMidiManager::deleteDevice_impl(MidiInputDevicePtr device) {
@@ -84,7 +84,7 @@ MidiResult AndroidMidiManager::deleteDevice_impl(MidiInputDevicePtr device) {
 }
 
 MidiResult AndroidMidiManager::deleteDevice_impl(MidiOutputDevicePtr device) {
-    return OK;
+    return android_deleteOutputDevice(device->id()->humanReadable(), mUsbMidiDriver);
 }
 
 }  // namespace midi

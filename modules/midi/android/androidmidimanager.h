@@ -21,7 +21,7 @@ public:
     void receiveMidiEvent(const std::string &id, int cmd, int byte1, int byte2);
 protected:
     virtual MidiResult init_impl() override final;
-    virtual MidiResult exit() override final;
+    virtual MidiResult exit_impl() override final;
 
     virtual std::vector<MidiDeviceID> listAvailableInputDevices() const override final;
     virtual std::vector<MidiDeviceID> listAvailableOutputDevices() const override final;

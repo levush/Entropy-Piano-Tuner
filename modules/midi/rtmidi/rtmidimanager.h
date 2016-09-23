@@ -17,7 +17,7 @@ public:
 
 protected:
     virtual MidiResult init_impl() override final;
-    virtual MidiResult exit() override final;
+    virtual MidiResult exit_impl() override final;
 
     virtual std::vector<MidiDeviceID> listAvailableInputDevices() const override final;
     virtual std::vector<MidiDeviceID> listAvailableOutputDevices() const override final;

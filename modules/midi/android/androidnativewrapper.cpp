@@ -2,6 +2,7 @@
 #include "midiprerequisites.h"
 #include "androidmidimanager.h"
 #include "androidmidiinputdevice.h"
+#include "androidmidioutputdevice.h"
 #include "jnienvironment.h"
 #include "jniobject.h"
 #include "midisystem.h"
@@ -10,61 +11,69 @@
 #include <android/log.h>
 #include <sstream>
 
-namespace midi {
-
-AndroidMidiManager &androidManager() {
-    return static_cast<AndroidMidiManager&>(manager());
+namespace {
+midi::AndroidMidiManager &androidManager() {
+    return static_cast<midi::AndroidMidiManager&>(midi::manager());
+}
 }
 
-void java_sendMidiMessage(JNIEnv *env, jobject thiz, jstring deviceName, jint eventId, jint byte1, jint byte2) {
+JNIEXPORT void java_midi_sendMidiMessage(JNIEnv *env, jobject thiz, jstring deviceName, jint eventId, jint byte1, jint byte2) {
     MIDI_UNUSED(env);
     MIDI_UNUSED(thiz);
+    __android_log_print(ANDROID_LOG_DEBUG, "MIDI", "java_sendMidiMissage: %d %d %d", eventId, byte1, byte2);
     const char* raw = env->GetStringUTFChars(deviceName, 0);
     androidManager().receiveMidiEvent(raw, eventId, byte1, byte2);
     env->ReleaseStringUTFChars(deviceName, raw);
 }
 
-void java_inputDeviceAttached(JNIEnv *env, jobject thiz, jstring deviceName) {
+JNIEXPORT void java_midi_inputDeviceAttached(JNIEnv *env, jobject thiz, jstring deviceName) {
     MIDI_UNUSED(env);
     MIDI_UNUSED(thiz);
+    __android_log_print(ANDROID_LOG_DEBUG, "MIDI", "java_inputDeviceAttached");
     const char* raw = env->GetStringUTFChars(deviceName, 0);
     androidManager().midiInputDeviceAttached(raw);
     env->ReleaseStringUTFChars(deviceName, raw);
 }
 
-void java_inputDeviceDetached(JNIEnv *env, jobject thiz, jstring deviceName) {
+JNIEXPORT void java_midi_inputDeviceDetached(JNIEnv *env, jobject thiz, jstring deviceName) {
     MIDI_UNUSED(env);
     MIDI_UNUSED(thiz);
+    __android_log_print(ANDROID_LOG_DEBUG, "MIDI", "java_inputDeviceDetached");
     const char* raw = env->GetStringUTFChars(deviceName, 0);
     androidManager().midiInputDeviceDetached(raw);
     env->ReleaseStringUTFChars(deviceName, raw);
 }
 
-void java_outputDeviceAttached(JNIEnv *env, jobject thiz, jstring deviceName) {
+JNIEXPORT void java_midi_outputDeviceAttached(JNIEnv *env, jobject thiz, jstring deviceName) {
     MIDI_UNUSED(env);
     MIDI_UNUSED(thiz);
+    __android_log_print(ANDROID_LOG_DEBUG, "MIDI", "java_outputDeviceAttached");
     const char* raw = env->GetStringUTFChars(deviceName, 0);
     androidManager().midiOutputDeviceAttached(raw);
     env->ReleaseStringUTFChars(deviceName, raw);
 }
 
-void java_outputDeviceDetached(JNIEnv *env, jobject thiz, jstring deviceName) {
+JNIEXPORT void java_midi_outputDeviceDetached(JNIEnv *env, jobject thiz, jstring deviceName) {
     MIDI_UNUSED(env);
     MIDI_UNUSED(thiz);
+    __android_log_print(ANDROID_LOG_DEBUG, "MIDI", "java_outputDeviceDetached");
     const char* raw = env->GetStringUTFChars(deviceName, 0);
     androidManager().midiOutputDeviceDetached(raw);
     env->ReleaseStringUTFChars(deviceName, raw);
 }
 
+namespace midi {
+
+
 static JNIClass g_midiClass;
 static jmethodID g_methodUsbMidiDriverAdapterInstance = 0;
 
 static JNINativeMethod jniMidiNativeMethods[] = {
-    {"java_sendMidiMessage", "(Ljava/lang/String;III)V", (void *)java_sendMidiMessage},
-    {"java_inputDeviceAttached", "(Ljava/lang/String;)V", (void *)java_inputDeviceAttached},
-    {"java_outputDeviceDetached", "(Ljava/lang/String;)V", (void *)java_outputDeviceDetached},
-    {"java_inputDeviceAttached", "(Ljava/lang/String;)V", (void *)java_inputDeviceAttached},
-    {"java_outputDeviceDetached", "(Ljava/lang/String;)V", (void *)java_outputDeviceDetached},
+    {"java_midi_sendMidiMessage", "(Ljava/lang/String;III)V", (void *)java_midi_sendMidiMessage},
+    {"java_midi_inputDeviceAttached", "(Ljava/lang/String;)V", (void *)java_midi_inputDeviceAttached},
+    {"java_midi_inputDeviceDetached", "(Ljava/lang/String;)V", (void *)java_midi_inputDeviceDetached},
+    {"java_midi_outputDeviceAttached", "(Ljava/lang/String;)V", (void *)java_midi_outputDeviceAttached},
+    {"java_midi_outputDeviceDetached", "(Ljava/lang/String;)V", (void *)java_midi_outputDeviceDetached},
 };
 
 JNIEXPORT void JNICALL initAndroidManagerJNI(JNIObject *usbmanager) {
@@ -128,6 +137,20 @@ MidiManager::MidiInDevRes android_createInputDevice(const std::string &id, JNIOb
     return std::make_pair(OK, std::make_shared<AndroidMidiInputDevice>(std::make_shared<MidiDeviceIdentifier>(INPUT, id), usbmanager));
 }
 
+MidiManager::MidiOutDevRes android_createOutputDevice(const std::string &id, JNIObject usbmanager) {
+    JNIEnv* env;
+    JNIEnvironment::env(&env);
+
+    jmethodID method = env->GetMethodID(g_midiClass->get(), "connectOutputDevice", "(Ljava/lang/String;)Z");
+    jstring jid = env->NewStringUTF(id.c_str());
+    jboolean res = env->CallBooleanMethod(usbmanager->get(), method, jid);
+    env->DeleteLocalRef(jid);
+    if (!res) {
+        return std::make_pair(MIDI_OUTPUT_DEVICE_ID_NOT_FOUND, MidiOutputDevicePtr());
+    }
+    return std::make_pair(OK, std::make_shared<AndroidMidiOutputDevice>(std::make_shared<MidiDeviceIdentifier>(OUTPUT, id), usbmanager));
+}
+
 MidiResult android_deleteInputDevice(const std::string &id, JNIObject usbmanager) {
     JNIEnv* env;
     JNIEnvironment::env(&env);
@@ -138,6 +161,20 @@ MidiResult android_deleteInputDevice(const std::string &id, JNIObject usbmanager
     env->DeleteLocalRef(jid);
     if (!res) {
         return MIDI_INPUT_DEVICE_ID_NOT_FOUND;
+    }
+    return OK;
+}
+
+MidiResult android_deleteOutputDevice(const std::string &id, JNIObject usbmanager) {
+    JNIEnv* env;
+    JNIEnvironment::env(&env);
+
+    jmethodID method = env->GetMethodID(g_midiClass->get(), "disconnectOutputDevice", "(Ljava/lang/String;)Z");
+    jstring jid = env->NewStringUTF(id.c_str());
+    jboolean res = env->CallBooleanMethod(usbmanager->get(), method, jid);
+    env->DeleteLocalRef(jid);
+    if (!res) {
+        return MIDI_OUTPUT_DEVICE_ID_NOT_FOUND;
     }
     return OK;
 }

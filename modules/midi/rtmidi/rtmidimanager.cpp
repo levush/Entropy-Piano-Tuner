@@ -42,7 +42,7 @@ MidiResult RtMidiManager::init_impl() {
     return OK;
 }
 
-MidiResult RtMidiManager::exit() {
+MidiResult RtMidiManager::exit_impl() {
     mMidiDeviceWatcher.stop();
 
     mRtMidiIn.reset();

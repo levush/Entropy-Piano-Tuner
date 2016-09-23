@@ -3,7 +3,6 @@
 namespace midi {
 
 MidiManager::MidiManager() {
-    addListener(this);
 }
 
 MidiManager::~MidiManager() {
@@ -14,7 +13,16 @@ MidiResult MidiManager::init(const MidiConfiguration &config) {
     *((MidiConfiguration*)this) = config;
 
     // init platform dependent manager
-    return init_impl();
+    auto r = init_impl();
+    addListener(this);
+
+    return r;
+}
+
+MidiResult MidiManager::exit() {
+    removeListener(this);
+
+    return exit_impl();
 }
 
 MidiInputDevicePtr MidiManager::getConnectedInputDevice() const {
@@ -178,7 +186,7 @@ MidiResult MidiManager::deleteDevice(const MidiDeviceID id) {
         }
     }
 
-    return MIDI_DEVICE_ID_NOT_FOUND;
+    return OK;
 }
 
 MidiManager::MidiInDevRes MidiManager::findMidiInputDevice(MidiDeviceID id) {

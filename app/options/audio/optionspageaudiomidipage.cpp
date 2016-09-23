@@ -91,9 +91,8 @@ void PageAudioMidi::updateMidiInputDevices() {
         }
     }
 
-    if (inputDevices.size() == 0) {
-        this->setDisabled(true);
-    }
+    setDisabled(inputDevices.size() == 0);
+
     mDeviceSelection->setCurrentIndex(curIndex);
 
     mDeviceSelection->blockSignals(oldBlock);

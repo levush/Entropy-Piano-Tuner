@@ -47,7 +47,7 @@ public:
 
 public:
     MidiResult init(const MidiConfiguration &config);
-    virtual MidiResult exit() = 0;
+    MidiResult exit();
 
     virtual std::vector<MidiDeviceID> listAvailableInputDevices() const = 0;
     virtual std::vector<MidiDeviceID> listAvailableOutputDevices() const = 0;
@@ -77,6 +77,7 @@ public:
 
 protected:
     virtual MidiResult init_impl() = 0;
+    virtual MidiResult exit_impl() = 0;
     virtual MidiInDevRes createInputDevice_impl(const MidiDeviceID id) = 0;
     virtual MidiOutDevRes createOutputDevice_impl(const MidiDeviceID id) = 0;
     virtual MidiResult deleteDevice_impl(MidiInputDevicePtr device) = 0;
