@@ -125,10 +125,12 @@ void Synthesizer::init (const int sampleRate, const int channels)
     mHammerWaveRight.assign(mSampleRate,0);
     transformer.calculateFFT(fftl,mHammerWaveLeft);
     transformer.calculateFFT(fftr,mHammerWaveRight);
-    for (int i=0; i<mSampleRate; i++)
+    // Note that the wave size may change if the sample rate is odd
+    // use data size instead
+    for (int i=0; i<mHammerWaveLeft.size(); i++)
     {
-        mHammerWaveRight[i] *= exp(-pow(i*3.0/mSampleRate,1.5));
-        mHammerWaveLeft[i] *= exp(-pow(i*3.0/mSampleRate,1.5));
+        mHammerWaveRight[i] *= exp(-pow(i*3.0/mHammerWaveLeft.size(),1.5));
+        mHammerWaveLeft[i] *= exp(-pow(i*3.0/mHammerWaveLeft.size(),1.5));
     }
 
     // Initialize reverb

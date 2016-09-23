@@ -69,7 +69,7 @@ defineReplace(depends_core) {
     contains(EPT_CONFIG, static_core) {
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
-        win32:DLLS += $$EPT_CORE_OUT_DIR/libcore.dll
+        win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
     }
 
     LIBS += -L$$EPT_CORE_OUT_DIR
