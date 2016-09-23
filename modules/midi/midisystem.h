@@ -3,12 +3,15 @@
 
 #include <memory>
 
+#include "midiprerequisites.h"
 #include "midimanager.h"
 #include "midiinputlistener.h"
 
 namespace midi {
 
-class MidiSystem
+MIDI_EXTERN_TEMPLATE class std::unique_ptr<MidiManager>;
+
+class MIDI_EXTERN MidiSystem
 {
 public:
     static MidiSystem &instance();

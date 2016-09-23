@@ -1,6 +1,8 @@
 #ifndef MIDIPREREQUISITES_H
 #define MIDIPREREQUISITES_H
 
+#include "midiexport.h"
+
 #define MIDI_UNUSED(x) {(void)x;}
 
 namespace midi {

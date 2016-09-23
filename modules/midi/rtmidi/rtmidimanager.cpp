@@ -15,6 +15,7 @@ MidiResult RtMidiManager::init_impl() {
         try {
             mRtMidiIn.reset(new RtMidiIn());
         } catch (const RtMidiError &error) {
+            MIDI_UNUSED(error);
             mRtMidiIn.reset();
             return BACKEND_CREATION_ERROR;
         }
@@ -28,6 +29,7 @@ MidiResult RtMidiManager::init_impl() {
         try {
             mRtMidiOut.reset(new RtMidiOut());
         } catch (const RtMidiError &error) {
+            MIDI_UNUSED(error);
             mRtMidiOut.reset();
             return BACKEND_CREATION_ERROR;
         }
@@ -67,6 +69,7 @@ std::vector<MidiDeviceID> RtMidiManager::listAvailableInputDevices() const {
             }
         }
     } catch (const RtMidiError& error) {
+        MIDI_UNUSED(error);
     }
 
     return devices;
@@ -88,6 +91,7 @@ std::vector<MidiDeviceID> RtMidiManager::listAvailableOutputDevices() const {
             }
         }
     } catch (const RtMidiError& error) {
+        MIDI_UNUSED(error);
     }
 
     return devices;
@@ -161,7 +165,7 @@ MidiResult RtMidiManager::clearInputQueue() {
         std::vector<unsigned char> message;
         bool clearing = true;
         int timeout = 1000;
-        while (clearing and --timeout > 0) {
+        while (clearing && --timeout > 0) {
             clearing = false;
             for (int i = 0; i < 256; ++i) {
                 std::this_thread::sleep_for(std::chrono::microseconds(2));
@@ -170,6 +174,7 @@ MidiResult RtMidiManager::clearInputQueue() {
             }
         }
     } catch (const RtMidiError &error) {
+        MIDI_UNUSED(error);
         return BACKEND_ERROR;
     }
 

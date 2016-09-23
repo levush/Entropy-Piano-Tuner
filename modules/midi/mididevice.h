@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "midiprerequisites.h"
 #include "midideviceidentifier.h"
 
 namespace midi {

@@ -6,7 +6,7 @@
 
 namespace midi {
 
-class MidiInputListener : public CallbackInterface<MidiInputListener> {
+class MIDI_EXTERN MidiInputListener : public CallbackInterface<MidiInputListener> {
 public:
     virtual void receiveMessage(int cmd, int byte1, int byte2) {
         MIDI_UNUSED(cmd);

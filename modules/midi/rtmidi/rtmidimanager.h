@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#define __LINUX_ALSA__
 #include <RtMidi/RtMidi.h>
 
+#include "midiprerequisites.h"
 #include "midimanager.h"
 
 namespace midi {

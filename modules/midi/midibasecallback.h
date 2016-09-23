@@ -25,6 +25,8 @@
 #include <functional>
 #include <mutex>
 
+#include "midiprerequisites.h"
+
 namespace midi {
 
 class BaseCallbackManager;
@@ -37,7 +39,7 @@ class BaseCallbackManager;
 ///
 /// Upon destruction it will automatically remove itself from its manager.
 ///
-class BaseCallbackInterface {
+class MIDI_EXTERN BaseCallbackInterface {
 public:
     virtual ~BaseCallbackInterface();
 
@@ -64,7 +66,7 @@ class CallbackInterface : public BaseCallbackInterface {
 ///
 /// It implements methods for adding and removing listeners.
 ///
-class BaseCallbackManager
+class MIDI_EXTERN BaseCallbackManager
 {
 public:
     ///
@@ -160,9 +162,9 @@ public:
     }
 
     const std::list<CallbackClass*> listeners() const {
-        std::list<const CallbackClass*> l;
+        std::list<CallbackClass*> l;
         for (auto i : mListeners) {
-            l.push_back(static_cast<const CallbackClass*>(i));
+            l.push_back(static_cast<CallbackClass*>(i));
         }
         return l;
     }

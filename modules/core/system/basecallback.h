@@ -61,7 +61,7 @@ private:
 ///
 /// It implements methods for adding and removing listeners.
 ///
-class BaseCallbackManager
+class EPT_EXTERN BaseCallbackManager
 {
 public:
     ///

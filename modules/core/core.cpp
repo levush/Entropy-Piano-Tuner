@@ -37,7 +37,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Core constructor
 /// \param projectManager : Pointer to the project manager
-/// \param recorderAdapter : Pointer to the recorder adapter
+/// \param recorderAdaXpter : Pointer to the recorder adapter
 /// \param playerAdapter : Pointer to the player adapter
 /// \param log : Pointer to the system log
 ///////////////////////////////////////////////////////////////////////////////

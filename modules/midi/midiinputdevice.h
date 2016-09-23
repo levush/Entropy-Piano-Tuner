@@ -4,6 +4,7 @@
 #include <memory>
 #include <list>
 
+#include "midiprerequisites.h"
 #include "mididevice.h"
 #include "midibasecallback.h"
 #include "midiinputlistener.h"

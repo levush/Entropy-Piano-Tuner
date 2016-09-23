@@ -70,7 +70,8 @@ defineReplace(depends_core) {
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/modules/midi/libmidi.so
-        win32:DLLS += $$EPT_CORE_OUT_DIR/libcore.dll
+        win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
+        win32:DLLS += $$EPT_CORE_OUT_DIR/modules/midi/midi.dll
     }
 
     LIBS += -L$$EPT_CORE_OUT_DIR

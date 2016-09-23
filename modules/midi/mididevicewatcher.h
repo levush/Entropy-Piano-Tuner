@@ -6,6 +6,7 @@
 #include <thread>
 #include <atomic>
 
+#include "midiprerequisites.h"
 #include "midideviceidentifier.h"
 
 namespace midi {

@@ -1,6 +1,7 @@
 #ifndef MIDIMANAGERLISTENER_H
 #define MIDIMANAGERLISTENER_H
 
+#include "midiprerequisites.h"
 #include "midibasecallback.h"
 #include "midideviceidentifier.h"
 #include "midiinputdevice.h"
@@ -8,7 +9,7 @@
 
 namespace midi {
 
-class MidiManagerListener : public CallbackInterface<MidiManagerListener> {
+class MIDI_EXTERN MidiManagerListener : public CallbackInterface<MidiManagerListener> {
 public:
     virtual void inputDeviceAttached(MidiDeviceID id) {MIDI_UNUSED(id);}
     virtual void outputDeviceAttached(MidiDeviceID id) {MIDI_UNUSED(id);}

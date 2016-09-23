@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "midiprerequisites.h"
 #include "midiinputdevice.h"
 
 namespace midi {

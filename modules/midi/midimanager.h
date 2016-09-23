@@ -16,7 +16,7 @@
 
 namespace midi {
 
-class MidiConfiguration {
+class MIDI_EXTERN MidiConfiguration {
 public:
     bool mEnableInput = true;
     bool mEnableOutput = true;
@@ -30,7 +30,7 @@ protected:
     bool mSingleOutputDevice = true;
 };
 
-class MidiManager
+class MIDI_EXTERN MidiManager
         : protected MidiConfiguration
         , public CallbackManager<MidiManagerListener>
         , public MidiManagerListener                // Listen to itself to handle auto conenct

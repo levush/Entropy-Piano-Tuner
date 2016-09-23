@@ -2,6 +2,7 @@
 #define MIDIDEVICEIDENTIFIER_H
 
 #include <memory>
+#include <string>
 
 #include "midiprerequisites.h"
 

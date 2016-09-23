@@ -15,6 +15,9 @@ QT += core
 CONFIG += dll
 CONFIG += c++11
 
+# just use shadowed path for output (no debug/release)
+DESTDIR = $$shadowed($$PWD)
+
 HEADERS += \
     midimanager.h \
     midimanagerlistener.h \
@@ -28,6 +31,7 @@ HEADERS += \
     midibasecallback.h \
     midisystem.h \
     mididevicewatcher.h \
+    midiexport.h
 
 SOURCES += \
     midimanager.cpp \
@@ -58,7 +62,13 @@ android {
         android/jnienvironment.cpp \
         android/androidmidioutputdevice.cpp
 
-} else:linux {
+} else:linux|win32 {
+    linux {
+        DEFINES += __LINUX_ALSA__
+    } win32 {
+        DEFINES += __WINDOWS_MM__
+        DEFINES += MIDI_BUILD
+    }
     DEFINES += MIDI_USE_RTMIDI
 
     HEADERS += \
