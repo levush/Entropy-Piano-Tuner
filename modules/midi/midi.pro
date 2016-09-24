@@ -31,7 +31,7 @@ HEADERS += \
     midibasecallback.h \
     midisystem.h \
     mididevicewatcher.h \
-    midiexport.h
+    midiexport.h \
 
 SOURCES += \
     midimanager.cpp \
@@ -61,6 +61,16 @@ android {
         android/jniobject.cpp \
         android/jnienvironment.cpp \
         android/androidmidioutputdevice.cpp
+
+} else:winrt|winphone {
+    DEFINES += MIDI_BUILD
+    DEFINES += MIDI_USE_WINRT
+
+    HEADERS += \
+        winrt/winrtmidimanager.h
+
+    SOURCES += \
+        winrt/winrtmidimanager.cpp
 
 } else:linux|win32 {
     linux {

@@ -6,6 +6,9 @@
 #elif defined(MIDI_USE_ANDROID)
     #include "android/androidmidimanager.h"
     using MidiManagerImplementation = midi::AndroidMidiManager;
+#elif defined(MIDI_USE_WINRT)
+    #include "winrt/winrtmidimanager.h"
+    using MidiManagerImplementation = midi::WinRTMidiManager;
 #endif
 
 namespace midi {
