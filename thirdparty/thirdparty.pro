@@ -17,7 +17,7 @@ fftw3 {
 
 libuv {
     !contains(EPT_THIRDPARTY_CONFIG, system_libuv) {
-        SUBDIRS += libuv/libuv
+        SUBDIRS += libuv
     }
 }
 
@@ -26,7 +26,7 @@ qwt {
 }
 
 getmemorysize {
-    SUBDIRS += getmemorysize/getmemorysize
+    SUBDIRS += getmemorysize
 }
 
 rtmidi {

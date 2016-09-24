@@ -1,7 +1,0 @@
-Author: Christoph Wick
-E-Mail: wick.chr.info@gmail.com
-Date:   03/05/2016
-
-Changed made to libuv library
- * Kept only required files
- * added libuv.pro to build libuv with qmake

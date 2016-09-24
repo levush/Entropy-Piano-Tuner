@@ -1,3 +1,9 @@
 [submodule "thirdparty/fftw3"]
 	path = thirdparty/fftw3
 	url = https://gitlab.com/chwick/fftw3-qmake.git
+[submodule "thirdparty/getmemorysize"]
+	path = thirdparty/getmemorysize
+	url = https://gitlab.com/chwick/getmemorysize.git
+[submodule "thirdparty/libuv"]
+	path = thirdparty/libuv
+	url = https://github.com/ChWick/libuv.git

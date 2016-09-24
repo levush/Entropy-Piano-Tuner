@@ -131,7 +131,7 @@ defineReplace(depends_fftw3) {
 defineReplace(depends_getmemorysize) {
     getmemorysize {
         !contains(EPT_THIRDPARTY_CONFIG, system_getmemorysize) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/getmemorysize
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR
         }
 
         LIBS += -lgetmemorysize
@@ -146,13 +146,20 @@ defineReplace(depends_getmemorysize) {
 defineReplace(depends_libuv) {
     libuv {
         !contains(EPT_THIRDPARTY_CONFIG, system_libuv) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/libuv/include
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/include
         }
 
-        LIBS += -luv
+        win32 {
+            DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/libuv/libuv.dll
+        }
+        android {
+            ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/thirdparty/libuv/libuv.so
+        }
+
+        LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/libuv -luv
 
         linux:LIBS += -ldl
-        win32|win32-g++:LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv -lkernel32 -ladvapi32
+        #win32|win32-g++:LIBS += -lws2_32 -lpsapi -liphlpapi -lshell32 -luserenv -lkernel32 -ladvapi32
     }
 
     export(LIBS)
