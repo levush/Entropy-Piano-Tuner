@@ -17,7 +17,7 @@ else:                                EPT_CONFIG += shared_algorithms no_static_a
 linux:!android: EPT_CONFIG += static_core
 
 # application packages use all static build
-macx|ios|winrt|winphone:       EPT_CONFIG += static_core static_qwt static_fftw static_algorithms
+macx|ios|winrt|winphone:       EPT_CONFIG += static_core static_algorithms
 
 # add install rules
 winrt|winphone: EPT_CONFIG += no_install

@@ -183,36 +183,33 @@ defineReplace(depends_pgmidi) {
 
 defineReplace(depends_qwt) {
     qwt {
+
+        contains(EPT_CONFIG, system_qwt) {
+        } else {
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
+            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib
+        }
+
         win32 {
             CONFIG(debug, debug|release){
                 LIBS += -lqwtd
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib/qwtd.dll
             } else {
                 LIBS += -lqwt
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib/qwt.dll
             }
         } else:macx {
-            contains(EPT_CONFIG, static_qwt) {
-                LIBS += -lqwt
-            } else {
-                # use framework on mac
-                LIBS += -F$$EPT_THIRDPARTY_OUT_DIR -framework qwt
-            }
+            # use framework on mac
+            LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib -framework qwt
         } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
             LIBS += -lqwt
         } else {
             LIBS += -lqwt-qt5
         }
 
-        contains(EPT_CONFIG, system_qwt) {
-        } else {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
-        }
 
-        contains(EPT_CONFIG, static_qwt) {
-        } else {
-            DEFINES += QWT_DLL
-            android: ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
-            win32: DLLS += $$EPT_THIRDPARTY_OUT_DIR/qwt.dll
-        }
+        DEFINES += QWT_DLL
+        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/qwt/qwt/lib/libqwt.so
     }
 
     export(INCLUDEPATH)
@@ -249,7 +246,7 @@ defineReplace(depends_timesupport) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR/timesupport
         }
 
-        LIBS += -ltimesupport
+        LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/timesupport -ltimesupport
     }
 
     export(INCLUDEPATH)

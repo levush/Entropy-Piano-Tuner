@@ -34,7 +34,7 @@ rtmidi {
 }
 
 timesupport {
-    SUBDIRS += timesupport/timesupport
+    SUBDIRS += timesupport
 }
 
 pgmidi {

@@ -7,3 +7,9 @@
 [submodule "thirdparty/libuv/libuv"]
 	path = thirdparty/libuv/libuv
 	url = https://github.com/libuv/libuv.git
+[submodule "thirdparty/timesupport"]
+	path = thirdparty/timesupport
+	url = https://gitlab.com/chwick/timesupport.git
+[submodule "thirdparty/qwt"]
+	path = thirdparty/qwt
+	url = https://github.com/ChWick/qwt.git
