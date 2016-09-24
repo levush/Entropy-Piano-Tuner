@@ -104,18 +104,18 @@ defineReplace(depends_fftw3) {
         contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
             LIBS += -lfftw3
         } else {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/fftw3/fftw3/api
+            INCLUDEPATH += $$FFTW_INCLUDE_PATHS
             LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
         }
 
         # copy dlls or shared library
-        contains(EPT_CONFIG, static_fftw) {
+        contains(FFTW_LIB_MODE_CONFIG, staticlib) {
         } else {
             win32 {
-                DLLS += $$EPT_THIRDPARTY_OUT_DIR/fftw3.dll
+                DLLS += $$FFTW_DESTDIR/fftw3.dll
             }
             android {
-                ANDROID_EXTRA_LIBS += $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+                ANDROID_EXTRA_LIBS += $$FFTW_DESTDIR/libfftw3.so
             }
         }
     }
