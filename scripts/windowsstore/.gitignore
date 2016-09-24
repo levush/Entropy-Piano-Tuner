@@ -1,0 +1,11 @@
+# Mapping files
+*Mapping.txt
+
+# created appx fiels
+*.appx
+*.appxbundle
+
+# Certificate
+*.cer
+*.pfx
+*.pvk

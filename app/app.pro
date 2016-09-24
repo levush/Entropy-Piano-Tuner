@@ -46,24 +46,33 @@ Debug:UI_DIR = debug/.ui
 # if the Constructor is called.
 # !build_pass ensures that the file generation is only executed once
 include($$EPT_ALGORITHMS_DIR/algorithms_config.pri)
-!build_pass:contains(EPT_CONFIG, static_algorithms) {
-    LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
-    INCLUDEPATH += $$EPT_ALGORITHMS_DIR
-
-    ALG_FILE_CPP = "// This file was generated automatically"
-
-    for(algBasename, ALGORITHM_NAMES) {
-        message(Adding algorithm $$algBasename)
-        LIBS += -l$$algBasename
-
-        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
-        ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
-    }
-
+contains(EPT_CONFIG, static_algorithms) {
+    # define the output c++ file that will be added to the source,
+    # but only created once during the build_pass
     OUT_FILE = $$OUT_PWD/algorithms.gen.cpp
 
-    write_file($$OUT_FILE, ALG_FILE_CPP)
+    # create the static cpp file that initilizes all algorithms
+    !build_pass {
+        ALG_FILE_CPP = "// This file was generated automatically"
+
+        for(algBasename, ALGORITHM_NAMES) {
+            message(Adding algorithm $$algBasename)
+
+            ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}$${LITERAL_HASH}include \"$${algBasename}/$${algBasename}.h\"")
+            ALG_FILE_CPP = $$join(ALG_FILE_CPP,,,"$${escape_expand(\n)}static $${algBasename}::Factory $${algBasename}_FACTORY($${algBasename}::getInitFactoryDescription());$${escape_expand(\n)}")
+        }
+
+
+        write_file($$OUT_FILE, ALG_FILE_CPP)
+    }
+
+    # add to sources, and add include/library paths and libs
     SOURCES += $$OUT_FILE
+    INCLUDEPATH += $$EPT_ALGORITHMS_DIR
+    LIBS += -L$$EPT_ALGORITHMS_OUT_DIR
+    for(algBasename, ALGORITHM_NAMES) {
+        LIBS += -l$$algBasename
+    }
 }
 
 
@@ -146,20 +155,24 @@ win32 {
 }
 
 winrt {
+    WINRT_MANIFEST.identity = "28869HayeHinrichsen.EntropyPianoTuner"
+    WINRT_MANIFEST.publisherid = "CN=1A48CBB8-649C-4CBD-908D-A767026541C7"
+    WINRT_MANIFEST.name = "Entropy Piano Tuner"
+    WINRT_MANIFEST.publisher = "Haye Hinrichsen"
     WINRT_MANIFEST.logo_large = $$EPT_APPSTORE_DIR/icons/winrt/icon_150x150.png
     WINRT_MANIFEST.logo_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_30x30.png
     WINRT_MANIFEST.logo_store = $$EPT_APPSTORE_DIR/icons/winrt/icon_50x50.png
     WINRT_MANIFEST.logo_splash = $$EPT_APPSTORE_DIR/splash/splash_620x300.png
     WINRT_MANIFEST.background = $${LITERAL_HASH}e5e5e5
-    WINRT_MANIFEST.publisher = "Haye Hinrichsen"
-    #winphone:equals(WINSDK_VER, 8.1) {
-        WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-        WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
-    #} else {
-    #}
-    CONFIG += windeployqt
+    WINRT_MANIFEST.version = 1.0.0.0
+    WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
+    WINRT_MANIFEST.capabilities_device = microphone
+
     WINDEPLOYQT_OPTIONS = -qmldir $$shell_quote($$system_path($$_PRO_FILE_PWD_))
+
+    CONFIG += windeployqt
 } else:winphone {
 } else:win32 {
     # windows desktop
