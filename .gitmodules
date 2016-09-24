@@ -1,0 +1,3 @@
+[submodule "thirdparty/fftw3"]
+	path = thirdparty/fftw3
+	url = https://gitlab.com/chwick/fftw3-qmake.git
