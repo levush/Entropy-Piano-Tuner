@@ -4,6 +4,6 @@
 [submodule "thirdparty/getmemorysize"]
 	path = thirdparty/getmemorysize
 	url = https://gitlab.com/chwick/getmemorysize.git
-[submodule "thirdparty/libuv"]
-	path = thirdparty/libuv
-	url = https://github.com/ChWick/libuv.git
+[submodule "thirdparty/libuv/libuv"]
+	path = thirdparty/libuv/libuv
+	url = https://github.com/libuv/libuv.git

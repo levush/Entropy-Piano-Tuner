@@ -134,7 +134,7 @@ defineReplace(depends_getmemorysize) {
             INCLUDEPATH += $$EPT_THIRDPARTY_DIR
         }
 
-        LIBS += -lgetmemorysize
+        LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/getmemorysize -lgetmemorysize
     }
 
     export(INCLUDEPATH)
@@ -146,7 +146,7 @@ defineReplace(depends_getmemorysize) {
 defineReplace(depends_libuv) {
     libuv {
         !contains(EPT_THIRDPARTY_CONFIG, system_libuv) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/include
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/libuv/libuv/include
         }
 
         win32 {
