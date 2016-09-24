@@ -22,15 +22,11 @@ libuv {
 }
 
 qwt {
-    !contains(EPT_THIRDPARTY_CONFIG, system_qwt):SUBDIRS += qwt/qwt
+    !contains(EPT_THIRDPARTY_CONFIG, system_qwt):SUBDIRS += qwt-lib
 }
 
 getmemorysize {
     SUBDIRS += getmemorysize
-}
-
-rtmidi {
-    SUBDIRS += rtmidi/RtMidi
 }
 
 timesupport {

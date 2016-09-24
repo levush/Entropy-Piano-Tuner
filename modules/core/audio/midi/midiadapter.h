@@ -26,7 +26,7 @@
 
 #include "prerequisites.h"
 
-#include "midi/midisystem.h"
+#include "umidi/midisystem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Adapter class for reading an externally connected MIDI keyboard.
@@ -43,8 +43,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class EPT_EXTERN MidiAdapter
-        : public midi::MidiInputListener
-        , public midi::MidiManagerListener
+        : public umidi::MidiInputListener
+        , public umidi::MidiManagerListener
 {
 public:
 
@@ -95,7 +95,7 @@ public:
 
 private:
     // MidiManagerListener
-    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override final {
+    virtual void inputDeviceCreated(umidi::MidiInputDevicePtr device) override final {
         device->addListener(this);
     }
 

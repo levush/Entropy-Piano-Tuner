@@ -34,7 +34,7 @@ namespace options {
 class PageAudioMidi
         : public QWidget
         , public ContentsWidgetInterface
-        , public midi::MidiManagerListener {
+        , public umidi::MidiManagerListener {
     Q_OBJECT
 public:
     PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInterface);
@@ -45,11 +45,11 @@ protected slots:
     void updateMidiInputDevices();
 
 protected:
-    virtual void inputDeviceAttached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
-    virtual void inputDeviceDetached(midi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceAttached(umidi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceDetached(umidi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
 
-    virtual void inputDeviceCreated(midi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
-    virtual void inputDeviceDeleted(midi::MidiDeviceID id) override {MIDI_UNUSED(id) QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceCreated(umidi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    virtual void inputDeviceDeleted(umidi::MidiDeviceID id) override {MIDI_UNUSED(id) QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
 private:
     MidiAdapter *mMidiInterface;
 

@@ -72,14 +72,14 @@ defineReplace(depends_core) {
         win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
     }
 
-    android:ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/modules/midi/libmidi.so
-    win32:DLLS += $$EPT_ROOT_OUT_DIR/modules/midi/midi.dll
+    android:ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/modules/umidi/libumidi.so
+    win32:DLLS += $$EPT_ROOT_OUT_DIR/modules/umidi/umidi.dll
 
     LIBS += -L$$EPT_CORE_OUT_DIR
     LIBS += -lcore
-    LIBS += -L$$EPT_ROOT_OUT_DIR/modules/midi -lmidi
+    LIBS += -L$$EPT_ROOT_OUT_DIR/modules/umidi -lumidi
 
-    INCLUDEPATH += $$EPT_CORE_DIR
+    INCLUDEPATH += $$EPT_CORE_DIR $$EPT_MODULES_DIR/umidi
 
     export(DLLS)
     export(INCLUDEPATH)
@@ -186,21 +186,21 @@ defineReplace(depends_qwt) {
 
         contains(EPT_CONFIG, system_qwt) {
         } else {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt
-            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib
+            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib
         }
 
         win32 {
             CONFIG(debug, debug|release){
                 LIBS += -lqwtd
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib/qwtd.dll
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/qwtd.dll
             } else {
                 LIBS += -lqwt
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib/qwt.dll
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/qwt.dll
             }
         } else:macx {
             # use framework on mac
-            LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt/qwt/lib -framework qwt
+            LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib -framework qwt
         } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
             LIBS += -lqwt
         } else {
@@ -209,7 +209,7 @@ defineReplace(depends_qwt) {
 
 
         DEFINES += QWT_DLL
-        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/qwt/qwt/lib/libqwt.so
+        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/qwt-lib/libqwt.so
     }
 
     export(INCLUDEPATH)
@@ -217,25 +217,6 @@ defineReplace(depends_qwt) {
     export(DEFINES)
     export(DLLS)
     export(ANDROID_EXTRA_LIBS)
-
-    return(true)
-}
-
-defineReplace(depends_rtmidi) {
-    rtmidi {
-        !contains(EPT_THIRDPARTY_CONFIG, system_rtmidi) {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/rtmidi
-        }
-
-        LIBS += -lRtMidi
-
-        # additional libs for platforms
-        win32: LIBS+= -lwinmm
-        linux: LIBS += -lasound
-    }
-
-    export(INCLUDEPATH)
-    export(LIBS)
 
     return(true)
 }

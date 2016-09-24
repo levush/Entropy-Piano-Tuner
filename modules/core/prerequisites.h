@@ -39,7 +39,7 @@
 using uint = unsigned int;
 #endif
 
-#include "midi/midiexport.h"
+#include "umidi/midiexport.h"
 
 #if defined(_MSC_VER)
 // msvc compiler required to implement template classes

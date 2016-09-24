@@ -24,7 +24,7 @@ DEFINES += EPT_BUILD_CORE
 DESTDIR = $$EPT_CORE_OUT_DIR
 
 # basic include dirs
-INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$EPT_MODULES_DIR $$PWD
+INCLUDEPATH += $$EPT_ROOT_DIR $$EPT_BASE_DIR $$EPT_MODULES_DIR $$PWD $$EPT_MODULES_DIR/umidi
 
 # Dependencies
 $$depends_dirent()
@@ -33,7 +33,7 @@ $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_timesupport()
 
-LIBS += -L$$EPT_ROOT_OUT_DIR/modules/midi -lmidi
+LIBS += -L$$EPT_ROOT_OUT_DIR/modules/umidi -lumidi
 
 # debugging flags: all warnings and check arrays, etc
 linux-g++*:!android {

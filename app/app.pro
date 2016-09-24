@@ -97,7 +97,6 @@ contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
 $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_qwt()
-$$depends_rtmidi()
 $$depends_timesupport()
 
 #-------------------------------------------------

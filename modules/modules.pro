@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 SUBDIRS = \
     algorithms \
     core \
-    midi \
+    umidi \
 
 algorithms.depends = core
-core.depends = midi
+core.depends = umidi
