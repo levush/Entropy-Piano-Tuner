@@ -40,3 +40,7 @@ timesupport {
 pgmidi {
     SUBDIRS += pgmidi/PgMidi
 }
+
+winrtbridge {
+    SUBDIRS += winrtbridge
+}

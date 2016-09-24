@@ -249,3 +249,15 @@ defineReplace(depends_timesupport) {
 
     return(true)
 }
+
+defineReplace(depends_winrtbridge) {
+    winrtbridge {
+        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/winrtbridge
+        LIBS += -lwinrtbridge
+    }
+
+    export(INCLUDEPATH)
+    export(LIBS)
+
+    return(true)
+}

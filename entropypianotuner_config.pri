@@ -41,13 +41,14 @@ EPT_TUTORIAL_DIR = $$EPT_ROOT_DIR/tutorial
 
 EPT_ROOT_OUT_DIR = $$shadowed($$PWD)
 EPT_THIRDPARTY_OUT_DIR = $$shadowed($$PWD)/lib
-EPT_CORE_OUT_DIR = $$shadowed($$PWD)/lib
+EPT_TARGET_DIR = $$shadowed($$PWD)/target
+EPT_CORE_OUT_DIR = $$EPT_ROOT_OUT_DIR/lib
 EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 
 EPT_PLATFORMS_DIR = $$EPT_APP_DIR/platforms
 EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_PLATFORMS_DIR/android
 
-# Install paths if not defines
+# Install paths if not defined
 isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=bin
 isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=shared
 isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
@@ -62,7 +63,7 @@ contains(EPT_CONFIG, shared_algorithms) {
 }
 
 winrt|winphone {
-    CONFIG += timesupport
+    CONFIG += timesupport winrtbridge
 }
 else:win32 {
     CONFIG += timesupport rtmidi dirent
