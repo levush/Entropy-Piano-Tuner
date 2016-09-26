@@ -5,19 +5,12 @@ else:return()
 #------------------------------------------------
 # Global config
 
-CONFIG += c++11
-
 # include example algorithm by default in debug builts
 
 # on mobile platforms and mac/ios  use static algorithm build
-android|ios|winrt|winphone|macx|ios: EPT_CONFIG += no_shared_algorithms static_algorithms
-else:                                EPT_CONFIG += shared_algorithms no_static_algorithms
+android|ios|winrt|winphone|macx|ios: EPT_CONFIG += no_shared_algorithms static_algorithms static_core no_shared_core
+else:                                EPT_CONFIG += shared_algorithms no_static_algorithms shared_core no_static_core
 
-# on linux build static core
-linux:!android: EPT_CONFIG += static_core
-
-# application packages use all static build
-macx|ios|winrt|winphone:       EPT_CONFIG += static_core static_algorithms
 
 # add install rules
 winrt|winphone: EPT_CONFIG += no_install
@@ -100,12 +93,6 @@ packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 
 #--------------------------------------------------
 # global settings
-
-# additional debug flags
-linux-g++*:!android {
-    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
-}
-
 
 # config
 contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1" "EPT_STATIC_ALGORITHMS=1"

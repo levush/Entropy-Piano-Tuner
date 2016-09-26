@@ -10,3 +10,5 @@ SUBDIRS = \
 
 app.depends = modules thirdparty
 modules.depends = thirdparty
+
+DISTFILES += .qmake.conf
