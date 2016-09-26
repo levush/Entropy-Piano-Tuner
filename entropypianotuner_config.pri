@@ -10,14 +10,11 @@ CONFIG += c++11
 # include example algorithm by default in debug builts
 
 # on mobile platforms and mac/ios  use static algorithm build
-android|ios|winrt|winphone|macx|ios: EPT_CONFIG += no_shared_algorithms static_algorithms
-else:                                EPT_CONFIG += shared_algorithms no_static_algorithms
-
-# on linux build static core
-linux:!android: EPT_CONFIG += static_core
+android|ios|winrt|winphone|macx|ios: EPT_CONFIG += no_shared_algorithms static_algorithms static_core no_shared_core
+else:                                EPT_CONFIG += shared_algorithms no_static_algorithms shared_core no_static_core
 
 # application packages use all static build
-macx|ios|winrt|winphone:       EPT_CONFIG += static_core static_qwt static_fftw static_algorithms
+macx|ios|winrt|winphone:       EPT_CONFIG += static_qwt static_fftw static_algorithms
 
 # add install rules
 winrt|winphone: EPT_CONFIG += no_install
