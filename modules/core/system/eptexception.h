@@ -23,7 +23,7 @@
 #include <exception>
 #include <assert.h>
 #include <string>
-#include "prerequisites.h"
+#include "../prerequisites.h"
 #include "../config.h"
 
 // Check for assert mode

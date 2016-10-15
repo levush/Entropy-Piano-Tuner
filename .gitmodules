@@ -10,9 +10,6 @@
 [submodule "thirdparty/timesupport"]
 	path = thirdparty/timesupport
 	url = https://gitlab.com/chwick/timesupport.git
-[submodule "modules/umidi"]
-	path = modules/umidi
-	url = https://gitlab.com/entropytuner/umidi.git
 [submodule "thirdparty/qwt-lib"]
 	path = thirdparty/qwt-lib
 	url = https://gitlab.com/chwick/qwt-lib.git

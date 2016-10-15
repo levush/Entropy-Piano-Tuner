@@ -26,8 +26,6 @@
 
 #include "prerequisites.h"
 
-#include "umidi/midisystem.h"
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Adapter class for reading an externally connected MIDI keyboard.
 ///
@@ -43,8 +41,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class EPT_EXTERN MidiAdapter
-        : public umidi::MidiInputListener
-        , public umidi::MidiManagerListener
 {
 public:
 
@@ -90,17 +86,10 @@ public:
 
     // The following functions have to be public because of access from iosnativewrapper
     static MidiEvent byteToEvent (int byte); ///< Convert MIDI code to MidiEvent
+
     void send (Data &data); ///< Send new MIDI data to the messaging system
 
-
-private:
-    // MidiManagerListener
-    virtual void inputDeviceCreated(umidi::MidiInputDevicePtr device) override final {
-        device->addListener(this);
-    }
-
-    // MidiInputListener
-    virtual void receiveMessage(int cmd, int byte1, int byte2) override final;
+    void receiveMessage(int cmd, int byte1, int byte2, double timestamp = 0);
 };
 
 typedef std::shared_ptr<MidiAdapter> MidiAdapterPtr;

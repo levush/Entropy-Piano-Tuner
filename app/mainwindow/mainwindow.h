@@ -25,6 +25,8 @@
 #include <QToolButton>
 #include <memory>
 
+#include <QtMidi/qmidiautoconnector.h>
+
 #include "prerequisites.h"
 
 #include "core/config.h"
@@ -92,6 +94,13 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     Core *getCore() {return mCore;}
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief Getter function for the midi auto connector
+    /// \return mMidiAutoConnector
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    QMidiAutoConnector *getMidiAutoConnector() {return mMidiAutoConnector;}
 
 protected:
     ///////////////////////////////////////////////////////////////////////////////
@@ -176,6 +185,9 @@ private:
 
     /// Tool buttons for all modes.
     QToolButton *mModeToolButtons[OperationMode::MODE_COUNT];
+
+    /// Instance of the midi auto connector
+    QMidiAutoConnector *mMidiAutoConnector;
 
 signals:
     void modeChanged(OperationMode mode);
@@ -339,6 +351,9 @@ public slots:
 
 private slots:
     void onVersionUpdate(VersionInformation information);
+
+    void onMidiInputDeviceCreated(const QMidiInput *input);
+    void onMidiMessageReceived(const QMidiMessage &message);
 };
 
 #endif // MAINWINDOW_H

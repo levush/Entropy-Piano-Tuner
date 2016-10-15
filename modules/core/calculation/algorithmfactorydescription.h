@@ -23,7 +23,7 @@
 #include <string>
 #include <map>
 
-#include "prerequisites.h"
+#include "../prerequisites.h"
 
 class EPT_EXTERN AlgorithmFactoryDescription
 {

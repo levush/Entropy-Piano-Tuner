@@ -21,17 +21,12 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
-
-#include "umidi/midisystem.h"
-#include "umidi/midimanager.h"
-
-Q_DECLARE_SMART_POINTER_METATYPE(std::shared_ptr)
-Q_DECLARE_METATYPE(umidi::MidiDeviceID)
+#include <QCheckBox>
 
 namespace options {
 
-PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInterface)
-    : mMidiInterface(midiInterface) {
+PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *autoConnector)
+    : mAutoConnector(autoConnector) {
     QGridLayout *inputLayout = new QGridLayout;
     this->setLayout(inputLayout);
 
@@ -39,39 +34,38 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInte
 
     inputLayout->addWidget(new QLabel(tr("Midi device")), 0, 0);
     inputLayout->addWidget(mDeviceSelection = new QComboBox(), 0, 1);
+
+    auto acCheckBox = new QCheckBox(tr("Auto connect"), this);
+    acCheckBox->setChecked(mAutoConnector->isAutoConnectEnabled(QMidi::MidiInput));
+    connect(acCheckBox, &QCheckBox::toggled, mAutoConnector, &QMidiAutoConnector::setAutoConnectToInput);
+    connect(mAutoConnector, &QMidiAutoConnector::autoConnectToInputChanged, acCheckBox, &QCheckBox::setChecked);
+
+    inputLayout->addWidget(acCheckBox, 1, 0);
+
     inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
+
 
     updateMidiInputDevices();
 
     // notify if changes are made
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
 
-    umidi::manager().addListener(this);
+    // create system notifier to listen to new devices
+    auto systemNotifier = new QMidiSystemNotifier(this);
+    connect(systemNotifier, &QMidiSystemNotifier::inputDeviceAttached, this, &PageAudioMidi::inputDeviceAttached);
+    connect(systemNotifier, &QMidiSystemNotifier::inputDeviceDetached, this, &PageAudioMidi::inputDeviceDetached);
+
+    connect(systemNotifier, &QMidiSystemNotifier::inputDeviceCreated, this, &PageAudioMidi::inputDeviceCreated);
 }
 
 void PageAudioMidi::apply() {
     if (mDeviceSelection->currentIndex() >= 0) {
-        umidi::MidiDeviceID midiPort = mDeviceSelection->currentData().value<umidi::MidiDeviceID>();
-        if (!midiPort) {
-            umidi::MidiResult r = umidi::manager().deleteAllInputDevices();
-            if (r != umidi::OK) {
-                LogW("Could not delete all input devices. Code: %d", r);
-            } else {
-                LogI("Disconnected from midi devices.");
-            }
+        QMidiDeviceInfo info = mDeviceSelection->currentData().value<QMidiDeviceInfo>();
+        if (info.isNull()) {
+            mAutoConnector->setAutoConnect(QMidi::MidiInput, false);
+            mAutoConnector->disconnectFromAll(QMidi::MidiInput);
         } else {
-            umidi::MidiResult r;
-            umidi::MidiInputDevicePtr device;
-            std::tie(r, device) = umidi::manager().createInputDevice(midiPort);
-            if (r != umidi::OK) {
-                QMessageBox::warning(this, tr("MIDI error"),
-                                     tr("Could not connect to midi device '%1'. Error code: %2'").arg(
-                                         QString::fromStdString(midiPort->humanReadable()),
-                                         QString::number(r)));
-                LogW("Could not connect to midi device '%s'. Error code: %d", midiPort->humanReadable().c_str(), r);
-            } else {
-                LogI("Connected to midi device '%s'", midiPort->humanReadable().c_str());
-            }
+            mAutoConnector->connectWith(info, QMidi::MidiInput);
         }
     }
 }
@@ -80,13 +74,16 @@ void PageAudioMidi::updateMidiInputDevices() {
     bool oldBlock = mDeviceSelection->blockSignals(true);
 
     mDeviceSelection->clear();
-    mDeviceSelection->addItem(tr("Disabled"), QVariant::fromValue(umidi::MidiDeviceID()));
+    mDeviceSelection->addItem(tr("Disabled"), QVariant::fromValue(QMidiDeviceInfo()));
 
     int curIndex = 0;
-    std::vector<umidi::MidiDeviceID> inputDevices = umidi::manager().listAvailableInputDevices();
-    for (umidi::MidiDeviceID device : inputDevices) {
-        mDeviceSelection->addItem(QString::fromStdString(device->humanReadable()), QVariant::fromValue(device));
-        if (device->equals(umidi::manager().getConnectedInputDeviceID())) {
+    auto inputDevices = QMidiDeviceInfo::availableDevices(QMidi::MidiInput);
+    const QMidiInput *connectedDevice = mAutoConnector->device<QMidiInput>();
+    QMidiDeviceInfo connectedDeviceInfo = (connectedDevice) ? connectedDevice->deviceInfo() : QMidiDeviceInfo();
+
+    for (const QMidiDeviceInfo &info : inputDevices) {
+        mDeviceSelection->addItem(info.deviceName(), QVariant::fromValue(info));
+        if (info == connectedDeviceInfo) {
             curIndex = mDeviceSelection->count() - 1;
         }
     }
@@ -96,6 +93,19 @@ void PageAudioMidi::updateMidiInputDevices() {
     mDeviceSelection->setCurrentIndex(curIndex);
 
     mDeviceSelection->blockSignals(oldBlock);
+}
+
+void PageAudioMidi::inputDeviceCreated(const QMidiInput *d) {
+    if (mDeviceSelection->currentData().value<QMidiDeviceInfo>() == d->deviceInfo()) {
+        return;
+    }
+
+    for (int i = 0; i < mDeviceSelection->count(); ++i) {
+        if (mDeviceSelection->itemData(i).value<QMidiDeviceInfo>() == d->deviceInfo()) {
+            mDeviceSelection->setCurrentIndex(i);
+            break;
+        }
+    }
 }
 
 }  // namespace midi

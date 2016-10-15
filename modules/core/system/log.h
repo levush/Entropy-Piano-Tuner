@@ -24,7 +24,7 @@
 #include <fstream>
 #include <cstdio>
 #include "../config.h"
-#include "prerequisites.h"
+#include "../prerequisites.h"
 
 
 #define ERROR_BUFFER_SIZE 1024

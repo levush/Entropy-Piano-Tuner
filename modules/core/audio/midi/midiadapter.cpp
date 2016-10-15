@@ -66,7 +66,7 @@ void MidiAdapter::send (Data &data)
     MessageHandler::send<MessageMidiEvent>(data);
 }
 
-void MidiAdapter::receiveMessage(int cmd, int byte1, int byte2) {
-    Data data = {byteToEvent(cmd), byte1, byte2, 0.0};
+void MidiAdapter::receiveMessage(int cmd, int byte1, int byte2, double timestamp) {
+    Data data = {byteToEvent(cmd), byte1, byte2, timestamp};
     send(data);
 }

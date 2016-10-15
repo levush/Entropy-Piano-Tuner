@@ -7,7 +7,7 @@
 #-------------------------------------------------
 
 # Qt modules
-QT          += core gui multimedia widgets opengl concurrent
+QT          += core gui multimedia widgets opengl concurrent midi
 qtHaveModule(svg):QT += svg
 android:QT  += androidextras
 

@@ -22,6 +22,8 @@
 
 #include <QWidget>
 #include <QComboBox>
+#include <QtMidi/qmidisystemnotifier.h>
+#include <QtMidi/qmidiautoconnector.h>
 
 #include "prerequisites.h"
 
@@ -33,25 +35,22 @@ namespace options {
 
 class PageAudioMidi
         : public QWidget
-        , public ContentsWidgetInterface
-        , public umidi::MidiManagerListener {
+        , public ContentsWidgetInterface {
     Q_OBJECT
 public:
-    PageAudioMidi(OptionsDialog *optionsDialog, MidiAdapter *midiInterface);
+    PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *autoConnector);
 
     void apply() override final;
 
 protected slots:
     void updateMidiInputDevices();
 
-protected:
-    virtual void inputDeviceAttached(umidi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
-    virtual void inputDeviceDetached(umidi::MidiDeviceID id) override {MIDI_UNUSED(id); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
+    void inputDeviceAttached(const QMidiDeviceInfo &) {updateMidiInputDevices();}
+    void inputDeviceDetached(const QMidiDeviceInfo &) {updateMidiInputDevices();}
+    void inputDeviceCreated(const QMidiInput *d);
 
-    virtual void inputDeviceCreated(umidi::MidiInputDevicePtr device) override {MIDI_UNUSED(device); QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
-    virtual void inputDeviceDeleted(umidi::MidiDeviceID id) override {MIDI_UNUSED(id) QMetaObject::invokeMethod(this, "updateMidiInputDevices");}
 private:
-    MidiAdapter *mMidiInterface;
+    QMidiAutoConnector *mAutoConnector;
 
     QComboBox *mDeviceSelection;
 };

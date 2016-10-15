@@ -20,7 +20,7 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-#include "prerequisites.h"
+#include "../prerequisites.h"
 #include "../system/simplethreadhandler.h"
 #include "../system/log.h"
 #include "../piano/piano.h"

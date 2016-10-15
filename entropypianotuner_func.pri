@@ -72,14 +72,10 @@ defineReplace(depends_core) {
         win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
     }
 
-    android:ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/modules/umidi/libumidi.so
-    win32:DLLS += $$EPT_ROOT_OUT_DIR/modules/umidi/umidi.dll
-
     LIBS += -L$$EPT_CORE_OUT_DIR
     LIBS += -lcore
-    LIBS += -L$$EPT_ROOT_OUT_DIR/modules/umidi -lumidi
 
-    INCLUDEPATH += $$EPT_CORE_DIR $$EPT_MODULES_DIR/umidi
+    INCLUDEPATH += $$EPT_CORE_DIR
 
     export(DLLS)
     export(INCLUDEPATH)

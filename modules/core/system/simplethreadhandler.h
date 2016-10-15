@@ -29,9 +29,9 @@
 #include <atomic>
 #include <chrono>
 
-#include "prerequisites.h"
-#include "log.h"
-#include "eptexception.h"
+#include "../prerequisites.h"
+#include "../system/log.h"
+#include "../system/eptexception.h"
 
 #define CHECK_CANCEL_THREAD { if (cancelThread()) {return;} }
 #define CANCEL_THREAD       { setCancelThread(true); return; }

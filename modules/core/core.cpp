@@ -54,8 +54,7 @@ Core::Core(ProjectManagerAdapter *projectManager,
       mSignalAnalyzer(recorderAdapter)
 {
     new PianoManager;
-    mMidi = PlatformToolsCore::getSingleton()->createMidiAdapter();
-    umidi::manager().addListener(mMidi.get());
+    mMidi = std::make_shared<MidiAdapter>();
 
     // load algorithm plugins
 #ifdef EPT_ALL_STATIC
@@ -147,23 +146,8 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
     mRecordingManager.init();
 
     initAdapter->updateProgress (75);   // Initialze the MIDI system
-    umidi::MidiConfiguration config;
-    config.mEnableOutput = false;
-    umidi::MidiResult r = umidi::manager().init(config);
-    if (r != umidi::OK) {
-        LogW("Midi backend could not be initialized. Error code: %d", r);
-    } else {
-        LogI("MIDI backend initialized.")
-    }
 
     initAdapter->updateProgress (87);   // Open the default MIDI port
-    umidi::MidiInputDevicePtr midiDevice;
-    std::tie(r, midiDevice) = umidi::manager().createDefaultInputDevice();
-    if (r != umidi::OK) {
-        LogI("Could not connect to default midi device. Code: %d", r);
-    } else {
-        LogI("Connected to MIDI device %s", midiDevice->id()->humanReadable().c_str());
-    }
 
     initAdapter->updateProgress (100);
 
@@ -185,11 +169,6 @@ void Core::exit()
 {
     if (not mInitialized) return;
     stop();
-
-    auto r = umidi::manager().exit();
-    if (r != umidi::OK) {
-        LogW("Midi backend could not be closed. Error code: %d", r);
-    }
 
     mRecordingManager.exit();
     if (mSoundGenerator) {mSoundGenerator->exit();}
