@@ -42,12 +42,15 @@ public:
 
     void apply() override final;
 
+signals:
+    void inputEventStrenghUpdate(int value);
 protected slots:
     void updateMidiInputDevices();
 
     void inputDeviceAttached(const QMidiDeviceInfo &) {updateMidiInputDevices();}
     void inputDeviceDetached(const QMidiDeviceInfo &) {updateMidiInputDevices();}
     void inputDeviceCreated(const QMidiInput *d);
+    void inputEventReceived(const QMidiMessage &m);
 
 private:
     QMidiAutoConnector *mAutoConnector;

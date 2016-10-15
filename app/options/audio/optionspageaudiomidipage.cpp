@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QCheckBox>
+#include <QProgressBar>
 
 namespace options {
 
@@ -39,8 +40,13 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *a
     acCheckBox->setChecked(mAutoConnector->isAutoConnectEnabled(QMidi::MidiInput));
     connect(acCheckBox, &QCheckBox::toggled, mAutoConnector, &QMidiAutoConnector::setAutoConnectToInput);
     connect(mAutoConnector, &QMidiAutoConnector::autoConnectToInputChanged, acCheckBox, &QCheckBox::setChecked);
-
     inputLayout->addWidget(acCheckBox, 1, 0);
+
+    inputLayout->addWidget(new QLabel(tr("Test input")), 2, 0);
+    auto inputStrengthBar = new QProgressBar(this);
+    inputLayout->addWidget(inputStrengthBar, 2, 1);
+    inputStrengthBar->setRange(0, 127);
+    connect(this, &PageAudioMidi::inputEventStrenghUpdate, inputStrengthBar, &QProgressBar::setValue);
 
     inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
 
@@ -55,6 +61,9 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *a
     connect(systemNotifier, &QMidiSystemNotifier::inputDeviceAttached, this, &PageAudioMidi::inputDeviceAttached);
     connect(systemNotifier, &QMidiSystemNotifier::inputDeviceDetached, this, &PageAudioMidi::inputDeviceDetached);
 
+    for (const QMidiInput* input : mAutoConnector->devices<QMidiInput>()) {
+        connect(input, &QMidiInput::notify, this, &PageAudioMidi::inputEventReceived);
+    }
     connect(systemNotifier, &QMidiSystemNotifier::inputDeviceCreated, this, &PageAudioMidi::inputDeviceCreated);
 }
 
@@ -96,6 +105,7 @@ void PageAudioMidi::updateMidiInputDevices() {
 }
 
 void PageAudioMidi::inputDeviceCreated(const QMidiInput *d) {
+    connect(d, &QMidiInput::notify, this, &PageAudioMidi::inputEventReceived);
     if (mDeviceSelection->currentData().value<QMidiDeviceInfo>() == d->deviceInfo()) {
         return;
     }
@@ -105,6 +115,15 @@ void PageAudioMidi::inputDeviceCreated(const QMidiInput *d) {
             mDeviceSelection->setCurrentIndex(i);
             break;
         }
+    }
+}
+
+void PageAudioMidi::inputEventReceived(const QMidiMessage &m) {
+    if (m.command() == 0x8) {
+        emit inputEventStrenghUpdate(0);
+    }
+    else if (m.command() == 0x9) {
+        emit inputEventStrenghUpdate(m.byte2());
     }
 }
 
