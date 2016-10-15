@@ -27,7 +27,6 @@ private:
     virtual void init() override;
     virtual void disableScreensaver() override;
     virtual void enableScreensaver() override;
-    virtual std::shared_ptr<MidiAdapter> createMidiAdapter() const override;
     virtual unsigned long long getInstalledPhysicalMemoryInB() const override final;
 };
 

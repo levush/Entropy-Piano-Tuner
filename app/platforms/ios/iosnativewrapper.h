@@ -37,16 +37,5 @@ void iosDisableScreensaver();
 void iosReleaseScreensaverLock();
 unsigned long long iosGetInstalledPhysicalMemoryInB();
 
-
-// midi functions
-void iosMidiInit();
-void iosMidiExit();
-int iosMidiGetNumberOfPorts();
-std::string iosMidiGetPortName(int i);
-bool iosMidiOpenPort(int i);
-bool iosMidiOpenPort();
-int iosMidiGetCurrentPort();
-
-
 #endif // IOSNATIVEWRAPPER_H
 

@@ -59,11 +59,11 @@ winrt|winphone {
     CONFIG += timesupport winrtbridge
 }
 else:win32 {
-    CONFIG += timesupport rtmidi dirent
+    CONFIG += timesupport dirent
 }
 
 linux:!android {
-    CONFIG += getmemorysize rtmidi
+    CONFIG += getmemorysize
 }
 
 android {
@@ -71,11 +71,7 @@ android {
 }
 
 macx {
-    CONFIG += getmemorysize rtmidi
-}
-
-ios {
-    CONFIG += pgmidi
+    CONFIG += getmemorysize
 }
 
 # tests on desktop platforms

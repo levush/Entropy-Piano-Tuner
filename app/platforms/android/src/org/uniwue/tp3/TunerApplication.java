@@ -34,8 +34,6 @@ import android.app.ActivityManager.MemoryInfo;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
-import org.modules.midi.UsbMidiDriverAdapter;
-
 /**
  * Custom activity
  */
@@ -44,7 +42,6 @@ public class TunerApplication extends QtActivity {
     private boolean  mFileToOpenCached = false;
 
     static private TunerApplication mApplication;
-    private UsbMidiDriverAdapter mMidiDriver = new UsbMidiDriverAdapter();
 
     public TunerApplication() {
         super();
@@ -65,16 +62,10 @@ public class TunerApplication extends QtActivity {
 
         // keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // create midi driver
-        mMidiDriver.create(this);
     }
 
     @Override
     public void onDestroy() {
-        // destroy midi driver
-        mMidiDriver.destroy();
-
         super.onDestroy();
     }
 
@@ -117,7 +108,6 @@ public class TunerApplication extends QtActivity {
 
 
     public static native void java_openFile(String s, boolean cached);
-    public static native void java_sendMidiMessage(int event, int byte1, int byte2, double deltaTime);
 
     private void parseIntent(Intent intent) {
         if (intent != null) {

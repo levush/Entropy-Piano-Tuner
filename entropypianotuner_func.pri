@@ -164,19 +164,6 @@ defineReplace(depends_libuv) {
     return(true)
 }
 
-defineReplace(depends_pgmidi) {
-    pgmidi {
-        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/pgmidi/PgMidi
-        LIBS += -lPgMidi
-        LIBS += -framework UIKit -framework Foundation -framework CoreMIDI
-    }
-
-    export(INCLUDEPATH)
-    export(LIBS)
-
-    return(true)
-}
-
 defineReplace(depends_qwt) {
     qwt {
 
@@ -205,7 +192,7 @@ defineReplace(depends_qwt) {
 
 
         DEFINES += QWT_DLL
-        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/qwt-lib/libqwt.so
+        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
     }
 
     export(INCLUDEPATH)
