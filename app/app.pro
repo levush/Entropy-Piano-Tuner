@@ -7,7 +7,7 @@
 #-------------------------------------------------
 
 # Qt modules
-QT          += core gui multimedia widgets opengl concurrent midi
+QT          += core gui multimedia widgets concurrent midi
 qtHaveModule(svg):QT += svg
 android:QT  += androidextras
 
@@ -177,6 +177,22 @@ winrt {
 
     # add winrtbridge to required dlls for copying
     DLLS += $$EPT_THIRDPARTY_OUT_DIR/winrtbridge.dll
+
+    # need to copy the midi plugin manually on win rt
+    CONFIG(debug, debug|release) {
+        PLUGIN_DIR = $$DESTDIR
+        PLUGIN_FILE=qtwinrt_midid.dll
+    }
+    else {
+        PLUGIN_DIR = $$DESTDIR
+        PLUGIN_FILE=qtwinrt_midi.dll
+    }
+
+    PLUGIN_DIR ~= s,/,\\,g
+
+    QMAKE_POST_LINK += \
+        $$sprintf($$QMAKE_MKDIR_CMD, $$quote($$PLUGIN_DIR\\midi)) $$escape_expand(\\n\\t) \
+        $$QMAKE_COPY $$quote($$(QTDIR)\\plugins\\midi\\$$PLUGIN_FILE) $$quote($$PLUGIN_DIR\\midi\\$$PLUGIN_FILE) $$escape_expand(\\n\\t)
 } else:winphone {
 } else:win32 {
     # windows desktop

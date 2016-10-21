@@ -174,12 +174,15 @@ defineReplace(depends_qwt) {
         }
 
         win32 {
+            # if only Qwt depends on OpenGL the module will not get copied
             CONFIG(debug, debug|release){
-                LIBS += -lqwtd
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/qwtd.dll
+                LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug -lqwtd
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug/qwtd.dll
+                DLLS += $$(QTDIR)/bin/Qt5OpenGLd.dll
             } else {
-                LIBS += -lqwt
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/qwt.dll
+                LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release -lqwt
+                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release/qwt.dll
+                DLLS += $$(QTDIR)/bin/Qt5OpenGL.dll
             }
         } else:macx {
             # use framework on mac
