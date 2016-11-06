@@ -34,13 +34,18 @@ EPT_TUTORIAL_DIR = $$EPT_ROOT_DIR/tutorial
 
 EPT_ROOT_OUT_DIR = $$shadowed($$PWD)
 EPT_THIRDPARTY_OUT_DIR = $$shadowed($$PWD)/lib
-EPT_TARGET_DIR = $$shadowed($$PWD)/target
 EPT_CORE_OUT_DIR = $$EPT_ROOT_OUT_DIR/lib
 EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
 
 EPT_PLATFORMS_DIR = $$EPT_APP_DIR/platforms
 EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_PLATFORMS_DIR/android
 
+EPT_TARGET_DIR = $$shadowed($$PWD)/target
+winrt|winphone {
+    # debug version requires debug dir for execution
+    CONFIG(debug, debug|release) :EPT_TARGET_DIR = $$shadowed($$PWD)/app/debug
+    else                         :EPT_TARGET_DIR = $$shadowed($$PWD)/app/release
+}
 # Install paths if not defined
 isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=bin
 isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=shared

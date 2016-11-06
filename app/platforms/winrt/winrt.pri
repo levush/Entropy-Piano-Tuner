@@ -1,3 +1,5 @@
+include(../../../entropypianotuner_config.pri)
+
 HEADERS += \
     $$PWD/winrtplatformtools.h \
     $$PWD/winrtmidiadapterinterface.h
@@ -11,15 +13,14 @@ $$depends_winrtbridge()
 
 # need to copy the midi plugin manually on win rt
 CONFIG(debug, debug|release) {
-    PLUGIN_DIR = $$shadowed($$EPT_TARGET_DIR)
-    PLUGIN_FILE=qtwinrt_midid.dll
+    PLUGIN_DIR = $$EPT_TARGET_DIR
+    PLUGIN_FILE = qtwinrt_midid.dll
 }
 else {
-    PLUGIN_DIR = $$shadowed($$EPT_TARGET_DIR)
-    PLUGIN_FILE=qtwinrt_midi.dll
+    PLUGIN_DIR = $$EPT_TARGET_DIR
+    PLUGIN_FILE = qtwinrt_midi.dll
 }
 
-message($$PLUGIN_DIR)
 PLUGIN_DIR ~= s,/,\\,g
 
 QMAKE_POST_LINK += \
