@@ -52,6 +52,7 @@ IF NOT "%1"=="" (
 :: prepare paths
 set postfix=%vcplatform%
 set builddir=%tunerdir%\\.build_%postfix%
+set QTDIR=%QtHome%\\%qtversion%
 set qtbindir=%QtHome%\\%qtversion%\bin
 set winkitbindir=%WinKitPath%\\%winkitarch%
 set path=%qtbindir%;%winkitbindir%;%QtCreatorPath%;%path%
@@ -111,15 +112,8 @@ if %createPackage%==1 (
 	:: erase mp:PhoneIdentity tag in ApplicationManifest file
 	cd %binarydir%
 	
-	echo Fixing AppxManifest.xml
-	copy AppxManifest.xml AppxManifest.xml.bak || exit /b
 	
-	:: remove file that in not required, but causes errors on package creation
-	type AppxManifest.xml.bak | findstr /v mp:PhoneIdentity > AppxManifest.xml.bak2
-	
-	:: fix slashes to backslashes in files (windows uses \)
-	call %tunerdir%\scripts\windows\BatchSubstitute.bat "assets/" "assets\" AppxManifest.xml.bak2 > AppxManifest.xml
-	
+	echo Calling windeploy.
 	call windeployqt %binary%
 	
 	cd %windowsstoredir%
