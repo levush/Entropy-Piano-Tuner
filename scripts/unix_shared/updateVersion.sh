@@ -42,3 +42,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	<app rolling=\"$versionRolling\" string=\"$versionString\" />
 	<dependencies rolling=\"$depsVersionRolling\" string=\"$depsVersionString\" />
 </version>" > $TUNER_BASE_DIR/appstore/installer/version.xml
+
+# app.pro (qmake)
+echo Updating 
+sed -i.bak "s/WINRT_MANIFEST\.version = [[:digit:]\.]*/WINRT_MANIFEST\.version = $versionString\.0/" $TUNER_BASE_DIR/app.pro
