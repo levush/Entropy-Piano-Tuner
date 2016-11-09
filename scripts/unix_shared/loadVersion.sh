@@ -8,7 +8,7 @@ if [ -z "$TUNER_BASE_DIR" ] ; then
 fi
 
 # read version from version.h
-versionfile="$TUNER_BASE_DIR/core/system/version.h"
+versionfile="$TUNER_BASE_DIR/modules/core/system/version.h"
 if [ -f "$versionfile" ]
 then
 	echo "$versionfile found."

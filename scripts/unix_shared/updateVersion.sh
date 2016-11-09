@@ -11,8 +11,8 @@ sed -i.bak "s/^Version:[[:space:][:digit:]\.]*/Version: $versionString/" $TUNER_
 
 echo "Updating AndroidManifest.xml"
 
-sed -i.bak "s/android:versionName=\"[[:digit:]\.]*\"/android:versionName=\"$versionString\"/" $TUNER_BASE_DIR/platforms/android/AndroidManifest.xml
-sed -i.bak "s/android:versionCode=\"[[:digit:]]*\"/android:versionCode=\"$versionRolling\"/" $TUNER_BASE_DIR/platforms/android/AndroidManifest.xml
+sed -i.bak "s/android:versionName=\"[[:digit:]\.]*\"/android:versionName=\"$versionString\"/" $TUNER_BASE_DIR/app/platforms/android/AndroidManifest.xml
+sed -i.bak "s/android:versionCode=\"[[:digit:]]*\"/android:versionCode=\"$versionRolling\"/" $TUNER_BASE_DIR/app/platforms/android/AndroidManifest.xml
 
 
 # write it to Info.plist
@@ -20,12 +20,12 @@ sed -i.bak "s/android:versionCode=\"[[:digit:]]*\"/android:versionCode=\"$versio
 echo "Updating Info.plist"
 
 # ios
-perl -i.bak -p -000 -e 's/(<key>CFBundleShortVersionString<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionString}$2/' $TUNER_BASE_DIR/platforms/ios/Info.plist
-perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionRolling}$2/' $TUNER_BASE_DIR/platforms/ios/Info.plist
+perl -i.bak -p -000 -e 's/(<key>CFBundleShortVersionString<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionString}$2/' $TUNER_BASE_DIR/app/platforms/ios/Info.plist
+perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionRolling}$2/' $TUNER_BASE_DIR/app/platforms/ios/Info.plist
 
 # osx
-perl -i.bak -p -000 -e 's/(<key>CFBundleShortVersionString<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionString}$2/' $TUNER_BASE_DIR/platforms/osx/Info.plist
-perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionRolling}$2/' $TUNER_BASE_DIR/platforms/osx/Info.plist
+perl -i.bak -p -000 -e 's/(<key>CFBundleShortVersionString<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionString}$2/' $TUNER_BASE_DIR/app/platforms/osx/Info.plist
+perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/string>)/$1$ENV{versionRolling}$2/' $TUNER_BASE_DIR/app/platforms/osx/Info.plist
 
 echo Write it to the installer
 sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.app/meta/package.xml
@@ -44,5 +44,5 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 </version>" > $TUNER_BASE_DIR/appstore/installer/version.xml
 
 # app.pro (qmake)
-echo Updating 
-sed -i.bak "s/WINRT_MANIFEST\.version = [[:digit:]\.]*/WINRT_MANIFEST\.version = $versionString\.0/" $TUNER_BASE_DIR/app.pro
+echo Updating app.pro
+sed -i.bak "s/WINRT_MANIFEST\.version = [[:digit:]\.]*/WINRT_MANIFEST\.version = $versionString\.0/" $TUNER_BASE_DIR/app/app.pro
