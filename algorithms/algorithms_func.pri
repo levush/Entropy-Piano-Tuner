@@ -44,7 +44,7 @@ defineReplace(declareAlgorithm) {
     RESOURCES += $${algorithmName}.qrc
 
     # installation of shared lib
-    contains(CONFIG, dll) {
+    contains(CONFIG, plugin) {
       target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner/algorithms
 
       INSTALLS += target
