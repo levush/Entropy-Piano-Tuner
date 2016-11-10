@@ -292,4 +292,12 @@ SOURCES += \
     $$CORE_CALCULATION_SOURCES \
     $$CORE_SYSTEM_SOURCES
 
+# installation of shared lib
+contains(EPT_CONFIG, install) {
+  target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
 
+  INSTALLS += target
+
+  export(target.path)
+  export(INSTALLS)
+}
