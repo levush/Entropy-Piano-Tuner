@@ -12,7 +12,7 @@ defineReplace(declareAlgorithm) {
     contains(EPT_CONFIG, static_algorithms) {
         CONFIG += staticlib
     } else {
-        CONFIG += dll
+        CONFIG += plugin
     }
 
     TARGET = $$algorithmName
