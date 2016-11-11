@@ -30,6 +30,16 @@ SingleAlgorithmParameters::SingleAlgorithmParameters(const std::string &algorith
 void SingleAlgorithmParameters::loadDefaultParams() {
     // load algorithm information from xml file
     // add all params with default value if not in algorithm description
+
+    // If the algorithm is not present, we cannot load defaul parameters
+    // This usully occurs if the user loads a file with present information of an
+    // algorithm that is not implemented in the current distribution.
+    // E.g. Shipping a ept file with a newly implemented algorithm, that the user
+    // has not installed on his system.
+    if (!CalculationManager::getSingleton().hasAlgorithm(getAlgorithmName())) {
+        return;
+    }
+
     auto info = CalculationManager::getSingleton().loadAlgorithmInformation(getAlgorithmName());
 
     for (const AlgorithmParameterDescription &param : info->getParameters()) {
