@@ -23,6 +23,7 @@
 #include <QMessageBox>
 #include <QCheckBox>
 #include <QProgressBar>
+#include <QTimer>
 
 namespace options {
 
@@ -46,6 +47,8 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *a
     auto inputStrengthBar = new QProgressBar(this);
     inputLayout->addWidget(inputStrengthBar, 2, 1);
     inputStrengthBar->setRange(0, 127);
+    inputStrengthBar->setTextVisible(false);
+    mInputEventStrengthBar = inputStrengthBar;
     connect(this, &PageAudioMidi::inputEventStrenghUpdate, inputStrengthBar, &QProgressBar::setValue);
 
     inputLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding), 20, 0);
@@ -65,6 +68,12 @@ PageAudioMidi::PageAudioMidi(OptionsDialog *optionsDialog, QMidiAutoConnector *a
         connect(input, &QMidiInput::notify, this, &PageAudioMidi::inputEventReceived);
     }
     connect(systemNotifier, &QMidiSystemNotifier::inputDeviceCreated, this, &PageAudioMidi::inputDeviceCreated);
+
+    QTimer *timer = new QTimer(this);
+    timer->setInterval(50);
+    timer->setSingleShot(false);
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(inputStrenghtUpdateTigger()));
+    timer->start();
 }
 
 void PageAudioMidi::apply() {
@@ -120,11 +129,15 @@ void PageAudioMidi::inputDeviceCreated(const QMidiInput *d) {
 
 void PageAudioMidi::inputEventReceived(const QMidiMessage &m) {
     if (m.command() == 0x8) {
-        emit inputEventStrenghUpdate(0);
+        //emit inputEventStrenghUpdate(0);
     }
     else if (m.command() == 0x9) {
-        emit inputEventStrenghUpdate(m.byte2());
+        mInputEventStrengthBar->setValue(std::max<int>(mInputEventStrengthBar->value(), m.byte2()));
     }
+}
+
+void PageAudioMidi::inputStrenghtUpdateTigger() {
+    mInputEventStrengthBar->setValue(std::max<int>(0, mInputEventStrengthBar->value() - 10));
 }
 
 }  // namespace midi

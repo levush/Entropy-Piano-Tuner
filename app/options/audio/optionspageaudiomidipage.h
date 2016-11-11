@@ -22,6 +22,7 @@
 
 #include <QWidget>
 #include <QComboBox>
+#include <QProgressBar>
 #include <QtMidi/qmidisystemnotifier.h>
 #include <QtMidi/qmidiautoconnector.h>
 
@@ -52,10 +53,13 @@ protected slots:
     void inputDeviceCreated(const QMidiInput *d);
     void inputEventReceived(const QMidiMessage &m);
 
+    void inputStrenghtUpdateTigger();
+
 private:
     QMidiAutoConnector *mAutoConnector;
 
     QComboBox *mDeviceSelection;
+    QProgressBar * mInputEventStrengthBar;
 };
 
 
