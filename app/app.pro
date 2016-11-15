@@ -415,14 +415,20 @@ contains(EPT_CONFIG, install) {
     !contains(EPT_THIRDPARTY_CONFIG, system_qwt):!contains(EPT_CONFIG, static_qwt) {
         # install target for qwt
         qwtinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
-        qwtinstall.files = $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
+
+        qwt_files = $$files($$EPT_THIRDPARTY_OUT_DIR/libqwt*)
+        for(file, qwt_files):qwtinstall.files += $$file
+
         INSTALLS += qwtinstall
     }
 
     !contains(EPT_THIRDPARTY_CONFIG, system_fftw3):!contains(EPT_CONFIG, static_fftw) {
-        # install target for fftw
+        # install target for qwt
         fftwinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
-        fftwinstall.files = $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+
+        fftw_files = $$files($$EPT_THIRDPARTY_OUT_DIR/libfftw3*)
+        for(file, fftw_files):fftwinstall.files += $$file
+
         INSTALLS += fftwinstall
     }
 
