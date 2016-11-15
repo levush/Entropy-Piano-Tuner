@@ -396,7 +396,7 @@ TRANSLATIONS = \
 
 contains(EPT_CONFIG, install) {
     # add the install dir for the core the the rpath
-    unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_DIR/entropypianotuner
+    unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
 
     target.path = $$EPT_INSTALL_BIN_DIR
 

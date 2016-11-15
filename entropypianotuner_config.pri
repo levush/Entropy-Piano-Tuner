@@ -43,9 +43,15 @@ EPT_PLATFORMS_DIR = $$EPT_APP_DIR/platforms
 EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_PLATFORMS_DIR/android
 
 # Install paths if not defines
-isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=bin
-isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=shared
-isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
+isEmpty(EPT_INSTALL_BIN_RDIR):EPT_INSTALL_BIN_RDIR=bin
+isEmpty(EPT_INSTALL_DATA_RDIR):EPT_INSTALL_DATA_RDIR=shared
+isEmpty(EPT_INSTALL_LIB_RDIR):EPT_INSTALL_LIB_RDIR=lib
+
+# Create paths in package (PKGDIR). Arch Linux requires install into the pkgdir
+# but the rpath needs to be set to RDIR
+isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=$${PKGDIR}$${EPT_INSTALL_BIN_RDIR}
+isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=$${PKGDIR}$${EPT_INSTALL_DATA_RDIR}
+isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=$${PKGDIR}$${EPT_INSTALL_LIB_RDIR}
 
 #------------------------------------------------
 # third party modules
