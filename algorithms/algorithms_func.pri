@@ -44,13 +44,18 @@ defineReplace(declareAlgorithm) {
     RESOURCES += $${algorithmName}.qrc
 
     # installation of shared lib
-    contains(CONFIG, plugin) {
-      target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner/algorithms
+    contains(EPT_CONFIG, install):contains(CONFIG, plugin) {
+        # add the install dir for the core the the rpath
+        unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
 
-      INSTALLS += target
 
-      export(target.path)
-      export(INSTALLS)
+        target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner/algorithms
+
+        INSTALLS += target
+
+        export(QMAKE_RPATHDIR)
+        export(target.path)
+        export(INSTALLS)
     }
 
     # export all variables
