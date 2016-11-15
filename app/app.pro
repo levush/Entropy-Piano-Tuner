@@ -412,5 +412,19 @@ contains(EPT_CONFIG, install) {
     application.path = $$EPT_INSTALL_DATA_DIR/applications
     application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
 
+    !contains(EPT_THIRDPARTY_CONFIG, system_qwt):!contains(EPT_CONFIG, static_qwt) {
+        # install target for qwt
+        qwtinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
+        qwtinstall.files = $$EPT_THIRDPARTY_OUT_DIR/libqwt.so
+        INSTALLS += qwtinstall
+    }
+
+    !contains(EPT_THIRDPARTY_CONFIG, system_fftw3):!contains(EPT_CONFIG, static_fftw) {
+        # install target for fftw
+        fftwinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
+        fftwinstall.files = $$EPT_THIRDPARTY_OUT_DIR/libfftw3.so
+        INSTALLS += fftwinstall
+    }
+
     INSTALLS += target pixmaps icons mime application
 }
