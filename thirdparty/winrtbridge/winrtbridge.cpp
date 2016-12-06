@@ -1,5 +1,4 @@
 #include "winrtbridge.h"
-#include "mididevicewatcher.h"
 #include "winrtnativehelper.h"
 
 using namespace Windows::System;

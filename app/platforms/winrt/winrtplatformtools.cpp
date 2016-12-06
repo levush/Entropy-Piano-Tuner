@@ -20,7 +20,6 @@
 #include "winrtplatformtools.h"
 #include <Windows.h>
 
-#include "winrtmidiadapterinterface.h"
 #include <winrtbridge.h>
 
 namespace {
@@ -38,10 +37,6 @@ void WinRTPlatformTools::disableScreensaver() {
 }
 
 void WinRTPlatformTools::enableScreensaver() {
-}
-
-std::shared_ptr<MidiAdapter> WinRTPlatformTools::createMidiAdapter() const {
-    return std::make_shared<WinRTMidiAdapterInterface>();
 }
 
 unsigned long long WinRTPlatformTools::getInstalledPhysicalMemoryInB() const {

@@ -1,12 +1,10 @@
 include(../../../entropypianotuner_config.pri)
 
 HEADERS += \
-    $$PWD/winrtplatformtools.h \
-    $$PWD/winrtmidiadapterinterface.h
+    $$PWD/winrtplatformtools.h
 
 SOURCES += \
-    $$PWD/winrtplatformtools.cpp \
-    $$PWD/winrtmidiadapterinterface.cpp
+    $$PWD/winrtplatformtools.cpp
 
 $$depends_winrtbridge()
 
