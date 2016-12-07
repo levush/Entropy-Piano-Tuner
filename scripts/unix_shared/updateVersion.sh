@@ -29,12 +29,14 @@ perl -i.bak -p -000 -e 's/(<key>CFBundleVersion<\/key>\s*<string>)[0-9\.]+(<\/st
 
 echo Write it to the installer
 sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.app/meta/package.xml
+sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.algorithms/meta/package.xml
 sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$versionString<\/Version>/" $TUNER_BASE_DIR/appstore/installer/config/config.xml
 sed -i.bak "s/<Version>[[:digit:]\.]*<\/Version>/<Version>$depsVersionString<\/Version>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.deps/meta/package.xml
 
 echo Update date in the installer
 sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.app/meta/package.xml
 sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.deps/meta/package.xml
+sed -i.bak "s/<ReleaseDate>[[:digit:]\-]*<\/ReleaseDate>/<ReleaseDate>$releaseDate<\/ReleaseDate>/" $TUNER_BASE_DIR/appstore/installer/packages/org.entropytuner.algorithms/meta/package.xml
 
 echo Update the version.xml file
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>

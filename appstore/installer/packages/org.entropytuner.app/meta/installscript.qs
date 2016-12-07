@@ -18,6 +18,11 @@ Component.prototype.createOperations = function()
     
 		// create desktop/startmenu entry
 		component.addOperation("CreateShortcut",
+                               "@TargetDir@/maintenancetool.exe",
+                               "@StartMenuDir@/Uninstall Entropy Piano Tuner.lnk",
+                               "workingDirectory=@TargetDir@",
+                               "iconPath=@TargetDir@\\entropytuner.ico");
+		component.addOperation("CreateShortcut",
                                "@TargetDir@/entropypianotuner.exe",
                                "@DesktopDir@/Entropy Piano Tuner.lnk",
                                "workingDirectory=@TargetDir@", 
@@ -27,7 +32,6 @@ Component.prototype.createOperations = function()
                                "@StartMenuDir@/Entropy Piano Tuner.lnk",
                                "workingDirectory=@TargetDir@", 
                                "iconPath=@TargetDir@\\entropytuner.ico");
-		//component.addOperation("CreateShortcut", "@TargetDir@/maintenancetool.exe", "@StartMenuDir@/maintenancetool.lnk");
     }
     if (systemInfo.kernelType === "linux") {
         // create desktop entry

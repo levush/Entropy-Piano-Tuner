@@ -146,7 +146,7 @@ defineReplace(depends_libuv) {
         }
 
         win32 {
-            DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/libuv/libuv.dll
+            DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/libuv/uv.dll
         }
         android {
             ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/thirdparty/libuv/libuv.so
@@ -160,6 +160,8 @@ defineReplace(depends_libuv) {
 
     export(LIBS)
     export(INCLUDEPATH)
+    export(DLLS)
+    export(ANDROID_EXTRA_LIBS)
 
     return(true)
 }

@@ -85,7 +85,7 @@ if %build%==1 (
 	cd %builddir%
 	
 	:: qmake + jom
-	qmake %tunerdir%\entropytuner.pro -r -spec %msvc_spec% DEFINES+="CONFIG_ENABLE_UPDATE_TOOL" || exit /b
+	qmake %tunerdir%\entropypianotuner.pro -r -spec %msvc_spec% DEFINES+="CONFIG_ENABLE_UPDATE_TOOL" || exit /b
 	
 	if %compiler% EQU msvc (
 		:: silent + other options
@@ -116,9 +116,19 @@ if %updateDependencies%==1 (
 	move "%builddir%\.keepme" %depsDataDir%
 
 	echo Calling windeployqt
-	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\release\entropypianotuner.exe"
+	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\target\entropypianotuner.exe"
 	
-	copy /Y "%builddir%\release\libfftw3-3.dll" %depsDataDir%
+	copy /Y "%builddir%\target\fftw3.dll" %depsDataDir%
+	copy /Y "%builddir%\target\qwt.dll" %depsDataDir%
+	copy /Y "%builddir%\target\uv.dll" %depsDataDir%
+	
+	:: Additional Qt dlls due to bug in windeployqt
+	copy /Y "%QTDIR%\bin\Qt5OpenGL.dll" %depsDataDir%
+	copy /Y "%QTDIR%\bin\Qt5PrintSupport.dll" %depsDataDir%
+	
+	:: Midi Plugin is not deployed aswell
+	mkdir %depsDataDir%\midi
+	copy /Y "%QTDIR%\plugins\midi\qtwinmm_midi.dll" %depsDataDir%\midi
 	
 	if %compiler% EQU msvc (
 		:: move vcredist_xxx to vcredist
@@ -137,10 +147,20 @@ if %updateDependencies%==1 (
 if %build%==1 (
 	echo Copying built exe and icon started.
 	rd %appDataDir% /s /q
-	mkdir %appDataDir%
-	copy /Y %builddir%\release\entropypianotuner.exe %appDataDir%
-	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir%
+	mkdir %appDataDir% || exit /b
+	copy /Y %builddir%\target\entropypianotuner.exe %appDataDir% || exit /b
+	copy /Y %builddir%\target\core.dll %appDataDir% || exit /b
+	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir% || exit /b
 	echo Copying build exe and icon finished.
+	
+	echo Copying common algorithms started.
+	rd %commonAlgsDataDir% /s /q
+	mkdir %commonAlgsDataDir% || exit /b
+	mkdir %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\algorithms\entropyminimizer.dll %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\algorithms\pitchraise.dll %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\algorithms\resettorecording.dll %commonAlgsDataDir%\algorithms || exit /b
+	echo Copying common algorithms done.
 )
 
 :: cd to installer

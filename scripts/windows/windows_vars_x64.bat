@@ -1,7 +1,8 @@
 :: Set required variables for win x86 build
 set vcredist=x64
 set postfix=%vcredist%
-path=%path%;%QtDir_x64%;%QtIFW%
+set QTDIR=%QtDir_x64%
+path=%path%;%QtDir_x64%\bin;%QtIFW%
 
 ::if %compiler% EQU msvc (
 	:: set the build platform variables from visual studio compiler

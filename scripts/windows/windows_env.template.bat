@@ -25,11 +25,14 @@ set VSPath="C:\Program Files (x86)\Microsoft Visual Studio 12.0"
 :: Path to mingw (e.g. C:\Qt\Qt5.5.0\Tools\mingw492_32\bin), there is a bug: NO "..." allowed!!!
 set MinGWPath=C:\Qt\Qt5.5.0\Tools\mingw492_32\bin
 
-:: Path to the 32 bit Qt base dir (e.g. "C:\Qt\5.4\msvc2013\bin")
-set QtDir_x86="C:\Qt\Qt5.5.0\5.5\mingw492_32\bin"
+:: QtHome dir
+set QtHome="C:\Qt\5.7"
 
-:: Path to the 64 bit Qt base dir (e.g. "C:\Qt\5.4\msvc2013_64\bin")
-set QtDir_x64="C:\Qt\5.4\msvc2013_64\bin"
+:: Path to the 32 bit Qt base dir (e.g. "C:\Qt\5.4\msvc2013")
+set QtDir_x86="C:\Qt\5.7\mingw492_32"
+
+:: Path to the 64 bit Qt base dir (e.g. "C:\Qt\5.4\msvc2013_64")
+set QtDir_x64="C:\Qt\5.7\msvc2013_64"
 
 :: Path to the cygwin bin dir (e.g. "C:\cygwin64\bin")
 set CygwinBin="C:\cygwin64\bin"
