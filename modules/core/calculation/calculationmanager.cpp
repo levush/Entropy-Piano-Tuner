@@ -89,20 +89,20 @@ void CalculationManager::loadAlgorithms()
                                                 "../algorithms",
                                                 "../../algorithms"
                                             };
-
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-    // add current executable dir (required when starting with wrong working dir)
-    char filename[MAX_PATH];
-    if (GetModuleFileNameA(NULL, filename, MAX_PATH)) {
-        // remove name of exe to get dir
-        std::string dir = filename;
-        dir = dir.substr(0, dir.rfind('\\'));
-        search_dirs.push_back(dir + "\\algorithms");
-    } else {
-        LogW("Executable dir could not be added to the algorithm search path: Error in GetModuleFileName");
-    }
-#endif
-#ifdef __unix
+#if defined(_WIN32)
+#   if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+        // add current executable dir (required when starting with wrong working dir)
+        char filename[MAX_PATH];
+        if (GetModuleFileNameA(NULL, filename, MAX_PATH)) {
+            // remove name of exe to get dir
+            std::string dir = filename;
+            dir = dir.substr(0, dir.rfind('\\'));
+            search_dirs.push_back(dir + "\\algorithms");
+        } else {
+            LogW("Executable dir could not be added to the algorithm search path: Error in GetModuleFileName");
+        }
+#   endif
+#elif defined(__unix)
     // add system directories on unix systems
     search_dirs.push_back("/usr/lib/entropypianotuner/algorithms");
     search_dirs.push_back("/usr/lib64/entropypianotuner/algorithms");
