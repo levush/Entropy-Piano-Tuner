@@ -164,7 +164,7 @@ winrt {
     WINRT_MANIFEST.logo_store = $$EPT_APPSTORE_DIR/icons/winrt/icon_50x50.png
     WINRT_MANIFEST.logo_splash = $$EPT_APPSTORE_DIR/splash/splash_620x300.png
     WINRT_MANIFEST.background = $${LITERAL_HASH}e5e5e5
-    WINRT_MANIFEST.version = 1.1.7.0
+    WINRT_MANIFEST.version = 1.2.0.0
     WINRT_MANIFEST.logo_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
     WINRT_MANIFEST.tile_iconic_small = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
     WINRT_MANIFEST.tile_iconic_medium = $$EPT_APPSTORE_DIR/icons/winrt/icon_100x100.png
