@@ -1,5 +1,4 @@
 include($$PWD/entropypianotuner_config.pri)
-include($$PWD/thirdparty/fftw3/fftw3_export.pri)
 
 defineReplace(declareStaticLibrary) {
     libname = $$1
@@ -169,9 +168,14 @@ defineReplace(depends_libuv) {
 defineReplace(depends_qwt) {
     qwt {
 
-        contains(EPT_CONFIG, system_qwt) {
+        contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
+            unix {
+                INCLUDEPATH += /usr/include/$$QWT_INCLUDE_DIR
+            } else {
+                INCLUDEPATH += $$QWT_INCLUDE_DIR
+            }
         } else {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib
+            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib/$$QWT_INCLUDE_DIR
             LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib
         }
 

@@ -53,6 +53,11 @@ isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
 
 #------------------------------------------------
 # third party modules
+
+# default variables
+QWT_INCLUDE_DIR=qwt
+
+# select modules
 CONFIG += qwt fftw3
 
 # add libuv when shared algorithms are enabled
@@ -73,7 +78,14 @@ win|linux {
     load(configure)
 
     # use modules that are installed on the system
-    qtCompileTest(qwt_exists):  EPT_THIRDPARTY_CONFIG+=system_qwt
+    qtCompileTest(qwt_exists) {
+        EPT_THIRDPARTY_CONFIG+=system_qwt
+        QWT_INCLUDE_DIR=qwt
+    }
+    qtCompileTest(qwt6-qt5_exists) {
+        EPT_THIRDPARTY_CONFIG+=system_qwt
+        QWT_INCLUDE_DIR=qwt6-qt5
+    }
 }
 
 packagesExist(qwt):       EPT_THIRDPARTY_CONFIG+=system_qwt

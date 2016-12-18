@@ -12,3 +12,7 @@ app.depends = modules thirdparty
 modules.depends = thirdparty
 
 DISTFILES += .qmake.conf
+
+message(Config: $$CONFIG)
+message(EPT_CONFIG: $$EPT_CONFIG)
+message(EPT_THIRDPARTY_CONFIG: $$EPT_THIRDPARTY_CONFIG)

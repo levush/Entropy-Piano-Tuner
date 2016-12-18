@@ -20,7 +20,7 @@
 #ifndef KEYINDEXSCALEDRAW_H
 #define KEYINDEXSCALEDRAW_H
 
-#include <qwt/qwt_scale_draw.h>
+#include <qwt_scale_draw.h>
 
 #include "prerequisites.h"
 

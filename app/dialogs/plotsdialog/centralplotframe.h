@@ -23,8 +23,8 @@
 #include <QTouchEvent>
 #include <QTime>
 
-#include <qwt/qwt_plot.h>
-#include <qwt/qwt_plot_zoomer.h>
+#include <qwt_plot.h>
+#include <qwt_plot_zoomer.h>
 
 #include "prerequisites.h"
 

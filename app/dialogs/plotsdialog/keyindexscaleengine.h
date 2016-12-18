@@ -20,8 +20,8 @@
 #ifndef KEYINDEXSCALEENGINE_H
 #define KEYINDEXSCALEENGINE_H
 
-#include <qwt/qwt_scale_engine.h>
-#include <qwt/qwt_scale_div.h>
+#include <qwt_scale_engine.h>
+#include <qwt_scale_div.h>
 
 #include "prerequisites.h"
 
