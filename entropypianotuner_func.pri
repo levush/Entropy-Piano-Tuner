@@ -194,6 +194,11 @@ defineReplace(depends_qwt) {
         } else:macx {
             # use framework on mac
             LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib -framework qwt
+        } else:android {
+            LIBS += -lqwt
+            ANDROID_EXTRA_LIBS += \
+                $$[QT_INSTALL_LIBS]/libQt5OpenGL.so \
+                $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
         } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
             LIBS += -lqwt
         } else {
@@ -202,7 +207,6 @@ defineReplace(depends_qwt) {
 
 
         DEFINES += QWT_DLL
-        android: ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
     }
 
     export(INCLUDEPATH)
