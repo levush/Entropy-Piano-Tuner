@@ -267,12 +267,6 @@ CORE_3RDPARTY_HEADERS = \
 CORE_3RDPARTY_SOURCES = \
     3rdparty/getmemorysize/getmemorysize.cpp \
 
-win32 {
-    CORE_3RDPARTY_HEADERS += 3rdparty/timesupport/timesupport.h
-    CORE_3RDPARTY_SOURCES += 3rdparty/timesupport/timesupport.cpp
-}
-
-
 #---------------- complete --------------------
 
 HEADERS += \

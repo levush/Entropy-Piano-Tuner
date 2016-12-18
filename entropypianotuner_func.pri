@@ -99,6 +99,7 @@ defineReplace(depends_fftw3) {
         contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
             LIBS += -lfftw3
         } else {
+            include($$EPT_THIRDPARTY_DIR/fftw3/fftw3_export.pri)
             INCLUDEPATH += $$FFTW_INCLUDE_PATHS
             LIBS += $$FFTW_LIB_PATH $$FFTW_EXTERN_LIBS
         }
