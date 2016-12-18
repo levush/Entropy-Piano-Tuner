@@ -5,7 +5,7 @@
 import os
 
 # Directories to exclude
-excludedir = ["./dependencies", "./thirdparty"]
+excludedir = ["./dependencies", "./thirdparty", "./modules/core/3rdparty"]
 
 # single filed to exclude
 excludefile = []

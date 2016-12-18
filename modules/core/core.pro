@@ -259,6 +259,20 @@ CORE_SOURCES = \
     core.cpp \
     settings.cpp \
 
+#---------------- thirdparty --------------------
+
+CORE_3RDPARTY_HEADERS = \
+    3rdparty/getmemorysize/getmemorysize.h \
+
+CORE_3RDPARTY_SOURCES = \
+    3rdparty/getmemorysize/getmemorysize.cpp \
+
+win32 {
+    CORE_3RDPARTY_HEADERS += 3rdparty/timesupport/timesupport.h
+    CORE_3RDPARTY_SOURCES += 3rdparty/timesupport/timesupport.cpp
+}
+
+
 #---------------- complete --------------------
 
 HEADERS += \
@@ -273,6 +287,7 @@ HEADERS += \
     $$CORE_PIANO_HEADERS \
     $$CORE_CALCULATION_HEADERS \
     $$CORE_SYSTEM_HEADERS \
+    $$CORE_3RDPARTY_HEADERS \
 
 SOURCES += \
     $$CORE_SOURCES \
@@ -286,6 +301,7 @@ SOURCES += \
     $$CORE_PIANO_SOURCES \
     $$CORE_CALCULATION_SOURCES \
     $$CORE_SYSTEM_SOURCES \
+    $$CORE_3RDPARTY_SOURCES \
 
 # installation of shared lib
 contains(EPT_CONFIG, install) {

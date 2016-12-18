@@ -53,7 +53,7 @@ isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
 
 #------------------------------------------------
 # third party modules
-CONFIG += qwt fftw3 getmemorysize
+CONFIG += qwt fftw3
 
 # add libuv when shared algorithms are enabled
 contains(EPT_CONFIG, shared_algorithms) {
@@ -61,22 +61,10 @@ contains(EPT_CONFIG, shared_algorithms) {
 }
 
 winrt|winphone {
-    CONFIG += timesupport winrtbridge
+    CONFIG += winrtbridge
 }
 else:win32 {
-    CONFIG += timesupport dirent
-}
-
-linux:!android {
-    CONFIG += getmemorysize
-}
-
-android {
-    CONFIG += getmemorysize
-}
-
-macx {
-    CONFIG += getmemorysize
+    CONFIG += dirent
 }
 
 # tests on desktop platforms

@@ -25,14 +25,6 @@ qwt {
     !contains(EPT_THIRDPARTY_CONFIG, system_qwt):SUBDIRS += qwt-lib
 }
 
-getmemorysize {
-    SUBDIRS += getmemorysize
-}
-
-timesupport {
-    SUBDIRS += timesupport
-}
-
 winrtbridge {
     SUBDIRS += winrtbridge
 }

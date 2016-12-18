@@ -20,7 +20,7 @@
 #include "platformtoolscore.h"
 #include "core/config.h"
 #include "core/system/eptexception.h"
-#include "getmemorysize/getmemorysize.h"
+#include "core/3rdparty/getmemorysize/getmemorysize.h"
 
 PlatformToolsCore* PlatformToolsCore::mSingletonPtr(nullptr);
 
