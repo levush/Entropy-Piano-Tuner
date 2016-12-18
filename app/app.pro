@@ -429,6 +429,9 @@ TRANSLATIONS = \
 #-------------------------------------------------
 
 contains(EPT_CONFIG, install) {
+    # add the install dir for the core the the rpath
+    unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
+
     target.path = $$EPT_INSTALL_BIN_DIR
 
     pixmaps.path = $$EPT_INSTALL_DATA_DIR/pixmaps
@@ -442,6 +445,26 @@ contains(EPT_CONFIG, install) {
 
     application.path = $$EPT_INSTALL_DATA_DIR/applications
     application.files += $$EPT_APPSTORE_DIR/installer/scripts/entropypianotuner.desktop
+
+    !contains(EPT_THIRDPARTY_CONFIG, system_qwt):!contains(EPT_CONFIG, static_qwt) {
+        # install target for qwt
+        qwtinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
+
+        qwt_files = $$files($$EPT_THIRDPARTY_OUT_DIR/libqwt*)
+        for(file, qwt_files):qwtinstall.files += $$file
+
+        INSTALLS += qwtinstall
+    }
+
+    !contains(EPT_THIRDPARTY_CONFIG, system_fftw3):!contains(EPT_CONFIG, static_fftw) {
+        # install target for fftw3
+        fftwinstall.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
+
+        fftw_files = $$files($$EPT_THIRDPARTY_OUT_DIR/libfftw3*)
+        for(file, fftw_files):fftwinstall.files += $$file
+
+        INSTALLS += fftwinstall
+    }
 
     INSTALLS += target pixmaps icons mime application
 }

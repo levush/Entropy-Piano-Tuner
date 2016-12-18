@@ -46,10 +46,16 @@ winrt|winphone {
     CONFIG(debug, debug|release) :EPT_TARGET_DIR = $$shadowed($$PWD)/app/debug
     else                         :EPT_TARGET_DIR = $$shadowed($$PWD)/app/release
 }
-# Install paths if not defined
-isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=bin
-isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=shared
-isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=lib
+# Install paths if not defines
+isEmpty(EPT_INSTALL_BIN_RDIR):EPT_INSTALL_BIN_RDIR=bin
+isEmpty(EPT_INSTALL_DATA_RDIR):EPT_INSTALL_DATA_RDIR=shared
+isEmpty(EPT_INSTALL_LIB_RDIR):EPT_INSTALL_LIB_RDIR=lib
+
+# Create paths in package (PKGDIR). Arch Linux requires install into the pkgdir
+# but the rpath needs to be set to RDIR
+isEmpty(EPT_INSTALL_BIN_DIR):EPT_INSTALL_BIN_DIR=$${PKGDIR}$${EPT_INSTALL_BIN_RDIR}
+isEmpty(EPT_INSTALL_DATA_DIR):EPT_INSTALL_DATA_DIR=$${PKGDIR}$${EPT_INSTALL_DATA_RDIR}
+isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=$${PKGDIR}$${EPT_INSTALL_LIB_RDIR}
 
 #------------------------------------------------
 # third party modules
@@ -94,6 +100,12 @@ packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 
 #--------------------------------------------------
 # global settings
+
+# additional debug flags
+linux-g++*:!android {
+    QMAKE_CXXFLAGS_DEBUG += -D_GLIBCXX_DEBUG
+}
+
 
 # config
 contains(EPT_CONFIG, no_shared_algorithms):DEFINES+="EPT_NO_SHARED_ALGORITHMS=1" "EPT_STATIC_ALGORITHMS=1"

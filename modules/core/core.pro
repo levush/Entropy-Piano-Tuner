@@ -299,10 +299,14 @@ SOURCES += \
 
 # installation of shared lib
 contains(EPT_CONFIG, install) {
-  target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
+    # add rpath for dependent libs (e.g. if fftw3 or qwt is compiled in the project itself)
+    unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
+    DEFINES += "EPT_ALGORITHMS_DIR='\"$$EPT_INSTALL_LIB_RDIR/entropypianotuner/algorithms\"'"
 
-  INSTALLS += target
+    target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
 
-  export(target.path)
-  export(INSTALLS)
+    INSTALLS += target
+
+    export(target.path)
+    export(INSTALLS)
 }
