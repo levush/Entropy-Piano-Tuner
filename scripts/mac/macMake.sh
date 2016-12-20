@@ -100,13 +100,22 @@ if $DO_BUILD ; then
 	echo "Creating temporary build directory"
 	mkdir -p $BUILD_DIR
 	cd $BUILD_DIR
-	rm -rf $BINARY_FILE_NAME.app
-	qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec macx-clang CONFIG+=$CONFIG DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
+	rm -rf target/$BINARY_FILE_NAME.app
+	qmake $TUNER_BASE_DIR/entropypianotuner.pro -r -spec macx-clang CONFIG+=$CONFIG DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
 	make $MAKE_ARGS
 
 	# copy info.plist and icns files on our own. there is a bug in qt
-	cp ../platforms/osx/info.plist $BINARY_FILE_NAME.app/Contents/.
-	cp ../appstore/icons/entropytuner.icns $BINARY_FILE_NAME.app/Contents/Resources/.
+	cp $TUNER_BASE_DIR/app/platforms/osx/info.plist target/$BINARY_FILE_NAME.app/Contents/.
+	cp $TUNER_BASE_DIR/appstore/icons/entropytuner.icns target/$BINARY_FILE_NAME.app/Contents/Resources/.
+
+	# copy fftw3 and qwt
+	mkdir -p target/$BINARY_FILE_NAME.app/Contents/Frameworks
+	cp -r thirdparty/qwt-lib/qwt.framework target/$BINARY_FILE_NAME.app/Contents/Frameworks/.
+	cp thirdparty/fftw3/libfftw3*.dylib target/$BINARY_FILE_NAME.app/Contents/Frameworks/.
+
+	# adjust search paths for lib	
+	install_name_tool -change qwt.framework/Versions/6/qwt @executable_path/../Frameworks/qwt.framework/Versions/6/qwt target/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner 
+	install_name_tool -change libfftw3.1.dylib @executable_path/../Frameworks/libfftw3.1.dylib target/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner
 
 	echo "Done."
 fi
@@ -116,8 +125,10 @@ fi
 if $DO_DMG ; then
 	echo "Creating dmg."
 	cd $BUILD_DIR
-	mv $BINARY_FILE_NAME.app "EntropyPianoTuner.app"
+	rm -rf "EntropyPianoTuner.app"
+	mv target/$BINARY_FILE_NAME.app "EntropyPianoTuner.app"
 	macdeployqt "EntropyPianoTuner.app" -dmg
+	mkdir -p ${PUBLISH_DIR}
 	mv "EntropyPianoTuner.dmg" ${DMG_FILE}
 	echo "Done."
 fi
