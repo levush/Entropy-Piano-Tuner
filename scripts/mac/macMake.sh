@@ -127,7 +127,11 @@ if $DO_DMG ; then
 	cd $BUILD_DIR
 	rm -rf "EntropyPianoTuner.app"
 	mv target/$BINARY_FILE_NAME.app "EntropyPianoTuner.app"
+	# copy midi plugin
+	mkdir -p EntropyPianoTuner.app/Contents/PlugIns/midi
+	cp -r $QTDIR/plugins/midi/libqtpg_midi.dylib EntropyPianoTuner.app/Contents/PlugIns/midi
 	macdeployqt "EntropyPianoTuner.app" -dmg
+
 	mkdir -p ${PUBLISH_DIR}
 	mv "EntropyPianoTuner.dmg" ${DMG_FILE}
 	echo "Done."
