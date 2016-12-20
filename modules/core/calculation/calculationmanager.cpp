@@ -87,7 +87,7 @@ void CalculationManager::loadAlgorithms()
     std::vector<std::string> search_dirs = {
                                                 "algorithms",
                                                 "../algorithms",
-                                                "../../algorithms"
+                                                EPT_ALGORITHMS_DIR
                                             };
 #if defined(_WIN32)
 #   if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)

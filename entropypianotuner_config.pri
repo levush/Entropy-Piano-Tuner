@@ -64,7 +64,7 @@ isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=$${PKGDIR}$${EPT_INSTALL_LIB_RD
 QWT_INCLUDE_DIR=qwt
 
 # select modules
-CONFIG += qwt fftw3
+CONFIG += fftw3
 
 # add libuv when shared algorithms are enabled
 contains(EPT_CONFIG, shared_algorithms) {

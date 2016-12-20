@@ -19,6 +19,7 @@ CONFIG += c++11
 
 # add this define to set dllimport/dllexport for msvc
 DEFINES += EPT_BUILD_CORE
+DEFINES += "EPT_ALGORITHMS_DIR=\\\"$$EPT_INSTALL_LIB_RDIR/entropypianotuner/algorithms\\\""
 
 # set the destiantion dir
 DESTDIR = $$EPT_CORE_OUT_DIR

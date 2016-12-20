@@ -167,47 +167,44 @@ defineReplace(depends_libuv) {
 }
 
 defineReplace(depends_qwt) {
-    qwt {
-
-        contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
-            unix {
-                INCLUDEPATH += /usr/include/$$QWT_INCLUDE_DIR
-            } else {
-                INCLUDEPATH += $$QWT_INCLUDE_DIR
-            }
+    contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
+        unix {
+            INCLUDEPATH += /usr/include/$$QWT_INCLUDE_DIR
         } else {
-            INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib/$$QWT_INCLUDE_DIR
-            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib
+            INCLUDEPATH += $$QWT_INCLUDE_DIR
         }
-
-        win32 {
-            # if only Qwt depends on OpenGL the module will not get copied
-            CONFIG(debug, debug|release){
-                LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug -lqwtd
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug/qwtd.dll
-                DLLS += $$(QTDIR)/bin/Qt5OpenGLd.dll
-            } else {
-                LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release -lqwt
-                DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release/qwt.dll
-                DLLS += $$(QTDIR)/bin/Qt5OpenGL.dll
-            }
-        } else:macx {
-            # use framework on mac
-            LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib -framework qwt
-        } else:android {
-            LIBS += -lqwt
-            ANDROID_EXTRA_LIBS += \
-                $$[QT_INSTALL_LIBS]/libQt5OpenGL.so \
-                $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
-        } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
-            LIBS += -lqwt
-        } else {
-            LIBS += -lqwt-qt5
-        }
-
-
-        DEFINES += QWT_DLL
+    } else {
+        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib/$$QWT_INCLUDE_DIR
+        LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib
     }
+
+    win32 {
+        # if only Qwt depends on OpenGL the module will not get copied
+        CONFIG(debug, debug|release){
+            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug -lqwtd
+            DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/debug/qwtd.dll
+            DLLS += $$(QTDIR)/bin/Qt5OpenGLd.dll
+        } else {
+            LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release -lqwt
+            DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/release/qwt.dll
+            DLLS += $$(QTDIR)/bin/Qt5OpenGL.dll
+        }
+    } else:macx {
+        # use framework on mac
+        LIBS += -F$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib -framework qwt
+    } else:android {
+        LIBS += -lqwt
+        ANDROID_EXTRA_LIBS += \
+            $$[QT_INSTALL_LIBS]/libQt5OpenGL.so \
+            $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
+    } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
+        LIBS += -lqwt
+    } else {
+        LIBS += -lqwt-qt5
+    }
+
+
+    DEFINES += QWT_DLL
 
     export(INCLUDEPATH)
     export(LIBS)
