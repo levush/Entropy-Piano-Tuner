@@ -60,9 +60,6 @@ isEmpty(EPT_INSTALL_LIB_DIR):EPT_INSTALL_LIB_DIR=$${PKGDIR}$${EPT_INSTALL_LIB_RD
 #------------------------------------------------
 # third party modules
 
-# default variables
-QWT_INCLUDE_DIR=qwt
-
 # select modules
 CONFIG += fftw3
 
@@ -86,11 +83,9 @@ win|linux {
     # use modules that are installed on the system
     qtCompileTest(qwt_exists) {
         EPT_THIRDPARTY_CONFIG+=system_qwt
-        QWT_INCLUDE_DIR=qwt
     }
     qtCompileTest(qwt6-qt5_exists) {
         EPT_THIRDPARTY_CONFIG+=system_qwt
-        QWT_INCLUDE_DIR=qwt6-qt5
     }
 }
 

@@ -168,13 +168,9 @@ defineReplace(depends_libuv) {
 
 defineReplace(depends_qwt) {
     contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
-        unix {
-            INCLUDEPATH += /usr/include/$$QWT_INCLUDE_DIR
-        } else {
-            INCLUDEPATH += $$QWT_INCLUDE_DIR
-        }
+        CONFIG += qwt
     } else {
-        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib/$$QWT_INCLUDE_DIR
+        INCLUDEPATH += $$EPT_THIRDPARTY_DIR/qwt-lib/qwt
         LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib
     }
 
@@ -211,6 +207,7 @@ defineReplace(depends_qwt) {
     export(DEFINES)
     export(DLLS)
     export(ANDROID_EXTRA_LIBS)
+    export(CONFIG)
 
     return(true)
 }
