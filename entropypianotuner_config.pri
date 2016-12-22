@@ -76,7 +76,7 @@ else:win32 {
 }
 
 # tests on desktop platforms
-win|linux {
+win|linux:!android {
     # run tests
     load(configure)
 
@@ -87,11 +87,12 @@ win|linux {
     qtCompileTest(qwt6-qt5_exists) {
         EPT_THIRDPARTY_CONFIG+=system_qwt
     }
+
+    packagesExist(qwt):       EPT_THIRDPARTY_CONFIG+=system_qwt
+    packagesExist(fftw3):     EPT_THIRDPARTY_CONFIG+=system_fftw3
+    packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 }
 
-packagesExist(qwt):       EPT_THIRDPARTY_CONFIG+=system_qwt
-packagesExist(fftw3):     EPT_THIRDPARTY_CONFIG+=system_fftw3
-packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 
 #--------------------------------------------------
 # global settings
