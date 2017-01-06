@@ -37,6 +37,9 @@ Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
+# Add out dir to library path so that QtCreator can add it automatically
+# to the LD_LIBRARY_PATH (on unix)
+LIBS += -L $$EPT_TARGET_OUT_DIR
 
 #-------------------------------------------------
 #                    ALGORITHMS
@@ -436,7 +439,6 @@ TRANSLATIONS = \
 contains(EPT_CONFIG, install) {
     # add the install dir for the core the the rpath
     unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
-    unix:QMAKE_RPATHDIR += .
 
     target.path = $$EPT_INSTALL_BIN_DIR
 
