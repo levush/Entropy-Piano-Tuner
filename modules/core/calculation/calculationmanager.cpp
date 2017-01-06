@@ -41,8 +41,11 @@
 #include "algorithmfactory.h"
 #include "algorithminformationparser.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <windows.h>
+#elif defined(__unix)
+#include <libgen.h>
+#include <unistd.h>
 #endif
 
 //-----------------------------------------------------------------------------
@@ -107,6 +110,16 @@ void CalculationManager::loadAlgorithms()
     search_dirs.push_back("/usr/lib/entropypianotuner/algorithms");
     search_dirs.push_back("/usr/lib64/entropypianotuner/algorithms");
     search_dirs.push_back("~/.entropypianotuner/algorithms");
+
+
+    // add current executable dir (required when starting with wrong working dir)
+    char result[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+    const char *path;
+    if (count != -1) {
+        path = dirname(result);
+    }
+    search_dirs.push_back(std::string(path) + "/algorithms");
 #endif
     loadAlgorithms(search_dirs);
 

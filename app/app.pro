@@ -25,7 +25,7 @@ INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
 INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR $$EPT_MODULES_DIR
 
-DESTDIR = $$EPT_TARGET_DIR
+DESTDIR = $$EPT_TARGET_OUT_DIR
 
 Release:OBJECTS_DIR = release/.obj
 Release:MOC_DIR = release/.moc
@@ -206,6 +206,11 @@ winrt|winphone|win32|win32-g++ {
     DESTDIR_WIN ~= s,/,\\,g
     for(FILE,DLLS){
         QMAKE_POST_LINK += $$quote(cmd /c $$QMAKE_COPY $${FILE} $${DESTDIR_WIN} $$escape_expand(\n\t))
+    }
+} else:linux {
+    # copy so's, that they are found by the executable
+    for (FILE,DLLS) {
+        QMAKE_POST_LINK += $$quote($$QMAKE_COPY $${FILE} $${EPT_TARGET_OUT_DIR} $$escape_expand(\n\t))
     }
 }
 
@@ -431,6 +436,7 @@ TRANSLATIONS = \
 contains(EPT_CONFIG, install) {
     # add the install dir for the core the the rpath
     unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
+    unix:QMAKE_RPATHDIR += .
 
     target.path = $$EPT_INSTALL_BIN_DIR
 

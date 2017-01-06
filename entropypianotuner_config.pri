@@ -19,8 +19,10 @@ else: EPT_CONFIG += install
 #------------------------------------------------
 # Path defines
 
+# root dir
 EPT_ROOT_DIR = $$PWD
 
+# Source files dirs
 EPT_BASE_DIR = $$EPT_ROOT_DIR
 EPT_APP_DIR = $$EPT_BASE_DIR/app
 EPT_MODULES_DIR = $$EPT_ROOT_DIR/modules
@@ -31,21 +33,24 @@ EPT_THIRDPARTY_DIR = $$EPT_ROOT_DIR/thirdparty
 EPT_DEPENDENCIES_DIR = $$EPT_ROOT_DIR/dependencies
 EPT_TRANSLATIONS_DIR = $$EPT_BASE_DIR/translations
 EPT_TUTORIAL_DIR = $$EPT_ROOT_DIR/tutorial
-
-EPT_ROOT_OUT_DIR = $$shadowed($$PWD)
-EPT_THIRDPARTY_OUT_DIR = $$shadowed($$PWD)/lib
-EPT_CORE_OUT_DIR = $$EPT_ROOT_OUT_DIR/lib
-EPT_ALGORITHMS_OUT_DIR = $$shadowed($$PWD)/algorithms
-
 EPT_PLATFORMS_DIR = $$EPT_APP_DIR/platforms
 EPT_ANDROID_PACKAGE_SOURCE_DIR = $$EPT_PLATFORMS_DIR/android
 
-EPT_TARGET_DIR = $$shadowed($$PWD)/target
+# Build output dirs
+EPT_ROOT_OUT_DIR = $$shadowed($$PWD)
+
+EPT_TARGET_OUT_DIR = $$EPT_ROOT_OUT_DIR/bin
 winrt|winphone {
     # debug version requires debug dir for execution
-    CONFIG(debug, debug|release) :EPT_TARGET_DIR = $$shadowed($$PWD)/app/debug
-    else                         :EPT_TARGET_DIR = $$shadowed($$PWD)/app/release
+    CONFIG(debug, debug|release) :EPT_TARGET_OUT_DIR = $$shadowed($$PWD)/app/debug
+    else                         :EPT_TARGET_OUT_DIR = $$shadowed($$PWD)/app/release
 }
+
+EPT_THIRDPARTY_OUT_DIR = $$EPT_TARGET_OUT_DIR
+EPT_CORE_OUT_DIR = $$EPT_TARGET_OUT_DIR
+EPT_ALGORITHMS_OUT_DIR = $$EPT_TARGET_OUT_DIR/algorithms
+
+
 # Install paths if not defines
 isEmpty(EPT_INSTALL_BIN_RDIR):EPT_INSTALL_BIN_RDIR=bin
 isEmpty(EPT_INSTALL_DATA_RDIR):EPT_INSTALL_DATA_RDIR=shared

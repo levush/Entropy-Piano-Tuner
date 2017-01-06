@@ -105,13 +105,15 @@ defineReplace(depends_fftw3) {
         }
 
         # copy dlls or shared library
-        contains(FFTW_LIB_MODE_CONFIG, staticlib) {
+        contains(EPT_THIRDPARTY_CONFIG, system_fftw3) {
+        } else:contains(FFTW_LIB_MODE_CONFIG, staticlib) {
         } else {
             win32 {
                 DLLS += $$FFTW_DESTDIR/fftw3.dll
-            }
-            android {
+            } else:android {
                 ANDROID_EXTRA_LIBS += $$FFTW_DESTDIR/libfftw3.so
+            } else:linux {
+                DLLS += $$FFTW_DESTDIR/libfftw3.so
             }
         }
     }
@@ -195,6 +197,7 @@ defineReplace(depends_qwt) {
             $$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so
     } else:!contains(EPT_THIRDPARTY_CONFIG, system_qwt) {
         LIBS += -lqwt
+        DLLS += "$$EPT_ROOT_OUT_DIR/thirdparty/qwt-lib/libqwt.so*"
     } else {
         LIBS += -lqwt-qt5
     }
