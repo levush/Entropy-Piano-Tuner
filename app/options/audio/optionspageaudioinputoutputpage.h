@@ -21,6 +21,7 @@
 #define OPTIONSPAGEAUDIOINPUTOUTPUTPAGE_H
 
 #include <QSpinBox>
+#include <QThread>
 
 #include "prerequisites.h"
 
@@ -54,6 +55,9 @@ public:
     void apply() override final;
 
 
+signals:
+    void updateProgress(int percentage);
+
 private slots:
     ///
     /// \brief Called if the device (input/output) changed
@@ -70,6 +74,7 @@ private slots:
     ///
     void onDefaultSamplingRate();
 
+    void addDevice(QAudioDeviceInfo info);
 
     // special audio output
     // ====================================================================
@@ -96,6 +101,23 @@ private:
     // =====================================================================
     QComboBox *mChannelsSelect;         ///< Item to select the number of channels
     QSpinBox *mBufferSizeEdit;          ///< Item to select the buffer size for output
+};
+
+class DeviceLoaderThread : public QThread
+{
+    Q_OBJECT
+public:
+    DeviceLoaderThread(QObject *parent, QAudio::Mode mode);
+
+private:
+    virtual void run() override final;
+
+signals:
+    void updateProgress(int percentageCompleted);
+    void deviceReady(QAudioDeviceInfo device);
+
+private:
+    QAudio::Mode mMode;
 };
 
 }  // namespace options

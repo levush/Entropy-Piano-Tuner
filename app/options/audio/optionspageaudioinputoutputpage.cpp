@@ -20,6 +20,7 @@
 #include "optionspageaudioinputoutputpage.h"
 
 #include <QMessageBox>
+#include <QThread>
 
 #include "core/audio/player/audioplayeradapter.h"
 #include "core/audio/recorder/audiorecorderadapter.h"
@@ -29,19 +30,26 @@
 #include "implementations/settingsforqt.h"
 #include "mainwindow/volumecontrollevel.h"
 #include "mainwindow/mainwindow.h"
+#include "widgets/progressoverlay.h"
 
 namespace options {
+
+
 
 PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio::Mode mode)
     : mOptionsDialog(optionsDialog),
       mAudioBase(nullptr),
       mMode(mode) {
 
+    ProgressOverlay *overlay = nullptr;
     if (mode == QAudio::AudioInput) {
         mAudioBase = optionsDialog->getCore()->getAudioRecorder();
+        overlay = new ProgressOverlay(this, tr("Loading input devices"), true);
     } else {
         mAudioBase = optionsDialog->getCore()->getAudioPlayer();
+        overlay = new ProgressOverlay(this, tr("Loading output devices"), true);
     }
+    QObject::connect(this, SIGNAL(updateProgress(int)), overlay, SLOT(updatePercentage(int)));
 
     QGridLayout *inputLayout = new QGridLayout;
     this->setLayout(inputLayout);
@@ -49,19 +57,7 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     inputLayout->setColumnStretch(1, 1);
 
     mDeviceSelection = new QComboBox;
-
-    QList<QAudioDeviceInfo> deviceInfos(QAudioDeviceInfo::availableDevices(mode));
-    for (QAudioDeviceInfo info : deviceInfos) {
-        if (!info.isFormatSupported(info.preferredFormat())) {
-            // no supported formats, dont list
-            LogI("%s is not supported.", info.deviceName().toStdString().c_str());
-            continue;
-        }
-
-        LogI("%s is supported.", info.deviceName().toStdString().c_str());
-
-        mDeviceSelection->addItem(info.deviceName(), QVariant::fromValue<QAudioDeviceInfo>(info));
-    }
+    // devices will be loaded in separate thread
 
     // select input device
     QPushButton *selectDefaultInputDeviceButton = new QPushButton(tr("Default"));
@@ -121,6 +117,12 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     }
 
     // set current values
+    auto devices(QAudioDeviceInfo::availableDevices(mode));
+    for (const QAudioDeviceInfo &info : devices) {
+        if (info.deviceName() == QString::fromStdString(mAudioBase->getDeviceName())) {
+            addDevice(info);
+        }
+    }
     mDeviceSelection->setCurrentText(QString::fromStdString(mAudioBase->getDeviceName()));
     onDeviceSelectionChanged(mDeviceSelection->currentIndex());
     mSamplingRates->setCurrentText(QString("%1").arg(mAudioBase->getSamplingRate()));
@@ -142,6 +144,13 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
         QObject::connect(mChannelsSelect, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
         QObject::connect(mBufferSizeEdit, SIGNAL(valueChanged(int)), optionsDialog, SLOT(onChangesMade()));
     }
+
+    // start thread to load devices
+    DeviceLoaderThread *t = new DeviceLoaderThread(this, mode);
+    QObject::connect(t, SIGNAL(updateProgress(int)), overlay, SLOT(updatePercentage(int)));
+    QObject::connect(t, SIGNAL(deviceReady(QAudioDeviceInfo)), this, SLOT(addDevice(QAudioDeviceInfo)));
+    QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+    t->start();
 }
 
 void PageAudioInputOutput::apply() {
@@ -248,6 +257,12 @@ void PageAudioInputOutput::onDefaultSamplingRate() {
     }
 }
 
+void PageAudioInputOutput::addDevice(QAudioDeviceInfo info) {
+    if (mDeviceSelection->findText(info.deviceName()) == -1) {
+        mDeviceSelection->addItem(info.deviceName(), QVariant::fromValue<QAudioDeviceInfo>(info));
+    }
+}
+
 void PageAudioInputOutput::onDefaultChannel() {
     mChannelsSelect->setCurrentText(QString::number(2));
 }
@@ -256,5 +271,32 @@ void PageAudioInputOutput::onDefaultBufferSize() {
     mBufferSizeEdit->setValue(AudioPlayerAdapter::DefaultBufferSizeMilliseconds);
 }
 
+DeviceLoaderThread::DeviceLoaderThread(QObject *parent, QAudio::Mode mode)
+    : QThread(parent)
+    , mMode(mode)
+{
+}
+
+void DeviceLoaderThread::run() {
+    QList<QAudioDeviceInfo> deviceInfos(QAudioDeviceInfo::availableDevices(mMode));
+    int progress = 0;
+    for (QAudioDeviceInfo info : deviceInfos) {
+        bool isSupported = info.isFormatSupported(info.preferredFormat());
+        emit updateProgress(progress);
+        progress += 100 / deviceInfos.size();
+        if (!isSupported) {
+            // no supported formats, dont list
+            LogI("%s is not supported.", info.deviceName().toStdString().c_str());
+            continue;
+        }
+
+        LogI("%s is supported.", info.deviceName().toStdString().c_str());
+
+        //mDeviceSelection->addItem(info.deviceName(), QVariant::fromValue<QAudioDeviceInfo>(info));
+        emit deviceReady(info);
+    }
+
+    emit updateProgress(100);
+}
 
 }  // namespace options
