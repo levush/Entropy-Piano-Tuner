@@ -295,6 +295,7 @@ HEADERS  += \
     widgets/displaysizedependinggroupbox.h \
     widgets/doubleslider.h \
     widgets/preferredtextsizelabel.h \
+    widgets/progressoverlay.h \
     widgets/verticalscrollarea.h \
     displaysize.h \
     prerequisites.h \
@@ -364,6 +365,7 @@ SOURCES +=  \
     widgets/displaysizedependinggroupbox.cpp \
     widgets/doubleslider.cpp \
     widgets/preferredtextsizelabel.cpp \
+    widgets/progressoverlay.cpp \
     widgets/verticalscrollarea.cpp \
     displaysize.cpp \
     main.cpp \
