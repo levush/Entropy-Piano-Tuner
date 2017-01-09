@@ -48,6 +48,8 @@ public:
     ///
     PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio::Mode mode);
 
+    virtual ~PageAudioInputOutput();
+
 
     ///
     /// \brief Stops the audio, changes the device and restarts the audio
@@ -96,6 +98,8 @@ private:
 
     QComboBox *mDeviceSelection;        ///< Item to select the device
     QComboBox *mSamplingRates;          ///< Item to select the sampling rate
+
+    QThread *mDeviceLoader;             ///< Thread to load devices
 
     // special audio output
     // =====================================================================

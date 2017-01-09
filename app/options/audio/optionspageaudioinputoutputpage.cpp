@@ -149,8 +149,14 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     DeviceLoaderThread *t = new DeviceLoaderThread(this, mode);
     QObject::connect(t, SIGNAL(updateProgress(int)), overlay, SLOT(updatePercentage(int)));
     QObject::connect(t, SIGNAL(deviceReady(QAudioDeviceInfo)), this, SLOT(addDevice(QAudioDeviceInfo)));
-    QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
     t->start();
+    mDeviceLoader = t;
+}
+
+PageAudioInputOutput::~PageAudioInputOutput()
+{
+    mDeviceLoader->requestInterruption();
+    mDeviceLoader->wait();
 }
 
 void PageAudioInputOutput::apply() {
@@ -281,6 +287,9 @@ void DeviceLoaderThread::run() {
     QList<QAudioDeviceInfo> deviceInfos(QAudioDeviceInfo::availableDevices(mMode));
     int progress = 0;
     for (QAudioDeviceInfo info : deviceInfos) {
+        if (isInterruptionRequested()) {
+            break;
+        }
         bool isSupported = info.isFormatSupported(info.preferredFormat());
         emit updateProgress(progress);
         progress += 100 / deviceInfos.size();
