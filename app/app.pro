@@ -37,10 +37,6 @@ Debug:MOC_DIR = debug/.moc
 Debug:RCC_DIR = debug/.rcc
 Debug:UI_DIR = debug/.ui
 
-# Add out dir to library path so that QtCreator can add it automatically
-# to the LD_LIBRARY_PATH (on unix)
-LIBS += -L $$EPT_TARGET_OUT_DIR
-
 #-------------------------------------------------
 #                    ALGORITHMS
 #-------------------------------------------------
