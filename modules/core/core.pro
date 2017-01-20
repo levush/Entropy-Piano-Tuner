@@ -19,7 +19,6 @@ CONFIG += c++11
 
 # add this define to set dllimport/dllexport for msvc
 DEFINES += EPT_BUILD_CORE
-DEFINES += "EPT_ALGORITHMS_DIR=\\\"$$EPT_INSTALL_LIB_RDIR/entropypianotuner/algorithms\\\""
 
 # set the destiantion dir
 DESTDIR = $$EPT_CORE_OUT_DIR
@@ -302,7 +301,7 @@ SOURCES += \
 contains(EPT_CONFIG, install) {
     # add rpath for dependent libs (e.g. if fftw3 or qwt is compiled in the project itself)
     unix:QMAKE_RPATHDIR += $$EPT_INSTALL_LIB_RDIR/entropypianotuner
-    DEFINES += "EPT_ALGORITHMS_DIR='\"$$EPT_INSTALL_LIB_RDIR/entropypianotuner/algorithms\"'"
+    DEFINES += "EPT_ALGORITHMS_DIR=\\\"$$EPT_INSTALL_LIB_RDIR/entropypianotuner/algorithms\\\""
 
     target.path = $$EPT_INSTALL_LIB_DIR/entropypianotuner
 
