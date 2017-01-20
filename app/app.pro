@@ -204,7 +204,10 @@ winrt|winphone|win32|win32-g++ {
     DESTDIR_WIN = $$DESTDIR
     DESTDIR_WIN ~= s,/,\\,g
     for(FILE,DLLS){
-        QMAKE_POST_LINK += $$quote(cmd /c $$QMAKE_COPY $${FILE} $${DESTDIR_WIN} $$escape_expand(\n\t))
+        # skip files, that are already built in the currect destination
+        !equals(FILE, $${DESTDIR_WIN}\\$$basename(FILE)) {
+            QMAKE_POST_LINK += $$quote(cmd /c $$QMAKE_COPY $${FILE} $${DESTDIR_WIN} $$escape_expand(\n\t))
+        }
     }
 } else:linux {
     # copy so's, that they are found by the executable

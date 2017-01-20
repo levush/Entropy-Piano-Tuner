@@ -89,9 +89,13 @@ void CalculationManager::loadAlgorithms()
 {
     std::vector<std::string> search_dirs = {
                                                 "algorithms",
-                                                "../algorithms",
-                                                EPT_ALGORITHMS_DIR
+                                                "../algorithms"
                                             };
+
+#if defined(EPT_ALGORITHMS_DIR)
+    // add ept algorithms install dir
+    search_dirs.push_back(EPT_ALGORITHMS_DIR);
+#endif
 #if defined(_WIN32)
 #   if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
         // add current executable dir (required when starting with wrong working dir)
