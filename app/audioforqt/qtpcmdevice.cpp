@@ -16,7 +16,7 @@ qint64 QtPCMDevice::readData(char *data, qint64 maxSize) {
         AudioBase::PacketType packet(maxSize / sizeof(AudioPlayerForQt::DataFormat));
         if (mWriter->generateAudioSignal(packet)) {
             AudioPlayerForQt::DataFormat *p = reinterpret_cast<AudioPlayerForQt::DataFormat*>(data);
-            for (qint64 i = 0; i < packet.size(); ++i) {
+            for (size_t i = 0; i < packet.size(); ++i) {
                 *p = scaling * packet[i];
                 ++p;
             }
