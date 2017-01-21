@@ -116,11 +116,11 @@ if %updateDependencies%==1 (
 	move "%builddir%\.keepme" %depsDataDir%
 
 	echo Calling windeployqt
-	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\target\entropypianotuner.exe"
+	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\bin\entropypianotuner.exe"
 	
-	copy /Y "%builddir%\target\fftw3.dll" %depsDataDir%
-	copy /Y "%builddir%\target\qwt.dll" %depsDataDir%
-	copy /Y "%builddir%\target\uv.dll" %depsDataDir%
+	copy /Y "%builddir%\bin\fftw3.dll" %depsDataDir%
+	copy /Y "%builddir%\bin\qwt.dll" %depsDataDir%
+	copy /Y "%builddir%\bin\uv.dll" %depsDataDir%
 	
 	:: Additional Qt dlls due to bug in windeployqt
 	copy /Y "%QTDIR%\bin\Qt5OpenGL.dll" %depsDataDir%
@@ -148,8 +148,8 @@ if %build%==1 (
 	echo Copying built exe and icon started.
 	rd %appDataDir% /s /q
 	mkdir %appDataDir% || exit /b
-	copy /Y %builddir%\target\entropypianotuner.exe %appDataDir% || exit /b
-	copy /Y %builddir%\target\core.dll %appDataDir% || exit /b
+	copy /Y %builddir%\bin\entropypianotuner.exe %appDataDir% || exit /b
+	copy /Y %builddir%\bin\core.dll %appDataDir% || exit /b
 	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir% || exit /b
 	echo Copying build exe and icon finished.
 	
@@ -157,9 +157,9 @@ if %build%==1 (
 	rd %commonAlgsDataDir% /s /q
 	mkdir %commonAlgsDataDir% || exit /b
 	mkdir %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\algorithms\entropyminimizer.dll %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\algorithms\pitchraise.dll %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\algorithms\resettorecording.dll %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\bin\algorithms\entropyminimizer.dll %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\bin\algorithms\pitchraise.dll %commonAlgsDataDir%\algorithms || exit /b
+	copy /Y %builddir%\bin\algorithms\resettorecording.dll %commonAlgsDataDir%\algorithms || exit /b
 	echo Copying common algorithms done.
 )
 
