@@ -113,6 +113,7 @@ void AudioPlayerForQt::init()
 
     // Open the audio output stream
     mAudioSink = new QAudioOutput(device, format);
+    QObject::connect(mAudioSink, SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChanged(QAudio::State)));
     if (mAudioSink->error() != QAudio::NoError)
     {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
@@ -208,4 +209,9 @@ void AudioPlayerForQt::writerChanged(PCMWriterInterface *writer) {
 void AudioPlayerForQt::errorString(QString s)
 {
     LogE("Error in QtAudioManager: %s", s.toStdString().c_str());
+}
+
+void AudioPlayerForQt::stateChanged(QAudio::State state)
+{
+    qDebug() << "Audio player state changed: " << state;
 }

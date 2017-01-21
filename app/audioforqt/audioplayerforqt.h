@@ -43,7 +43,7 @@ class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
     Q_OBJECT
 
 public:
-    typedef int16_t DataFormat;
+    typedef int32_t DataFormat;
 
     AudioPlayerForQt(QObject *parent);
     ~AudioPlayerForQt() {}
@@ -59,6 +59,7 @@ protected:
 
 private slots:
     void errorString(QString);
+    void stateChanged(QAudio::State state);
 
 private:
     QtPCMDevice mIODevice;              ///< Qt IO device pointer
