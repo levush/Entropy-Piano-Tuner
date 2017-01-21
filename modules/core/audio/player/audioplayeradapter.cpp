@@ -23,7 +23,7 @@
 
 #include "audioplayeradapter.h"
 
-const double AudioPlayerAdapter::DefaultBufferSizeMilliseconds = 50;
+const double AudioPlayerAdapter::DefaultBufferSizeMilliseconds = 100;
 
 //-----------------------------------------------------------------------------
 //			                    Constructor
@@ -71,6 +71,8 @@ void AudioPlayerAdapter::setWriter(PCMWriterInterface *writerInterface)
 
     // Copy sampling rate and channel count and initialize the writer
     if (mPCMWriter) mPCMWriter->init(getSamplingRate(), getChannelCount());
+
+    writerChanged(mPCMWriter);
 }
 
 

@@ -19,10 +19,12 @@
 
 #include "audioplayerforqt.h"
 
+#include <QDebug>
+
 #include "core/system/log.h"
 
-#include "audioplayerthreadforqt.h"
 #include "implementations/settingsforqt.h"
+
 
 //-----------------------------------------------------------------------------
 //                              Constructor
@@ -34,12 +36,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 AudioPlayerForQt::AudioPlayerForQt(QObject *parent) :
-    QObject(parent),
-    mQtThread(nullptr),
-    mQtAudioManager(nullptr)
+    QObject(parent)
 {
     setDeviceName(SettingsForQt::getSingleton().getOuputDeviceName().toStdString());
     setSamplingRate(SettingsForQt::getSingleton().getOutputDeviceSamplingRate());
+    setBufferSize(SettingsForQt::getSingleton().getAudioPlayerBufferSize());
 }
 
 
@@ -56,16 +57,83 @@ AudioPlayerForQt::AudioPlayerForQt(QObject *parent) :
 
 void AudioPlayerForQt::init()
 {
-    mQtThread = new QThread;
-    mQtAudioManager = new AudioPlayerThreadForQt(this);
-    mQtAudioManager->moveToThread(mQtThread);
-    connect(mQtAudioManager, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(deleteLater()));
-    connect(mQtThread, SIGNAL(started()), mQtAudioManager, SLOT(workerFunction()));
-    connect(mQtAudioManager, SIGNAL(finished()), mQtThread, SLOT(quit()));
-    connect(mQtAudioManager, SIGNAL(finished()), mQtAudioManager, SLOT(deleteLater()));
+    // (does not work yet) SimpleThreadHandler::setThreadName("AudioPlayer");
 
-    mQtThread->start(QThread::HighPriority);
+    // Format specification:
+    QAudioFormat format;
+    format.setSampleRate(getSamplingRate());
+    format.setChannelCount(getChannelCount());
+    format.setCodec("audio/pcm");
+    format.setSampleSize(sizeof(DataFormat) * 8);
+    format.setSampleType(QAudioFormat::SignedInt);
+
+    // Find the audio device:
+    QAudioDeviceInfo device(QAudioDeviceInfo::defaultOutputDevice());
+    if (getDeviceName().size() > 0)
+    {
+        QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
+        for (const QAudioDeviceInfo &i : devices)
+        {
+            if (i.deviceName().toStdString() == getDeviceName())
+            {
+                device = i;
+                break;
+            }
+
+        if (!device.isFormatSupported(format))
+            LogE("Selected device settings are not supported!");
+        }
+    }
+    else
+    {
+        if (not device.isFormatSupported(format))
+        {
+            LogW("Raw audio format not supported by backend, falling back to default supported");
+            format = device.preferredFormat();
+            // update sampling rate, buffer type has to stay the same!
+            if (not device.isFormatSupported(format))
+            {
+                LogW("Fallback failed. Probably there is no output device available.");
+                return;
+            }
+            setSamplingRate(format.sampleRate());
+            if (format.sampleSize() != sizeof(DataFormat) * 8)
+            {
+                LogW("Sample size of %i not supported", format.sampleSize());
+                return;
+            }
+            if (format.sampleType() != QAudioFormat::SignedInt)
+            {
+                LogW("Sample format (%i) not supported", format.sampleType());
+                return;
+            }
+        }
+    }
+    setDeviceName(device.deviceName().toStdString());
+
+    // Open the audio output stream
+    mAudioSink = new QAudioOutput(device, format);
+    if (mAudioSink->error() != QAudio::NoError)
+    {
+        LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
+        return;
+    }
+
+    // set volume
+    mAudioSink->setVolume(1);
+
+
+    // Specify the size of the Qt-internal buffer
+    const size_t BufferSize = getChannelCount() *
+            ((getSamplingRate() * getBufferSize())/1000) * sizeof(DataFormat);
+    mAudioSink->setBufferSize(BufferSize);
+    if (mAudioSink->error() != QAudio::NoError) {
+        LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
+        return;
+    }
+
+    setWriter(getWriter());
+    LogI("Initialized Qt audio player using device: %s", getDeviceName().c_str());
 }
 
 
@@ -82,14 +150,15 @@ void AudioPlayerForQt::init()
 
 void AudioPlayerForQt::exit()
 {
-    // quit and wait for thread termination
-    mQtAudioManager->registerForTermination();
-    mQtThread->quit();
-    mQtThread->wait();
+    stop();
+    if (mAudioSink)
+    {
+        mAudioSink->reset();
+        delete mAudioSink;
+        mAudioSink = nullptr;
+    }
 
-    // objects are deleted automatically upon finished, so just set pointers to nullptr
-    mQtAudioManager = nullptr;
-    mQtThread = nullptr;
+    LogI("Qt audio player closed.");
 
     // exit the parent
     AudioPlayerAdapter::exit();
@@ -98,16 +167,42 @@ void AudioPlayerForQt::exit()
 
 void AudioPlayerForQt::start()
 {
-    if (!mQtAudioManager) {return;}
-
-    mQtAudioManager->setPause(false);
+    LogI("Start Qt audio device")
+    if (not mAudioSink)
+    {
+        LogI("Audio device was not created and thus cannot be started.");
+        return;
+    }
+    if (!mIODevice.isOpen()) {
+        mIODevice.setWriter(getWriter());
+        if (!mIODevice.open(QIODevice::ReadOnly)) {
+            LogE("Could not open io device");
+        } else {
+            mAudioSink->start(&mIODevice);
+            if (mAudioSink->error() != QAudio::NoError)
+            {
+                qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
+            }
+            if (!getWriter()) {
+                mAudioSink->suspend();
+            }
+        }
+    }
 }
 
 void AudioPlayerForQt::stop()
 {
-    if (!mQtAudioManager) {return;}
+    LogI("Stop Qt audio device");
+    if (not mAudioSink) return;
+    mAudioSink->stop();
+    mIODevice.close();
+}
 
-    mQtAudioManager->setPause(true);
+void AudioPlayerForQt::writerChanged(PCMWriterInterface *writer) {
+    mIODevice.setWriter(writer);
+    if (mAudioSink) {
+        mAudioSink->resume();
+    }
 }
 
 void AudioPlayerForQt::errorString(QString s)

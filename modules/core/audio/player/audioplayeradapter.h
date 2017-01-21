@@ -66,6 +66,10 @@ public:
 
     void setBufferSize (double bufferSize) { mBufferSize = bufferSize; }   ///< Set the buffersize, exit->init has to be called after changes
     double getBufferSize () const { return mBufferSize; }                  ///< Returns the playback buffer size in milliseconds
+
+protected:
+   virtual void writerChanged(PCMWriterInterface *writer) {(void)(writer);}
+
 private:
     PCMWriterInterface *mPCMWriter;                 ///< Pointer to PCM writer
     bool   mMuted;                                  ///< Flag which is true if the ouput device muted

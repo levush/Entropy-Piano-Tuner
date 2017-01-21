@@ -23,8 +23,10 @@
 #include <QAudioOutput>
 
 #include "prerequisites.h"
+#include "qtpcmdevice.h"
 
 #include "core/audio/player/audioplayeradapter.h"
+
 
 class AudioPlayerThreadForQt;
 
@@ -41,6 +43,8 @@ class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
     Q_OBJECT
 
 public:
+    typedef int16_t DataFormat;
+
     AudioPlayerForQt(QObject *parent);
     ~AudioPlayerForQt() {}
 
@@ -50,12 +54,17 @@ public:
     void start() override final;
     void stop() override final;
 
+protected:
+   virtual void writerChanged(PCMWriterInterface *writer) override final;
+
 private slots:
     void errorString(QString);
 
 private:
-    QThread* mQtThread;
-    AudioPlayerThreadForQt* mQtAudioManager;
+    QtPCMDevice mIODevice;              ///< Qt IO device pointer
+    QAudioOutput *mAudioSink;           ///< Audio sink to which the data is sent
+    std::atomic<bool> mTerminateThread; ///< Boolean indicating that the thread shall be terminated
+    std::atomic<bool> mPause;           ///< Boolean indicating that the thread is pausing
 };
 
 

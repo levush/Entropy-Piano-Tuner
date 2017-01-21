@@ -236,8 +236,8 @@ linux-g++*:!android {
 
 HEADERS  += \
     audioforqt/audioplayerforqt.h \
-    audioforqt/audioplayerthreadforqt.h \
     audioforqt/audiorecorderforqt.h \
+    audioforqt/qtpcmdevice.h \
     dialogs/algorithmdialog/algorithmdialog.h \
     dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.h \
     dialogs/editpianosheet/editpianosheetdialog.h \
@@ -305,8 +305,8 @@ HEADERS  += \
 
 SOURCES +=  \
     audioforqt/audioplayerforqt.cpp \
-    audioforqt/audioplayerthreadforqt.cpp \
     audioforqt/audiorecorderforqt.cpp \
+    audioforqt/qtpcmdevice.cpp \
     dialogs/algorithmdialog/algorithmdialog.cpp \
     dialogs/algorithmdialog/algorithmdialogparameterupdatetimer.cpp \
     dialogs/editpianosheet/editpianosheetdialog.cpp \
