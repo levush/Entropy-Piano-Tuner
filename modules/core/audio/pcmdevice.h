@@ -10,7 +10,7 @@ class AudioInterface;
 class EPT_EXTERN PCMDevice
 {
 public:
-    typedef int32_t DataType;
+    typedef int16_t DataType;
 
     virtual void open(AudioInterface *audioInterface);
     virtual void close();
