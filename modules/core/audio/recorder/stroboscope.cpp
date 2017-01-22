@@ -78,7 +78,7 @@ void Stroboscope::pushRawData (const PacketType &data)
                 for (auto &c : mComplexPhase) c /= std::abs(c);
                 ComplexVector normalizedPhases (mMeanComplexPhase);
                 for (auto &c : normalizedPhases) c /= 0.5*mSamplesPerFrame/(1-FRAME_DAMPING);
-                MessageHandler::send<MessageStroboscope>(normalizedPhases);
+                MessageHandler::sendUnique<MessageStroboscope>(normalizedPhases);
 
                 for (auto &c : mMeanComplexPhase) c *= FRAME_DAMPING;
                 mMaxAmplitude *= AMPLITUDE_DAMPING;
