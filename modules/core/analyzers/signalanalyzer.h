@@ -37,7 +37,7 @@
 #include "keyrecognizer.h"
 #include "overpull.h"
 
-class AudioRecorderAdapter;
+class AudioRecorder;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Signal analyzer: Fourier transformation of the recorded audio signal
@@ -71,7 +71,7 @@ private:
     };
 
 public:
-    SignalAnalyzer(AudioRecorderAdapter *recorder);
+    SignalAnalyzer(AudioRecorder *recorder);
     ~SignalAnalyzer() {}
 
     void init();
@@ -111,7 +111,7 @@ private:
     const Piano *mPiano;                    ///< Pointer to the piano
     CircularBuffer<FFTWType> mDataBuffer;   ///< Local audio buffer
     std::mutex mDataBufferMutex;            ///< The data buffer might change its size during recording and key selection, lock it
-    AudioRecorderAdapter *mAudioRecorder;   ///< Pointer to the audio recorder
+    AudioRecorder *mAudioRecorder;          ///< Pointer to the audio recorder
     std::atomic<bool> mRecording;           ///< Flag indicating ongoing recording
     FFTWVector mProprocessedSignal;         ///< the current signal (after preprocessing)
     FFTDataPointer mPowerspectrum;          ///< the last recorded powerspectrum

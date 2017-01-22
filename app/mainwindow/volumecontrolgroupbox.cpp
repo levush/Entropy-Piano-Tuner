@@ -170,6 +170,9 @@ void VolumeControlGroupBox::onRefreshClicked() {
 
 void VolumeControlGroupBox::onMicroMuteToggled(bool b) {
     emit muteMicroToggled(b);
+    if (b) {
+        mVolumeControlLevel->setValue(0);
+    }
 }
 
 void VolumeControlGroupBox::onSpeakerMuteToggled(bool b) {

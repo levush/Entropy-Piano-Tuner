@@ -31,9 +31,7 @@
 #include <vector>
 #include <mutex>
 
-#include "../audiobase.h"
-
-class AudioRecorderAdapter;
+class AudioRecorder;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for a stroboscopic tuning indicator
@@ -67,6 +65,9 @@ class AudioRecorderAdapter;
 class Stroboscope
 {
 private:
+    typedef double PCMDataType;
+    typedef std::vector<PCMDataType> PacketType;
+
     /// Damping factor of the normalizing amplitude level on a single frame (0...1)
     const double AMPLITUDE_DAMPING = 0.95;
 
@@ -77,16 +78,16 @@ public:
     using Complex = std::complex<double>;           ///< Type for a complex number
     using ComplexVector = std::vector<Complex>;     ///< Type for a vector of complex numbers
 
-    Stroboscope (AudioRecorderAdapter *recorder);   ///< Constructor
+    Stroboscope (AudioRecorder*recorder);   ///< Constructor
     void start () { mActive = true; }               ///< Start the stroboscope
     void stop  () { mActive = false; }              ///< Stop the stroboscope
 
     void setFramesPerSecond (double fps);
     void setFrequencies (const std::vector<double> &frequencies);
-    void pushRawData (const AudioBase::PacketType &data);
+    void pushRawData (const PacketType &data);
 
 private:
-    AudioRecorderAdapter *mRecorder;        ///< Pointer to the audio recorder
+    AudioRecorder*mRecorder;                ///< Pointer to the audio recorder
     bool mActive;                           ///< Flag indicating activity (start/stop)
     int mSamplesPerFrame;                   ///< Number of PCM samples per frame
     int mSampleCounter;                     ///< Actual number of PCM samples read

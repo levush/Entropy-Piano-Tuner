@@ -26,10 +26,11 @@
 
 #include "prerequisites.h"
 #include "../../messages/messagelistener.h"
-#include "audiorecorderadapter.h"
 
 class Piano;
 class Key;
+class AudioRecorder;
+class Stroboscope;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Recording manager
@@ -42,7 +43,7 @@ class Key;
 class EPT_EXTERN RecordingManager :  public MessageListener
 {
 public:
-    RecordingManager (AudioRecorderAdapter *audioRecorder);
+    RecordingManager (AudioRecorder *audioRecorder);
 
     void init () {}
     void exit () {}
@@ -50,7 +51,8 @@ public:
 private:
     virtual void handleMessage(MessagePtr m);
 
-    AudioRecorderAdapter *mAudioRecorder;   ///< Pointer to the audio device
+    AudioRecorder *mAudioRecorder;            ///< Pointer to the audio device
+    Stroboscope *mStroboscope;
     const Piano* mPiano;                    ///< Poitner to the actual piano
     OperationMode mOperationMode;           ///< Current operation mode
     const Key* mSelectedKey;                ///< Currently selected key

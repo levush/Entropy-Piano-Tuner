@@ -21,8 +21,8 @@
 //                               Stroboscope
 //=============================================================================
 
-#include "audiorecorderadapter.h"
 #include "stroboscope.h"
+#include "audiorecorder.h"
 #include "../../messages/messagehandler.h"
 #include "../../messages/messagestroboscope.h"
 #include "../../math/mathtools.h"
@@ -37,7 +37,7 @@
 /// \param recorder
 ///////////////////////////////////////////////////////////////////////////////
 
-Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
+Stroboscope::Stroboscope(AudioRecorder *recorder) :
     mRecorder(recorder),
     mActive(false),
     mSamplesPerFrame(22050),
@@ -56,7 +56,7 @@ Stroboscope::Stroboscope(AudioRecorderAdapter *recorder) :
 /// \param data
 ///////////////////////////////////////////////////////////////////////////////
 
-void Stroboscope::pushRawData (const AudioBase::PacketType &data)
+void Stroboscope::pushRawData (const PacketType &data)
 {
     // data packet size is typically 1100, can be 0.
     if (mActive) if (Settings::getSingleton().isStroboscopeActive())
@@ -100,7 +100,7 @@ void Stroboscope::pushRawData (const AudioBase::PacketType &data)
 
 void Stroboscope::setFramesPerSecond (double fps)
 {
-    mSamplesPerFrame = mRecorder->getSamplingRate() / fps;
+    mSamplesPerFrame = mRecorder->getSampleRate() / fps;
 }
 
 
@@ -123,6 +123,6 @@ void Stroboscope::setFrequencies(const std::vector<double> &frequencies)
     mComplexIncrement.clear();
     for (auto &f : frequencies)
         mComplexIncrement.push_back(std::exp(Complex(0,MathTools::TWO_PI) *
-                                    (f/mRecorder->getSamplingRate())));
+                                    (f/mRecorder->getSampleRate())));
 }
 

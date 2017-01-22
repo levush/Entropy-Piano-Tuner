@@ -3,12 +3,21 @@
 
 #include <QIODevice>
 
-#include "core/audio/player/pcmwriterinterface.h"
+#include "core/audio/pcmdevice.h"
+
+class AudioInterfaceForQt;
 
 class QtPCMDevice : public QIODevice
 {
 public:
-    void setWriter(PCMWriterInterface *writer);
+    QtPCMDevice(AudioInterfaceForQt *audioInterface);
+
+    virtual bool open(OpenMode mode) override final;
+    virtual void close() override final;
+
+    void setDevice(PCMDevice *device);
+    PCMDevice *getDevice() const {return mDevice;}
+
 
     virtual bool isSequential() const {return false;}
 private:
@@ -16,7 +25,8 @@ private:
     virtual qint64 writeData(const char *data, qint64 maxSize) override final;
 
 private:
-    PCMWriterInterface *mWriter = nullptr;
+    PCMDevice *mDevice = nullptr;
+    AudioInterfaceForQt *mAudioInterface;
 };
 
 #endif // QTPCMDEVICE_H

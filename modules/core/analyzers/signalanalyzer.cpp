@@ -35,7 +35,7 @@
 #include "../messages/messagepreliminarykey.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagetuningdeviation.h"
-#include "../audio/recorder/audiorecorderadapter.h"
+#include "../audio/recorder/audiorecorder.h"
 #include "../math/mathtools.h"
 
 #include <cmath>
@@ -53,7 +53,7 @@
 /// \param recorder : pointer to the implementation of the AudioRecorder
 ///////////////////////////////////////////////////////////////////////////////
 
-SignalAnalyzer::SignalAnalyzer(AudioRecorderAdapter *recorder) :
+SignalAnalyzer::SignalAnalyzer(AudioRecorder *recorder) :
     mPiano(nullptr),
     mDataBuffer(),
     mAudioRecorder(recorder),
@@ -206,7 +206,7 @@ void SignalAnalyzer::updateDataBufferSize()
         case ROLE_RECORD_KEYSTROKE:
         {
             // Initialize the local circular buffer which holds about a minute of data
-            mDataBuffer.resize(mAudioRecorder->getSamplingRate() *
+            mDataBuffer.resize(mAudioRecorder->getSampleRate() *
                                AUDIO_BUFFER_SIZE_IN_SECONDS);
             break;
         }
@@ -217,7 +217,7 @@ void SignalAnalyzer::updateDataBufferSize()
             const double timeAtHighest = 0.5;
             const double timeAtLowest = 3;
             const double time = (timeAtHighest - timeAtLowest) * globalKey / 88 + timeAtLowest;
-            mDataBuffer.resize(static_cast<size_t>(mAudioRecorder->getSamplingRate() * time));
+            mDataBuffer.resize(static_cast<size_t>(mAudioRecorder->getSampleRate() * time));
             break;
         }
     }
@@ -290,13 +290,13 @@ void SignalAnalyzer::recordSignal()
     Timer timer;
 
     // define the packed to store audio data
-    AudioBase::PacketType packet;
+    AudioRecorder::PacketType packet;
 
     // read all data from the audio recorder to clear all buffered data
     mAudioRecorder->readAll(packet);
 
     // get the sampling rate
-    uint samplingrate = mAudioRecorder->getSamplingRate();
+    uint samplingrate = mAudioRecorder->getSampleRate();
 
     // Loop that continuously reads the audio stream and performs FFTs
     while (mRecording and not cancelThread())
@@ -521,7 +521,7 @@ void SignalAnalyzer::updateOverpull ()
 double SignalAnalyzer::signalPreprocessing(FFTWVector &signal)
 {
 
-    const uint sr = mAudioRecorder->getSamplingRate();
+    const uint sr = mAudioRecorder->getSampleRate();
     uint N=(uint)signal.size();
     if (N==0) return 0;
 
@@ -726,7 +726,7 @@ void SignalAnalyzer::createPolygon (const FFTWVector &powerspec, FFTPolygon &pol
 
     size_t fftsize = powerspec.size();
     EptAssert(fftsize>0,"powerspectum has to be non-empty");
-    int samplingrate = mAudioRecorder->getSamplingRate();
+    int samplingrate = mAudioRecorder->getSampleRate();
     auto q = [fftsize,samplingrate] (double f) { return 2*fftsize*f/samplingrate; };
 
     double qs1 = q(fmin/factor);
@@ -828,7 +828,7 @@ void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
 //void SignalAnalyzer::WriteFFT (std::string filename, const FFTWVector &fft)
 //{
 //    std::ofstream os(filename);
-//    uint samplingrate = mAudioRecorder->getSamplingRate();
+//    uint samplingrate = mAudioRecorder->getSampleRate();
 //    uint fftsize = fft.size();
 //    auto qtof = [samplingrate,fftsize] (int q) { return (double)samplingrate*q/fftsize/2; };
 //    os << "@g0 type logy" << std::endl;
@@ -842,7 +842,7 @@ void SignalAnalyzer::keyRecognized(int keyIndex, double frequency)
 //void SignalAnalyzer::WriteSignal (std::string filename, const FFTWVector &signal)
 //{
 //    std::ofstream os(filename);
-//    int samplingrate = mAudioRecorder->getSamplingRate();
+//    int samplingrate = mAudioRecorder->getSampleRate();
 //    os << "@    xaxis  label \"TIME (s)\"" << std::endl;
 //    os << "@    yaxis  label \"AMPLITUDE\"" << std::endl;
 //    os << "@    subtitle \"RECORDED SIGNAL\"" << std::endl;

@@ -21,12 +21,11 @@
 
 #include <QMessageBox>
 
-#include "core/audio/player/audioplayeradapter.h"
-#include "core/audio/recorder/audiorecorderadapter.h"
+#include "audioforqt/audiointerfaceforqt.h"
+
 #include "core/config.h"
 #include "core/core.h"
 
-#include "implementations/settingsforqt.h"
 #include "mainwindow/volumecontrollevel.h"
 #include "mainwindow/mainwindow.h"
 
@@ -34,13 +33,13 @@ namespace options {
 
 PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio::Mode mode)
     : mOptionsDialog(optionsDialog),
-      mAudioBase(nullptr),
+      mAudioInterface(nullptr),
       mMode(mode) {
 
     if (mode == QAudio::AudioInput) {
-        mAudioBase = optionsDialog->getCore()->getAudioRecorder();
+        mAudioInterface = dynamic_cast<AudioInterfaceForQt*>(optionsDialog->getCore()->getAudioInput());
     } else {
-        mAudioBase = optionsDialog->getCore()->getAudioPlayer();
+        mAudioInterface = dynamic_cast<AudioInterfaceForQt*>(optionsDialog->getCore()->getAudioPlayer());
     }
 
     QGridLayout *inputLayout = new QGridLayout;
@@ -109,7 +108,7 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
         mBufferSizeEdit->setSingleStep(10);
         mBufferSizeEdit->setSuffix("ms");
         mBufferSizeEdit->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-        mBufferSizeEdit->setValue(static_cast<int>(SettingsForQt::getSingleton().getAudioPlayerBufferSize() + 0.5));
+        mBufferSizeEdit->setValue(mAudioInterface->getBufferSizeMS());
 
         QPushButton *defaultBufferSize = new QPushButton(tr("Default"));
         QObject::connect(defaultBufferSize, SIGNAL(clicked(bool)), this, SLOT(onDefaultBufferSize()));
@@ -121,9 +120,9 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
     }
 
     // set current values
-    mDeviceSelection->setCurrentText(QString::fromStdString(mAudioBase->getDeviceName()));
+    mDeviceSelection->setCurrentText(mAudioInterface->getDeviceInfo().deviceName());
     onDeviceSelectionChanged(mDeviceSelection->currentIndex());
-    mSamplingRates->setCurrentText(QString("%1").arg(mAudioBase->getSamplingRate()));
+    mSamplingRates->setCurrentText(QString("%1").arg(mAudioInterface->getSamplingRate()));
 
     // connect widgets
     QObject::connect(mDeviceSelection, SIGNAL(currentIndexChanged(int)), this, SLOT(onDeviceSelectionChanged(int)));
@@ -137,7 +136,7 @@ PageAudioInputOutput::PageAudioInputOutput(OptionsDialog *optionsDialog, QAudio:
 
     // special audio output
     if (mMode == QAudio::AudioOutput) {
-        mChannelsSelect->setCurrentText(QString::number(SettingsForQt::getSingleton().getAudioPlayerChannelsCount()));
+        mChannelsSelect->setCurrentText(QString::number(mAudioInterface->getChannelCount()));
         // notify if changes are made
         QObject::connect(mChannelsSelect, SIGNAL(currentIndexChanged(int)), optionsDialog, SLOT(onChangesMade()));
         QObject::connect(mBufferSizeEdit, SIGNAL(valueChanged(int)), optionsDialog, SLOT(onChangesMade()));
@@ -148,37 +147,25 @@ void PageAudioInputOutput::apply() {
     assert(mSamplingRates->currentIndex() != -1);
     assert(mSamplingRates->currentText().isEmpty() == false);
 
-    PCMWriterInterface *writerInterfaceBackup = nullptr;
+    //PCMDevice *writerInterfaceBackup = nullptr;
     if (mMode == QAudio::AudioOutput) {
-        writerInterfaceBackup = dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->getWriter();
+        //writerInterfaceBackup = dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->getWriter();
     }
 
-    mAudioBase->stop();
-    mAudioBase->exit();
+    QAudioDeviceInfo info(mDeviceSelection->currentData().value<QAudioDeviceInfo>());
+    int bufferSizeMS = -1;
+    int channels = 1;
+    const int samplingRate = mSamplingRates->currentText().toInt();
     if (mMode == QAudio::AudioOutput) {
-        SettingsForQt::getSingleton().setOutputDeviceName(mDeviceSelection->currentText());
-        SettingsForQt::getSingleton().setOutputDeviceSamplingRate(mSamplingRates->currentText().toInt());
-
-        const int bufferSize = mBufferSizeEdit->value();
-        const int channels = mChannelsSelect->currentData().toInt();
-
-        SettingsForQt::getSingleton().setAudioPlayerBufferSize(bufferSize);
-        SettingsForQt::getSingleton().setAudioPlayerChannelsCount(channels);
-
-        AudioPlayerAdapter *player = dynamic_cast<AudioPlayerAdapter*>(mAudioBase);
-        player->setChannelCount(channels);
-        player->setBufferSize(bufferSize);
+        bufferSizeMS = mBufferSizeEdit->value();
+        channels = mChannelsSelect->currentData().toInt();
     } else {
-        SettingsForQt::getSingleton().setInputDeviceName(mDeviceSelection->currentText());
-        SettingsForQt::getSingleton().setInputDeviceSamplingRate(mSamplingRates->currentText().toInt());
     }
-    mAudioBase->setDeviceName(mDeviceSelection->currentText().toStdString());
-    mAudioBase->setSamplingRate(mSamplingRates->currentText().toInt());
-    mAudioBase->init();
-    mAudioBase->start();
+    mAudioInterface->reinitialize(samplingRate, channels, info, bufferSizeMS);
+    mAudioInterface->start();
 
     if (mMode == QAudio::AudioOutput) {
-        dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->setWriter(writerInterfaceBackup);
+        //dynamic_cast<AudioPlayerAdapter*>(mAudioBase)->setWriter(writerInterfaceBackup);
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // give waveform generator time
         if (mOptionsDialog->getCore()->getSoundGenerator()) {
             mOptionsDialog->getCore()->getSoundGenerator()->init();
@@ -253,7 +240,7 @@ void PageAudioInputOutput::onDefaultChannel() {
 }
 
 void PageAudioInputOutput::onDefaultBufferSize() {
-    mBufferSizeEdit->setValue(AudioPlayerAdapter::DefaultBufferSizeMilliseconds);
+    //mBufferSizeEdit->setValue(AudioPlayerAdapter::DefaultBufferSizeMilliseconds);
 }
 
 

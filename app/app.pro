@@ -235,6 +235,7 @@ linux-g++*:!android {
 
 
 HEADERS  += \
+    audioforqt/audiointerfaceforqt.h \
     audioforqt/audioplayerforqt.h \
     audioforqt/audiorecorderforqt.h \
     audioforqt/qtpcmdevice.h \
@@ -304,6 +305,7 @@ HEADERS  += \
 
 
 SOURCES +=  \
+    audioforqt/audiointerfaceforqt.cpp \
     audioforqt/audioplayerforqt.cpp \
     audioforqt/audiorecorderforqt.cpp \
     audioforqt/qtpcmdevice.cpp \

@@ -1,31 +1,8 @@
-/*****************************************************************************
- * Copyright 2016 Haye Hinrichsen, Christoph Wick
- *
- * This file is part of Entropy Piano Tuner.
- *
- * Entropy Piano Tuner is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * Entropy Piano Tuner is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
- *****************************************************************************/
-
-//=============================================================================
-//                          Adapter for audio input
-//=============================================================================
-
-#ifndef AUDIORECORDERADAPTER_H
-#define AUDIORECORDERADAPTER_H
+#ifndef AUDIORECORDER_H
+#define AUDIORECORDER_H
 
 #include "prerequisites.h"
-#include "../audiobase.h"
+#include "../pcmdevice.h"
 #include "../circularbuffer.h"
 #include "stroboscope.h"
 //#include "../../messages/messagelistener.h"
@@ -48,9 +25,16 @@
 /// The adapter incorporates an autonomous fully automatic level control.
 ///////////////////////////////////////////////////////////////////////////////
 
-class EPT_EXTERN AudioRecorderAdapter : public AudioBase
+class EPT_EXTERN AudioRecorder : public PCMDevice
 {
 public:
+    /// Floating point data type for a single PCM Value. The PCM values are
+    /// assumed to be in [-1,1].
+    typedef double PCMDataType;
+
+    /// Type definition of a PCM packet (vector of PCM values).
+    typedef std::vector<PCMDataType> PacketType;
+
     // Static constants, explained in the source file:
 
     static const int    BUFFER_SIZE_IN_SECONDS;     // size of circular buffer
@@ -63,32 +47,34 @@ public:
     static const double DB_OFF;                     // dB shift for off mark
 
 public:
-    AudioRecorderAdapter();                 ///< Constructor
-    virtual ~AudioRecorderAdapter() {}                 ///< Empty destructor
+    AudioRecorder();                 ///< Constructor
+    virtual ~AudioRecorder() {}                 ///< Empty destructor
 
-    void resetInputLevelControl();          // Reset level control
-    void setMuted(bool muted);              // Mute the input device
+    virtual void open(AudioInterface *audioInterface) override final;
 
     void readAll(PacketType &packet);       // Read all buffered data
     void cutSilence (PacketType &packet);   // Cut off trailing silence
 
+    void resetInputLevelControl();          // Reset level control
     double getStopLevel() const { return mStopLevel; }
 
+    Stroboscope *getStroboscope() {return &mStroboscope;}
     void setStandby (bool flag) { mStandby = flag; }
     void setWaitingFlag (bool flag) { mWaiting = flag; }
+private:
 
-    Stroboscope *getStroboscope() {return &mStroboscope;}
+    virtual int64_t read(char *, int64_t) override final {return 0;}
+    virtual int64_t write(const char *data, int64_t max_bytes) override final;
 
-protected:
+
+    void setMuted(bool muted);              // Mute the input device
+
+
+
+
+
     // The implementation calls the following functions:
     void pushRawData (const PacketType &data);
-    virtual void setSamplingRate (int rate) override;
-
-    // This class controls the input gain of the implementation
-    virtual void setDeviceInputGain(double volume) = 0;
-    virtual double getDeviceInputGain() const = 0;
-
-
 
 private:
     bool   mMuted;              ///< Is the input device muted
@@ -118,4 +104,5 @@ private:
     void   automaticControl (double intensity, double level);   // automatic input level control
 };
 
-#endif // AUDIORECORDERADAPTER_H
+
+#endif // AUDIORECORDER_H

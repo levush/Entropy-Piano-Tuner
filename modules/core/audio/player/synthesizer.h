@@ -26,9 +26,8 @@
 
 #include "prerequisites.h"
 
-#include "audioplayeradapter.h"
 #include "waveformgenerator.h"
-#include "pcmwriterinterface.h"
+#include "../pcmdevice.h"
 #include "../../system/simplethreadhandler.h"
 
 
@@ -108,7 +107,7 @@ struct Tone
 /// differences and phase shifts between the two stereo channels.
 ///////////////////////////////////////////////////////////////////////////////
 
-class EPT_EXTERN Synthesizer : public PCMWriterInterface
+class EPT_EXTERN Synthesizer : public PCMDevice
 {
 public:
 
@@ -116,8 +115,8 @@ public:
 
     Synthesizer ();
 
-    virtual void init (const int sampleRate, const int channels) override final;
-    virtual void exit () override final { mWaveformGenerator.exit();}
+    virtual void open (AudioInterface *audioInterface) override final;
+    virtual void close () override final { mWaveformGenerator.exit(); PCMDevice::close(); }
 
     void setNumberOfKeys (int numberOfKeys);
 
@@ -136,17 +135,21 @@ public:
 
     bool isPlaying              (const int id) const;
 
-    virtual bool generateAudioSignal(AudioBase::PacketType &outputPacket) override final;
 
     WaveformGenerator &getWaveformGenerator() {return mWaveformGenerator;}
 
-private:
 
+    virtual int64_t read(char *data, int64_t max_bytes) override final;
+    bool generateAudioSignal(DataType *outputPacket, const int64_t packet_size);
+    virtual int64_t write(const char *, int64_t) override final {return 0;}
+private:
     using Waveform = WaveformGenerator::Waveform;
 
     WaveformGenerator mWaveformGenerator;
 
     int mNumberOfKeys;                      ///< Number of keys, passed in init()
+    int mSampleRate;
+    int mChannels;
 
     std::vector<Tone> mPlayingTones;        ///< Chord defined as a collection of tones.
     mutable std::mutex mPlayingMutex;       ///< Mutex to protect access to the chord.

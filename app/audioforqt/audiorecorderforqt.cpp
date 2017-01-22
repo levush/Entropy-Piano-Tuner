@@ -27,16 +27,10 @@
 #include "implementations/settingsforqt.h"
 #include "dialogs/donotshowagainmessagebox.h"
 
-const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING = std::numeric_limits<AudioRecorderForQt::DataFormat>::max();
-// const AudioRecorderForQt::DataFormat AudioRecorderForQt::SIGNAL_SCALING  = 1;
 
 AudioRecorderForQt::AudioRecorderForQt(QObject *parent)
-    : QObject(parent),
-      mAudioInput(nullptr),
-      mIODevice(nullptr) {
-
-    setDeviceName(SettingsForQt::getSingleton().getInputDeviceName().toStdString());
-    setSamplingRate(SettingsForQt::getSingleton().getInputDeviceSamplingRate());
+    : AudioInterfaceForQt(QAudio::AudioInput, parent)
+    , mAudioInput(nullptr) {
 }
 
 AudioRecorderForQt::~AudioRecorderForQt()
@@ -44,129 +38,79 @@ AudioRecorderForQt::~AudioRecorderForQt()
 }
 
 
-void AudioRecorderForQt::init() {
-    QAudioFormat format;
-    // Set up the format, eg.
-    format.setSampleRate(getSamplingRate());
-    format.setChannelCount(getChannelCount());
-    format.setCodec("audio/pcm");
-    format.setSampleSize(sizeof(DataFormat) * 8);
-    format.setSampleType(QAudioFormat::SignedInt);
-    //format.setByteOrder(QAudioFormat::LittleEndian);
+QAudio::Error AudioRecorderForQt::createDevice(const QAudioFormat &format, const QAudioDeviceInfo &info, int bufferSizeMS) {
+    Q_UNUSED(bufferSizeMS);
 
-    QAudioDeviceInfo device(QAudioDeviceInfo::defaultInputDevice());
-    if (getDeviceName().size() > 0) {
-        QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioInput));
-        for (const QAudioDeviceInfo &i : devices) {
-            if (i.deviceName().toStdString() == getDeviceName()) {
-                device = i;
-                break;
-            }
-        }
-
-        if (!device.isFormatSupported(format)) {
-            LogE("Selected device settings are not supported!");
-        }
-    }
-    else {
-        // only necessary if default settings
-        if (!device.isFormatSupported(format)) {
-            LogW("Raw audio format not supported by backend, falling back to nearest supported");
-            format = device.nearestFormat(format);
-            // update sampling rate, buffer type has to stay the same!
-            if (not device.isFormatSupported(format))
-            {
-                LogW("Fallback failed. Probably there is no input device available. Did you connect your microphone?");
-                return;
-            }
-            setSamplingRate(format.sampleRate());
-            if (format.sampleSize() != sizeof(DataFormat) * 8) {
-                LogW("Sample size not supported");
-                return;
-            }
-            if (format.sampleType() != QAudioFormat::SignedInt) {
-                LogW("Sample format not supported");
-                return;
-            }
-        }
-    }
-
-    mAudioInput = new QAudioInput(device, format);
+    mAudioInput = new QAudioInput(info, format);
     if (mAudioInput->error() != QAudio::NoError) {
         LogE("Error creating QAudioInput with error %d", mAudioInput->error());
-        return;
+        return mAudioInput->error();
     }
-    mAudioInput->setNotifyInterval(20);
-
-    setDeviceName(device.deviceName().toStdString());
-
-
-    QObject::connect(&mReadTimer, SIGNAL(timeout()), this, SLOT(onReadPacket()));
 
     LogI("Initialized Qt audio recorder using device: %s", getDeviceName().c_str());
+
+    return mAudioInput->error();
 }
 
 void AudioRecorderForQt::exit() {
-    mReadTimer.stop();
-
-    if (mAudioInput) {
-        if (mIODevice) {
-            mIODevice->close();
-            mIODevice = nullptr;
-        }
+    stop();
+    if (mAudioInput)
+    {
         mAudioInput->reset();
         delete mAudioInput;
         mAudioInput = nullptr;
     }
+
     LogI("Qt audio recorder closed.");
 }
 
 void AudioRecorderForQt::start() {
-    if (!mAudioInput) {
-        LogI("Audio device not created, cannot start it.");
+    LogI("Start Qt audio input device")
+    if (not mAudioInput)
+    {
+        LogI("Audio input device was not created and thus cannot be started.");
         return;
     }
-    mIODevice = mAudioInput->start();
-    if (mAudioInput->error() != QAudio::NoError) {
-        qWarning() << "Error starting QAudioInput with error " << mAudioInput->error();
-        return;
+    if (!mPCMDevice.isOpen()) {
+        if (!mPCMDevice.open(QIODevice::WriteOnly)) {
+            LogE("Could not open io device");
+        } else {
+            mAudioInput->start(&mPCMDevice);
+            if (mAudioInput->error() != QAudio::NoError)
+            {
+                qWarning() << "Error opening QAudioOutput with error " << mAudioInput->error();
+            }
+        }
     }
-    mReadTimer.start(mAudioInput->notifyInterval());
+    if (isSuspended()) {
+        mAudioInput->suspend();
+    }
 }
 
 void AudioRecorderForQt::stop() {
-    if (!mAudioInput) {
-        return;
-    }
-    mReadTimer.stop();
+    LogI("Stop Qt audio device");
+    if (!mAudioInput) return;
+    mAudioInput->stop();
+    mPCMDevice.close();
+}
+
+void AudioRecorderForQt::suspendChanged(bool v)
+{
     if (mAudioInput) {
-        mAudioInput->stop();
-        mIODevice = nullptr;
+        if (v) {mAudioInput->suspend();}
+        else {mAudioInput->resume();}
     }
 }
 
-void AudioRecorderForQt::setDeviceInputGain(double volume) {
+void AudioRecorderForQt::setGain(double volume) {
     if (mAudioInput) {
         mAudioInput->setVolume(volume);
     }
 }
 
-double AudioRecorderForQt::getDeviceInputGain() const {
+double AudioRecorderForQt::getGain() const {
     if (mAudioInput) {
         return mAudioInput->volume();
     }
     return 1;
-}
-
-void AudioRecorderForQt::onReadPacket() {
-    QByteArray rawdata = mIODevice->readAll();
-    std::vector<DataFormat> data(rawdata.size() / sizeof(DataFormat));
-    memcpy(data.data(), rawdata.data(), data.size() * sizeof(DataFormat));
-
-    PacketType realData(data.size());
-    for (size_t i = 0; i < data.size(); ++i) {
-        realData[i] = data[i] * 1.0 / SIGNAL_SCALING;
-    }
-
-    pushRawData(realData);
 }

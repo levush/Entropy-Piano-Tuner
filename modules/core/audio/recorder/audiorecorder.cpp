@@ -1,32 +1,7 @@
-/*****************************************************************************
- * Copyright 2016 Haye Hinrichsen, Christoph Wick
- *
- * This file is part of Entropy Piano Tuner.
- *
- * Entropy Piano Tuner is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * Entropy Piano Tuner is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * Entropy Piano Tuner. If not, see http://www.gnu.org/licenses/.
- *****************************************************************************/
-
-//=============================================================================
-//                         Adapter for audio input
-//=============================================================================
-
-// Test sine waves with: play -n synth sin 440 vol 0.1
-// monitor system input with xoscope
-
-#include "audiorecorderadapter.h"
+#include "audiorecorder.h"
 
 #include "stroboscope.h"
+#include "../audiointerface.h"
 #include "../../messages/messagerecorderenergychanged.h"
 #include "../../messages/messagemodechanged.h"
 #include "../../messages/messagehandler.h"
@@ -38,35 +13,35 @@
 //-----------------------------------------------------------------------------
 
 /// Capacity of the local circular audio buffer in seconds
-const int    AudioRecorderAdapter::BUFFER_SIZE_IN_SECONDS = 2;
+const int    AudioRecorder::BUFFER_SIZE_IN_SECONDS = 2;
 
 /// Update interval in milliseconds, defining the packet size.
-const int    AudioRecorderAdapter::UPDATE_IN_MILLISECONDS = 50;
+const int    AudioRecorder::UPDATE_IN_MILLISECONDS = 50;
 
 /// Attack rate at which the sliding level goes up (1=instantly).
-const double AudioRecorderAdapter::ATTACKRATE = 0.97;
+const double AudioRecorder::ATTACKRATE = 0.97;
 
 /// Decay rate at which the sliding level goes down.
-const double AudioRecorderAdapter::DECAYRATE  = 0.7;
+const double AudioRecorder::DECAYRATE  = 0.7;
 
 /// Level below which retriggering (restart) is allowed.
-const double AudioRecorderAdapter::LEVEL_RETRIGGER = 0.3;
+const double AudioRecorder::LEVEL_RETRIGGER = 0.3;
 
 /// Level above which the recorder starts to operate.
-const double AudioRecorderAdapter::LEVEL_TRIGGER = 0.48;
+const double AudioRecorder::LEVEL_TRIGGER = 0.48;
 
 /// Level above which the input mGain is automatically reduced.
-const double  AudioRecorderAdapter::LEVEL_CUTOFF = 0.9;
+const double  AudioRecorder::LEVEL_CUTOFF = 0.9;
 
 /// dB shift for off mark (high value = shorter recording)
-const double AudioRecorderAdapter::DB_OFF = 2;
+const double AudioRecorder::DB_OFF = 2;
 
 
 //-----------------------------------------------------------------------------
 //                             Constructor
 //-----------------------------------------------------------------------------
 
-AudioRecorderAdapter::AudioRecorderAdapter() :
+AudioRecorder::AudioRecorder() :
       mMuted(false),            // input device is not muted
       mGain(1),                 // Gain factor amplifying the PCM signal
       mCounter(0),              // Counter counting incoming PCM values
@@ -84,9 +59,33 @@ AudioRecorderAdapter::AudioRecorderAdapter() :
       mCurrentPacket(0),        // Local audio buffer
       mStroboscope(this)
 {
-      setSamplingRate(44100);   // Set default sampling rate
 }
 
+
+void AudioRecorder::open(AudioInterface *audioInterface) {
+    PCMDevice::open(audioInterface);
+    mCurrentPacket.resize(getSampleRate() * BUFFER_SIZE_IN_SECONDS);
+    mCounterThreshold =   getSampleRate() * UPDATE_IN_MILLISECONDS / 1000;
+}
+
+int64_t AudioRecorder::write(const char *data, int64_t max_bytes) {
+    // convert data from DataType to PCMDataType
+    PacketType packet(max_bytes / sizeof(DataType));
+    const DataType *d = reinterpret_cast<const DataType *>(data);
+    PCMDataType *p = packet.data();
+    const PCMDataType *const pend = packet.data() + packet.size();
+
+    while (p != pend) {
+        *p = *d;
+        *p /= std::numeric_limits<DataType>::max();
+        ++p;
+        ++d;
+    }
+
+    pushRawData(packet);
+
+    return packet.size() * sizeof(DataType);
+}
 
 //---------------------------------------------l--------------------------------
 //                        Reset input level control
@@ -102,9 +101,12 @@ AudioRecorderAdapter::AudioRecorderAdapter() :
 /// clears the intensity histogram.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::resetInputLevelControl()
+void AudioRecorder::resetInputLevelControl()
 {
-    setDeviceInputGain(1);
+    if (mAudioInterface) {
+        mAudioInterface->setGain(1);
+    }
+
     mGain = 1;
     mIntensityHistogram.clear();
     mPacketCounter = 0;
@@ -123,31 +125,10 @@ void AudioRecorderAdapter::resetInputLevelControl()
 /// \param muted : Activate or deactivate the muting
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::setMuted (bool muted)
+void AudioRecorder::setMuted (bool muted)
 {
     mMuted = muted;
 }
-
-
-//-----------------------------------------------------------------------------
-//                           Set sampling rate
-//-----------------------------------------------------------------------------
-
-///////////////////////////////////////////////////////////////////////////////
-/// The implementation of the audio device is allowed to change the sampling
-/// rate in which case this function is called. It adjusts the actual
-/// maximal buffer size so that the maximal time of recording is kept constant.
-///
-/// \param rate : New sampling rate
-///////////////////////////////////////////////////////////////////////////////
-
-void AudioRecorderAdapter::setSamplingRate(int rate)
-{
-    AudioBase::setSamplingRate(rate);
-    mCurrentPacket.resize(rate * BUFFER_SIZE_IN_SECONDS);
-    mCounterThreshold =   rate * UPDATE_IN_MILLISECONDS / 1000;
-}
-
 
 //-----------------------------------------------------------------------------
 //                      Read all data from the buffer
@@ -161,7 +142,7 @@ void AudioRecorderAdapter::setSamplingRate(int rate)
 /// \param packet : Reference to the packet where the new data is stored.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::readAll(PacketType &packet)
+void AudioRecorder::readAll(PacketType &packet)
 {
     std::lock_guard<std::mutex> lock(mCurrentPacketMutex);   // lock the function
     packet = mCurrentPacket.getOrderedData();               // copy the content
@@ -179,7 +160,7 @@ void AudioRecorderAdapter::readAll(PacketType &packet)
 /// \return Level to be displayed by the VU meter (not clipped to [0,1])
 ///////////////////////////////////////////////////////////////////////////////
 
-double AudioRecorderAdapter::convertIntensityToLevel (double intensity)
+double AudioRecorder::convertIntensityToLevel (double intensity)
 { return pow(intensity*mGain*mGain,0.25); }
 
 
@@ -190,7 +171,7 @@ double AudioRecorderAdapter::convertIntensityToLevel (double intensity)
 /// \return Corresponding intensity
 ///////////////////////////////////////////////////////////////////////////////
 
-double AudioRecorderAdapter::convertLevelToIntensity (double level)
+double AudioRecorder::convertLevelToIntensity (double level)
 { return pow(level,4.0)/mGain/mGain; }
 
 
@@ -212,7 +193,7 @@ double AudioRecorderAdapter::convertLevelToIntensity (double level)
 /// \param data : Vector containing the raw pcm data to be copied
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::pushRawData(const PacketType &data)
+void AudioRecorder::pushRawData(const PacketType &data)
 {
     if (data.size()==0) return;
 
@@ -275,7 +256,7 @@ void AudioRecorderAdapter::pushRawData(const PacketType &data)
 /// \param level : Actual level (shown on the VU meter) of the packet.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::automaticControl (double intensity, double level)
+void AudioRecorder::automaticControl (double intensity, double level)
 {
     if (intensity == 0) return;
 
@@ -283,7 +264,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
     // A sine wave with maximal amplitude +/- 1 has the integrated intensity 1/2.
     // Therefore, we reduce the hardware input level whenever this value
     // is surpassed. This down-regulation is irreversible.
-    if (intensity > 0.45) setDeviceInputGain(getDeviceInputGain() * 0.9);
+    if (intensity > 0.45) mAudioInterface->setGain(mAudioInterface->getGain() * 0.9);
 
     // The level (passed as parameter) is a power law funtion of the intensity
     // scaled with the parameter mGain. The parameter mGain controls the overall
@@ -349,7 +330,7 @@ void AudioRecorderAdapter::automaticControl (double intensity, double level)
 /// \param E : energy of the actual package
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::controlRecordingState (double level)
+void AudioRecorder::controlRecordingState (double level)
 {
     // check for recording end
     // ------------------------------------------------------------------------
@@ -397,14 +378,14 @@ void AudioRecorderAdapter::controlRecordingState (double level)
 /// \param packet : The packet with the audio PCM data (call by reference)
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioRecorderAdapter::cutSilence (PacketType &packet)
+void AudioRecorder::cutSilence (PacketType &packet)
 {
     // determine the maximum amplitude in the packet
     double maxamplitude = 0;
     for (auto &y : packet) if (fabs(y)>maxamplitude) maxamplitude = fabs(y);
     double trigger = std::min(0.2,maxamplitude*maxamplitude/100);
 
-    int w = getSamplingRate() / 40;           // section width of 0.025 sec
+    int w = getSampleRate() / 40;           // section width of 0.025 sec
     int sections = packet.size() / w;         // number of sections
     if (sections < 2) return;                 // required: at least two sections
     size_t entries_to_delete = 0;             // number of sections to be deleted

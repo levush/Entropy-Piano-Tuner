@@ -26,8 +26,9 @@
 
 #include "prerequisites.h"
 
+#include "audio/audiointerface.h"
 #include "audio/player/soundgenerator.h"
-#include "audio/recorder/audiorecorderadapter.h"
+#include "audio/recorder/audiorecorder.h"
 #include "audio/recorder/recordingmanager.h"
 #include "audio/midi/midiadapter.h"
 #include "analyzers/signalanalyzer.h"
@@ -53,8 +54,8 @@ class EPT_EXTERN Core
     // Note msvc: export (EPT_EXTERN) only required fields
 public:
     Core(ProjectManagerAdapter *projectManager,
-         AudioRecorderAdapter *recorderAdapter,
-         AudioPlayerAdapter *playerAdapter,
+         AudioInterface *recorderInterface,
+         AudioInterface *playerInterface,
          Log *log = new Log());
     ~Core();
 
@@ -71,8 +72,9 @@ public:
 
     // Getter functions
     ProjectManagerAdapter *getProjectManager()  {return mProjectManager.get();}
-    AudioRecorderAdapter *getAudioRecorder()    {return mRecorderAdapter;}
-    AudioPlayerAdapter *getAudioPlayer()        {return mPlayerAdapter;}
+    AudioInterface *getAudioInput()             {return mRecorderInterface;}
+    AudioInterface *getAudioPlayer()            {return mPlayerInterface;}
+    AudioRecorder *getAudioRecorder()           {return &mAudioRecoder;}
     SoundGenerator *getSoundGenerator()         {return mSoundGenerator.get();}
     PianoManager *getPianoManager()             {return PianoManager::getSingletonPtr().get();}
     MidiAdapter *getMidiInterface()             {return mMidi.get();}
@@ -84,8 +86,9 @@ private:
 
     // modules
     std::unique_ptr<ProjectManagerAdapter> mProjectManager;
-    AudioRecorderAdapter *mRecorderAdapter;
-    AudioPlayerAdapter *mPlayerAdapter;
+    AudioInterface *mRecorderInterface;
+    AudioInterface *mPlayerInterface;
+    AudioRecorder mAudioRecoder;
     std::unique_ptr<SoundGenerator> mSoundGenerator;
     RecordingManager mRecordingManager;
     SignalAnalyzer mSignalAnalyzer;

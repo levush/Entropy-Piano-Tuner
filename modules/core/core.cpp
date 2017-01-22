@@ -43,15 +43,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Core::Core(ProjectManagerAdapter *projectManager,
-           AudioRecorderAdapter *recorderAdapter,
-           AudioPlayerAdapter *playerAdapter,
+           AudioInterface *recorderInterface,
+           AudioInterface *playerInterface,
            Log *log)
     : mInitialized(false),                      // Initially not initialized
       mProjectManager(projectManager),
-      mRecorderAdapter(recorderAdapter),
-      mPlayerAdapter(playerAdapter),
-      mRecordingManager (recorderAdapter),
-      mSignalAnalyzer(recorderAdapter)
+      mRecorderInterface(recorderInterface),
+      mPlayerInterface(playerInterface),
+      mRecordingManager (&mAudioRecoder),
+      mSignalAnalyzer(&mAudioRecoder)
 {
     new PianoManager;
     mMidi = std::make_shared<MidiAdapter>();
@@ -123,20 +123,21 @@ void Core::init(CoreInitialisationAdapter *initAdapter)
     initAdapter->updateProgress (0);    // empty
 
     initAdapter->updateProgress (11);   // Initialize recorder
-    mRecorderAdapter->init();
+    mRecorderInterface->init();
+    mRecorderInterface->setDevice(&mAudioRecoder);
 
     initAdapter->updateProgress (22);   // Initialize player
-    mPlayerAdapter->init();
+    mPlayerInterface->init();
 
     initAdapter->updateProgress (33);   // Start the player, so that the startup sound is played
-    mPlayerAdapter->start();
+    mPlayerInterface->start();
 
     initAdapter->updateProgress (44);   // Initialize the signal analyzer
     mSignalAnalyzer.init();
 
     initAdapter->updateProgress (55);   // Initialize the sound generator
     if (mEnableSoundGenerator) {
-        mSoundGenerator.reset(new SoundGenerator(mPlayerAdapter));
+        mSoundGenerator.reset(new SoundGenerator(mPlayerInterface));
         mSoundGenerator->init();
     } else {
         LogI("SoundGenerator is disabled. Possibly low physical memory!");
@@ -173,8 +174,8 @@ void Core::exit()
     mRecordingManager.exit();
     if (mSoundGenerator) {mSoundGenerator->exit();}
     mSignalAnalyzer.exit();
-    mPlayerAdapter->exit();
-    mRecorderAdapter->exit();
+    mPlayerInterface->exit();
+    mRecorderInterface->exit();
     CalculationManager::getSingleton().stop();
 
     mInitialized = false;
@@ -194,8 +195,8 @@ void Core::exit()
 void Core::start()
 {
     LogI("Starting the core");
-    mRecorderAdapter->start();
-    mPlayerAdapter->start();
+    mRecorderInterface->start();
+    mPlayerInterface->start();
 }
 
 
@@ -213,6 +214,6 @@ void Core::start()
 void Core::stop()
 {
     mSignalAnalyzer.stop();
-    mRecorderAdapter->stop();
-    mPlayerAdapter->stop();
+    mRecorderInterface->stop();
+    mPlayerInterface->stop();
 }

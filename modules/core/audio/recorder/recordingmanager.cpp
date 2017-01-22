@@ -23,21 +23,26 @@
 
 #include "recordingmanager.h"
 
+#include "audiorecorder.h"
+#include "stroboscope.h"
+#include "../audiointerface.h"
+
 #include "../../messages/messageprojectfile.h"
 #include "../../messages/messagekeyselectionchanged.h"
 #include "../../messages/messagemodechanged.h"
 
 #include "piano/piano.h"
 
-RecordingManager::RecordingManager  (AudioRecorderAdapter *audioRecorder)
- : mAudioRecorder (audioRecorder),
-   mPiano(nullptr),
+RecordingManager::RecordingManager  (AudioRecorder *audioRecorder)
+ : mAudioRecorder (audioRecorder)
+ , mStroboscope(audioRecorder->getStroboscope())
+ , mPiano(nullptr),
    mOperationMode(MODE_IDLE),
    mSelectedKey(nullptr),
    mKeyNumberOfA4(88),
    mNumberOfSelectedKey(-1)
 {
-   mAudioRecorder->getStroboscope()->setFramesPerSecond(FPS_SLOW);
+    mStroboscope->setFramesPerSecond(FPS_SLOW);
 }
 
 
@@ -80,15 +85,15 @@ void RecordingManager::handleMessage(MessagePtr m)
             switch (mOperationMode)
             {
                 case MODE_TUNING:
-                    mAudioRecorder->getStroboscope()->start();
+                    mStroboscope->start();
                     mAudioRecorder->setStandby(false);
                 break;
                 case MODE_RECORDING:
-                    mAudioRecorder->getStroboscope()->stop();
+                    mStroboscope->stop();
                     mAudioRecorder->setStandby(false);
                 break;
                 default:
-                    mAudioRecorder->getStroboscope()->stop();
+                    mStroboscope->stop();
                     mAudioRecorder->setStandby(true);
                 break;
             }

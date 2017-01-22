@@ -128,28 +128,27 @@ CORE_ADAPTER_SOURCES = \
 #---------------- Audio -----------------
 
 CORE_AUDIO_HEADERS = \
-    audio/audiobase.h \
+    audio/audiointerface.h \
     audio/circularbuffer.h \
-    audio/player/audioplayeradapter.h \
+    audio/pcmdevice.h \
     audio/player/hammerknock.h \
-    audio/player/pcmwriterinterface.h \
     audio/player/soundgenerator.h \
     audio/player/synthesizer.h \
     audio/player/waveformgenerator.h \
     audio/midi/midiadapter.h \
-    audio/recorder/audiorecorderadapter.h \
+    audio/recorder/audiorecorder.h \
     audio/recorder/stroboscope.h \
     audio/recorder/recordingmanager.h \
 
 
 CORE_AUDIO_SOURCES = \
-    audio/audiobase.cpp \
-    audio/player/audioplayeradapter.cpp \
+    audio/audiointerface.cpp \
+    audio/pcmdevice.cpp \
     audio/player/soundgenerator.cpp \
     audio/player/synthesizer.cpp \
     audio/player/waveformgenerator.cpp \
     audio/midi/midiadapter.cpp \
-    audio/recorder/audiorecorderadapter.cpp \
+    audio/recorder/audiorecorder.cpp \
     audio/recorder/stroboscope.cpp \
     audio/recorder/recordingmanager.cpp \
 

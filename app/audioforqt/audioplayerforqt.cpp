@@ -35,12 +35,10 @@
 /// \param parent : Qt object to which the audio player belongs
 ///////////////////////////////////////////////////////////////////////////////
 
-AudioPlayerForQt::AudioPlayerForQt(QObject *parent) :
-    QObject(parent)
+AudioPlayerForQt::AudioPlayerForQt(QObject *parent)
+    : AudioInterfaceForQt(QAudio::AudioOutput, parent)
+    , mAudioSink(nullptr)
 {
-    setDeviceName(SettingsForQt::getSingleton().getOuputDeviceName().toStdString());
-    setSamplingRate(SettingsForQt::getSingleton().getOutputDeviceSamplingRate());
-    setBufferSize(SettingsForQt::getSingleton().getAudioPlayerBufferSize());
 }
 
 
@@ -55,69 +53,15 @@ AudioPlayerForQt::AudioPlayerForQt(QObject *parent) :
 /// audio device is instantiated and started.
 ///////////////////////////////////////////////////////////////////////////////
 
-void AudioPlayerForQt::init()
+QAudio::Error AudioPlayerForQt::createDevice(const QAudioFormat &format, const QAudioDeviceInfo &info, int bufferSizeMS)
 {
-    // (does not work yet) SimpleThreadHandler::setThreadName("AudioPlayer");
-
-    // Format specification:
-    QAudioFormat format;
-    format.setSampleRate(getSamplingRate());
-    format.setChannelCount(getChannelCount());
-    format.setCodec("audio/pcm");
-    format.setSampleSize(sizeof(DataFormat) * 8);
-    format.setSampleType(QAudioFormat::SignedInt);
-
-    // Find the audio device:
-    QAudioDeviceInfo device(QAudioDeviceInfo::defaultOutputDevice());
-    if (getDeviceName().size() > 0)
-    {
-        QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
-        for (const QAudioDeviceInfo &i : devices)
-        {
-            if (i.deviceName().toStdString() == getDeviceName())
-            {
-                device = i;
-                break;
-            }
-
-        if (!device.isFormatSupported(format))
-            LogE("Selected device settings are not supported!");
-        }
-    }
-    else
-    {
-        if (not device.isFormatSupported(format))
-        {
-            LogW("Raw audio format not supported by backend, falling back to default supported");
-            format = device.preferredFormat();
-            // update sampling rate, buffer type has to stay the same!
-            if (not device.isFormatSupported(format))
-            {
-                LogW("Fallback failed. Probably there is no output device available.");
-                return;
-            }
-            setSamplingRate(format.sampleRate());
-            if (format.sampleSize() != sizeof(DataFormat) * 8)
-            {
-                LogW("Sample size of %i not supported", format.sampleSize());
-                return;
-            }
-            if (format.sampleType() != QAudioFormat::SignedInt)
-            {
-                LogW("Sample format (%i) not supported", format.sampleType());
-                return;
-            }
-        }
-    }
-    setDeviceName(device.deviceName().toStdString());
-
     // Open the audio output stream
-    mAudioSink = new QAudioOutput(device, format);
+    mAudioSink = new QAudioOutput(info, format);
     QObject::connect(mAudioSink, SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChanged(QAudio::State)));
     if (mAudioSink->error() != QAudio::NoError)
     {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
-        return;
+        return mAudioSink->error();
     }
 
     // set volume
@@ -125,16 +69,14 @@ void AudioPlayerForQt::init()
 
 
     // Specify the size of the Qt-internal buffer
-    const size_t BufferSize = getChannelCount() *
-            ((getSamplingRate() * getBufferSize())/1000) * sizeof(DataFormat);
-    mAudioSink->setBufferSize(BufferSize);
+    const size_t bufferSize = format.bytesForDuration(bufferSizeMS * 1000);
+    mAudioSink->setBufferSize(bufferSize);
     if (mAudioSink->error() != QAudio::NoError) {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());
-        return;
+        return mAudioSink->error();
     }
 
-    setWriter(getWriter());
-    LogI("Initialized Qt audio player using device: %s", getDeviceName().c_str());
+    return mAudioSink->error();
 }
 
 
@@ -160,9 +102,6 @@ void AudioPlayerForQt::exit()
     }
 
     LogI("Qt audio player closed.");
-
-    // exit the parent
-    AudioPlayerAdapter::exit();
 }
 
 
@@ -174,20 +113,19 @@ void AudioPlayerForQt::start()
         LogI("Audio device was not created and thus cannot be started.");
         return;
     }
-    if (!mIODevice.isOpen()) {
-        mIODevice.setWriter(getWriter());
-        if (!mIODevice.open(QIODevice::ReadOnly)) {
+    if (!mPCMDevice.isOpen()) {
+        if (!mPCMDevice.open(QIODevice::ReadOnly)) {
             LogE("Could not open io device");
         } else {
-            mAudioSink->start(&mIODevice);
+            mAudioSink->start(&mPCMDevice);
             if (mAudioSink->error() != QAudio::NoError)
             {
                 qWarning() << "Error opening QAudioOutput with error " << mAudioSink->error();
             }
-            if (!getWriter()) {
-                mAudioSink->suspend();
-            }
         }
+    }
+    if (isSuspended()) {
+        mAudioSink->suspend();
     }
 }
 
@@ -196,14 +134,26 @@ void AudioPlayerForQt::stop()
     LogI("Stop Qt audio device");
     if (not mAudioSink) return;
     mAudioSink->stop();
-    mIODevice.close();
+    mPCMDevice.close();
 }
 
-void AudioPlayerForQt::writerChanged(PCMWriterInterface *writer) {
-    mIODevice.setWriter(writer);
+void AudioPlayerForQt::suspendChanged(bool v)
+{
     if (mAudioSink) {
-        mAudioSink->resume();
+        if (v) {mAudioSink->suspend();}
+        else {mAudioSink->resume();}
     }
+}
+
+void AudioPlayerForQt::setGain(double gain)
+{
+    if (mAudioSink) {mAudioSink->setVolume(gain);}
+}
+
+double AudioPlayerForQt::getGain() const
+{
+    if (mAudioSink) {return mAudioSink->volume();}
+    return 1;
 }
 
 void AudioPlayerForQt::errorString(QString s)
