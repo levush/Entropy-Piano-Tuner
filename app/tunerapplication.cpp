@@ -60,8 +60,8 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
         setAttribute(Qt::AA_UseHighDpiPixmaps);
     }
 
+    // create file manager instance
     new FileManagerForQt();
-    log->createLogFile();
 
     // get last exit code
     QSettings settings;
@@ -79,6 +79,9 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
             v.exec();
         }
     }
+
+    // create clean new log
+    log->createLogFile();
 
     // writeout args to log
     LogI("Number of arguments: %d", arguments().size());
