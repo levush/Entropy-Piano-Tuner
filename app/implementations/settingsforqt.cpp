@@ -19,8 +19,6 @@
 
 #include "settingsforqt.h"
 
-#include "core/audio/recorder/audiorecorderadapter.h"
-
 #include "dialogs/donotshowagainmessagebox.h"
 #include "options/optionsdialog.h"
 
@@ -48,13 +46,6 @@ void SettingsForQt::load() {
     mLanguageId = mSettings.value("app/languageId", QString()).toString().toStdString();
 
     mLastVisitedOptionsPage = mSettings.value("app/lastOptionsPage", options::OptionsDialog::PAGE_ENVIRONMENT).toInt();
-
-    mInputDeviceName = mSettings.value("audio/inputDeviceName", QString()).toString();
-    mInputDeviceSamplingRate = mSettings.value("audio/inputDeviceSamplingRate", 44100).toInt();
-
-    mOutputDeviceName = mSettings.value("audio/outputDeviceName", QString()).toString();
-    mOutputDeviceSamplingRate = mSettings.value("audio/outputDeviceSamplingRate", 22050).toInt();
-
 
     mSoundGeneratorMode = static_cast<SoundGenerator::SoundGeneratorMode>(
                 mSettings.value("core/soundGeneratorMode", static_cast<int>(SoundGenerator::SGM_SYNTHESIZE_KEY)).toInt());
@@ -118,26 +109,6 @@ void SettingsForQt::setLastVisitedOptionsPage(int id) {
     mSettings.setValue("app/lastOptionsPage", mLastVisitedOptionsPage);
 }
 
-void SettingsForQt::setInputDeviceName(const QString &s) {
-    mInputDeviceName = s;
-    mSettings.setValue("audio/inputDeviceName", mInputDeviceName);
-}
-
-void SettingsForQt::setInputDeviceSamplingRate(int rate) {
-    mInputDeviceSamplingRate = rate;
-    mSettings.setValue("audio/inputDeviceSamplingRate", mInputDeviceSamplingRate);
-}
-
-void SettingsForQt::setOutputDeviceName(const QString &s) {
-    mOutputDeviceName = s;
-    mSettings.setValue("audio/outputDeviceName", mOutputDeviceName);
-}
-
-void SettingsForQt::setOutputDeviceSamplingRate(int rate) {
-    mOutputDeviceSamplingRate = rate;
-    mSettings.setValue("audio/outputDeviceSamplingRate", mOutputDeviceSamplingRate);
-}
-
 void SettingsForQt::setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) {
     Settings::setSoundGeneratorMode(mode);
     mSettings.setValue("core/soundGeneratorMode", static_cast<int>(mode));
@@ -156,20 +127,4 @@ void SettingsForQt::setStroboscopeMode(bool enable) {
 void SettingsForQt::setDisableAutomaticKeySelection(bool disable) {
     Settings::setDisableAutomaticKeySelection(disable);
     mSettings.setValue("core/disableAutomaticKeySelection", disable);
-}
-
-double SettingsForQt::getAudioPlayerBufferSize() const {
-    return mSettings.value("audio/playerBufferSize", AudioPlayerAdapter::DefaultBufferSizeMilliseconds).toDouble();
-}
-
-void SettingsForQt::setAudioPlayerBufferSize(double d) {
-    mSettings.setValue("audio/playerBufferSize", d);
-}
-
-int SettingsForQt::getAudioPlayerChannelsCount() const {
-    return mSettings.value("audio/playerChannels", 2).toInt();
-}
-
-void SettingsForQt::setAudioPlayerChannelsCount(int i) {
-    mSettings.setValue("audio/playerChannels", i);
 }

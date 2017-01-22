@@ -558,7 +558,7 @@ void MainWindow::updateWindowTitle() {
 }
 
 void MainWindow::updateVolumeBar() {
-    mVolumeControlGroup->updateLevels(mCore->getAudioRecorder()->getStopLevel(), AudioRecorderAdapter::LEVEL_TRIGGER);
+    mVolumeControlGroup->updateLevels(mCore->getAudioRecorder()->getStopLevel(), AudioRecorder::LEVEL_TRIGGER);
 }
 
 void MainWindow::onOpenSoundControl() {
@@ -610,11 +610,11 @@ void MainWindow::onResetNoiseLevel() {
 }
 
 void MainWindow::onToggleMicroMute(bool checked) {
-    mCore->getAudioRecorder()->setMuted(checked);
+    mCore->getAudioInput()->suspend(checked);
 }
 
 void MainWindow::onToggleSpeakerMute(bool checked) {
-    mCore->getAudioPlayer()->setMuted(checked);
+    mCore->getAudioPlayer()->suspend(checked);
 }
 
 void MainWindow::onFileNew() {

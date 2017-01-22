@@ -124,75 +124,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setLastVisitedOptionsPage(int id);
 
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Getter function for mInputDeviceName.
-    /// \return mInputDeviceName
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    const QString &getInputDeviceName() const {return mInputDeviceName;}
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for mInputDeviceName.
-    /// \param s : The name of the input device
-    ///
-    /// This will automatically store its new value to the QSettings.
-    ///////////////////////////////////////////////////////////////////////////////
-    void setInputDeviceName(const QString &s);
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Getter function for mInputDeviceSamplingRate.
-    /// \return mInputDeviceSamplingRate
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    int getInputDeviceSamplingRate() const {return mInputDeviceSamplingRate;}
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for mInputDeviceSamplingRate.
-    /// \param rate : The sampling rate
-    ///
-    /// This will automatically store its new value to the QSettings.
-    ///////////////////////////////////////////////////////////////////////////////
-    void setInputDeviceSamplingRate(int rate);
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Getter function for mOutputDeviceName.
-    /// \return mOutputDeviceName
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    const QString &getOuputDeviceName() const {return mOutputDeviceName;}
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for mOutputDeviceName.
-    /// \param s : The name of the input device
-    ///
-    /// This will automatically store its new value to the QSettings.
-    ///////////////////////////////////////////////////////////////////////////////
-    void setOutputDeviceName(const QString &s);
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Getter function for mOutputDeviceSamplingRate.
-    /// \return mOutputDeviceSamplingRate
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    int getOutputDeviceSamplingRate() const {return mOutputDeviceSamplingRate;}
-
-    ///////////////////////////////////////////////////////////////////////////////
-    /// \brief Setter function for mOutputDeviceSamplingRate.
-    /// \param b : The sampling rate
-    ///
-    /// This will automatically store its new value to the QSettings.
-    ///////////////////////////////////////////////////////////////////////////////
-    void setOutputDeviceSamplingRate(int rate);
-
     virtual void setSoundGeneratorMode(SoundGenerator::SoundGeneratorMode mode) override final;
     virtual void setSoundGeneratorVolumeDynamic(bool dynamic) override final;
     virtual void setStroboscopeMode(bool enable) override final;
     virtual void setDisableAutomaticKeySelection(bool disable) override final;
-
-    virtual double getAudioPlayerBufferSize() const override final;
-    virtual void setAudioPlayerBufferSize(double d) override final;
-    virtual int getAudioPlayerChannelsCount() const override final;
-    virtual void setAudioPlayerChannelsCount(int i) override final;
 
 protected:
 private:
@@ -206,20 +141,6 @@ private:
 
     /// last activated options page
     int mLastVisitedOptionsPage;
-
-    // Audio settings (devices, samling rates)
-
-    /// input device name
-    QString mInputDeviceName;
-
-    /// input device sampling rate
-    int mInputDeviceSamplingRate;
-
-    /// output device name
-    QString mOutputDeviceName;
-
-    /// output device sampling rate
-    int mOutputDeviceSamplingRate;
 
 private:
     /// The QSettings that will store all values to the storage.

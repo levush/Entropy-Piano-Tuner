@@ -27,6 +27,8 @@
 
 #include "../optionscontentswidgetinterface.h"
 
+class AudioInterfaceForQt;
+
 namespace options {
 
 ///
@@ -93,7 +95,7 @@ private slots:
 
 private:
     OptionsDialog *mOptionsDialog;      ///< Pointer to the options dialog
-    AudioBase *mAudioBase;              ///< Pointer to the audio base (input/output)
+    AudioInterfaceForQt *mAudioInterface;    ///< Pointer to the audio base (input/output)
     QAudio::Mode mMode;                 ///< Mode of this page
 
     QComboBox *mDeviceSelection;        ///< Item to select the device

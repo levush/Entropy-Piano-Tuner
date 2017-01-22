@@ -24,7 +24,7 @@
 
 #include "prerequisites.h"
 
-#include "core/audio/player/audioplayeradapter.h"
+#include "audiointerfaceforqt.h"
 
 class AudioPlayerThreadForQt;
 
@@ -36,7 +36,7 @@ class AudioPlayerThreadForQt;
 /// be operated from a single Qt-thread only.
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioPlayerForQt : public QObject, public AudioPlayerAdapter
+class AudioPlayerForQt : public AudioInterfaceForQt
 {
     Q_OBJECT
 
@@ -44,22 +44,25 @@ public:
     AudioPlayerForQt(QObject *parent);
     ~AudioPlayerForQt() {}
 
-    void init() override final;     // Initialize, start thread
-    void exit() override final;     // Exit, stop thread
+
+    void exit() override final;
 
     void start() override final;
     void stop() override final;
 
+    virtual void suspendChanged(bool s) override final;
+
+    virtual void setGain(double gain) override final;
+    virtual double getGain() const override final;
+protected:
+   virtual QAudio::Error createDevice(const QAudioFormat &format, const QAudioDeviceInfo &info, int bufferSizeMS) override final;
+
 private slots:
     void errorString(QString);
+    void stateChanged(QAudio::State state);
 
 private:
-    QThread* mQtThread;
-    AudioPlayerThreadForQt* mQtAudioManager;
+    QAudioOutput *mAudioSink;           ///< Audio sink to which the data is sent
 };
-
-
-
-
 
 #endif // AUDIOPLAYERFORQT_H

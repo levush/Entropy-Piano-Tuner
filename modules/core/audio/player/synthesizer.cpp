@@ -97,9 +97,12 @@ Synthesizer::Synthesizer () :
 /// of the synthesizer in an independent thread.
 ///////////////////////////////////////////////////////////////////////////////
 
-void Synthesizer::init (const int sampleRate, const int channels)
+void Synthesizer::open (AudioInterface *audioInterface)
 {
-    PCMWriterInterface::init(sampleRate, channels);
+    PCMDevice::open(audioInterface);
+
+    mSampleRate = getSampleRate();
+    mChannels = getChannels();
 
     if (mNumberOfKeys < 0 or mNumberOfKeys > 256)
     { LogW("Called init with an invalid number of keys = %d",mNumberOfKeys); return; }
@@ -169,7 +172,7 @@ void Synthesizer::setNumberOfKeys (int numberOfKeys)
     else if (numberOfKeys != mNumberOfKeys)
     {
         mNumberOfKeys = numberOfKeys;
-        init (mSampleRate, mChannels);
+        open (mAudioInterface);
     }
 }
 
@@ -307,6 +310,27 @@ void Synthesizer::updateIntensity()
     }
 }
 
+//-----------------------------------------------------------------------------
+//	                        Read audio data is requested
+//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief Generate waveform and write it to data
+/// \param data Pointer to the data
+/// \param max_bytes Maximum number of bytes that can be written
+/// \return Number of written bytes
+///
+///////////////////////////////////////////////////////////////////////////////
+
+int64_t Synthesizer::read(char *data, int64_t max_bytes)
+{
+    const int64_t packet_size = (max_bytes / sizeof(DataType)) / 2;
+    if (generateAudioSignal(reinterpret_cast<DataType*>(data), packet_size)) {
+        return packet_size * sizeof(DataType);
+    }
+    std::fill(data, data + max_bytes, 0);
+    return max_bytes;
+}
 
 //-----------------------------------------------------------------------------
 //	                        Generate the waveform
@@ -321,7 +345,7 @@ void Synthesizer::updateIntensity()
 /// waveforms.
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
+bool Synthesizer::generateAudioSignal (DataType *outputBuffer, const int64_t packet_size)
 {
     // update intensity and played tones
     updateIntensity();
@@ -339,7 +363,7 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
     if (channels<=0 or channels>2) return false;
 
 
-    for (size_t bufferIndex = channels - 1; bufferIndex < outputBuffer.size(); bufferIndex += channels) {
+    for (size_t bufferIndex = channels - 1; bufferIndex < packet_size; bufferIndex += channels) {
         // pcm data
         double left = 0, right = 0;
 
@@ -423,12 +447,12 @@ bool Synthesizer::generateAudioSignal (AudioBase::PacketType &outputBuffer)
         // write data to buffer
         if (channels==1)
         {
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PCMDataType>((left+right)/2);
+            outputBuffer[bufferIndex] = static_cast<DataType>((left+right)/2 * std::numeric_limits<DataType>::max());
         }
         else // if stereo
         {
-            outputBuffer[bufferIndex - 1] = static_cast<AudioBase::PCMDataType>(left);
-            outputBuffer[bufferIndex] = static_cast<AudioBase::PCMDataType>(right);
+            outputBuffer[bufferIndex - 1] = static_cast<DataType>(left * std::numeric_limits<DataType>::max());
+            outputBuffer[bufferIndex] = static_cast<DataType>(right * std::numeric_limits<DataType>::max());
         }
 
     }

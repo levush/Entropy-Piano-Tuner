@@ -27,6 +27,7 @@
 #include "prerequisites.h"
 #include "synthesizer.h"
 #include "soundgenerator.h"
+#include "core/audio/audiointerface.h"
 #include "../midi/midiadapter.h"
 #include "../../piano/piano.h"
 #include "../../messages/messagelistener.h"
@@ -50,11 +51,11 @@ public:
     };
 
 public:
-    SoundGenerator (AudioPlayerAdapter *audioAdapter);
+    SoundGenerator (AudioInterface *AudioInterface);
     ~SoundGenerator(){}
 
     void init ();
-    void exit () { mSynthesizer.exit(); }   ///< Synthesizer shutdown
+    void exit () { mSynthesizer.close(); }   ///< Synthesizer shutdown
 
     Synthesizer &getSynthesizer() {return mSynthesizer;}
 

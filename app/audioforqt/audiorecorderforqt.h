@@ -25,42 +25,31 @@
 
 #include "prerequisites.h"
 
-#include "core/audio/recorder/audiorecorderadapter.h"
+#include "audiointerfaceforqt.h"
 
-class AudioRecorderForQt : public QObject, public AudioRecorderAdapter
+class AudioRecorderForQt : public AudioInterfaceForQt
 {
     Q_OBJECT
 
-
-    // define the data format of the input/output stream
-    // on android float streams are not supported, so we just use
-    // in general a singed int stream
-    // the int data will be scaled to the intervall [0,1] to allow an
-    // internal computation with floats independent on the selected stream
-    // size.
-    /// Data format of the input/output stream
-    typedef int16_t DataFormat;
-    /// maximal alloed value of the stream
-    static const DataFormat SIGNAL_SCALING;
 public:
     AudioRecorderForQt(QObject *parent);
     virtual ~AudioRecorderForQt();
 
-    void init() override;
     void exit() override;
 
     void start() override;
     void stop() override;
 
-    virtual void setDeviceInputGain(double volume) override final;
-    virtual double getDeviceInputGain() const override final;
+    virtual void suspendChanged(bool v) override final;
 
-public slots:
-    void onReadPacket();
+    virtual void setGain(double volume) override final;
+    virtual double getGain() const override final;
+
+protected:
+   virtual QAudio::Error createDevice(const QAudioFormat &format, const QAudioDeviceInfo &info, int bufferSizeMS) override final;
 
 private:
     QAudioInput *mAudioInput;
-    QIODevice *mIODevice;
     QTimer mReadTimer;
 };
 
