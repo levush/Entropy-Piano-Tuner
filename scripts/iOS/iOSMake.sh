@@ -74,8 +74,8 @@ if $DO_BUILD ; then
 	rm -rf $BINARY_FILE_NAME.app
 
 	# make app file
-	qmake ../entropytuner.pro -r -spec macx-ios-clang CONFIG+=release CONFIG+=iphoneos QMAKE_IOS_TARGETED_DEVICE_FAMILY=$QMAKE_IOS_TARGETED_DEVICE_FAMILY
-	#make -j4
+	qmake ../entropypianotuner.pro -r -spec macx-ios-clang CONFIG+=release CONFIG+=iphoneos QMAKE_IOS_TARGETED_DEVICE_FAMILY=$QMAKE_IOS_TARGETED_DEVICE_FAMILY
+	make $MAKE_ARGS
 	#xcodebuild -verbose -jobs 4 -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 	xcodebuild -alltargets -jobs 4 -configuration "Release" -scheme "entropypianotuner" -sdk iphoneos archive -archivePath "${PUBLISH_DIR}/entropypianotuner.xcarchive"
 
