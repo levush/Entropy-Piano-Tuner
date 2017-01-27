@@ -118,13 +118,6 @@ ios {
     # the following line is needed with XCode 7 bug 58926
     QMAKE_MAC_SDK = iphoneos
 
-    iphoneos {
-        LIBS += -L$$PWD/dependencies/lib/ios -lfftw3_armv7
-        # in release mode also arm64 is required
-        LIBS += -L$$PWD/dependencies/lib/ios -lfftw3_arm64
-    }
-
-
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/ios/Info.plist
 
