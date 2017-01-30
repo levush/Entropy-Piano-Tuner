@@ -238,9 +238,12 @@ void PlotsDialog::prepareCurve(Curves curve) {
         c->setStyle(QwtPlotCurve::NoCurve);
         c->setSymbol(new QwtSymbol(QwtSymbol::HLine, QBrush(), QPen(Qt::red, 2), QSize(mPlot->currentTickDistanceInPixel(), 1)));
 
+        int keyA4 = mPiano.getKeyboard().getKeyNumberOfA4();
+        double fA4 = mPiano.getKey(keyA4).getRecordedFrequency();
+
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i)));
+            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getRecordedFrequency() / mPiano.getEqualTempFrequency(i, 0, fA4)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_COMPUTED) {
@@ -249,7 +252,7 @@ void PlotsDialog::prepareCurve(Curves curve) {
 
         QPolygonF points;
         for (int i = 0; i < mKeyboard.getNumberOfKeys(); ++i) {
-            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getComputedFrequency() / mPiano.getEqualTempFrequency(i,0,440)));
+            points << QPointF(i + 0.5 + getKeyOffset(), cents(mKeyboard[i].getComputedFrequency() / mPiano.getDefiningTempFrequency(i,0,440)));
         }
         c->setSamples(points);
     } else if (curve == CURVE_TUNED) {
