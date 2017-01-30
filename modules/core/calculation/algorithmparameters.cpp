@@ -56,6 +56,10 @@ void SingleAlgorithmParameters::loadDefaultParams() {
             if (hasStringParameter(param.getID())) {continue;}
             setStringParameter(param.getID(), param.getStringDefaultValue());
             break;
+        case AlgorithmParameterDescription::TYPE_BOOL:
+            if (hasBoolParameter(param.getID())) {continue;}
+            setBoolParameter(param.getID(), param.getBoolDefaultValue());
+            break;
         default:
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parsing of default parameter not implemented");
             break;
@@ -76,6 +80,11 @@ int SingleAlgorithmParameters::getIntParameter(const std::string &s) const {
 const std::string &SingleAlgorithmParameters::getStringParameter(const std::string &id) const {
     EptAssert(hasStringParameter(id), "Parameter has to be in list before accessing.");
     return mStringParameters.at(id);
+}
+
+bool SingleAlgorithmParameters::getBoolParameter(const std::string &id) const {
+    EptAssert(hasBoolParameter(id), "Parameter has to be in list befor accessing.");
+    return mBoolParameters.at(id);
 }
 
 SingleAlgorithmParametersPtr AlgorithmParameters::getPreparedParameters(const std::string &id) const

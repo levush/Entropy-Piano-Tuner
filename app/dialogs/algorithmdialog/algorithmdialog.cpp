@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QCheckBox>
 
 #include "core/config.h"
 #include "core/calculation/algorithmfactorydescription.h"
@@ -168,6 +169,9 @@ void AlgorithmDialog::acceptCurrent() {
         } else if (param.getType() == AlgorithmParameterDescription::TYPE_LIST) {
             const QComboBox *cb = qobject_cast<const QComboBox*>(widget);
             mCurrentAlgorithmParameters->setStringParameter(paramWidget.first, cb->currentData().toString().toStdString());
+        } else if (param.getType() == AlgorithmParameterDescription::TYPE_BOOL) {
+            const QCheckBox *cb = qobject_cast<const QCheckBox*>(widget);
+            mCurrentAlgorithmParameters->setBoolParameter(paramWidget.first, cb->isChecked());
         } else {
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parameter type not implemented");
         }
@@ -363,6 +367,17 @@ void AlgorithmDialog::algorithmSelectionChanged(int index) {
                 cb->setCurrentIndex(defaultIndex);
 
                 dataWidget = cb;
+            } else if (param.getType() == AlgorithmParameterDescription::TYPE_BOOL) {
+                QCheckBox *cb = new QCheckBox;
+                cb->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+                dataLayout->addWidget(cb);
+
+                cb->setChecked(param.getBoolDefaultValue());
+                if (description.hasBoolParameter(param.getID())) {
+                    cb->setChecked(description.getBoolParameter(param.getID()));
+                }
+
+                dataWidget = cb;
             } else {
                 EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Parameter type not implemented.");
             }
@@ -432,6 +447,9 @@ void AlgorithmDialog::defaultButtonClicked() {
         QComboBox *cb = dynamic_cast<QComboBox*>(dataWidget);
         cb->setCurrentIndex(cb->findData(QString::fromStdString(param.getStringDefaultValue())));
         break; }
+    case AlgorithmParameterDescription::TYPE_BOOL:
+        dynamic_cast<QCheckBox*>(dataWidget)->setChecked(param.getBoolDefaultValue());
+        break;
     default:
         EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "Default button does not implement type.");
     }

@@ -51,12 +51,18 @@ public:
     const std::string &getStringParameter(const std::string &id) const;
     const std::map<std::string, std::string> &getStringParameters() const {return mStringParameters;}
 
+    void setBoolParameter(const std::string &id, bool b) {mBoolParameters[id] = b;}
+    bool hasBoolParameter(const std::string &id) const {return mBoolParameters.count(id) > 0;}
+    bool getBoolParameter(const std::string &id) const;
+    const std::map<std::string, bool> &getBoolParameters() const {return mBoolParameters;}
+
 private:
     const std::string mAlgorithmName;
 
     std::map<std::string, double> mDoubleParameters;
     std::map<std::string, int> mIntParamters;
     std::map<std::string, std::string> mStringParameters;
+    std::map<std::string, bool> mBoolParameters;
 };
 
 typedef std::shared_ptr<SingleAlgorithmParameters> SingleAlgorithmParametersPtr;

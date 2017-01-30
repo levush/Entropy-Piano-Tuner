@@ -144,6 +144,10 @@ AlgorithmParameterDescription AlgorithmInformationParser::parseAlgorithmParamete
         parameter.setType(AlgorithmParameterDescription::TYPE_LIST);
 
         parameter.getStringDefaultValue() = reader.queryStringAttribute("default");
+    } else if (type == "bool" || type == "boolean") {
+        parameter.setType(AlgorithmParameterDescription::TYPE_BOOL);
+
+        reader.queryBoolAttributeRef("default", parameter.getBoolDefaultValue());
     } else {
         EPT_EXCEPT(EptException::ERR_INVALIDPARAMS, "Parameter type '" + type + "' is not supported.");
     }

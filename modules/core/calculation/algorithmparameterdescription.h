@@ -33,6 +33,7 @@ public:
         TYPE_DOUBLE,
         TYPE_INT,
         TYPE_LIST,
+        TYPE_BOOL,
     };
 
 public:
@@ -83,6 +84,10 @@ public:
     const StringParameterList &getStringList() const {return mStringList;}
     StringParameterList &getStringList() {return mStringList;}
 
+    // bool parameters
+    bool getBoolDefaultValue() const {return mBoolDefaultValue;}
+    bool &getBoolDefaultValue() {return mBoolDefaultValue;}
+
     // global parameters
     // ----------------------------------------------------------------------------
     bool displayLineEdit() const {return mDisplayLineEdit;}
@@ -122,6 +127,8 @@ private:
 
     std::string mStringDefaultValue;
     StringParameterList mStringList;
+
+    bool mBoolDefaultValue;
 
     bool   mDisplayLineEdit;
     bool   mDisplaySpinBox;

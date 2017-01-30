@@ -33,6 +33,7 @@ AlgorithmParameterDescription::AlgorithmParameterDescription() :
     mIntMaxValue(std::numeric_limits<int>::max()),
     mStringDefaultValue(),
     mStringList(),
+    mBoolDefaultValue(false),
     mDisplayLineEdit(false),
     mDisplaySpinBox(true),
     mDisplaySlider(true),
