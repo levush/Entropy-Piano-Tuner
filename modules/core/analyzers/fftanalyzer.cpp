@@ -67,13 +67,18 @@ std::pair<FFTAnalyzerErrorTypes, std::shared_ptr<Key> > FFTAnalyzer::analyse (
     // consisty check
     EptAssert(piano, "Piano has to be set");
     EptAssert(finalFFT, "FFT has to exist");
-    EptAssert(finalFFT->isValid(), "The FFT data is not valid");
     EptAssert(finalKey >= 0, "The final key has to be set.");
-
 
     std::shared_ptr<Key> key;  // the key output
 
+    // dont handle an invalid fft's
+    if (!finalFFT->isValid()) {
+        LogD("Received invalid FFT to analyse. Cancel the analysis.");
+        return std::make_pair(FFTAnalyzerErrorTypes::ERR_DATA, key);
+    }
 
+
+    // Start with the analysis
     LogV("FFTAnalyzer started");
 
     // Map the final FFT to a logarithmically binned spectrum:

@@ -35,6 +35,7 @@ enum class EPT_EXTERN FFTAnalyzerErrorTypes
     ERR_FREQUENCY_OUT_OF_BOUNDS,        ///< The recorded frequency is out of the piano range
     ERR_NO_COMPUTED_FREQUENCY,          ///< The analyzer needs a computed frequency
     ERR_NO_PEAK_AMPLITUDE,              ///< No intensity in the signal near expected peak
+    ERR_DATA,                           ///< The data contains error and cannot be processed
 };
 
 
