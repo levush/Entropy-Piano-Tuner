@@ -63,14 +63,21 @@ void Key::clear()
 /// of invertibility this function returns a floating-point value. In order
 /// to get the actual logbin index the result of this function has to be
 /// rounded (not truncated) to an integer.
-/// \param f : Frequency in Hz in the range 0 < f < 20 kHz.
+/// \param f : Frequency in Hz (usually in the range 0 < f < 20 kHz).
 /// \return Floating point value representing the logbin index. Note that this
 /// value may lie outside of the allowed index range of the logbin spectrum.
+/// This function will return a negative number if the frequency is <= 0.
 ///////////////////////////////////////////////////////////////////////////////
 
 double Key::FrequencyToRealIndex (double f)
 {
-    EptAssert(f > 0 && f < 20000, "Freqency must be in [0,20000]");
+    if (f < 0) {
+        LogD("Frequency <= 0Hz detected.");
+        return -1;
+    } else if (f > 20000) {
+        LogD("Frequency higher than 20KHz detected.");
+    }
+
     static const double lnfmin = log(fmin);
     return BinsPerOctave * (log(f) - lnfmin) / MathTools::LOG2;
 }
@@ -81,9 +88,10 @@ double Key::FrequencyToRealIndex (double f)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Converts a frequency in Hz to the corresponding logbin index.
-/// \param f : Frequency in Hz in the range 0 < f < 20 kHz.
+/// \param f : Frequency in Hz (usually in the range 0 < f < 20 kHz).
 /// \return Logbin index. Note that this
 /// value may lie outside of the allowed index range of the logbin spectrum.
+/// This function will return a negative number if the frequency is <= 0.
 ///////////////////////////////////////////////////////////////////////////////
 
 int Key::FrequencyToIndex (double f)
