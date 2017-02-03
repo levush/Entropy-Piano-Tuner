@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QScroller>
 #include <QClipboard>
+#include <QTextCursor>
 
 #include "core/config.h"
 
@@ -50,6 +51,11 @@ LogViewer::LogViewer(QWidget *parent) :
 
     ui->textBrowser->setReadOnly(true);
     ui->textBrowser->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard | Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+
+    QTextCursor tc = ui->textBrowser->textCursor();
+    tc.movePosition(QTextCursor::End);
+    ui->textBrowser->setTextCursor(tc);
+    ui->textBrowser->ensureCursorVisible();
 
     // icon
     ui->copyToClipboardButton->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/media/icons/edit-copy.png")));
