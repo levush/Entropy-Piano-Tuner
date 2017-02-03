@@ -520,10 +520,13 @@ void SignalAnalyzer::updateOverpull ()
 
 double SignalAnalyzer::signalPreprocessing(FFTWVector &signal)
 {
+    if (signal.size() == 0) {
+        LogW("Empty signal. Cancelling the signal preprocessing");
+        return 0 ;
+    }
 
     const uint sr = mAudioRecorder->getSampleRate();
     uint N=(uint)signal.size();
-    if (N==0) return 0;
 
     // 1. Remove dc-Bias and cut subsonic waves
     // For a derivation see Mathematica file in the doc folder
@@ -602,6 +605,14 @@ double SignalAnalyzer::signalPreprocessing(FFTWVector &signal)
 ///////////////////////////////////////////////////////////////////////////////
 
 void SignalAnalyzer::signalProcessing(FFTWVector &signal, int samplingrate) {
+    if (signal.size() == 0) {
+        LogW("Empty signal. Cancelling the signal processing");
+        return;
+    } else if (samplingrate <= 0) {
+        LogW("Invalid sampling rate. Cancelling the signal processing");
+        return;
+    }
+
     mPowerspectrum = std::make_shared<FFTData>();
     mPowerspectrum->samplingRate = samplingrate;
     PerformFFT(signal, mPowerspectrum->fft);
@@ -745,9 +756,11 @@ void SignalAnalyzer::createPolygon (const FFTWVector &powerspec, FFTPolygon &pol
         poly[f] = y;
         q1=q2; qs1=qs2; leftarea=rightarea;
     }
-    EptAssert(ymax>0,"power should be nonzero");
-    for (auto &p : poly) p.second /= ymax; // normalize
-
+    if (ymax <= 0) {
+        LogW("Power should be nonzero, possibly empty data.");
+    } else {
+        for (auto &p : poly) p.second /= ymax; // normalize
+    }
 }
 
 

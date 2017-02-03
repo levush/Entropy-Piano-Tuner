@@ -229,8 +229,16 @@ void FFT_Implementation::updatePlan (const FFTComplexVector &in,
 
 void FFT_Implementation::calculateFFT  (const FFTRealVector &in, FFTComplexVector &out)
 {
-    EptAssert (in.size()>=1,"calling FFT with empty vector");
+    // resize output vector
     if (out.size() != in.size()/2+1) out.resize(in.size()/2+1);
+
+    // check for persistent data
+    if (in.size() == 0) {
+        LogD("Calling FFT with empty vector. Skipping computation");
+        return;
+    }
+
+    // Perform the computation
     updatePlan(in,FFTW_ESTIMATE);
     EptAssert (in.size()==mNRC and out.size()==mNRC/2+1,"Vector consistency");
     try {
