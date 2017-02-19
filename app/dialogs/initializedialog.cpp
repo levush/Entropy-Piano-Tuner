@@ -20,6 +20,7 @@
 #include "initializedialog.h"
 #include <QApplication>
 #include <QStyle>
+#include <QThread>
 #include "../core/messages/messagehandler.h"
 
 QtCoreInitialisation::QtCoreInitialisation(QWidget *parent) :
@@ -36,6 +37,10 @@ QtCoreInitialisation::~QtCoreInitialisation() {
 
 void QtCoreInitialisation::updateProgress (int percentage)
 {
+    if (!mInitializeDialog) {
+        return;
+    }
+
     mInitializeDialog->updateProgress(percentage);
 
     // process the message loop
@@ -54,9 +59,10 @@ void QtCoreInitialisation::create()
 
 void QtCoreInitialisation::destroy()
 {
-    EptAssert(mInitializeDialog, "init dialog already destroyed");
-    delete mInitializeDialog;
-    mInitializeDialog = nullptr;
+    if (mInitializeDialog) {
+        delete mInitializeDialog;
+        mInitializeDialog = nullptr;
+    }
 }
 
 
@@ -82,8 +88,11 @@ InitializeDialog::InitializeDialog(QWidget *parent) :
 
     // wait maximum of 1sec that this windows is drawn once
     QEventLoop loop;
-    while (!mOnceDrawn) {
-        loop.processEvents(QEventLoop::AllEvents, 1000);
+    int  i = 0;
+    while (!mOnceDrawn && i < 10) {
+        loop.processEvents(QEventLoop::AllEvents, 100);
+        QThread::msleep(100);
+        ++i;
     }
 }
 

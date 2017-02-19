@@ -326,6 +326,7 @@ void MainWindow::init(Core *core) {
     }
 
     ui->controlLayout->addWidget(mCalculationProgressGroup = new CalculationProgressGroup(mCore, this));
+    mCalculationProgressGroup->setVisible(false);  // not visible in idle mode
 }
 
 void MainWindow::start() {
@@ -400,10 +401,12 @@ void MainWindow::handleMessage(MessagePtr m) {
         emit modeChanged(mmc->getMode());
 
         // hide all groups first and enable if required
-        mCalculationProgressGroup->setVisible(false);
+        if (mCalculationProgressGroup) {
+            mCalculationProgressGroup->setVisible(false);
+        }
 
         // ask user if he wants to save
-        if (mCore->getProjectManager()->hasChangesInFile()) {
+        if (mCore && mCore->getProjectManager()->hasChangesInFile()) {
             if (DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::MODE_CHANGE_SAVE, this) == QMessageBox::Yes) {
                 // save
                 if (mCore->getProjectManager()->onSaveFile() == ProjectManagerAdapter::R_CANCELED) {

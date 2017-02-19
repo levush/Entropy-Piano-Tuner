@@ -63,6 +63,13 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
     // create file manager instance
     new FileManagerForQt();
 
+    // open the main window with the startup file
+    mMainWindow.reset(new MainWindow());
+#ifdef Q_OS_MOBILE
+    // fix fullscreen size on mobile devices
+    mMainWindow->setFixedSize(primaryScreen()->size());
+#endif
+
     // get last exit code
     QSettings settings;
     mLastExitCode =  settings.value("application/lastExitCode", EXIT_SUCCESS).toInt();
@@ -73,9 +80,10 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
 
     // check if there was a crash last session
     if (mLastExitCode != EXIT_SUCCESS) {
-        if (QMessageBox::information(nullptr, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
+        QMainWindow *m = mMainWindow.get();
+        if (QMessageBox::information(m, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
                 == QMessageBox::Yes) {
-            LogViewer v;
+            LogViewer v(m);
             v.exec();
         }
     }
@@ -116,13 +124,6 @@ void TunerApplication::setApplicationExitState(int errorcode) {
 void TunerApplication::init() {
 
 
-    // open the main window with the startup file
-    mMainWindow.reset(new MainWindow());
-#ifdef Q_OS_MOBILE
-    // fix fullscreen size on mobile devices
-    mMainWindow->setFixedSize(primaryScreen()->size());
-#endif
-
     // create core
     mCore.reset(new Core(
                     new ProjectManagerForQt(mMainWindow.get()),
@@ -141,14 +142,18 @@ void TunerApplication::init() {
     EptAssert(mCore, "Core has to be created before entering init");
 
     // init the window
+    LogI("Initializing the main window");
     mMainWindow->init(mCore.get());
 
     // init platform components
+    LogI("Initializing the platform tools");
     PlatformTools::getSingleton()->init();
 
     // then init the core
+    LogI("Initializing the core");
     initCore();
 
+    LogI("Initialized");
 }
 
 void TunerApplication::exit() {
