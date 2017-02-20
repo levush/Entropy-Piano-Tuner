@@ -76,7 +76,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     const QString buildByText = tr("by %1 and %2").arg("Prof. Dr. Haye Hinrichsen", "Christoph Wick M.Sc.");
 
     QString dependenciesText = tr("Based on");
-    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"https://github.com/ChWick/qtmidi\">QtMidi</a>, <a href=\"http://qwt.sf.net\">Qwt</a>, <a href=\"http://fftw.org\">fftw3</a>");
+    dependenciesText.append(" <a href=\"Qt\">Qt</a>, <a href=\"https://gitlab.com/tp3/qtmidi\">QtMidi</a>, <a href=\"http://qwt.sf.net\">Qwt</a>, <a href=\"http://fftw.org\">fftw3</a>");
 #ifdef EPT_SHARED_ALGORITHMS
     dependenciesText.append(", <a href=\"http://libuv.org\">libuv</a>");
 #endif
@@ -91,7 +91,7 @@ AboutDialog::AboutDialog(QWidget *parent, QString iconPostfix) :
     const QString copyrightText = tr("Copyright %1 Dept. of Theor. Phys. III, University of Würzburg. All rights reserved.").arg(compileTime.toString("yyyy"));
     const QString licenseText = tr("This software is licensed under the terms of the %1. The source code can be accessed at %2.").
             arg("<a href=\"http://www.gnu.org/licenses/gpl-3.0-standalone.html\">GPLv3</a>",
-                "<a href=\"https://gitlab.com/entropytuner/Entropy-Piano-Tuner\">GitLab</a>");
+                "<a href=\"https://gitlab.com/tp3/Entropy-Piano-Tuner\">GitLab</a>");
 
     const QString warrantyText = tr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.");
 
