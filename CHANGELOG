@@ -1,5 +1,6 @@
 entropypianotuner (1.2.0) stable; urgency=medium
 
+  * Disabled all context menus on the tool bars (Closes: #32)
   * Removed assertions on unlikely data (Closes: #37, #38, #40)
   * Usage of QtMidi for midi support (Closes: #30)
   * Algortihms as library plugin (Closes: #21)

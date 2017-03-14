@@ -109,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QScrollArea *modeScrollArea = new QScrollArea;
     ui->modeToolBar->addWidget(modeScrollArea);
+    ui->modeToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
     modeScrollArea->setWidgetResizable(true);
     modeScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     modeScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -193,6 +194,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFileToolBar->addSeparator();
     mFileToolBar->addAction(iconFromTheme("preferences-system"), tr("Options"), this, SLOT(onOptions()));
     mFileToolBar->addAction(QIcon(":/media/icons/mathematical_plot.png"), tr("Graphs"), this, SLOT(onOpenPlots()));
+    mFileToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     QToolBar *helpToolBar = new QToolBar(tr("Help"));
     helpToolBar->setObjectName("helpToolBar");
@@ -201,6 +203,7 @@ MainWindow::MainWindow(QWidget *parent) :
     helpToolBar->setFloatable(false);
     helpToolBar->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea);
     helpToolBar->setIconSize(mFileToolBar->iconSize());
+    helpToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     QWidget *tbStretch = new QWidget;
     helpToolBar->addWidget(tbStretch);
