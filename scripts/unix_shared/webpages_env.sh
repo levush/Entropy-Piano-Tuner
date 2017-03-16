@@ -5,7 +5,7 @@
 #export _SERVER_ROOT_DIR=download
 
 export SERVER_USERNAME=hinrichsen
-export SERVER_ADDRESS=webpages.physik.uni-wuerzburg.de
+export SERVER_ADDRESS=eptwebpages
 export _SERVER_ROOT_DIR=public_html/ept
 
 # load version
@@ -28,6 +28,12 @@ export US_DEPENDENCIES=$US_DOWNLOADS/dependencies/$depsVersionString
 
 # define functions to create a directory and uploading a file
 
+# set permissions
+########################################
+function fix_permissions {
+	local remote_path=$1
+	ssh $SERVER_USERNAME@$SERVER_ADDRESS "chmod 755 -R $_SERVER_ROOT_DIR/$remote_path"
+}
 # mkdir REMOTE_PATH
 ########################################
 

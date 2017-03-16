@@ -2,7 +2,7 @@
 setlocal
 
 :: load the user environment variables
-call windows_env.user.bat
+call windows_env.user.bat || exit 1
 
 :: default platform
 set vcredist=x86
@@ -91,7 +91,6 @@ if %build%==1 (
 		:: silent + other options
 		"%QtCreatorPath%\jom.exe" -S %jomargs% || exit /b
 	) else (
-		:: mingw make
 		"%MinGWPath%\mingw32-make.exe" %jomargs% || exit /b
 	)
 	
@@ -116,25 +115,25 @@ if %updateDependencies%==1 (
 	move "%builddir%\.keepme" %depsDataDir%
 
 	echo Calling windeployqt
-	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\bin\entropypianotuner.exe"
+	windeployqt --compiler-runtime --dir %depsDataDir% "%builddir%\bin\entropypianotuner.exe" || exit 1
 	
-	copy /Y "%builddir%\bin\fftw3.dll" %depsDataDir%
-	copy /Y "%builddir%\bin\qwt.dll" %depsDataDir%
-	copy /Y "%builddir%\bin\uv.dll" %depsDataDir%
+	copy /Y "%builddir%\bin\fftw3.dll" %depsDataDir% || exit 1
+	copy /Y "%builddir%\bin\qwt.dll" %depsDataDir% || exit 1
+	copy /Y "%builddir%\bin\uv.dll" %depsDataDir% || exit 1
 	
 	:: Additional Qt dlls due to bug in windeployqt
-	copy /Y "%QTDIR%\bin\Qt5OpenGL.dll" %depsDataDir%
-	copy /Y "%QTDIR%\bin\Qt5PrintSupport.dll" %depsDataDir%
+	copy /Y "%QTDIR%\bin\Qt5OpenGL.dll" %depsDataDir% || exit 1
+	copy /Y "%QTDIR%\bin\Qt5PrintSupport.dll" %depsDataDir% || exit 1
 	
 	:: Midi Plugin is not deployed aswell
 	mkdir %depsDataDir%\midi
-	copy /Y "%QTDIR%\plugins\midi\qtwinmm_midi.dll" %depsDataDir%\midi
+	copy /Y "%QTDIR%\plugins\midi\qtwinmm_midi.dll" %depsDataDir%\midi || exit 1
 	
 	if %compiler% EQU msvc (
 		:: move vcredist_xxx to vcredist
 		echo Moving vcredist
 		del %depsDataDir%\vcredist.exe
-		move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit /b
+		move %depsDataDir%\vcredist_%vcredist%.exe %depsDataDir%\vcredist.exe || exit 1
 	) else (
 		:: move the mingw runtime done by Qt
 		echo MinGW runtime moved
@@ -148,18 +147,18 @@ if %build%==1 (
 	echo Copying built exe and icon started.
 	rd %appDataDir% /s /q
 	mkdir %appDataDir% || exit /b
-	copy /Y %builddir%\bin\entropypianotuner.exe %appDataDir% || exit /b
-	copy /Y %builddir%\bin\core.dll %appDataDir% || exit /b
-	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir% || exit /b
+	copy /Y %builddir%\bin\entropypianotuner.exe %appDataDir% || exit 1
+	copy /Y %builddir%\bin\core.dll %appDataDir% || exit 1
+	copy /Y %tunerdir%\appstore\icons\entropytuner.ico %appDataDir% || exit 1
 	echo Copying build exe and icon finished.
 	
 	echo Copying common algorithms started.
 	rd %commonAlgsDataDir% /s /q
-	mkdir %commonAlgsDataDir% || exit /b
-	mkdir %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\bin\algorithms\entropyminimizer.dll %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\bin\algorithms\pitchraise.dll %commonAlgsDataDir%\algorithms || exit /b
-	copy /Y %builddir%\bin\algorithms\resettorecording.dll %commonAlgsDataDir%\algorithms || exit /b
+	mkdir %commonAlgsDataDir% || exit 1
+	mkdir %commonAlgsDataDir%\algorithms || exit 1
+	copy /Y %builddir%\bin\algorithms\entropyminimizer.dll %commonAlgsDataDir%\algorithms || exit 1
+	copy /Y %builddir%\bin\algorithms\pitchraise.dll %commonAlgsDataDir%\algorithms || exit 1
+	copy /Y %builddir%\bin\algorithms\resettorecording.dll %commonAlgsDataDir%\algorithms || exit 1
 	echo Copying common algorithms done.
 )
 
@@ -170,7 +169,7 @@ if %updatePackages%==1 (
 	echo Updating packages started. This may take some time
 	
 	rd %repository% /s /q
-	repogen -p packages %repository%
+	repogen -p packages %repository% || exit 1
 	
 	echo Updating packages finished.
 )
@@ -181,27 +180,27 @@ if %createInstaller%==1 (
 	
 	del %relConfigFile%
 	:: create windows config pointing to the correct repository
-	call %tunerdir%\scripts\windows\BatchSubstitute.bat dummy_repository %repository% config\config.xml > %relConfigFile%.tmp
+	call %tunerdir%\scripts\windows\BatchSubstitute.bat dummy_repository %repository% config\config.xml > %relConfigFile%.tmp || exit 1
 	:: correct path for windows for default install dir
-	call %tunerdir%\scripts\windows\BatchSubstitute.bat "<TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>" "<TargetDir>@ApplicationsDir@/EntropyPianoTuner</TargetDir>" %relConfigFile%.tmp > %relConfigFile%
+	call %tunerdir%\scripts\windows\BatchSubstitute.bat "<TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>" "<TargetDir>@ApplicationsDir@/EntropyPianoTuner</TargetDir>" %relConfigFile%.tmp > %relConfigFile% || exit 1
 	
 	if %compiler% EQU msvc (
 		:: use correct script
-		copy /Y scripts\deps_installscript_msvc.qs packages\org.entropytuner.deps\meta\installscript.qs || exit /b
+		copy /Y scripts\deps_installscript_msvc.qs packages\org.entropytuner.deps\meta\installscript.qs || exit 1
 	) else (
 		:: use dummy script
-		copy /Y scripts\deps_installscript_dummy.qs packages\org.entropytuner.deps\meta\installscript.qs || exit /b
+		copy /Y scripts\deps_installscript_dummy.qs packages\org.entropytuner.deps\meta\installscript.qs || exit 1
 	)
 	
 	:: create online/offline installer
-	binarycreator --%installer_type% -v -c %relConfigFile% -p packages %setupname%
+	binarycreator --%installer_type% -v -c %relConfigFile% -p packages %setupname% || exit 1
 
 	:: move installer to publish dir
 	cd %tunerdir%
 	mkdir publish
 	cd publish
 	echo Moving installer to %CD%\%setupname%
-	move %tunerdir%\appstore\installer\%setupname% .
+	move %tunerdir%\appstore\installer\%setupname% . || exit 1
 	
 	echo Creating installer finished.
 )
@@ -211,7 +210,7 @@ if %publish%==1 (
 	@echo off
 	C:
 	chdir %CygwinBin%
-	bash.exe -o igncr "%tunerdir%\scripts\windows\windowsUpload.sh"
+	bash.exe -o igncr "%tunerdir%\scripts\windows\windowsUpload.sh" || exit 1
 	@echo on
 	echo Publishing updates finished.
 )
