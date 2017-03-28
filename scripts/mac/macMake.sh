@@ -18,6 +18,8 @@ DO_UPLOAD=false
 DO_TRANSLATIONS=false
 DO_VERSION_UPDATE=false
 
+_TARGET_DIR="bin"
+
 echo "Parsing options."
 # parse options
 # -c clear
@@ -100,22 +102,22 @@ if $DO_BUILD ; then
 	echo "Creating temporary build directory"
 	mkdir -p $BUILD_DIR
 	cd $BUILD_DIR
-	rm -rf target/$BINARY_FILE_NAME.app
+	rm -rf $_TARGET_DIR/$BINARY_FILE_NAME.app
 	qmake $TUNER_BASE_DIR/entropypianotuner.pro -r -spec macx-clang CONFIG+=$CONFIG DEFINES+="CONFIG_ENABLE_UPDATE_TOOL"
 	make $MAKE_ARGS
 
 	# copy info.plist and icns files on our own. there is a bug in qt
-	cp $TUNER_BASE_DIR/app/platforms/osx/info.plist target/$BINARY_FILE_NAME.app/Contents/.
-	cp $TUNER_BASE_DIR/appstore/icons/entropytuner.icns target/$BINARY_FILE_NAME.app/Contents/Resources/.
+	cp $TUNER_BASE_DIR/app/platforms/osx/info.plist $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/.
+	cp $TUNER_BASE_DIR/appstore/icons/entropytuner.icns $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/Resources/.
 
 	# copy fftw3 and qwt
-	mkdir -p target/$BINARY_FILE_NAME.app/Contents/Frameworks
-	cp -r thirdparty/qwt-lib/qwt.framework target/$BINARY_FILE_NAME.app/Contents/Frameworks/.
-	cp thirdparty/fftw3/libfftw3*.dylib target/$BINARY_FILE_NAME.app/Contents/Frameworks/.
+	mkdir -p $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/Frameworks
+	cp -r thirdparty/qwt-lib/qwt.framework $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/Frameworks/.
+	cp thirdparty/fftw3/libfftw3*.dylib $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/Frameworks/.
 
 	# adjust search paths for lib	
-	install_name_tool -change qwt.framework/Versions/6/qwt @executable_path/../Frameworks/qwt.framework/Versions/6/qwt target/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner 
-	install_name_tool -change libfftw3.1.dylib @executable_path/../Frameworks/libfftw3.1.dylib target/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner
+	install_name_tool -change qwt.framework/Versions/6/qwt @executable_path/../Frameworks/qwt.framework/Versions/6/qwt $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner 
+	install_name_tool -change libfftw3.1.dylib @executable_path/../Frameworks/libfftw3.1.dylib $_TARGET_DIR/$BINARY_FILE_NAME.app/Contents/MacOS/entropypianotuner
 
 	echo "Done."
 fi
@@ -126,7 +128,7 @@ if $DO_DMG ; then
 	echo "Creating dmg."
 	cd $BUILD_DIR
 	rm -rf "EntropyPianoTuner.app"
-	mv target/$BINARY_FILE_NAME.app "EntropyPianoTuner.app"
+	mv $_TARGET_DIR/$BINARY_FILE_NAME.app "EntropyPianoTuner.app"
 	# copy midi plugin
 	mkdir -p EntropyPianoTuner.app/Contents/PlugIns/midi
 	cp -r $QTDIR/plugins/midi/libqtpg_midi.dylib EntropyPianoTuner.app/Contents/PlugIns/midi

@@ -63,7 +63,7 @@ if $DO_BUILD ; then
 	echo "Creating temporary build directory"
 	mkdir -p $BUILD_DIR
 	cd $BUILD_DIR
-	${QT_BIN_DIR}/qmake $TUNER_BASE_DIR/entropytuner.pro -r -spec android-g++
+	${QT_BIN_DIR}/qmake $TUNER_BASE_DIR/entropypianotuner.pro -r -spec android-g++
 	make $MAKE_ARGS
 fi
 
@@ -79,15 +79,14 @@ if $DO_APK ; then
 	echo
 
 	${QT_BIN_DIR}/androiddeployqt \
-		--gradle \
-		--input "android-lib$BINARY_FILE_NAME.so-deployment-settings.json" \
+		--input "${BUILD_DIR}/app/android-lib$BINARY_FILE_NAME.so-deployment-settings.json" \
 		--output "${BUILD_DIR}" \
 		--sign ${TUNER_BASE_DIR}/${ANDROID_KEYSTORE} "entropyk" \
 		--storepass $keystorepassword \
 		--verbose
 
 
-	cp ${BUILD_DIR}/build/outputs/apk/android-build-release-signed.apk ${APK_FILE}
+	cp ${BUILD_DIR}/bin/QtApp-release-signed.apk ${APK_FILE}
 
 	echo "Created ${APK_FILE}. This file can be uploaded to the google play store."
 fi

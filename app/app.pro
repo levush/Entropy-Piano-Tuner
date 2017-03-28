@@ -118,6 +118,9 @@ ios {
     # the following line is needed with XCode 7 bug 58926
     QMAKE_MAC_SDK = iphoneos
 
+    # team settings (xcode 8)
+    QMAKE_MAC_XCODE_SETTINGS=team team.name=DEVELOPMENT_TEAM team.value=W79N63VU7K 
+
     # set plist file
     QMAKE_INFO_PLIST = $$PWD/platforms/ios/Info.plist
 
