@@ -49,7 +49,33 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
 
     EptAssert(!mSingleton, "Singleton class already created");
     mSingleton = this;
+}
 
+TunerApplication::~TunerApplication()
+{
+    stop();
+    exit();
+    mCore.reset();
+
+    mSingleton = nullptr;
+}
+
+TunerApplication &TunerApplication::getSingleton() {
+    EptAssert(mSingleton, "Class has to be created");
+    return *mSingleton;
+}
+
+TunerApplication *TunerApplication::getSingletonPtr() {
+    return mSingleton;
+}
+
+void TunerApplication::setApplicationExitState(int errorcode) {
+    // store the error code for next session
+    QSettings settings;
+    settings.setValue("application/lastExitCode", errorcode);
+}
+
+void TunerApplication::init() {
     QIcon::setThemeSearchPaths(QIcon::themeSearchPaths() << ":/media" << ":/media/icons");
 
     if (primaryScreen()->devicePixelRatio() >= 1.5) {
@@ -85,35 +111,6 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
     // writeout args to log
     LogI("Number of arguments: %d", arguments().size());
     LogI("Program arguments: %s", arguments().join(", ").toStdString().c_str());
-}
-
-TunerApplication::~TunerApplication()
-{
-    stop();
-    exit();
-    mCore.reset();
-    PlatformTools::getSingleton()->enableScreensaver();
-
-    mSingleton = nullptr;
-}
-
-TunerApplication &TunerApplication::getSingleton() {
-    EptAssert(mSingleton, "Class has to be created");
-    return *mSingleton;
-}
-
-TunerApplication *TunerApplication::getSingletonPtr() {
-    return mSingleton;
-}
-
-void TunerApplication::setApplicationExitState(int errorcode) {
-    // store the error code for next session
-    QSettings settings;
-    settings.setValue("application/lastExitCode", errorcode);
-}
-
-void TunerApplication::init() {
-
 
     // create core
     mCore.reset(new Core(

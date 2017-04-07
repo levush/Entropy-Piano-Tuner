@@ -37,6 +37,8 @@ class SettingsForQt : public Settings
 public:
     // non globally stored settings ids
     static const QString KEY_CURRENT_FILE_DIALOG_PATH;
+
+    static const QString KEY_LANGUAGE_ID;
 public:
     ///////////////////////////////////////////////////////////////////////////////
     /// \brief Empty default constructor.

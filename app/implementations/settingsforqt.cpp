@@ -24,6 +24,7 @@
 
 
 const QString SettingsForQt::KEY_CURRENT_FILE_DIALOG_PATH = "app/currentFileDialogPath";
+const QString SettingsForQt::KEY_LANGUAGE_ID = "app/languageId";
 
 SettingsForQt::SettingsForQt()
     : mApplicationRuns(0),
@@ -43,7 +44,7 @@ SettingsForQt &SettingsForQt::getSingleton() {
 
 void SettingsForQt::load() {
     mApplicationRuns = mSettings.value("app/runs", 0).toLongLong();
-    mLanguageId = mSettings.value("app/languageId", QString()).toString().toStdString();
+    mLanguageId = mSettings.value(KEY_LANGUAGE_ID, QString()).toString().toStdString();
 
     mLastVisitedOptionsPage = mSettings.value("app/lastOptionsPage", options::OptionsDialog::PAGE_ENVIRONMENT).toInt();
 

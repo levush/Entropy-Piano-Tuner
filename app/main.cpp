@@ -73,24 +73,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain(serverinfo::SERVER_DOMAIN.c_str());
     QCoreApplication::setApplicationName("Entropy Piano Tuner");
 
-    // only single instance also on desktop (on mobile platforms this is handled already, winphone needs an "extra sausage")
-#if defined(Q_OS_DESKTOP) && !defined(Q_OS_WINPHONE)
-    RunGuard guard("entropypianotuner_runguard");
-    if ( !guard.tryToRun() ) {
-        // a QApplication is required for showing message boxes
-        QApplication q(argc, argv);
-        QMessageBox::warning(nullptr, q.tr("Application can not be started"), q.tr("The Entropy Piano Tuner could not be started because another instance is already running."));
-        return 0;
-    }
-#endif
+    // =========================================================================================
+    // Create application an initialize the basic components:
+    //  - Plaform dependent tools
+    //  - Settings
+    //  - Translation
 
-    // create file manager instance to initialize file paths
-    new FileManagerForQt();
-
-    // Initialize log
-    tp3Log::setLogPath(QString::fromStdString(FileManagerForQt::getSingleton().getLogFilePath("log.txt")));
-
-    int exitCode = -1;
+    // create our application object
+    TunerApplication a(argc, argv);
 
     // setup platformtools
 
@@ -101,34 +91,59 @@ int main(int argc, char *argv[])
         // no platform specific platform tools, use default ones
     }
 
+    // Settings object
+    QSettings settings;
+
+    // install language files
+    QTranslator qtTranslator;
+
+    QString localeName(settings.value(SettingsForQt::KEY_LANGUAGE_ID, QString()).toString());
+    if (localeName.isEmpty()) {
+        // system language
+        localeName = QLocale::system().name();
+    }
+    // set default to be sure that this is not "C"
+    QLocale::setDefault(QLocale(localeName));
+
+    // Qt translation
+    qtTranslator.load(QLocale(), "qt", "_", ":/languages/translations");
+    a.installTranslator(&qtTranslator);
+
+    // application translation
+    QTranslator myappTranslator;
+    myappTranslator.load(QLocale(), "piano_tuner", "_", ":/languages/translations");
+    a.installTranslator(&myappTranslator);
+
+    // =========================================================================================
+    // Check if app is already running
+
+    // only single instance also on desktop (on mobile platforms this is handled already, winphone needs an "extra sausage")
+#if defined(Q_OS_DESKTOP) && !defined(Q_OS_WINPHONE)
+    RunGuard guard("entropypianotuner_runguard");
+    if ( !guard.tryToRun() ) {
+        // a QApplication is required for showing message boxes
+        QMessageBox::warning(nullptr, a.tr("Application can not be started"), a.tr("The Entropy Piano Tuner could not be started because another instance is already running."));
+        return 0;
+    }
+#endif
+
+    // =========================================================================================
+    // Launching the application, mainwindow, core, ...
+
+    // create file manager instance to initialize file paths
+    new FileManagerForQt();
+
+    // Initialize log
+    tp3Log::setLogPath(QString::fromStdString(FileManagerForQt::getSingleton().getLogFilePath("log.txt")));
+
+    int exitCode = -1;
+
     try {
         // create settings
         (new SettingsForQt())->load();
+
         // increase run count
         SettingsForQt::getSingleton().increaseApplicationRuns();
-
-        // create our application object
-        TunerApplication a(argc, argv);
-
-        // install language files
-        QTranslator qtTranslator;
-
-        QString localeName(QString::fromStdString(SettingsForQt::getSingleton().getLanguageId()));
-        if (localeName.isEmpty()) {
-            // system language
-            localeName = QLocale::system().name();
-        }
-        // set default to be sure that this is not "C"
-        QLocale::setDefault(QLocale(localeName));
-
-        // Qt translation
-        qtTranslator.load(QLocale(), "qt", "_", ":/languages/translations");
-        a.installTranslator(&qtTranslator);
-
-        // application translation
-        QTranslator myappTranslator;
-        myappTranslator.load(QLocale(), "piano_tuner", "_", ":/languages/translations");
-        a.installTranslator(&myappTranslator);
 
         a.playStartupSound();
 
