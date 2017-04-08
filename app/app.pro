@@ -24,6 +24,7 @@ include(../entropypianotuner_func.pri)
 INCLUDEPATH += $$EPT_DEPENDENCIES_DIR/include
 INCLUDEPATH += $$EPT_THIRDPARTY_DIR
 INCLUDEPATH += $$EPT_BASE_DIR $$EPT_ROOT_DIR $$EPT_MODULES_DIR
+INCLUDEPATH += $$EPT_THIRDPARTY_DIR/tp3log
 
 DESTDIR = $$EPT_TARGET_OUT_DIR
 
@@ -255,7 +256,6 @@ HEADERS  += \
     implementations/filemanagerforqt.h \
     implementations/graphicsitemforqt.h \
     implementations/graphicsviewadapterforqt.h \
-    implementations/logforqt.h \
     implementations/platformtools.h \
     implementations/projectmanagerforqt.h \
     implementations/qtxmlreader.h \
@@ -326,7 +326,6 @@ SOURCES +=  \
     implementations/filemanagerforqt.cpp \
     implementations/graphicsitemforqt.cpp \
     implementations/graphicsviewadapterforqt.cpp \
-    implementations/logforqt.cpp \
     implementations/platformtools.cpp \
     implementations/projectmanagerforqt.cpp \
     implementations/qtxmlreader.cpp \

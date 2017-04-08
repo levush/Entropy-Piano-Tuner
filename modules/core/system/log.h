@@ -20,11 +20,8 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <memory>
-#include <fstream>
-#include <cstdio>
+#include "tp3log/tp3log.h"
 #include "../config.h"
-#include "../prerequisites.h"
 
 
 #define ERROR_BUFFER_SIZE 1024
@@ -35,85 +32,33 @@
 #endif
 
 #if LOG_LEVEL <= 1
-#   define LogV(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::verbose(b, __LINE__, __FILE__, __func__);}
+#   define LogV(...) LOGVA(DEBUG, __VA_ARGS__)
 #else
 #   define LogV(...)
 #endif
 
 #if LOG_LEVEL <= 2
-#   define LogD(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::debug(b, __LINE__, __FILE__, __func__);}
+#   define LogD(...) LOGVA(DEBUG, __VA_ARGS__)
 #else
 #   define LogD(...)
 #endif
 
 #if LOG_LEVEL <= 3
-#   define LogI(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::information(b, __LINE__, __FILE__, __func__);}
+#   define LogI(...) LOGVA(INFO, __VA_ARGS__)
 #else
 #   define LogI(...)
 #endif
 
 #if LOG_LEVEL <= 4
-#   define LogW(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::warning(b, __LINE__, __FILE__, __func__);}
+#   define LogW(...) LOGVA(WARNING, __VA_ARGS__)
 #else
 #   define LogW(...)
 #endif
 
 #if LOG_LEVEL <= 5
-#   define LogE(...) {char b[ERROR_BUFFER_SIZE]; snprintf(b, ERROR_BUFFER_SIZE, __VA_ARGS__); Log::error(b, __LINE__, __FILE__, __func__);}
+#   define LogE(...) LOGVA(FATAL, __VA_ARGS__)
 #else
 #   define LogE(...)
 #endif
-
-class Log;
-
-template class EPT_EXTERN std::shared_ptr<Log>;
-
-class EPT_EXTERN Log
-{
-public:
-    static const std::string LOG_NAME;
-
-private:
-    enum ELevel {
-        LEVEL_VERBOSE,
-        LEVEL_DEBUG,
-        LEVEL_INFORMATION,
-        LEVEL_WARNING,
-        LEVEL_ERROR,
-    };
-
-public:
-    static void verbose(const char *text, int line, const char *file, const char *function);
-    static void debug(const char *text, int line, const char *file, const char *function);
-    static void information(const char *text, int line, const char *file, const char *function);
-    static void warning(const char *text, int line, const char *file, const char *function);
-    static void error(const char *text, int line, const char *file, const char *function);
-
-    Log();
-    ~Log();
-
-    void createLogFile();
-
-    static Log &getSingleton() {return *mLog.get();}
-    static Log *getSingletonPtr() {return mLog.get();}
-
-protected:
-    virtual void impl_verbose(const char *l);
-    virtual void impl_debug(const char *l);
-    virtual void impl_information(const char *l);
-    virtual void impl_warning(const char *l);
-    virtual void impl_error(const char *l);
-
-private:
-    void writeToLogfile(ELevel level, const char *text, int line, const char *file, const char *function);
-
-private:
-    static std::shared_ptr<Log> mLog;
-
-    // use pointer due to warning C4267 on windows
-    std::ofstream *mLogStream;
-
-    static const char* simplify (const char* filename);
-};
 
 #endif // LOG_H

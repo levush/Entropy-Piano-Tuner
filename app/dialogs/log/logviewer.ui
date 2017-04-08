@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>609</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -51,6 +51,26 @@
       </spacer>
      </item>
      <item>
+      <widget class="QComboBox" name="logSelectionComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Current log</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Previous log</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="copyToClipboardButton">
        <property name="toolTip">
         <string>Copy the contents of the log to the clipboard.</string>
@@ -59,7 +79,7 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset resource="../media/media.qrc">
+        <iconset resource="../../../media/media.qrc">
          <normaloff>:/media/icons/edit-copy.png</normaloff>:/media/icons/edit-copy.png</iconset>
        </property>
        <property name="iconSize">
@@ -81,7 +101,7 @@
       <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textInteractionFlags">
@@ -109,7 +129,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>copyToClipboardButton</tabstop>
  </tabstops>
  <resources>
-  <include location="../media/media.qrc"/>
+  <include location="../../../media/media.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -160,8 +180,25 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>logSelectionComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>LogViewer</receiver>
+   <slot>logIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>29</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>copyToClipboard()</slot>
+  <slot>logIndexChanged(int)</slot>
  </slots>
 </ui>

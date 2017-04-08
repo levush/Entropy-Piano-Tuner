@@ -35,8 +35,6 @@
 #include "core/config.h"
 
 #include "dialogs/log/logviewer.h"
-#include "implementations/filemanagerforqt.h"
-#include "implementations/logforqt.h"
 #include "implementations/platformtools.h"
 #include "implementations/projectmanagerforqt.h"
 #include "implementations/settingsforqt.h"
@@ -49,8 +47,6 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
       mAudioRecorder(this),
       mAudioPlayer(this) {
 
-    LogForQt *log = new LogForQt();
-
     EptAssert(!mSingleton, "Singleton class already created");
     mSingleton = this;
 
@@ -60,8 +56,6 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
         setAttribute(Qt::AA_UseHighDpiPixmaps);
     }
 
-    // create file manager instance
-    new FileManagerForQt();
 
     // open the main window with the startup file
     mMainWindow.reset(new MainWindow());
@@ -83,13 +77,10 @@ TunerApplication::TunerApplication(int & argc, char ** argv)
         QMainWindow *m = mMainWindow.get();
         if (QMessageBox::information(m, tr("Crash handler"), tr("The application exited unexpectedly on the last run. Do you want to view the last log?"), QMessageBox::Yes | QMessageBox::No)
                 == QMessageBox::Yes) {
-            LogViewer v(m);
+            LogViewer v(LogViewer::PREVIOUS_LOG, m);
             v.exec();
         }
     }
-
-    // create clean new log
-    log->createLogFile();
 
     // writeout args to log
     LogI("Number of arguments: %d", arguments().size());
@@ -128,8 +119,7 @@ void TunerApplication::init() {
     mCore.reset(new Core(
                     new ProjectManagerForQt(mMainWindow.get()),
                     &mAudioRecorder,
-                    &mAudioPlayer,
-                    Log::getSingletonPtr()));
+                    &mAudioPlayer));
 
     // print memory information, the waveform generator will check cases
     // to determine the length of the waveforms

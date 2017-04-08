@@ -7,3 +7,6 @@
 [submodule "thirdparty/qwt-lib"]
 	path = thirdparty/qwt-lib
 	url = https://gitlab.com/chwick/qwt-lib.git
+[submodule "thirdparty/tp3log"]
+	path = thirdparty/tp3log
+	url = git@gitlab.com:tp3/tp3log.git

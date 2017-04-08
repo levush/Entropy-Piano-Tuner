@@ -44,8 +44,7 @@
 
 Core::Core(ProjectManagerAdapter *projectManager,
            AudioInterface *recorderInterface,
-           AudioInterface *playerInterface,
-           Log *log)
+           AudioInterface *playerInterface)
     : mInitialized(false),                      // Initially not initialized
       mProjectManager(projectManager),
       mRecorderInterface(recorderInterface),
@@ -62,7 +61,6 @@ Core::Core(ProjectManagerAdapter *projectManager,
     CalculationManager::getSingleton().loadAlgorithms();
 #endif
 
-    EptAssert(log, "A log has to be specified during creation of the core");
     LogI("Core created");
 }
 

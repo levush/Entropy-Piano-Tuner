@@ -58,7 +58,6 @@
 #include "dialogs/editpianosheet/editpianosheetdialog.h"
 #include "dialogs/log/logviewer.h"
 #include "dialogs/plotsdialog/plotsdialog.h"
-#include "implementations/logforqt.h"
 #include "implementations/settingsforqt.h"
 #include "options/optionsdialog.h"
 
@@ -736,7 +735,7 @@ void MainWindow::onAbout() {
 
 
 void MainWindow::onViewLog() {
-    LogViewer logViewer(this);
+    LogViewer logViewer(LogViewer::CURRENT_LOG, this);
     logViewer.exec();
 }
 

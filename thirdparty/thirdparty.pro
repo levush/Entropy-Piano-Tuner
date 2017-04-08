@@ -26,3 +26,5 @@ libuv {
 winrtbridge {
     SUBDIRS += winrtbridge
 }
+
+SUBDIRS += tp3log

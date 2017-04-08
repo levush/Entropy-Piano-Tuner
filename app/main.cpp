@@ -51,12 +51,15 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QMessageBox>
+#include <QStandardPaths>
+#include <QDir>
 #include <qdebug.h>
 
 #include "core/system/serverinfo.h"
 #include "core/system/eptexception.h"
 #include "core/config.h"
 
+#include "implementations/filemanagerforqt.h"
 #include "implementations/settingsforqt.h"
 #include "implementations/platformtools.h"
 #include "qtconfig.h"
@@ -65,6 +68,10 @@
 
 int main(int argc, char *argv[])
 {
+    // basic application properties (needed for settings)
+    QCoreApplication::setOrganizationName("tp3");
+    QCoreApplication::setOrganizationDomain(serverinfo::SERVER_DOMAIN.c_str());
+    QCoreApplication::setApplicationName("Entropy Piano Tuner");
 
     // only single instance also on desktop (on mobile platforms this is handled already, winphone needs an "extra sausage")
 #if defined(Q_OS_DESKTOP) && !defined(Q_OS_WINPHONE)
@@ -77,6 +84,12 @@ int main(int argc, char *argv[])
     }
 #endif
 
+    // create file manager instance to initialize file paths
+    new FileManagerForQt();
+
+    // Initialize log
+    tp3Log::setLogPath(QString::fromStdString(FileManagerForQt::getSingleton().getLogFilePath("log.txt")));
+
     int exitCode = -1;
 
     // setup platformtools
@@ -87,11 +100,6 @@ int main(int argc, char *argv[])
         defaultPlatformTools.reset(new PlatformTools());
         // no platform specific platform tools, use default ones
     }
-
-    // basic application properties (needed for settings)
-    QCoreApplication::setOrganizationName("tp3");
-    QCoreApplication::setOrganizationDomain(serverinfo::SERVER_DOMAIN.c_str());
-    QCoreApplication::setApplicationName("Entropy Piano Tuner");
 
     try {
         // create settings

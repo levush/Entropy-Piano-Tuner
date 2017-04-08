@@ -33,11 +33,17 @@ class LogViewer : public QDialog
     Q_OBJECT
 
 public:
-    explicit LogViewer(QWidget *parent = nullptr);
+    enum LogIndex {
+        CURRENT_LOG = 0,
+        PREVIOUS_LOG = 1
+    };
+
+    explicit LogViewer(int defaultIndex = CURRENT_LOG, QWidget *parent = nullptr);
     ~LogViewer();
 
 private slots:
     void copyToClipboard();
+    void logIndexChanged(int i);
 
 private:
     Ui::LogViewer *ui;

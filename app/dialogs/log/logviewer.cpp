@@ -26,13 +26,12 @@
 
 #include "core/config.h"
 
-#include "implementations/logforqt.h"
 #include "implementations/filemanagerforqt.h"
 
 #include "ui_logviewer.h"
 #include "qtconfig.h"
 
-LogViewer::LogViewer(QWidget *parent) :
+LogViewer::LogViewer(int defaultIndex, QWidget *parent) :
     QDialog(parent, Qt::Window),
     ui(new Ui::LogViewer)
 {
@@ -44,18 +43,12 @@ LogViewer::LogViewer(QWidget *parent) :
         setGeometry(p.left() + p.width() / 4, p.top() + p.height() / 4, p.width() / 2, p.height() / 2);
     }
 
-    QFile f(QString::fromStdString(FileManager::getSingleton().getLogFilePath(LogForQt::LOG_NAME)));
-    if (!f.open(QFile::ReadOnly | QFile::Text)) return;
-    QTextStream in(&f);
-    ui->textBrowser->setText(in.readAll());
+    ui->logSelectionComboBox->setCurrentIndex(-1);
+    ui->logSelectionComboBox->setCurrentIndex(defaultIndex);
+
 
     ui->textBrowser->setReadOnly(true);
     ui->textBrowser->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard | Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
-
-    QTextCursor tc = ui->textBrowser->textCursor();
-    tc.movePosition(QTextCursor::End);
-    ui->textBrowser->setTextCursor(tc);
-    ui->textBrowser->ensureCursorVisible();
 
     // icon
     ui->copyToClipboardButton->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/media/icons/edit-copy.png")));
@@ -74,4 +67,34 @@ void LogViewer::copyToClipboard()
 {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textBrowser->toPlainText());
+}
+
+void LogViewer::logIndexChanged(int i) {
+    if (i < 0) {
+        ui->textBrowser->setText(QString());
+        return;
+    }
+    QString path;
+    switch (i) {
+    case CURRENT_LOG:
+        path = tp3Log::logPath();
+        break;
+    case PREVIOUS_LOG:
+        path = tp3Log::oldLogPath();
+        break;
+    default:
+        path = tp3Log::logPath();
+        LogW("Invalid log index %d. Using default", i);
+        break;
+    }
+    QFile f(path);
+    if (!f.open(QFile::ReadOnly | QFile::Text)) return;
+    QTextStream in(&f);
+    ui->textBrowser->setText(in.readAll());
+
+    QTextCursor tc = ui->textBrowser->textCursor();
+    tc.movePosition(QTextCursor::End);
+    ui->textBrowser->setTextCursor(tc);
+    ui->textBrowser->ensureCursorVisible();
+
 }

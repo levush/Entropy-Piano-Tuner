@@ -159,35 +159,35 @@ private:
     const QString mIconPostfix;
 
     /// Pointer to the Core.
-    Core *mCore;
+    Core *mCore = nullptr;
 
     /// Ui of the Mainwindow.
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui = nullptr;
 
     /// Pointer to the CalculationProgressGroup.
-    CalculationProgressGroup *mCalculationProgressGroup;
+    CalculationProgressGroup *mCalculationProgressGroup = nullptr;
 
     /// Pointer to the SignalAnalyzerGroupBox
-    SignalAnalyzerGroupBox *mSignalAnalyzerGroup;
+    SignalAnalyzerGroupBox *mSignalAnalyzerGroup = nullptr;
 
     /// Pointer to the TuningIndicatorGroupBox
-    TuningIndicatorGroupBox *mTuningIndicatorGroup;
+    TuningIndicatorGroupBox *mTuningIndicatorGroup = nullptr;
 
     /// Pointer to the VolumeControlGroupBox
-    VolumeControlGroupBox *mVolumeControlGroup;
+    VolumeControlGroupBox *mVolumeControlGroup = nullptr;
 
-    KeyboardGraphicsView *mKeyboardGraphicsView;
+    KeyboardGraphicsView *mKeyboardGraphicsView = nullptr;
 
     /// Progress display on the lower right side
-    ProgressDisplay *mProgressDisplay;
+    ProgressDisplay *mProgressDisplay = nullptr;
 
-    QToolBar *mFileToolBar;
+    QToolBar *mFileToolBar = nullptr;
 
     /// Tool buttons for all modes.
     QToolButton *mModeToolButtons[OperationMode::MODE_COUNT];
 
     /// Instance of the midi auto connector
-    QMidiAutoConnector *mMidiAutoConnector;
+    QMidiAutoConnector *mMidiAutoConnector = nullptr;
 
 signals:
     void modeChanged(OperationMode mode);

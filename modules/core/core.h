@@ -55,8 +55,8 @@ class EPT_EXTERN Core
 public:
     Core(ProjectManagerAdapter *projectManager,
          AudioInterface *recorderInterface,
-         AudioInterface *playerInterface,
-         Log *log = new Log());
+         AudioInterface *playerInterface
+         );
     ~Core();
 
     void setEnableSoundGenerator(bool enable);

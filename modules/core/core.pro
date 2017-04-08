@@ -32,6 +32,7 @@ $$depends_fftw3()
 $$depends_getmemorysize()
 $$depends_libuv()
 $$depends_timesupport()
+$$depends_tp3log()
 
 # debugging flags: all warnings and check arrays, etc
 linux-g++*:!android {
@@ -177,7 +178,6 @@ CORE_SYSTEM_HEADERS = \
     system/sharedlibrary.h \
 
 CORE_SYSTEM_SOURCES = \
-    system/log.cpp \
     system/simplethreadhandler.cpp \
     system/eptexception.cpp \
     system/timer.cpp \

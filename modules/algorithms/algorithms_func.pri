@@ -21,6 +21,7 @@ defineReplace(declareAlgorithm) {
     DESTDIR = $$EPT_ALGORITHMS_OUT_DIR
 
     INCLUDEPATH += $$EPT_BASE_DIR $$EPT_MODULES_DIR $$EPT_CORE_DIR
+    INCLUDEPATH += $$EPT_THIRDPARTY_DIR/tp3log
 
     # library
     $$depends_core()

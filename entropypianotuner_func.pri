@@ -241,3 +241,13 @@ defineReplace(depends_winrtbridge) {
 
     return(true)
 }
+
+defineReplace(depends_tp3log) {
+    INCLUDEPATH += $$EPT_THIRDPARTY_DIR/tp3log
+    LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/tp3log/tp3log -ltp3log
+
+    export(LIBS)
+    export(INCLUDEPATH)
+
+    return(true)
+}

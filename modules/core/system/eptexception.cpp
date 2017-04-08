@@ -27,9 +27,7 @@ EptException::EptException(int num, const std::string& desc, const std::string& 
     mDescription( desc ),
     mSource( src )
 {
-    if (Log::getSingletonPtr()) {
-        Log::error(desc.c_str(), 0, src.c_str(), "unknown");
-    }
+    LogE("%s %d %s unknown", desc.c_str(), 0, src.c_str());
 }
 
 EptException::EptException(int num, const std::string& desc, const std::string& src, const char* fil, long lin) :
@@ -40,9 +38,7 @@ EptException::EptException(int num, const std::string& desc, const std::string& 
     mSource( src ),
     mFile( fil )
 {
-    if (Log::getSingletonPtr()) {
-        Log::error(getFullDescription().c_str(), mLine, mSource.c_str(), mFile.c_str());
-    }
+    LogE("%s %d %s %s", getFullDescription().c_str(), mLine, mSource.c_str(), mFile.c_str());
 }
 
 const std::string& EptException::getFullDescription(void) const
