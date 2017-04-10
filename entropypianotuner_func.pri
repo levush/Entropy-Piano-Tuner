@@ -66,6 +66,7 @@ defineReplace(declareSharedLibrary) {
 
 defineReplace(depends_core) {
     contains(EPT_CONFIG, static_core) {
+        $$depends_tp3log()
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
         win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll

@@ -71,7 +71,8 @@ void LogViewer::copyToClipboard()
 
 void LogViewer::logIndexChanged(int i) {
     if (i < 0) {
-        ui->textBrowser->setText(QString());
+        ui->textBrowser->setText("Internal log error. This should not have appened!dropb    "
+                                 "");
         return;
     }
     QString path;
@@ -88,7 +89,10 @@ void LogViewer::logIndexChanged(int i) {
         break;
     }
     QFile f(path);
-    if (!f.open(QFile::ReadOnly | QFile::Text)) return;
+    if (!f.open(QFile::ReadOnly | QFile::Text))  {
+        ui->textBrowser->setText(tr("Log file does not exist."));
+        return;
+    }
     QTextStream in(&f);
     ui->textBrowser->setText(in.readAll());
 
