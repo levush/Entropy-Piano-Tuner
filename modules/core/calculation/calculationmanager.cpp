@@ -285,7 +285,7 @@ void CalculationManager::start(const Piano &piano)
     stop();
 
     // create and start new algorithm
-    mCurrentAlgorithm = std::move(mAlgorithms[getCurrentAlgorithmInformation()->getId()]->createAlgorithm(piano));
+    mCurrentAlgorithm = mAlgorithms[getCurrentAlgorithmInformation()->getId()]->createAlgorithm(piano);
     mCurrentAlgorithm->start();
 }
 

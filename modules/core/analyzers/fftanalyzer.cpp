@@ -246,12 +246,12 @@ FrequencyDetectionResult FFTAnalyzer::detectFrequencyOfKnownKey (
         // create the kernel of the key, if the key changed
         if (&key != mCurrentKernelKey)
         {
-            mCurrentKernel = std::move(constructKernel(key.getSpectrum()));
+            mCurrentKernel = constructKernel(key.getSpectrum());
             mCurrentKernelKey = &key;
         }
 
         // compute the deviation
-        out = std::move(computeTuningDeviation(mCurrentKernel, spectrum, searchSize));
+        out = computeTuningDeviation(mCurrentKernel, spectrum, searchSize);
     }
 
     int maxIndex = MathTools::findMaximum(out);

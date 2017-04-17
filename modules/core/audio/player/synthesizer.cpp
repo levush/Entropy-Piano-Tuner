@@ -130,7 +130,7 @@ void Synthesizer::open (AudioInterface *audioInterface)
     transformer.calculateFFT(fftr,mHammerWaveRight);
     // Note that the wave size may change if the sample rate is odd
     // use data size instead
-    for (int i=0; i<mHammerWaveLeft.size(); i++)
+    for (size_t i=0; i<mHammerWaveLeft.size(); i++)
     {
         mHammerWaveRight[i] *= exp(-pow(i*3.0/mHammerWaveLeft.size(),1.5));
         mHammerWaveLeft[i] *= exp(-pow(i*3.0/mHammerWaveLeft.size(),1.5));
@@ -363,7 +363,7 @@ bool Synthesizer::generateAudioSignal (DataType *outputBuffer, const int64_t pac
     if (channels<=0 or channels>2) return false;
 
 
-    for (size_t bufferIndex = channels - 1; bufferIndex < packet_size; bufferIndex += channels) {
+    for (int bufferIndex = channels - 1; bufferIndex < packet_size; bufferIndex += channels) {
         // pcm data
         double left = 0, right = 0;
 

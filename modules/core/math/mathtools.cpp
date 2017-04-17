@@ -183,7 +183,7 @@ void MathTools::coarseGrainSpectrum (const std::vector<double> &X,
 int MathTools::findMaximum (const std::vector<double> &X, int i, int j)
 {
 
-    size_t N = X.size();
+    int N = static_cast<int>(X.size());
     assert (i>=0 and i<N and j>i and j<=N);
     return std::distance(X.begin(), std::max_element(X.begin()+i,X.begin()+j));
 }

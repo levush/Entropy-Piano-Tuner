@@ -243,7 +243,7 @@ void WaveformGenerator::workerFunction()
                 }
                 mFFT.calculateFFT(mIn,mOut);
                 mLibraryMutex[keynumber].lock();
-                for (int i=0; i<mOut.size(); i++) mLibrary[keynumber][i]=mOut[i];
+                for (size_t i=0; i<mOut.size(); i++) mLibrary[keynumber][i]=mOut[i];
                 mLibraryMutex[keynumber].unlock();
             }
         }

@@ -38,7 +38,7 @@ EptException::EptException(int num, const std::string& desc, const std::string& 
     mSource( src ),
     mFile( fil )
 {
-    LogE("%s %d %s %s", getFullDescription().c_str(), mLine, mSource.c_str(), mFile.c_str());
+    LogE("%s %ld %s %s", getFullDescription().c_str(), mLine, mSource.c_str(), mFile.c_str());
 }
 
 const std::string& EptException::getFullDescription(void) const

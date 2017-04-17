@@ -326,7 +326,7 @@ void SignalAnalyzer::recordSignal()
             {
 
                 // Get audio data and make it suitable for analysis
-                mProprocessedSignal = std::move(mDataBuffer.getOrderedData());
+                mProprocessedSignal = mDataBuffer.getOrderedData();
 
                 // check if there is data in the buffer
                 bool dataInBuffer = false;
@@ -710,7 +710,7 @@ bool SignalAnalyzer::detectClipping(FFTWVector signal)
         else if (y<=minamp*0.99) mincnt++;
         if (y==0) nullcnt++;
     }
-    const size_t threshold = signal.size()/50;
+    const int threshold = static_cast<int>(signal.size()) / 50;
     if (maxcnt+mincnt > threshold)
     {
         LogW("SignalAnalyzer: High-amplitude clipping detected");
