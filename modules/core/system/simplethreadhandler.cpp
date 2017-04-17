@@ -18,3 +18,46 @@
  *****************************************************************************/
 
 #include "simplethreadhandler.h"
+
+SimpleThreadHandler::SimpleThreadHandler()
+    : mCancelThread(false),
+      mRunning(false) {
+}
+
+SimpleThreadHandler::~SimpleThreadHandler() {
+    stop();
+}
+
+void SimpleThreadHandler::start() {
+    stop();
+    setCancelThread(false);
+    mThread = std::thread(&SimpleThreadHandler::simpleWorkerFunction, this);
+}
+
+void SimpleThreadHandler::stop() {
+    setCancelThread(true);                  // Set cancel flag to true
+    if (mThread.joinable()) mThread.join(); // Wait for thread to terminate
+}
+
+void SimpleThreadHandler::simpleWorkerFunction() {
+    mRunning = true;
+
+    try
+    {
+        workerFunction();
+    }
+    catch (const EptException &e)
+    {
+        LogE("Worker thread stopped with EptException: %s", e.what());
+        exceptionCaught(e);
+    }
+    catch (const std::exception &e)
+    {
+        LogE("Worker thread stopped with std::exception: %s", e.what());
+    }
+    catch (...) {
+        LogE("Worker thread stopped with an unknown exception");
+    }
+
+    mRunning = false;
+}

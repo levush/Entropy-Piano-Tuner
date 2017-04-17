@@ -67,40 +67,26 @@ public:
     /// The constructor sets the cancel-thread flag to false.
     /// It does not yet start the thread.
     ///////////////////////////////////////////////////////////////////////////////
-    SimpleThreadHandler()
-        : mCancelThread(false),
-          mRunning(false)
-    {}
+    SimpleThreadHandler();
 
     ///////////////////////////////////////////////////////////////////////////////
     /// The destructor waits for the current thread to stop if it is running
     ///////////////////////////////////////////////////////////////////////////////
-    virtual ~SimpleThreadHandler() {
-        stop();
-    }
+    virtual ~SimpleThreadHandler();
 
 
     ///////////////////////////////////////////////////////////////////////////////
     /// If the thread is already running register it for termination and wait
     /// until it has terminated. Then restart a new thread.
     ///////////////////////////////////////////////////////////////////////////////
-    virtual void start()
-    {
-        stop();
-        setCancelThread(false);
-        mThread = std::thread(&SimpleThreadHandler::simpleWorkerFunction, this);
-    }
+    virtual void start();
 
     ///////////////////////////////////////////////////////////////////////////////
     /// Mark the thread for cancellation. This function waits for termination of the
     /// thread, i.e. it blocks until the thread has been shut down. This waiting
     /// time will depend on the implementation of the workerFunction.
     ///////////////////////////////////////////////////////////////////////////////
-    virtual void stop()
-    {
-        setCancelThread(true);                  // Set cancel flag to true
-        if (mThread.joinable()) mThread.join(); // Wait for thread to terminate
-    }
+    virtual void stop();
 
     ///////////////////////////////////////////////////////////////////////////////
     /// With this function it is possible to rename the thread. This is particularly
@@ -189,29 +175,7 @@ private:
     /// This function calls the abstract workerFunction of the implementation.
     /// It also catches its exceptions-
     ///////////////////////////////////////////////////////////////////////////////
-    void simpleWorkerFunction()
-    {
-        mRunning = true;
-
-        try
-        {
-            workerFunction();
-        }
-        catch (const EptException &e)
-        {
-            LogE("Worker thread stopped with EptException: %s", e.what());
-            exceptionCaught(e);
-        }
-        catch (const std::exception &e)
-        {
-            LogE("Worker thread stopped with std::exception: %s", e.what());
-        }
-        catch (...) {
-            LogE("Worker thread stopped with an unknown exception");
-        }
-
-        mRunning = false;
-    }
+    void simpleWorkerFunction();
 
 private:
     bool mCancelThread;                     ///< Cancel flag

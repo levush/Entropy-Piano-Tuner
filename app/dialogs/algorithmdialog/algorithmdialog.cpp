@@ -65,7 +65,7 @@ AlgorithmDialog::AlgorithmDialog(std::shared_ptr<const AlgorithmInformation> cur
         for (auto &desc : CalculationManager::getSingleton().getAlgorithms()) {
             const std::string &name = desc.first;
             try {
-                auto info(std::move(CalculationManager::getSingleton().loadAlgorithmInformation(name)));
+                auto info(CalculationManager::getSingleton().loadAlgorithmInformation(name));
                 mAlgorithmNames.push_back(qMakePair(QString::fromStdString(name), QString::fromStdWString(info->getName())));
             } catch (...) {
                 LogW("Error during loading and adding the algorithm '%s'. Skipping...", name.c_str());
