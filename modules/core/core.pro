@@ -59,6 +59,7 @@ CORE_MESSAGE_SYSTEM_HEADERS = \
     messages/messagenewfftcalculated.h \
     messages/messagepreliminarykey.h \
     messages/messagefinalkey.h \
+    messages/messagesignalanalysis.h \
     messages/messagechangetuningcurve.h \
     messages/messagetuningdeviation.h \
     messages/messagekeydatachanged.h \

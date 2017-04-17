@@ -33,6 +33,7 @@
 #include "core/messages/messagepreliminarykey.h"
 #include "core/messages/messagekeydatachanged.h"
 #include "core/messages/messageprojectfile.h"
+#include "core/messages/messagesignalanalysis.h"
 #include "core/piano/piano.h"
 #include "autoscaledtokeyboardgraphicsview.h"
 #include "keyboard/graphicskeyitem.h"
@@ -235,9 +236,13 @@ void KeyboardGraphicsView::handleMessage(MessagePtr m) {
         // update key
         break;
     }
-    case Message::MSG_SIGNAL_ANALYSIS_ENDED:
-        selectPreliminaryKey(NO_KEY);
+    case Message::MSG_SIGNAL_ANALYSIS: {
+        auto msa(std::static_pointer_cast<MessageSignalAnalysis>(m));
+        if (msa->status() == MessageSignalAnalysis::Status::ENDED) {
+            selectPreliminaryKey(NO_KEY);
+        }
         break;
+    }
     default:
         break;
     }

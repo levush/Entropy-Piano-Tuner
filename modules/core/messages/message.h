@@ -50,8 +50,6 @@ public:
         MSG_CLEAR_RECORDING,                    ///< called when the recording was cleared
         MSG_RECORDING_STARTED,                  ///< keystroke recognized and recording started
         MSG_RECORDING_ENDED,                    ///< recording ended
-        MSG_SIGNAL_ANALYSIS_STARTED,            ///< analysis of the signal started
-        MSG_SIGNAL_ANALYSIS_ENDED,              ///< analysis of the signal ended
         MSG_FINAL_KEY,                          ///< final key information after recording
         MSG_OPTIONS_CHANGED,                    ///< settings in the system options changed
 
@@ -69,6 +67,7 @@ public:
         MSG_RECORDER_ENERGY_CHANGED,            ///< recording input level has changed
         MSG_STROBOSCOPE_EVENT,                  ///< stroboscope message
         MSG_TUNING_DEVIATION,                   ///< tuning deviation curve has been updated
+        MSG_SIGNAL_ANALYSIS,                    ///< Analysis of the signal state changed (start, end)
     };
 
 public:

@@ -54,6 +54,11 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
         setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         setIcon(QMessageBox::Question);
         break;
+    case FORCE_RECORDING_INFORMATION:
+        setWindowTitle(tr("Information"));
+        setStandardButtons(QMessageBox::Ok);
+        setIcon(QMessageBox::Information);
+        break;
     default:
         setWindowTitle(tr("Question"));
         setStandardButtons(QMessageBox::Ok);
@@ -77,6 +82,9 @@ DoNotShowAgainMessageBox::DoNotShowAgainMessageBox(Type type, const QString &tex
             break;
         case MODE_CHANGE_SAVE:
             setText(tr("Do you want to save your current changes? You can save at any time using the tool button or the action from the menu."));
+            break;
+        case FORCE_RECORDING_INFORMATION:
+            setText(tr("If the recording of a key fails you can force its recording by clicking the desired key twice. A forced key will be highlighted as a dark red color."));
             break;
         default:
             EPT_EXCEPT(EptException::ERR_NOT_IMPLEMENTED, "DoNotShowAgainMessageBoxTypeNotImplemented");

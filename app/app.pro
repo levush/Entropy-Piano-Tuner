@@ -415,22 +415,6 @@ RESOURCES += \
 
 
 #-------------------------------------------------
-#                  TRANSLATIONS
-#-------------------------------------------------
-
-
-TRANSLATIONS = \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_de.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_es.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_pl.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_pt.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_ru.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_ko.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_zh.ts \
-    $$EPT_TRANSLATIONS_DIR/piano_tuner_fr.ts \
-
-
-#-------------------------------------------------
 #                      INSTALL
 #-------------------------------------------------
 

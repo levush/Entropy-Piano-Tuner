@@ -35,6 +35,7 @@
 #include "../messages/messagepreliminarykey.h"
 #include "../messages/messagekeyselectionchanged.h"
 #include "../messages/messagetuningdeviation.h"
+#include "../messages/messagesignalanalysis.h"
 #include "../audio/recorder/audiorecorder.h"
 #include "../math/mathtools.h"
 
@@ -247,7 +248,7 @@ void SignalAnalyzer::workerFunction()
         recordSignal();
 
         // Send message
-        MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_STARTED);
+        MessageHandler::send<MessageSignalAnalysis>(MessageSignalAnalysis::Status::STARTED);
 
         // stop the KeyRecognizer
         mKeyRecognizer.stop();
@@ -256,7 +257,11 @@ void SignalAnalyzer::workerFunction()
         recordPostprocessing();
 
         // Send message
-        MessageHandler::send(Message::MSG_SIGNAL_ANALYSIS_ENDED);
+        MessageHandler::send<MessageSignalAnalysis>(
+                    MessageSignalAnalysis::Status::ENDED,
+                    (mInvalidRecoringCounter == 0) ? MessageSignalAnalysis::Result::SUCCESSFULL
+                                                   : MessageSignalAnalysis::Result::INVALID,
+                    mInvalidRecoringCounter);
     }
 }
 
@@ -388,9 +393,12 @@ void SignalAnalyzer::analyzeSignal()
     // check if found key equates the keynumber
     if (keynumber != mSelectedKey)
     {
-        LogD("Final detected key does not match the selected key. Cancel analysis.");
+        ++mInvalidRecoringCounter;
+        LogW("Final detected key does not match the selected key. %d invalid recordings. Cancel analysis.", mInvalidRecoringCounter);
         return;
     }
+
+    mInvalidRecoringCounter = 0;
 
     // If the key was successfully identified start call the FFTAnalyzer
     if (mAnalyzerRole == ROLE_RECORD_KEYSTROKE)

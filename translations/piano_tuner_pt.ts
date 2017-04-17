@@ -98,6 +98,10 @@
         <source>Reset the parameter to its default value</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Version:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CalculationProgressGroup</name>
@@ -248,6 +252,14 @@
         <source>Do you want to save your current changes? You can save at any time using the tool button or the action from the menu.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">Informação</translation>
+    </message>
+    <message>
+        <source>If the recording of a key fails you can force its recording by clicking the desired key twice. A forced key will be highlighted as a dark red color.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>EditPianoSheetDialog</name>
@@ -377,6 +389,18 @@
     </message>
     <message>
         <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log file does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -674,6 +698,10 @@
         <source>Clear pitch markers</source>
         <translation>Repor marcadores arremesso</translation>
     </message>
+    <message>
+        <source>Signal analysis failed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlotsDialog</name>
@@ -749,15 +777,15 @@
     <name>QwtPlotRenderer</name>
     <message>
         <source>Documents</source>
-        <translation>Documentos</translation>
+        <translation type="vanished">Documentos</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation>Imagens</translation>
+        <translation type="vanished">Imagens</translation>
     </message>
     <message>
         <source>Export File Name</source>
-        <translation>Exportação: nome do arquivo</translation>
+        <translation type="vanished">Exportação: nome do arquivo</translation>
     </message>
 </context>
 <context>
@@ -985,12 +1013,32 @@
         <source>Sampling rate </source>
         <translation>Taxa de amostragem</translation>
     </message>
+    <message>
+        <source>Loading input devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading output devices</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>options::PageAudioMidi</name>
     <message>
         <source>Midi device</source>
         <translation>Aparelho Midi</translation>
+    </message>
+    <message>
+        <source>Auto connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Test input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Desativado</translation>
     </message>
 </context>
 <context>

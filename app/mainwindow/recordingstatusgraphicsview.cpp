@@ -20,6 +20,7 @@
 #include "recordingstatusgraphicsview.h"
 #include "../core/messages/messagenewfftcalculated.h"
 #include "../core/messages/messagemodechanged.h"
+#include "../core/messages/messagesignalanalysis.h"
 #include <QBoxLayout>
 #include <QDebug>
 
@@ -96,22 +97,22 @@ void RecordingStatusGraphicsView::resizeEvent(QResizeEvent *event) {
 
 void RecordingStatusGraphicsView::handleMessage(MessagePtr m) {
     switch (m->getType()) {
-    case Message::MSG_SIGNAL_ANALYSIS_STARTED:
-        qDebug() << "Analysis started";
-        setItemVisible(mRecordItems, false);
-        setItemVisible(mPauseItems, false);
-        setItemVisible(mProgressItems, true);
-        mProgressTimer.start(1000.0 / 24);  // 24 fps
+    case Message::MSG_SIGNAL_ANALYSIS: {
+        auto msa(std::static_pointer_cast<MessageSignalAnalysis>(m));
+        if (msa->status() == MessageSignalAnalysis::Status::STARTED) {
+            setItemVisible(mRecordItems, false);
+            setItemVisible(mPauseItems, false);
+            setItemVisible(mProgressItems, true);
+            mProgressTimer.start(1000.0 / 24);  // 24 fps
+        } else {
+            setItemVisible(mRecordItems, false);
+            setItemVisible(mProgressItems, false);
+            setItemVisible(mPauseItems, true);
+            mProgressTimer.stop();
+        }
         break;
-    case Message::MSG_SIGNAL_ANALYSIS_ENDED:
-        qDebug() << "Analysis ended";
-        setItemVisible(mRecordItems, false);
-        setItemVisible(mProgressItems, false);
-        setItemVisible(mPauseItems, true);
-        mProgressTimer.stop();
-        break;
+    }
     case Message::MSG_RECORDING_STARTED:
-        qDebug() << "Recording started";
         setItemVisible(mRecordItems, true);
         setItemVisible(mProgressItems, false);
         setItemVisible(mPauseItems, false);

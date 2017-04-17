@@ -28,6 +28,7 @@
 #include "../core/messages/messagefinalkey.h"
 #include "../core/messages/messagecaluclationprogress.h"
 #include "../core/messages/messagenewfftcalculated.h"
+#include "../core/messages/messagesignalanalysis.h"
 #include "../core/system/version.h"
 #include "../core/system/serverinfo.h"
 #include <QDebug>
@@ -63,6 +64,8 @@
 
 #include "qtconfig.h"
 #include "displaysize.h"
+
+const int MAX_NUMBER_OF_INVALID_RECORDINGS_BEFORE_USER_INFORMATION = 3;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -352,6 +355,7 @@ void MainWindow::start() {
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (mCore->getProjectManager()->onQuit()) {
+        mClosing = true;
 #if CONFIG_DIALOG_SIZE == 1
         QSettings settings;
         settings.setValue("geometry/mainwindow", saveGeometry());
@@ -472,16 +476,31 @@ void MainWindow::handleMessage(MessagePtr m) {
         }
         mSignalAnalyzerGroup->setFrequency("-");
         break;
-    case Message::MSG_SIGNAL_ANALYSIS_STARTED:
-        statusBar()->showMessage(tr("Signal analysis started"));
-        break;
-    case Message::MSG_SIGNAL_ANALYSIS_ENDED:
-        statusBar()->showMessage(tr("Signal analysis ended"));
-        if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
-            ui->fourierSpectrumGraphics->setVisible(false);
-            ui->tuningCurveGraphicsView->setVisible(true);
+    case Message::MSG_SIGNAL_ANALYSIS: {
+        auto msa(std::static_pointer_cast<MessageSignalAnalysis>(m));
+        if (msa->status() == MessageSignalAnalysis::Status::STARTED) {
+            statusBar()->showMessage(tr("Signal analysis started"));
+        } else {
+            if (DisplaySizeDefines::getSingleton()->getGraphDisplayMode() == GDM_ONE_VISIBLE) {
+                ui->fourierSpectrumGraphics->setVisible(false);
+                ui->tuningCurveGraphicsView->setVisible(true);
+            }
+            switch (msa->result()) {
+            case MessageSignalAnalysis::Result::SUCCESSFULL:
+                statusBar()->showMessage(tr("Signal analysis ended"));
+                break;
+            case MessageSignalAnalysis::Result::INVALID:
+                statusBar()->showMessage(tr("Signal analysis failed"));
+                if (!mClosing && mCurrentMode == MODE_RECORDING) {
+                    if (msa->invalidAttempts() >= MAX_NUMBER_OF_INVALID_RECORDINGS_BEFORE_USER_INFORMATION) {
+                        LogD("Maximum number of invalid recordings reached. Trying to inform the user.");
+                        DoNotShowAgainMessageBox::show(DoNotShowAgainMessageBox::FORCE_RECORDING_INFORMATION, this);
+                    }
+                }
+            }
         }
         break;
+    }
     case Message::MSG_KEY_SELECTION_CHANGED: {
         auto mksc(std::static_pointer_cast<MessageKeySelectionChanged>(m));
         updateNoteName(mksc->getKeyNumber());

@@ -44,6 +44,7 @@ public:
         TUNING_CURVE_NOT_CALCULATED,    ///< The tuning curve has not been calculated
         TUNING_CURVE_NEEDS_UPDATE,      ///< The tuning curve has to be recalculated
         MODE_CHANGE_SAVE,               ///< Switching the mode from recording and there are changes
+        FORCE_RECORDING_INFORMATION,    ///< Information that the user can force a recording
 
         COUNT                           ///< Number of message boxes
     };

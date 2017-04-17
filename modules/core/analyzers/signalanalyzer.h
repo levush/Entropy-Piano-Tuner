@@ -125,6 +125,7 @@ private:
     std::mutex mKeyCountStatisticsMutex;    ///< Corresponding mutex
     int mSelectedKey;                       ///< The selected key by the user
     bool mKeyForced;                        ///< Is the key selection forced
+    int mInvalidRecoringCounter = 0;        ///< Number of recordings that failed in the current key
 
     std::atomic<AnalyzerRole> mAnalyzerRole;
 };

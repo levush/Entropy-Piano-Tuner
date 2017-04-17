@@ -30,6 +30,7 @@
 #include "../../messages/messageprojectfile.h"
 #include "../../messages/messagekeyselectionchanged.h"
 #include "../../messages/messagemodechanged.h"
+#include "../../messages/messagesignalanalysis.h"
 
 #include "piano/piano.h"
 
@@ -70,11 +71,14 @@ void RecordingManager::handleMessage(MessagePtr m)
             updateStroboscopicFrequencies();
             break;
         }
-        case Message::MSG_SIGNAL_ANALYSIS_ENDED:
+        case Message::MSG_SIGNAL_ANALYSIS:
         {
-            // Tell the audio recorder to wait after completed analysis
-            // in order to avoid self-recording of the echo sound
-            mAudioRecorder->setWaitingFlag (false);
+            auto msa(std::static_pointer_cast<MessageSignalAnalysis>(m));
+            if (msa->status() == MessageSignalAnalysis::Status::ENDED) {
+                // Tell the audio recorder to wait after completed analysis
+                // in order to avoid self-recording of the echo sound
+                mAudioRecorder->setWaitingFlag (false);
+            }
             break;
         }
         case Message::MSG_MODE_CHANGED:

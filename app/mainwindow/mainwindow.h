@@ -154,6 +154,9 @@ private:
     ///////////////////////////////////////////////////////////////////////////////
     void updateVolumeBar();
 private:
+    /// Set to true if a close event was accepted
+    bool mClosing = false;
+
     /// The icon postfix set to @2x on devices with a higher pixeldensity of the display
     /// e.g. on iPad iwth retina displays
     const QString mIconPostfix;
