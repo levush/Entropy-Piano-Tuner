@@ -99,6 +99,9 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget *parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QScroller::grabGesture(this, QScroller::LeftMouseButtonGesture);
+    QScrollerProperties probs(QScroller::scroller(this)->scrollerProperties());
+    probs.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
+    QScroller::scroller(this)->setScrollerProperties(probs);
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
@@ -162,7 +165,7 @@ int KeyboardGraphicsView::heightForWidth( int w ) const {
     if (mScene.sceneRect().width() == 0) {
         return w * TOTAL_HEIGHT / (88 * KEY_WIDTH);
     }
-    return w * mScene.height() / mScene.width();
+    return std::ceilf(w * mScene.height() / mScene.width()) + 1;
 }
 
 void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {
