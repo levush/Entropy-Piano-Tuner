@@ -165,7 +165,7 @@ int KeyboardGraphicsView::heightForWidth( int w ) const {
     if (mScene.sceneRect().width() == 0) {
         return w * TOTAL_HEIGHT / (88 * KEY_WIDTH);
     }
-    return std::ceilf(w * mScene.height() / mScene.width()) + 1;
+    return std::ceil(w * mScene.height() / mScene.width()) + 1;
 }
 
 void KeyboardGraphicsView::mousePressEvent(QMouseEvent *event) {

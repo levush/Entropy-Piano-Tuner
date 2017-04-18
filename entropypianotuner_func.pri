@@ -70,7 +70,9 @@ defineReplace(depends_core) {
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
         win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
+        tp3LogDLL:$$depends_tp3log()
     }
+
 
     LIBS += -L$$EPT_CORE_OUT_DIR
     LIBS += -lcore
@@ -246,9 +248,15 @@ defineReplace(depends_winrtbridge) {
 defineReplace(depends_tp3log) {
     INCLUDEPATH += $$EPT_THIRDPARTY_DIR/tp3log
     LIBS += -L$$EPT_ROOT_OUT_DIR/thirdparty/tp3log/tp3log -ltp3log
+    tp3LogDLL {
+        android:ANDROID_EXTRA_LIBS += $$EPT_ROOT_OUT_DIR/thirdparty/tp3log/tp3log/libtp3log.so
+        win32:DLLS += $$EPT_ROOT_OUT_DIR/thirdparty/tp3log/tp3log/tp3log.dll
+    }
 
     export(LIBS)
     export(INCLUDEPATH)
+    export(ANDROID_EXTRA_LIBS)
+    export(DLLS)
 
     return(true)
 }

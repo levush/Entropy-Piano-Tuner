@@ -98,6 +98,11 @@ win|linux:!android {
     packagesExist(libuv):     EPT_THIRDPARTY_CONFIG+=system_libuv
 }
 
+# tp3log
+win32:contains(EPT_CONFIG, shared_core) {
+    CONFIG += tp3LogDLL
+    DEFINES += TP3LOG_DLL
+}
 
 #--------------------------------------------------
 # global settings
