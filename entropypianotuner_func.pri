@@ -70,7 +70,7 @@ defineReplace(depends_core) {
     } else {
         android:ANDROID_EXTRA_LIBS += $$EPT_CORE_OUT_DIR/libcore.so
         win32:DLLS += $$EPT_CORE_OUT_DIR/core.dll
-        tp3LogDLL:$$depends_tp3log()
+        tp3LogDLL { $$depends_tp3log() }
     }
 
 

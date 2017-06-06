@@ -79,8 +79,9 @@ Core::~Core()
     exit();  // just to be sure
     // destroy piano manager (here, because it inherits MessageListener)
     PianoManager::getSingletonPtr().reset();
+    LogI("PianoManager destroyed");
     CalculationManager::selfDelete();
-    LogI("Core denstroyed");
+    LogI("Core destroyed");
 }
 
 void Core::setEnableSoundGenerator(bool enable)
