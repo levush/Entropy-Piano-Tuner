@@ -134,7 +134,7 @@ Key * Keyboard::getKeyPtr(int i)
 
 std::string Keyboard::getNoteName (int keynumber) const
 {
-    const int K = size();
+    const int K = static_cast<int>(size());
     const int Akey = mKeyNumberOfA4;
 
     if (keynumber < 0 || keynumber >+ K) return "--";

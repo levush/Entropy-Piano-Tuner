@@ -27,10 +27,6 @@
 #include "prerequisites.h"
 #include "audio/player/soundgenerator.h"
 
-class Settings;
-
-template class EPT_EXTERN std::unique_ptr<Settings>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The Settings class
 ///

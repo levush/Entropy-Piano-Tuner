@@ -23,8 +23,6 @@
 #include "prerequisites.h"
 #include "algorithmparameterdescription.h"
 
-template class EPT_EXTERN std::vector<AlgorithmParameterDescription>;
-
 class EPT_EXTERN AlgorithmInformation
 {
 public:

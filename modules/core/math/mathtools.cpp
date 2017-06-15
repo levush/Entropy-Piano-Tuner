@@ -161,7 +161,7 @@ void MathTools::coarseGrainSpectrum (const std::vector<double> &X,
     for (int y=0; y<static_cast<int>(Y.size()); ++y)
     {
         double xs2 = f(y+0.5);
-        int x2 = std::min<int>(roundToInteger(xs2), X.size() - 1);
+        int x2 = std::min<int>(roundToInteger(xs2), static_cast<int>(X.size()) - 1);
         double sum=0;
         for (int x=x1+1; x<=x2; ++x) sum += X[x];
         double rightarea = (x2-xs2+0.5)*X[x2];
@@ -185,18 +185,18 @@ int MathTools::findMaximum (const std::vector<double> &X, int i, int j)
 
     int N = static_cast<int>(X.size());
     assert (i>=0 and i<N and j>i and j<=N);
-    return std::distance(X.begin(), std::max_element(X.begin()+i,X.begin()+j));
+    return static_cast<int>(std::distance(X.begin(), std::max_element(X.begin()+i,X.begin()+j)));
 }
 
 int MathTools::findMaximum (const std::vector<double> &X)
 {
-    return std::distance(X.begin(), std::max_element(X.begin(),X.end()));
+    return static_cast<int>(std::distance(X.begin(), std::max_element(X.begin(),X.end())));
 }
 
 double MathTools::findSmoothedMaximum (const std::vector<double> &x)
 {
     auto maxElem = std::max_element(std::next(x.begin()), std::prev(x.end()));
-    int maxIndex = std::distance(x.begin(), maxElem);
+    int maxIndex = static_cast<int>(std::distance(x.begin(), maxElem));
     // interpolate with neighbours using a parabolas maximum
     double y1 = *std::prev(maxElem);
     double y2 = *maxElem;

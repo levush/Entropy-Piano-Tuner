@@ -201,7 +201,7 @@ void TuningIndicatorDrawer::draw()
     if (not mPiano) {return;}                    // and a piano
 
     // show only a quarter of the actual deviation curve
-    const int specWindowSize = mFrequencyDetectionResult->tuningDeviationCurve.size() / 4;
+    const int specWindowSize = static_cast<int>(mFrequencyDetectionResult->tuningDeviationCurve.size() / 4);
 
     for (int i=1; i<specWindowSize; i++)
     {
@@ -218,12 +218,12 @@ void TuningIndicatorDrawer::draw()
                                        mFrequencyDetectionResult->tuningDeviationCurve.end());
 
         std::vector<GraphicsViewAdapter::Point> points;
-        const int centerIndex = mFrequencyDetectionResult->tuningDeviationCurve.size() / 2;
+        const int centerIndex = static_cast<int>(mFrequencyDetectionResult->tuningDeviationCurve.size() / 2);
         const int startIndex = std::max<int>(0, centerIndex - specWindowSize / 2 +
                                MathTools::roundToInteger(mFrequencyDetectionResult->positionOfMaximum) -
                                mFrequencyDetectionResult->deviationInCents);
         const int endIndex = std::min<int>(startIndex + specWindowSize,
-                                           mFrequencyDetectionResult->tuningDeviationCurve.size());
+                                           static_cast<int>(mFrequencyDetectionResult->tuningDeviationCurve.size()));
         for (int i = startIndex; i < endIndex; ++i) {
             double y = mFrequencyDetectionResult->tuningDeviationCurve[i] / max;
             y *= y;

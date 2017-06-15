@@ -28,8 +28,6 @@
 
 class BaseCallbackManager;
 
-template class EPT_EXTERN std::list<BaseCallbackManager *>;
-
 ///
 /// \brief Base class for a callback implementation
 ///

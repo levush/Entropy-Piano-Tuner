@@ -120,7 +120,7 @@ void StroboscopicViewAdapterForQt::drawStroboscope (const ComplexVector &data)
     QImage image (W, H, QImage::Format_RGB32);
 
     // loop over all vector entries (partials)
-    const int N = data.size();
+    const int N = static_cast<int>(data.size());
     if (N>0)
     {
         // First derive the graphical information from the complex numbers

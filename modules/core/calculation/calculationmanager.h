@@ -39,14 +39,6 @@ class AlgorithmFactoryBase;
 class AlgorithmFactoryDescription;
 class Algorithm;
 
-#ifdef EPT_SHARED_ALGORITHMS
-template class EPT_EXTERN std::vector<SharedLibraryPtr>;
-#endif
-
-template class EPT_EXTERN std::map<std::string, AlgorithmFactoryBase*>;
-template class EPT_EXTERN std::unique_ptr<Algorithm>;
-template class EPT_EXTERN std::shared_ptr<const AlgorithmInformation>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Calculation-Manager
 ///

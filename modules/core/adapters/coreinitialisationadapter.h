@@ -26,9 +26,6 @@
 
 #include "prerequisites.h"
 
-class CoreInitialisationAdapter;
-template class EPT_EXTERN std::unique_ptr<CoreInitialisationAdapter>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Core initialization adapter (singleton class).
 ///

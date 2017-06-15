@@ -230,14 +230,15 @@ double AuditoryPreprocessing::getInharmonicPartialIndex (double f, double f1, do
 void AuditoryPreprocessing::cleanSpectrum (Key &key)
 {
     SpectrumType &spectrum = key.getSpectrum();
-    int M = spectrum.size();
+    const int M = static_cast<int>(spectrum.size());
+    const double f = key.getRecordedFrequency();
+    const double B = key.getMeasuredInharmonicity();
 
-    double f = key.getRecordedFrequency();
-    double B = key.getMeasuredInharmonicity();
     auto wave = [f,B,this] (int m)
         { return cos(MathTools::PI*getInharmonicPartialIndex(mtof(m),f,B)); };
     auto envelope = [wave,f,this] (int m)
         { return  pow(fabs(wave(m)),200.0/pow(mtof(m)/f,1.5)); };
+
     for (int m=0; m<M; m++) spectrum[m] *= envelope(m);
 }
 
@@ -255,8 +256,8 @@ void AuditoryPreprocessing::cleanSpectrum (Key &key)
 void AuditoryPreprocessing::cutLowFrequencies(Key &key)
 {
     SpectrumType &spectrum = key.getSpectrum();
-    double f = key.getRecordedFrequency();
-    int lowcutindex = std::min(static_cast<size_t>((5*ftom(f)))/6,NumberOfBins);
+    const double f = key.getRecordedFrequency();
+    const int lowcutindex = std::min<int>(static_cast<int>((5*ftom(f)))/6,static_cast<int>(NumberOfBins));
     for (int m=0; m<lowcutindex; m++) spectrum[m]=0;
 }
 

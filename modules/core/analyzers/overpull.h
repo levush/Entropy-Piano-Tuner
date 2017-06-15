@@ -27,8 +27,6 @@
 #include "prerequisites.h"
 #include "../piano/piano.h"
 
-template class EPT_EXTERN std::vector<std::vector<float> >;
-
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief Class for estimating the overpull needed in a pitch raise.
 ///

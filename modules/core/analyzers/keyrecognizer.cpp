@@ -189,13 +189,13 @@ double KeyRecognizer::detectForcedFrequency()
 {
     if (mSelectedKey<0 or not mKeyForced) return 0;
     std::vector<double> &fft = mFFTPtr->fft;
-    int n = mFFTPtr->fft.size();
-    int sr = mFFTPtr->samplingRate;
+    const int n = static_cast<int>(mFFTPtr->fft.size());
+    const int sr = mFFTPtr->samplingRate;
     auto ftoq = [n,sr] (double f) { return MathTools::roundToInteger(2*n*f/sr); };
     auto qtof = [n,sr] (double q) { return sr*q/(2*n); };
     double f = mPiano->getEqualTempFrequency(mSelectedKey);
-    int q1 = std::max(0,ftoq(f/1.04));
-    int q2 = std::min(ftoq(f*1.04),n);
+    const int q1 = std::max(0,ftoq(f/1.04));
+    const int q2 = std::min(ftoq(f*1.04),n);
     double max=0;
     for (int q=q1; q<=q2; ++q) if (fft[q]>max)
     {
@@ -225,8 +225,8 @@ double KeyRecognizer::detectFrequencyInTreble()
 {
     const double threshold = 0.09;
     std::vector<double> &fft = mFFTPtr->fft;
-    int n = mFFTPtr->fft.size();
-    int sr = mFFTPtr->samplingRate;
+    const int n = static_cast<int>(mFFTPtr->fft.size());
+    const int sr = mFFTPtr->samplingRate;
     auto ftoq = [n,sr] (double f) { return MathTools::roundToInteger(2*n*f/sr); };
     auto qtof = [n,sr] (double q) { return sr*q/(2*n); };
     const int q1=ftoq(20), q2=ftoq(1000), q3=ftoq(4500);
@@ -306,7 +306,7 @@ double KeyRecognizer::mtof (int m) {
 
 void KeyRecognizer::constructLogSpec()
 {
-    const int Q = mFFTPtr->fft.size();
+    const int Q = static_cast<int>(mFFTPtr->fft.size());
     std::function<double(double)> mtoq = [this,Q] (double m)
         { return 2*fmin*Q/mFFTPtr->samplingRate*pow(fmax/fmin,m/M); };
     MathTools::coarseGrainSpectrum (mFFTPtr->fft,mLogSpec,mtoq);

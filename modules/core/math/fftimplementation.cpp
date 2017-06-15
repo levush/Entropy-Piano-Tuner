@@ -166,7 +166,7 @@ void FFT_Implementation::updatePlan (const FFTRealVector &in,
         mCvec2 = (fftw_complex*) fftw_malloc((mNRC/2+1)*sizeof(fftw_complex));
         EptAssert(mRvec1, "May not be nullptr");
         EptAssert(mCvec2, "May not be nullptr");
-        mPlanRC = fftw_plan_dft_r2c_1d (mNRC, mRvec1, mCvec2, flags);
+        mPlanRC = fftw_plan_dft_r2c_1d (static_cast<int>(mNRC), mRvec1, mCvec2, flags);
     }
     catch (...) LogE("fftw_pplan_dft_r2c_1d throwed an exception");
 }
@@ -209,7 +209,7 @@ void FFT_Implementation::updatePlan (const FFTComplexVector &in,
         mRvec2 = (double *) malloc(mNCR*sizeof(double));
         EptAssert(mCvec1, "May not be nullptr");
         EptAssert(mRvec2, "May not be nullptr");
-        mPlanCR = fftw_plan_dft_c2r_1d (mNCR, mCvec1, mRvec2, flags);
+        mPlanCR = fftw_plan_dft_c2r_1d (static_cast<int>(mNCR), mCvec1, mRvec2, flags);
     }
     catch (...) LogE("fftw_pplan_dft_c2r_1d throwed an exception");
 }

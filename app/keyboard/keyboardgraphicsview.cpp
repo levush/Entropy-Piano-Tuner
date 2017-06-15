@@ -547,7 +547,7 @@ int KeyboardGraphicsView::getKeyAtPosition(const QPoint &pos) {
 
 void KeyboardGraphicsView::selectNext() {
     setFocus();
-    selectKey(std::min<int>(mSelectedKey + 1, mKeysGraphicsItems.size() - 1), STATE_NORMAL);
+    selectKey(std::min<int>(mSelectedKey + 1, static_cast<int>(mKeysGraphicsItems.size()) - 1), STATE_NORMAL);
 }
 
 void KeyboardGraphicsView::selectPrevious() {

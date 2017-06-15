@@ -28,9 +28,6 @@
 
 #include "prerequisites.h"
 
-class FileManager;
-template class EPT_EXTERN std::unique_ptr<FileManager>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Abstract singleton adapter for opening files
 ///

@@ -612,7 +612,7 @@ double FFTAnalyzer::estimateQuality ()
     if (mOptimalSuperposition.size()==0) return 0;
 
     // cut the superposition at the edges
-    int cut = mOptimalSuperposition.size()/2-10;
+    const int cut = static_cast<int>(mOptimalSuperposition.size()/2)-10;
     SpectrumType vec = SpectrumType(mOptimalSuperposition.begin()+cut,
                                     mOptimalSuperposition.end()-cut);
 

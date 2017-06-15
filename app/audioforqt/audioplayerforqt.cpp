@@ -69,7 +69,7 @@ QAudio::Error AudioPlayerForQt::createDevice(const QAudioFormat &format, const Q
 
 
     // Specify the size of the Qt-internal buffer
-    const size_t bufferSize = format.bytesForDuration(bufferSizeMS * 1000);
+    const int bufferSize = format.bytesForDuration(bufferSizeMS * 1000);
     mAudioSink->setBufferSize(bufferSize);
     if (mAudioSink->error() != QAudio::NoError) {
         LogE("Error opening QAudioOutput with error %d", mAudioSink->error());

@@ -386,7 +386,7 @@ void AudioRecorder::cutSilence (PacketType &packet)
     double trigger = std::min(0.2,maxamplitude*maxamplitude/100);
 
     int w = getSampleRate() / 40;           // section width of 0.025 sec
-    int sections = packet.size() / w;         // number of sections
+    int sections = static_cast<int>(packet.size()) / w;         // number of sections
     if (sections < 2) return;                 // required: at least two sections
     size_t entries_to_delete = 0;             // number of sections to be deleted
     for (int sec = 0; sec < sections; ++sec)  // scan sectors

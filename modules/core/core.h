@@ -38,10 +38,6 @@
 #include "piano/pianomanager.h"
 #include "system/log.h"
 
-template class EPT_EXTERN std::unique_ptr<ProjectManagerAdapter>;
-template class EPT_EXTERN std::unique_ptr<SoundGenerator>;
-template class EPT_EXTERN std::unique_ptr<SignalAnalyzer>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief CORE : Class managing the core
 ///

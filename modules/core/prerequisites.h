@@ -40,24 +40,10 @@ using uint = unsigned int;
 #endif
 
 #if defined(_MSC_VER)
-// msvc compiler required to implement template classes
 
-// export std templates
-//template class EPT_EXTERN std::allocator<double>;
-//template class EPT_EXTERN std::vector<double>;
-/*template class EPT_EXTERN std::vector<float>;
-template class EPT_EXTERN std::map<std::string, double>;
-template class EPT_EXTERN std::map<std::string, int>;
-template class EPT_EXTERN std::map<std::string, std::string>;
-template class EPT_EXTERN std::map<double, double>;
-template class EPT_EXTERN std::map<int, int>;
-template struct EPT_EXTERN std::atomic<bool>;
-//template struct EPT_EXTERN std::pair<std::string, std::string>;
-template class EPT_EXTERN std::vector<std::pair<std::string, std::string> >;
-template class EPT_EXTERN std::complex<double>;
-template class EPT_EXTERN std::vector<std::complex<double>>;
-class EPT_EXTERN std::mutex;
-class EPT_EXTERN std::thread;*/
+// Ignore warnings of missing template exports
+// Trying to add all templates is a mess
+#pragma warning( disable: 4251 )
 
 #endif
 

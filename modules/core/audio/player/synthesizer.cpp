@@ -358,7 +358,7 @@ bool Synthesizer::generateAudioSignal (DataType *outputBuffer, const int64_t pac
     const int channels = mChannels;
 
     int64_t clock_timeout = 40*sampleRate; // one minute timeout
-    int hammerwavesize = mHammerWaveLeft.size();
+    int hammerwavesize = static_cast<int>(mHammerWaveLeft.size());
 
     if (channels<=0 or channels>2) return false;
 

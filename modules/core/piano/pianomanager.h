@@ -30,9 +30,6 @@
 #include "../messages/messagelistener.h"
 #include "../adapters/modeselectoradapter.h"
 
-class PianoManager;
-template class EPT_EXTERN std::unique_ptr<PianoManager>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The PianoManager class
 ///

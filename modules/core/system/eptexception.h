@@ -48,6 +48,7 @@
 
 #endif
 
+class EPT_EXTERN std::exception;
 class EPT_EXTERN EptException : public std::exception
 {
 protected:

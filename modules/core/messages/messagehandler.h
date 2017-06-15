@@ -32,9 +32,6 @@
 #include "prerequisites.h"
 #include "messagelistener.h"
 
-template class EPT_EXTERN std::list<MessageListener*>;
-template class EPT_EXTERN std::list<MessagePtr>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class for handling and sending messages
 ///

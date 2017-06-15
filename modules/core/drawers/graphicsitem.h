@@ -147,7 +147,6 @@ protected:
 
 
 using GraphicItemsList = std::list<GraphicsItem*>; ///< A list of GraphicItem (global)
-template class EPT_EXTERN std::list<GraphicsItem*>;
 
 #endif // GRAPHICSITEM_H
 

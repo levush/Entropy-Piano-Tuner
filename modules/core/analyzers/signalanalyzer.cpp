@@ -754,12 +754,12 @@ void SignalAnalyzer::createPolygon (const FFTWVector &powerspec, FFTPolygon &pol
     double ymax=0, df = samplingrate / 2 / fftsize;
     for (double f=fmin; f<=fmax; f=std::max(f*factor*factor,f+df))
     {
-        double qs2 = q(f*factor);
-        int q2 = std::min<int>(MathTools::roundToInteger(qs2), powerspec.size() - 1);
+        const double qs2 = q(f*factor);
+        const int q2 = std::min<int>(MathTools::roundToInteger(qs2), static_cast<int>(powerspec.size()) - 1);
         double sum=0;
         for (int q=q1+1; q<=q2; ++q) sum += powerspec[q];
-        double rightarea = (q2-qs2+0.5)*powerspec[q2];
-        double y = sum + leftarea - rightarea;
+        const double rightarea = (q2-qs2+0.5)*powerspec[q2];
+        const double y = sum + leftarea - rightarea;
         if (y>ymax) ymax=y;
         poly[f] = y;
         q1=q2; qs1=qs2; leftarea=rightarea;

@@ -68,11 +68,6 @@ private:
 typedef std::shared_ptr<SingleAlgorithmParameters> SingleAlgorithmParametersPtr;
 typedef std::shared_ptr<const SingleAlgorithmParameters> ConstSingleAlgorithmParametersPtr;
 
-template class EPT_EXTERN std::shared_ptr<SingleAlgorithmParameters>;
-template class EPT_EXTERN std::shared_ptr<const SingleAlgorithmParameters>;
-
-template class EPT_EXTERN std::vector<SingleAlgorithmParametersPtr>;
-
 class EPT_EXTERN AlgorithmParameters
 {
 public:

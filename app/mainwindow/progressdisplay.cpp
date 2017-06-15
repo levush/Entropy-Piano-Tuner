@@ -29,5 +29,5 @@ ProgressDisplay::ProgressDisplay(QWidget *mainWindow) :
 
 void ProgressDisplay::queueSizeChanged(size_t size, size_t total_size)
 {
-    emit wgPercentageChanged(((total_size - size) * 100) / total_size);
+    emit wgPercentageChanged(static_cast<int>(((total_size - size) * 100) / total_size));
 }

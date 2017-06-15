@@ -67,7 +67,7 @@ void Stroboscope::pushRawData (const PacketType &data)
             if (fabs(pcm)>mMaxAmplitude) mMaxAmplitude=fabs(pcm);
             if (mMaxAmplitude < 1E-20) continue;
 
-            int N = mComplexPhase.size();
+            int N = static_cast<int>(mComplexPhase.size());
             for (int i=0; i<N; ++i)
             {
                 mComplexPhase[i] *= mComplexIncrement[i];

@@ -28,8 +28,6 @@
 #include "key.h"
 #include "pianodefines.h"
 
-template class EPT_EXTERN std::vector<Key>;
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Class describing the piano keyboard, holding a collection of keys
 ///
