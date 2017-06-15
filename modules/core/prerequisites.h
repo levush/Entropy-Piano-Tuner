@@ -45,6 +45,9 @@ using uint = unsigned int;
 // Trying to add all templates is a mess
 #pragma warning( disable: 4251 )
 
+// Fix warning on msvc compiler
+class EPT_EXTERN std::exception;
+
 #endif
 
 // define snprintf for windows visual studio compiler
