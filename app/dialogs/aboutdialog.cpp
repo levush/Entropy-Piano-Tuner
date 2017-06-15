@@ -29,7 +29,6 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QFile>
-#include <QProcess>
 
 #include "core/system/eptexception.h"
 #include "core/system/version.h"

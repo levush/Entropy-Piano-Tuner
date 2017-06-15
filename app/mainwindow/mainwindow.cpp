@@ -33,7 +33,6 @@
 #include "../core/system/serverinfo.h"
 #include <QDebug>
 #include <QCloseEvent>
-#include <QProcess>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QToolButton>
@@ -52,6 +51,9 @@
 #include <QResource>
 #include <QDialogButtonBox>
 #include <QScroller>
+#ifndef QT_NO_PROCESS
+#include <QProcess>
+#endif
 
 #include "dialogs/aboutdialog.h"
 #include "dialogs/autoclosingmessagebox.h"
